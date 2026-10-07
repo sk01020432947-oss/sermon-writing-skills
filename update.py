@@ -55,7 +55,7 @@ def desc(p):
 L = ['# 설교·글쓰기·문서 스킬 모음', '',
      'Claude Code용 스킬을 주제별로 묶은 저장소입니다. 각 폴더를 `~/.claude/skills/`에 복사하면 바로 쓸 수 있습니다.', '',
      '> 동영상·음성 샘플(mp4·mov·wav·mp3)은 용량 문제로 저장소에서 뺐습니다. '
-     '일부 스킬은 외부 제작자의 것이므로 재배포 전 각 폴더의 LICENSE를 확인하세요.', '']
+     '라이선스·출처는 아래 [라이선스·출처](#라이선스출처) 단락과 [CREDITS.md](CREDITS.md)를 보세요.', '']
 for c, ns in cats.items():
     L += [f'## {c} ({len(ns)})', '', '| 스킬 | 설명 |', '|---|---|']
     for n in ns:
@@ -90,6 +90,13 @@ L += ['## 설치', '',
       '스킬 하나만 설치하려면 해당 폴더만 복사합니다:', '',
       '```bash', 'cp -R 01-설교/sermon-pipeline ~/.claude/skills/', '```', '',
       '설치 후 Claude Code 새 세션을 시작하면 스킬이 보입니다.', '',
+      '## 라이선스·출처', '',
+      '이 저장소는 여러 제작자의 스킬을 모은 것이라 **저장소 전체에 하나의 라이선스를 붙이지 않았습니다.** '
+      '각 스킬의 권리는 원 제작자에게 있습니다.', '',
+      '- 스킬별 원 저장소·라이선스·참고 자료: [CREDITS.md](CREDITS.md)',
+      '- 쓰거나 다시 배포하기 전에 각 폴더의 `LICENSE`·`SKILL.md`를 확인하세요.',
+      '- 권리자이신데 삭제나 출처 수정을 원하시면 '
+      '[이슈](https://github.com/sk01020432947-oss/sermon-writing-skills/issues)로 알려 주세요.', '',
       '## 갱신', '', '로컬 스킬을 고친 뒤 이 저장소를 맞추려면:', '', '```bash', 'python3 update.py',
       'git add -A && git commit -m "스킬 갱신" && git push', '```', '']
 (DST / 'README.md').write_text('\n'.join(L))
