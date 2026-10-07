@@ -197,3 +197,12 @@ Claude Code용 스킬을 주제별로 묶은 저장소입니다. 각 폴더를 `
 ```bash
 cp -R 01-설교/sermon-pipeline ~/.claude/skills/
 ```
+
+## 갱신
+
+로컬 스킬을 고친 뒤 이 저장소를 맞추려면:
+
+```bash
+python3 update.py
+git add -A && git commit -m "스킬 갱신" && git push
+```
