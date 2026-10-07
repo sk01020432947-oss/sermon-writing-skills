@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><title>코드와 결과 나란히 · Code to Preview</title>
+<link rel="stylesheet" href="../../lib/stage.css">
+<style>
+.frame{background:#0b1012 !important;background-image:none !important}
+.scene{position:absolute;inset:0;overflow:hidden;font-family:Pretendard,'Noto Sans KR',sans-serif;color:#e9f1ef;letter-spacing:-.01em}
+.bg{position:absolute;inset:0;background:radial-gradient(55% 75% at 12% -5%,#15493e 0%,rgba(21,73,62,0) 70%),radial-gradient(55% 75% at 105% 105%,#2c2257 0%,rgba(44,34,87,0) 70%),#0b1012}
+.tag{position:absolute;display:flex;gap:8px;align-items:center;font:600 12px/1 'IBM Plex Mono',monospace;letter-spacing:.12em;color:#9fb3ae;text-transform:uppercase;white-space:nowrap}
+.tag b{background:#3ee6a8;color:#06231a;padding:3px 6px;border-radius:4px;font-weight:700}
+.panel{position:absolute;background:rgba(18,26,28,.82);border:1px solid rgba(255,255,255,.09);border-radius:12px}
+.code{font:13px/1.75 'IBM Plex Mono',monospace;color:#b9c9c4;white-space:pre}
+.chip{position:absolute;padding:7px 14px;border-radius:999px;border:1px solid rgba(62,230,168,.45);color:#bff5df;font:600 14px/1 Pretendard;background:rgba(62,230,168,.08);white-space:nowrap}
+.mint{color:#3ee6a8}.red{color:#ff5d4f}
+
+.win{left:120px;top:90px;width:1040px;height:540px}
+.bar2{position:absolute;left:0;right:0;top:0;height:36px;border-bottom:1px solid rgba(255,255,255,.07);font:500 12px 'IBM Plex Mono';color:#6f817c;display:flex;align-items:center;padding-left:16px;gap:6px}
+.bar2 i{width:10px;height:10px;border-radius:50%;background:#3a4644;display:inline-block}
+.cd{position:absolute;left:24px;top:60px;width:500px;height:450px;padding:18px;border-radius:10px;background:rgba(0,0,0,.25)}
+.pv{position:absolute;right:24px;top:60px;width:470px;height:450px;border-radius:10px;background:rgba(0,0,0,.35);overflow:hidden}
+.pv .cap2{position:absolute;left:14px;top:12px;font:600 11px 'IBM Plex Mono';color:#7c8f8a;letter-spacing:.14em}
+.cur{display:inline-block;width:8px;height:16px;background:#3ee6a8;vertical-align:-3px}
+.k{color:#c792ea}.s{color:#c3e88d}.n{color:#ffb547}
+#ring{position:absolute;left:115px;top:105px}
+.mv{position:absolute;left:0;right:0;top:205px;text-align:center;font:800 34px Pretendard;color:#3ee6a8}
+.dotb{position:absolute;left:135px;top:330px;width:200px;height:10px;border-radius:5px;background:#8b7bff;transform-origin:left}
+</style></head>
+<body data-no="G03" data-cat="문법 · 설명" data-ko="코드와 결과 나란히" data-en="Code to Preview" data-meta="9초 · 타자기 코드 ↔ 줄마다 결과가 생김" data-dur="9" data-poster="8" data-size="1280x720">
+<main class="scene"><div class="bg"></div>
+  <div class="panel win"><div class="bar2"><i></i><i></i><i></i>&nbsp; my-video / index.html</div>
+    <div class="cd"><div class="code" id="cd"></div></div>
+    <div class="pv"><span class="cap2">PREVIEW</span>
+      <svg id="ring" width="240" height="240"><circle id="rc" cx="120" cy="120" r="110" fill="none" stroke="#3ee6a8" stroke-width="2.5" stroke-dasharray="8 8"/></svg>
+      <div class="mv" id="mv">움직이는 화면</div><div class="dotb" id="db"></div></div>
+  </div>
+</main>
+<script src="../../lib/gsap.min.js"></script><script src="../../lib/stage.js"></script>
+<script>
+// 줄 단위로 타이핑. 각 줄이 끝나는 순간 오른쪽 결과가 생긴다(코드↔결과 동기).
+const L = [
+  ['<span class="k">const</span> tl = gsap.<span class="k">timeline</span>();', null],
+  ['tl.from(<span class="s">\'.ring\'</span>, { <span class="n">drawSVG</span>: <span class="n">0</span> })', 'ring'],
+  ['  .from(<span class="s">\'.title\'</span>, { y: <span class="n">40</span>, opacity: <span class="n">0</span> })', 'title'],
+  ['  .from(<span class="s">\'.bar\'</span>, { scaleX: <span class="n">0</span> })', 'bar'],
+  ['  .to(<span class="s">\'.ring\'</span>, { rotate: <span class="n">180</span> });', 'spin'],
+  ['', null], ['<span class="k">export default</span> tl;', null]];
+const plain = s => s.replace(/<[^>]+>/g, '').replace(/&lt;/g, '<');
+const cd = document.getElementById('cd'), st = {c: 0};
+const total = L.reduce((a, l) => a + plain(l[0]).length + 1, 0);
+function render() {
+  let left = Math.floor(st.c), out = '';
+  for (const [h] of L) {
+    const p = plain(h);
+    if (left >= p.length + 1) { out += h + '\n'; left -= p.length + 1; }
+    else { out += p.slice(0, left).replace(/</g, '&lt;') + '<span class="cur"></span>'; left = -1; break; }
+  }
+  if (left >= 0) out += '<span class="cur"></span>';
+  cd.innerHTML = out;
+}
+const rc = document.getElementById('rc'), RL = 2 * Math.PI * 110;
+gsap.set(rc, {strokeDasharray: `${RL} ${RL}`, strokeDashoffset: RL});
+const tl = Motion.timeline();
+tl.from('.win', {y: 30, autoAlpha: 0, duration: .6}, 0);
+const T0 = .6, T1 = 6.6;
+tl.to(st, {c: total, duration: T1 - T0, ease: 'none', onUpdate: render}, T0);
+// 각 줄 끝 시각 계산
+let acc = 0; const endT = L.map(l => { acc += plain(l[0]).length + 1; return T0 + (acc / total) * (T1 - T0); });
+L.forEach((l, i) => {
+  const t = endT[i];
+  if (l[1] === 'ring') { tl.to(rc, {strokeDashoffset: 0, duration: .9, ease: 'power2.inOut'}, t); tl.set(rc, {strokeDasharray: '8 8'}, t + .95); }
+  if (l[1] === 'title') tl.from('#mv', {y: 40, autoAlpha: 0, duration: .7}, t);
+  if (l[1] === 'bar') tl.from('#db', {scaleX: 0, duration: .7}, t);
+  if (l[1] === 'spin') tl.to('#ring', {rotation: 180, duration: 1.4, ease: 'power3.inOut'}, t);
+});
+render();
+Motion.ready();
+</script></body></html>

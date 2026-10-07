@@ -1,0 +1,510 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><title>오프닝 몽타주 · Opening Montage</title>
+<link rel="stylesheet" href="../../lib/stage.css">
+<style>
+  .frame{background:#0b0d12 !important;background-image:none !important}
+  .scene{position:absolute;inset:0;overflow:hidden}
+  .sh{position:absolute;inset:0;overflow:hidden;visibility:hidden}
+  .sh canvas,.sh svg.full{position:absolute;inset:0;width:1280px;height:720px}
+  .grain{position:absolute;inset:0;width:1280px;height:720px;mix-blend-mode:multiply;opacity:.28;pointer-events:none}
+  #sA{visibility:visible}
+  .serif{font-family:"NanumMyeongjo",serif}
+  #sK{background:#0d1013;font-family:"IBM Plex Mono",monospace;color:#e8ece6}
+  #sK .hd{position:absolute;left:28px;right:28px;top:14px;font-size:11px;color:#4d555c;display:flex;justify-content:space-between;letter-spacing:.06em}
+  #sK .ft{position:absolute;left:28px;right:28px;bottom:12px;font-size:11px;color:#3f464c;display:flex;justify-content:space-between}
+  #sK .kb{position:absolute;inset:0;opacity:0}
+  #sK .ln{position:absolute;left:150px;font-size:36px;white-space:pre;line-height:1}
+  #sK .gut{position:absolute;left:96px;font-size:15px;color:#3a4147}
+  #sK .cmt{color:#4f575e}
+  #sK .lime{color:#c6f432}
+  #sK .kcur{display:inline-block;width:19px;height:36px;background:#c6f432;vertical-align:-4px;margin-left:3px}
+  #sK .hlbar{position:absolute;left:84px;right:60px;height:50px;background:#151a1e;border-left:3px solid #c6f432}
+  #sK .flyc{display:inline-block}
+  #sK .big{position:absolute;left:80px;top:470px;font:900 170px/1 "Gmarket Sans TTF";white-space:nowrap}
+  #sK .big span{display:inline-block}
+</style></head>
+<body data-no="S17" data-cat="재현 · MONTAGE" data-ko="오프닝 몽타주" data-en="Opening Montage" data-meta="18비트 하드컷 몽타주 → Opus 5.5 → ✳ Claude 타이틀" data-dur="24.5" data-poster="21.6" data-size="1280x720">
+<main class="scene">
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <filter id="wc" x="-30%" y="-30%" width="160%" height="160%"><feTurbulence type="fractalNoise" baseFrequency=".018" numOctaves="3" seed="4"/><feDisplacementMap in="SourceGraphic" scale="46"/><feGaussianBlur stdDeviation="3"/></filter>
+    <filter id="rough" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="2" seed="9"/><feDisplacementMap in="SourceGraphic" scale="3.2"/></filter>
+    <filter id="chalk" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="2" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="4" result="d"/><feComposite in="d" in2="n" operator="in"/></filter>
+    <filter id="wob1" x="-10%" y="-20%" width="120%" height="140%"><feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="2" seed="1"/><feDisplacementMap in="SourceGraphic" scale="6"/></filter>
+    <filter id="wob2" x="-10%" y="-20%" width="120%" height="140%"><feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="2" seed="7"/><feDisplacementMap in="SourceGraphic" scale="7"/></filter>
+    <filter id="leather" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".9 .35" numOctaves="3" seed="5"/><feColorMatrix type="matrix" values="0 0 0 0 .35  0 0 0 0 .2  0 0 0 0 .08  0 0 0 -1.1 .95"/></filter>
+    <filter id="noise"><feTurbulence type="fractalNoise" baseFrequency=".8" numOctaves="3" seed="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter>
+  </defs>
+</svg>
+
+<!-- a 수채 수중 -->
+<section class="sh" id="sA"><canvas id="cA" width="1280" height="720"></canvas>
+  <svg class="grain" viewBox="0 0 1280 720"><rect width="1280" height="720" filter="url(#noise)"/></svg></section>
+
+<!-- w 파도 소용돌이 -->
+<section class="sh" id="sW"><svg class="full" viewBox="0 0 1280 720">
+  <rect width="1280" height="720" fill="#d7e5e4"/>
+  <g id="wave"><path d="M-60 760 L-60 520 C 180 500, 360 470, 500 380 C 590 320, 640 230, 600 175 C 570 140, 515 160, 528 205 C 540 245, 610 255, 660 290 C 780 370, 1020 450, 1340 455 L1340 760Z" fill="#2c7b8b"/>
+  <path d="M-60 760 L-60 600 C 300 570, 700 540, 1340 560 L1340 760Z" fill="#245f6e" opacity=".7"/>
+  <g id="whirl" fill="none" stroke="#f4f6f2" stroke-linecap="round" filter="url(#rough)"><path d="M560 120 A70 70 0 1 1 492 190" stroke-width="6"/><path d="M560 145 A45 45 0 1 1 517 190" stroke-width="5"/><path d="M558 168 A22 22 0 1 1 540 192" stroke-width="4"/></g>
+  <g id="spray" fill="#f4f6f2"></g></g>
+</svg><svg class="grain" viewBox="0 0 1280 720"><rect width="1280" height="720" filter="url(#noise)"/></svg></section>
+
+<!-- b 눈송이 -->
+<section class="sh" id="sB"><svg class="full" viewBox="0 0 1280 720">
+  <rect width="1280" height="720" fill="#e4e8ea"/>
+  <g id="clouds" filter="url(#wc)"></g>
+  <g id="flake" transform="translate(640 360)"></g>
+</svg><svg class="grain" viewBox="0 0 1280 720"><rect width="1280" height="720" filter="url(#noise)"/></svg></section>
+
+<!-- c 호박색 매크로 -->
+<section class="sh" id="sC"><canvas id="cC" width="1280" height="720"></canvas></section>
+
+<!-- d 행성 가장자리 -->
+<section class="sh" id="sD"><canvas id="cD" width="1280" height="720"></canvas></section>
+
+<!-- s 노을 모래 언덕 -->
+<section class="sh" id="sS"><svg class="full" viewBox="0 0 1280 720">
+  <defs><linearGradient id="dSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a0d06"/><stop offset=".55" stop-color="#6b3410"/><stop offset="1" stop-color="#e59a3a"/></linearGradient>
+  <radialGradient id="dSand" cx="640" cy="300" r="900" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#f3c76a"/><stop offset=".45" stop-color="#d8902f"/><stop offset="1" stop-color="#8f4f15"/></radialGradient></defs>
+  <rect width="1280" height="720" fill="url(#dSky)"/>
+  <g id="dune"><ellipse cx="640" cy="1320" rx="1250" ry="1000" fill="url(#dSand)"/>
+  <g id="flower"><path d="M600 452 Q596 420 604 392" stroke="#5a2a10" stroke-width="3" fill="none"/><circle cx="604" cy="388" r="7" fill="#b0202a"/><circle cx="598" cy="396" r="4" fill="#d0303a"/></g></g>
+  <rect width="1280" height="720" filter="url(#noise)" opacity=".10"/>
+</svg></section>
+
+<!-- br 빵 껍질 -->
+<section class="sh" id="sBr"><svg class="full" viewBox="0 0 1280 720">
+  <rect width="1280" height="720" fill="#f3f0ea"/>
+  <clipPath id="brClip"><ellipse cx="660" cy="980" rx="900" ry="620"/></clipPath>
+  <g id="bread"><g clip-path="url(#brClip)"><rect width="1280" height="720" fill="#8d5326"/><rect width="1280" height="720" filter="url(#leather)" opacity=".8"/>
+    <path id="brIn" d="M1100 440 L900 470 L760 720 L1300 720 L1300 420Z" fill="#c78f55"/><rect width="1280" height="720" filter="url(#noise)" opacity=".12"/></g>
+  <path id="brCrack" d="M1100 440 L1010 455 L950 462 L900 470 L840 590 L760 720" fill="none" stroke="#3a1c08" stroke-width="5" stroke-linejoin="round" filter="url(#rough)"/></g>
+</svg></section>
+
+<!-- e 청사진 -->
+<section class="sh" id="sE"><svg class="full" viewBox="0 0 1280 720">
+  <rect width="1280" height="720" fill="#3468a0"/>
+  <rect width="1280" height="720" filter="url(#noise)" opacity=".10"/>
+  <g id="bp" fill="none" stroke="#f3f1ea" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" opacity=".95" filter="url(#rough)"></g>
+</svg></section>
+
+<!-- m 흑백 달 -->
+<section class="sh" id="sM"><svg class="full" viewBox="0 0 1280 720">
+  <filter id="lunar" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".011" numOctaves="5" seed="12"/><feColorMatrix type="matrix" values="0 0 0 0 .1  0 0 0 0 .1  0 0 0 0 .1  -1.6 0 0 0 1.05"/></filter>
+  <rect width="1280" height="720" fill="#050505"/>
+  <clipPath id="moonClip"><circle cx="640" cy="1180" r="860"/></clipPath>
+  <g id="moon"><g clip-path="url(#moonClip)"><rect width="1280" height="720" fill="#e9e9e5"/><rect width="1280" height="720" filter="url(#lunar)"/><g id="craters" fill="#1d1d1d"></g></g>
+  <circle cx="640" cy="1180" r="860" fill="none" stroke="#fff" stroke-width="3" opacity=".5"/></g>
+</svg></section>
+
+<!-- f 찢긴 종이 -->
+<section class="sh" id="sF"><svg class="full" viewBox="0 0 1280 720">
+  <rect width="1280" height="720" fill="#2fb3b5"/>
+  <g id="torn"><clipPath id="tornClip"><path id="tornPath"/></clipPath>
+    <use href="#tornPath" fill="#3b1519"/>
+    <g id="fibers" clip-path="url(#tornClip)" stroke-linecap="round"></g>
+    <use href="#tornPath" fill="none" stroke="#e8c3b6" stroke-width="3" opacity=".6" filter="url(#rough)"/><use href="#tornPath" fill="none" stroke="#1a0507" stroke-width="7" opacity=".35" transform="translate(0 6)"/>
+  </g>
+</svg></section>
+
+<!-- r 붉은 기포 -->
+<section class="sh" id="sR"><svg class="full" viewBox="0 0 1280 720">
+  <defs><radialGradient id="rDome" cx="640" cy="420" r="700" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#ec4f86"/><stop offset=".6" stop-color="#b8174f"/><stop offset="1" stop-color="#5e0822"/></radialGradient>
+  <radialGradient id="rBub" cx=".38" cy=".32" r=".7"><stop offset="0" stop-color="#ff8a6a"/><stop offset=".45" stop-color="#d0281e"/><stop offset="1" stop-color="#6e0a0e"/></radialGradient></defs>
+  <rect width="1280" height="720" fill="#1c0710"/>
+  <ellipse cx="640" cy="1180" rx="1000" ry="780" fill="url(#rDome)"/>
+  <g id="rbubs"></g>
+  <rect width="1280" height="720" filter="url(#noise)" opacity=".08"/>
+</svg></section>
+
+<!-- g 자수 가죽 -->
+<section class="sh" id="sG"><svg class="full" viewBox="0 0 1280 720">
+  <rect width="1280" height="720" fill="#d9cdb6"/>
+  <rect width="1280" height="720" filter="url(#noise)" opacity=".08"/>
+  <clipPath id="domeClip"><path id="dome" d="M-40 760 L-40 520 Q640 230 1320 520 L1320 760 Z"/></clipPath>
+  <g clip-path="url(#domeClip)"><rect width="1280" height="720" fill="#c7843f"/><rect width="1280" height="720" filter="url(#leather)" opacity=".55"/></g>
+  <use href="#dome" fill="none" stroke="#7a4a1d" stroke-width="3" opacity=".6"/>
+  <g id="holes" fill="#3a2210"></g>
+  <path id="green" fill="none" stroke="#2f5a3c" stroke-width="5" stroke-linecap="round"/>
+  <path id="red" fill="none" stroke="#c4262a" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg></section>
+
+<!-- hs 뛰는 말 -->
+<section class="sh" id="sHs"><svg class="full" viewBox="0 0 1280 720">
+  <rect width="1280" height="720" fill="#e6d4b0"/><rect width="1280" height="720" filter="url(#noise)" opacity=".14"/>
+  <path d="M-80 760 Q640 380 1360 760" fill="none" stroke="#8fae4f" stroke-width="46"/>
+  <g id="horse" fill="#8a4f24" stroke="#3a1d0a" stroke-width="3" stroke-linejoin="round">
+    <g class="leg" data-p="-95 30"><path d="M-105 20 L-85 20 L-80 150 L-96 150Z"/></g>
+    <g class="leg" data-p="-60 30"><path d="M-70 20 L-50 20 L-46 150 L-62 150Z"/></g>
+    <g class="leg" data-p="80 30"><path d="M70 20 L92 20 L100 150 L84 150Z"/></g>
+    <g class="leg" data-p="110 30"><path d="M100 20 L122 20 L132 150 L116 150Z"/></g>
+    <ellipse cx="0" cy="0" rx="150" ry="58"/>
+    <path d="M110 -20 L175 -110 L235 -100 L240 -78 L195 -70 L150 20Z"/>
+    <path d="M-140 -10 Q-210 10 -230 80" fill="none" stroke-width="12"/>
+  </g>
+</svg></section>
+
+<!-- l 잎과 물방울 -->
+<section class="sh" id="sL"><svg class="full" viewBox="0 0 1280 720">
+  <rect width="1280" height="720" fill="#f1ede6"/>
+  <g filter="url(#wc)" id="lBlobs"></g>
+  <g id="pads" filter="url(#wc)" opacity="0"></g>
+  <g id="leafG"><path d="M180 60 L520 250" stroke="#8a6a4a" stroke-width="5" stroke-linecap="round"/>
+    <g id="leaf"><path d="M500 240 C 600 160, 790 190, 860 300 C 760 330, 590 320, 500 240Z" fill="#79a052"/><path d="M500 240 C 640 250, 760 270, 860 300" stroke="#4f7434" stroke-width="3" fill="none"/></g></g>
+  <g id="drop"><path d="M0 -50 C 18 -22, 34 0, 34 18 C 34 40, 18 52, 0 52 C -18 52, -34 40, -34 18 C -34 0, -18 -22, 0 -50Z" fill="#8fbfe0" stroke="#4f86b4" stroke-width="2.5" opacity=".95"/>
+    <ellipse cx="-12" cy="6" rx="5" ry="10" fill="#fff" opacity=".7"/><circle cx="-9" cy="20" r="3.4" fill="#22344a"/><circle cx="10" cy="20" r="3.4" fill="#22344a"/><path d="M-6 32 Q0 37 6 32" stroke="#22344a" stroke-width="2" fill="none" stroke-linecap="round"/></g>
+</svg></section>
+
+<!-- tc 청록 원반 -->
+<section class="sh" id="sTc"><svg class="full" viewBox="0 0 1280 720">
+  <rect width="1280" height="720" fill="#e7e2cc"/><rect width="1280" height="720" filter="url(#noise)" opacity=".12"/>
+  <g id="disc2"><circle cx="560" cy="380" r="300" fill="#3f9a88"/><circle cx="560" cy="380" r="300" fill="none" stroke="#2c7465" stroke-width="10"/>
+    <g id="dleaves" fill="#2d6e4f" opacity=".8"></g>
+    <g id="rings" fill="none" stroke="#c7ebdd" stroke-width="3"></g><circle cx="560" cy="380" r="9" fill="#e7f6ef"/></g>
+</svg></section>
+
+<!-- k 터미널 -->
+<section class="sh" id="sK">
+  <div class="hd"><span>01_ENTRANCE.TS</span><span>48 BPM · BAR 01 · ● REC</span></div>
+  <div class="ft"><span>&gt; type()</span><span>00:00:14</span></div>
+  <div class="kb" id="k1"><div class="ln" style="top:150px"><span id="t1"></span><span class="kcur"></span></div></div>
+  <div class="kb" id="k2"><div class="ln" style="top:165px"><span id="t2"></span><span id="t2b"></span><span class="kcur"></span></div>
+    <svg style="position:absolute;left:0;top:0" width="1280" height="720"><line id="kline" x1="140" y1="420" x2="1150" y2="420" stroke="#c6f432" stroke-width="4"/></svg>
+    <div class="ln" id="klab" style="top:384px;left:1090px;font-size:22px;opacity:0">line</div></div>
+  <div class="kb" id="k3"><div class="gut" style="top:110px">05<br><br>06<br><br>07<br><br>08</div>
+    <div class="ln cmt" style="top:104px;font-size:20px">// verse 1, bar 02</div>
+    <div class="hlbar" style="top:156px"></div>
+    <div class="ln" style="top:162px"><span id="t3a" class="lime"></span><span id="t3b"></span></div>
+    <div class="ln" style="top:216px"><span id="t3c"></span><span id="flyw"></span></div></div>
+  <div class="kb" id="k4"><div class="ln" style="top:150px">typed a little logic();</div><div class="ln" style="top:200px">now the</div><div class="ln" style="top:250px"><span id="t4"></span></div>
+    <div class="big" id="bigL"></div></div>
+</section>
+
+<!-- h 잉크 스케치 -->
+<section class="sh" id="sH"><svg class="full" viewBox="0 0 1280 720">
+  <defs><radialGradient id="gillBg" cx="640" cy="1080" r="900" gradientUnits="userSpaceOnUse"><stop offset=".5" stop-color="#d9552a"/><stop offset=".78" stop-color="#a8331a"/><stop offset=".86" stop-color="#3a1209"/><stop offset="1" stop-color="#140c0a"/></radialGradient></defs>
+  <rect width="1280" height="720" fill="#120c0b"/>
+  <ellipse cx="640" cy="1080" rx="780" ry="780" fill="url(#gillBg)"/>
+  <rect width="1280" height="720" filter="url(#noise)" opacity=".10"/>
+  <text id="disc" x="640" y="215" text-anchor="middle" class="serif" font-size="128" font-weight="800" fill="#f3eee6" letter-spacing="2" style="paint-order:stroke" stroke="#120c0b" stroke-width="2">discover</text>
+  <g id="scrib" fill="none" stroke="#231d19" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" filter="url(#rough)"></g>
+</svg></section>
+
+<!-- i 타이틀 -->
+<section class="sh" id="sI">
+  <div style="position:absolute;inset:0;background:linear-gradient(#0a0c11,#0e131b 55%,#111a25)"></div>
+  <div id="glowB" style="position:absolute;inset:0;background:radial-gradient(85% 30% at 50% 108%,#8fb6d8 0%,#4f7397 30%,#1b2a3a 62%,transparent 80%)"></div>
+  <div id="glowO" style="position:absolute;inset:0;opacity:0;background:radial-gradient(80% 18% at 50% 104%,#ffb067 0%,#e2622a 30%,transparent 70%)"></div>
+  <svg class="full" viewBox="0 0 1280 720">
+    <text id="opus" x="640" y="372" text-anchor="middle" class="serif" font-size="66" fill="#ece8e1">Opus 5.5</text>
+    <g id="claude" transform="translate(640 0)" style="opacity:0">
+      <g id="mark" transform="translate(-126 349)" stroke="#ece8e1" stroke-width="5.5" stroke-linecap="round"></g>
+      <text x="-80" y="372" class="serif" font-size="66" fill="#ece8e1">Claude</text>
+    </g>
+    <g id="plus" transform="translate(-30 0)" stroke="#ece8e1" stroke-width="4" stroke-linecap="round" opacity="0"><line x1="660" y1="350" x2="660" y2="390"/><line x1="640" y1="370" x2="680" y2="370"/></g>
+    <g id="wm" style="opacity:0" fill="none" stroke-linejoin="round" stroke-linecap="round"><g id="wmA" stroke="#ece8e1" stroke-width="3" filter="url(#wob1)"></g><g id="wmB" stroke="#ece8e1" stroke-width="1.8" opacity=".6" filter="url(#wob2)"></g></g>
+  </svg>
+</section>
+</main>
+<script src="../../lib/gsap.min.js"></script><script src="../../lib/stage.js"></script>
+<script>
+const TL = Motion.timeline();
+// 기존 비트는 옛 절대 시각으로 쓰여 있으므로 OFF만큼 밀어 붙인다
+let OFF = 0;
+const tl = {to:(a,b,p)=>TL.to(a,b,p+OFF), from:(a,b,p)=>TL.from(a,b,p+OFF), fromTo:(a,b,c,p)=>TL.fromTo(a,b,c,p+OFF), set:(a,b,p)=>TL.set(a,b,p+OFF)};
+const r = Motion.rand(17);
+const NS = 'http://www.w3.org/2000/svg';
+const $ = s => document.querySelector(s);
+const mk = (tag, attrs, parent) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); parent && parent.appendChild(e); return e; };
+const drawOn = (el, t0, dur, ease) => { const L = el.getTotalLength ? el.getTotalLength() : 900; el.style.strokeDasharray = L + ' ' + L; tl.fromTo(el, {strokeDashoffset: L}, {strokeDashoffset: 0, duration: dur, ease: ease || 'power1.inOut'}, t0); };
+
+// 비트 표 (초)
+const BEATS = [['#sA',0,1.0],['#sW',1.0,1.8],['#sB',1.8,2.8],['#sD',2.8,3.8],['#sC',3.8,4.6],['#sS',4.6,5.3],['#sBr',5.3,6.0],['#sE',6.0,7.2],['#sM',7.2,7.9],['#sF',7.9,8.8],['#sR',8.8,9.5],['#sG',9.5,10.5],['#sHs',10.5,11.1],['#sL',11.1,12.9],['#sTc',12.9,13.5],['#sK',13.5,17.4],['#sH',17.4,18.8],['#sI',18.8,99]];
+BEATS.forEach(([s,a,b],i) => { if (i) tl.set(s,{visibility:'visible'},a); if (b < 99) tl.set(s,{visibility:'hidden'},b); });
+
+/* ---------- a 수중: 캔버스, 시간 함수 ---------- */
+const cA = $('#cA').getContext('2d');
+const fish = Array.from({length:170},()=>({rad:90+r()*380, th:r()*6.283, w:(0.9+r()*0.8)*(r()<.85?1:-1), s:5+r()*5, c:['#3f6f73','#a2553a','#556a7a','#7a8f6a','#2f4f5c','#b07a52'][Math.floor(r()*6)], tilt:0.5+r()*0.12}));
+const bub = Array.from({length:46},()=>({x:r()*1280, y:r()*900, v:60+r()*110, rr:2+r()*6, ph:r()*6}));
+const weeds = Array.from({length:26},()=>({x:r()*1280, h:90+r()*190, ph:r()*6}));
+function drawA(t){
+  const c = cA, cx = 640, cy = 330;
+  const g = c.createLinearGradient(0,0,0,720); g.addColorStop(0,'#b9d3cc'); g.addColorStop(.45,'#7fa9a7'); g.addColorStop(1,'#4d7c80');
+  c.fillStyle = g; c.fillRect(0,0,1280,720);
+  // 빛줄기
+  for (let i=0;i<9;i++){ const x = i*160 - 80 + Math.sin(t*0.8+i)*18; c.fillStyle = 'rgba(255,255,240,0.07)';
+    c.beginPath(); c.moveTo(x,0); c.lineTo(x+70,0); c.lineTo(x+250,720); c.lineTo(x+120,720); c.fill(); }
+  // 해초
+  c.lineCap='round';
+  weeds.forEach(w=>{ c.strokeStyle='rgba(38,66,52,.75)'; c.lineWidth=5; c.beginPath(); c.moveTo(w.x,730);
+    c.quadraticCurveTo(w.x+Math.sin(t*1.4+w.ph)*22, 730-w.h*.5, w.x+Math.sin(t*1.4+w.ph+1)*30, 730-w.h); c.stroke(); });
+  // 물고기 떼: 물방울 주위를 소용돌이
+  const tight = 1 - 0.18*Math.min(1,t/1.6);
+  fish.forEach(f=>{ const th = f.th + f.w*t*1.1; const R = f.rad*tight;
+    const x = cx + Math.cos(th)*R, y = cy + Math.sin(th)*R*f.tilt;
+    const ang = Math.atan2(Math.cos(th)*R*f.tilt*f.w, -Math.sin(th)*R*f.w);
+    c.save(); c.translate(x,y); c.rotate(ang); c.fillStyle=f.c; c.globalAlpha=.85;
+    c.beginPath(); c.ellipse(0,0,f.s,f.s*.38,0,0,6.283); c.fill();
+    c.beginPath(); c.moveTo(-f.s*.8,0); c.lineTo(-f.s*1.5,-f.s*.4); c.lineTo(-f.s*1.5,f.s*.4); c.fill(); c.restore(); });
+  c.globalAlpha=1;
+  // 기포
+  bub.forEach(b=>{ const y = ((b.y - b.v*t) % 900 + 900) % 900 - 90; const x = b.x + Math.sin(t*3+b.ph)*6;
+    c.strokeStyle='rgba(255,255,255,.8)'; c.lineWidth=1.4; c.fillStyle='rgba(255,255,255,.25)';
+    c.beginPath(); c.arc(x,y,b.rr,0,6.283); c.fill(); c.stroke(); });
+  // 물방울 캐릭터
+  const by = cy + Math.sin(t*2.2)*5;
+  const rg = c.createRadialGradient(cx-6,by-8,2,cx,by,24); rg.addColorStop(0,'#cfe4f2'); rg.addColorStop(1,'#6f9cc0');
+  c.fillStyle=rg; c.beginPath(); c.arc(cx,by,22,0,6.283); c.fill();
+  c.strokeStyle='rgba(255,255,255,.9)'; c.lineWidth=2.5; c.beginPath(); c.arc(cx,by,27,0,6.283); c.stroke();
+  c.fillStyle='#24384f'; c.beginPath(); c.arc(cx-7,by-2,2.6,0,6.283); c.arc(cx+7,by-2,2.6,0,6.283); c.fill();
+  c.strokeStyle='#24384f'; c.lineWidth=1.6; c.beginPath(); c.arc(cx,by+5,4,0.2,2.9); c.stroke();
+  // 비네트
+  const v = c.createRadialGradient(640,360,300,640,360,800); v.addColorStop(0,'rgba(0,0,0,0)'); v.addColorStop(1,'rgba(20,40,45,.35)');
+  c.fillStyle=v; c.fillRect(0,0,1280,720);
+}
+
+/* ---------- b 눈송이 ---------- */
+OFF = 0.2;
+const clouds = $('#clouds');
+const cloudCols = ['#8ea2b6','#a8a3bf','#6e8194','#b6c4d2','#99aec2','#7f8aa3'];
+for (let i=0;i<22;i++){ const a = r()*6.283, d = 290+r()*330;
+  mk('circle',{cx:640+Math.cos(a)*d*1.35, cy:360+Math.sin(a)*d*0.8, r:110+r()*120, fill:cloudCols[i%6], opacity:.42+r()*.25}, clouds); }
+const flake = $('#flake');
+for (let k=0;k<6;k++){ const a = k*60;
+  const p = mk('path',{d:'M0 0 L150 0 M55 0 L88 -32 M55 0 L88 32 M92 0 L118 -24 M92 0 L118 24 M122 0 L138 -14 M122 0 L138 14 M24 0 L36 -12 M24 0 L36 12',
+    transform:`rotate(${a})`, fill:'none', stroke:'#3d5f8f', 'stroke-width':4, 'stroke-linecap':'round'}, flake);
+  drawOn(p, 1.65+k*0.04, 0.85, 'power2.out'); }
+mk('circle',{r:13,fill:'#2f4c78'},flake);
+tl.fromTo('#flake',{attr:{transform:'translate(640 360) rotate(-20) scale(.75)'}},{attr:{transform:'translate(640 360) rotate(8) scale(1.12)'},duration:1.4,ease:'power2.out'},1.6);
+tl.fromTo('#clouds',{scale:1.08,transformOrigin:'640px 360px'},{scale:1,duration:1.4,ease:'none'},1.6);
+
+/* ---------- c 호박색 매크로 ---------- */
+OFF = 0;
+const cC = $('#cC').getContext('2d');
+const cells = Array.from({length:64},(_,i)=>({a:i/64*6.283, s:20+r()*16, o:r()*30-10}));
+const specks = Array.from({length:120},()=>({x:r()*1280, y:r()*380, a:r()}));
+function drawC(lt){
+  const c = cC; c.fillStyle='#0d0905'; c.fillRect(0,0,1280,720);
+  specks.forEach(s=>{ c.fillStyle=`rgba(255,220,170,${.15+s.a*.3})`; c.fillRect(s.x+lt*8, s.y-lt*5, 1.6,1.6); });
+  const CX=640, CY=1480, R=1120;
+  const g = c.createRadialGradient(CX,CY-R+80,40,CX,CY,R); g.addColorStop(0,'#f6cf63'); g.addColorStop(.12,'#e0a83c'); g.addColorStop(.5,'#b06d1e'); g.addColorStop(1,'#7a4810');
+  c.fillStyle=g; c.beginPath(); c.arc(CX,CY,R,0,6.283); c.fill();
+  // 표면 결
+  c.strokeStyle='rgba(255,230,160,.25)'; c.lineWidth=2;
+  for (let k=1;k<5;k++){ c.beginPath(); c.arc(CX,CY,R-40*k-lt*6,3.6,5.82); c.stroke(); }
+  // 가장자리 세포 링, 천천히 회전
+  const rot = lt*0.035;
+  cells.forEach(e=>{ const a = e.a + rot; if (Math.sin(a) > -0.8) return;
+    const x = CX + Math.cos(a)*(R+e.o*.6), y = CY + Math.sin(a)*(R+e.o*.6);
+    const rg = c.createRadialGradient(x-e.s*.3,y-e.s*.35,1,x,y,e.s);
+    rg.addColorStop(0,'rgba(255,250,230,.85)'); rg.addColorStop(.25,'rgba(255,225,160,.18)'); rg.addColorStop(.8,'rgba(150,95,40,.35)'); rg.addColorStop(1,'rgba(90,55,20,.75)');
+    c.fillStyle=rg; c.beginPath(); c.ellipse(x,y,e.s*1.15,e.s*.8,a+1.571,0,6.283); c.fill(); });
+}
+
+/* ---------- d 행성 가장자리 ---------- */
+const cD = $('#cD').getContext('2d');
+const dust = Array.from({length:110},()=>({x:r()*1500-110, y:r(), s:.8+r()*2.6, v:.5+r()}));
+const stars = Array.from({length:90},()=>({x:r()*1280, y:r()*300, a:r()}));
+const bands = Array.from({length:7},(_,i)=>({o:30+i*38+r()*20, a:.015+r()*.025}));
+function drawD(lt){
+  const c = cD; const sky = c.createLinearGradient(0,0,0,420);
+  sky.addColorStop(0,'#0b1218'); sky.addColorStop(1,'#060708'); c.fillStyle=sky; c.fillRect(0,0,1280,720);
+  stars.forEach(s=>{ c.fillStyle=`rgba(220,235,255,${.08+s.a*.25})`; c.fillRect(s.x,s.y,1.3,1.3); });
+  const k = 1 + lt*0.04; c.save(); c.translate(640,720); c.scale(k,k); c.translate(-640,-720);
+  const CX=640, CY=2300, R=1900;
+  // 대기층: 바깥 청회색 → 안쪽 주황 띠
+  const atm = c.createRadialGradient(CX,CY,R-4,CX,CY,R+230);
+  atm.addColorStop(0,'rgba(255,120,40,1)'); atm.addColorStop(.06,'rgba(255,150,60,.9)'); atm.addColorStop(.16,'rgba(240,170,110,.55)');
+  atm.addColorStop(.3,'rgba(150,175,190,.45)'); atm.addColorStop(.55,'rgba(80,120,145,.28)'); atm.addColorStop(.8,'rgba(30,55,75,.12)'); atm.addColorStop(1,'rgba(0,0,0,0)');
+  c.fillStyle=atm; c.beginPath(); c.arc(CX,CY,R+230,0,6.283); c.fill();
+  // 어두운 몸체
+  const g = c.createRadialGradient(CX,CY-R,0,CX,CY-R+260,520); g.addColorStop(0,'#3a1a0c'); g.addColorStop(.25,'#1d0f09'); g.addColorStop(1,'#0c0807');
+  c.fillStyle=g; c.beginPath(); c.arc(CX,CY,R,0,6.283); c.fill();
+  // 빛나는 림
+  c.save(); c.shadowColor='#ff7a2a'; c.shadowBlur=26; c.strokeStyle='#ffb070'; c.lineWidth=3;
+  c.beginPath(); c.arc(CX,CY,R,4.0,5.43); c.stroke(); c.restore();
+  // 표면 띠
+  bands.forEach(b=>{ c.strokeStyle=`rgba(180,90,40,${b.a})`; c.lineWidth=10; c.beginPath(); c.arc(CX,CY,R-b.o,4.0,5.43); c.stroke(); });
+  // 흐르는 먼지
+  dust.forEach(d=>{ const x = d.x + lt*40*d.v; const yy = 430 + d.y*290;
+    c.fillStyle=`rgba(15,6,3,${.5+d.y*.4})`; c.beginPath(); c.arc(x,yy,d.s,0,6.283); c.fill();
+    c.fillStyle=`rgba(255,170,100,${.12*(1-d.y)})`; c.beginPath(); c.arc(x-1,yy-1,d.s*.6,0,6.283); c.fill(); });
+  c.restore();
+}
+
+/* ---------- e 청사진 ---------- */
+OFF = 0.4;
+const bp = $('#bp');
+const bpPaths = [
+  'M-40 690 A820 640 0 0 1 1320 690',            // 큰 호
+  'M-40 760 A780 560 0 0 1 1320 760',
+  'M-20 40 L520 360','M-20 100 L470 390','M-20 160 L420 420',  // 평행선 묶음
+  'M40 -20 L520 260','M80 -20 L560 260','M120 -20 L600 255',
+  'M30 60 L230 60 L230 200 L30 200 Z','M90 60 L90 200','M160 60 L160 200',  // 격자 사각
+  'M-40 600 A820 640 0 0 1 1320 600',
+  'M960 -10 L1120 160 L1280 20',                  // 모서리
+  'M200 120 L380 40 L470 170',
+  'M820 420 L1120 120'
+];
+bpPaths.forEach((d,i)=>{ const p = mk('path',{d},bp); drawOn(p, 5.62+i*0.09, 0.75, 'power2.out'); });
+for (let i=0;i<13;i++){ const a = Math.PI*(1.12+i*0.06); const cx=640, cy=1050, R1=760, R2=860;
+  const p = mk('path',{d:`M${cx+Math.cos(a)*R1*1.08} ${cy+Math.sin(a)*R1*.84} L${cx+Math.cos(a)*R2*1.08} ${cy+Math.sin(a)*R2*.84}`, 'stroke-width':10}, bp);
+  drawOn(p, 6.1+i*0.04, 0.3); }
+tl.fromTo('#bp',{x:20,y:10},{x:-10,y:-6,duration:1.4,ease:'none'},5.6);
+
+/* ---------- f 찢긴 종이 ---------- */
+OFF = 0.9;
+(function(){
+  const nz = x => Math.sin(x*.011)*14 + Math.sin(x*.037+1.3)*7;
+  let d = 'M-40 900 L-40 400', x = -40; const tops = [];
+  while (x < 1320){ const w = 50 + r()*110, h = 50 + r()*160, base = 420 + nz(x), x2 = x + w;
+    // 한 덩어리: 거의 수직으로 솟고, 윗면은 평평하되 들쭉날쭉 찢긴 이빨
+    const top = base - h, rise = 3 + r()*6, n = Math.max(4, Math.round(w/9));
+    d += ` L${(x+rise).toFixed(1)} ${(top+(r()-.5)*10).toFixed(1)}`;
+    for (let i=1;i<n;i++){ const xx = x + rise + (w-2*rise)*i/n; const y = top + (r()<.25 ? 10+r()*22 : (r()-.5)*9);
+      d += ` L${xx.toFixed(1)} ${y.toFixed(1)}`; if (i===Math.round(n/2)) tops.push([xx,y]); }
+    d += ` L${(x2-rise).toFixed(1)} ${(top+(r()-.5)*10).toFixed(1)} L${x2.toFixed(1)} ${(base-(r()*14)).toFixed(1)}`;
+    x = x2; }
+  d += ' L1320 900 Z'; $('#tornPath').setAttribute('d', d);
+  const fib = $('#fibers');
+  for (let i=0;i<140;i++){ const fx = r()*1280, fy = 300+r()*160; mk('line',{x1:fx, y1:fy, x2:fx+(r()-.5)*30, y2:fy+120+r()*320, stroke:['#5e2329','#24090c','#7a3a36'][Math.floor(r()*3)], 'stroke-width':2+r()*9, opacity:.35+r()*.4}, fib); }
+  for (let i=0;i<70;i++){ const t = tops[Math.floor(r()*tops.length)]; mk('ellipse',{cx:t[0]+(r()-.5)*90, cy:t[1]+20+r()*170, rx:2+r()*7, ry:1+r()*3, fill:'#d9b0a0', opacity:.25+r()*.45}, fib); }
+})();
+tl.fromTo('#torn',{y:420},{y:0,duration:1.0,ease:'power3.out'},7.0);
+tl.to('#torn',{y:-14,duration:0.2,ease:'none'},8.0);
+
+/* ---------- g 자수 ---------- */
+OFF = 1.3;
+(function(){
+  const holes = $('#holes'), q = t => { const x = (1-t)*(1-t)*-40 + 2*(1-t)*t*640 + t*t*1320, y = (1-t)*(1-t)*520 + 2*(1-t)*t*230 + t*t*520; return [x, y+36]; };
+  let gd = '';
+  for (let i=0;i<=46;i++){ const [x,y] = q(i/46); mk('circle',{cx:x.toFixed(1), cy:y.toFixed(1), r:4.2}, holes);
+    if (i>=10 && i<=22) gd += (gd?' L':'M') + x.toFixed(1)+' '+y.toFixed(1); }
+  $('#green').setAttribute('d', gd);
+  const [hx,hy] = q(23/46);
+  $('#red').setAttribute('d', `M${hx-60} ${hy+4} L${hx} ${hy} L${hx+30} ${hy-90} L${hx+5} ${hy-150} L${hx+48} ${hy-235} L${hx+36} ${hy-330}`);
+})();
+drawOn($('#green'), 8.25, 0.7, 'none');
+drawOn($('#red'), 8.55, 0.8, 'power2.out');
+tl.fromTo('#red',{y:30},{y:-25,duration:1.0,ease:'power2.out'},8.5);
+
+/* ---------- h 잉크 스케치 ---------- */
+OFF = 7.9;
+(function(){
+  const sc = $('#scrib');
+  // 버섯 주름: 중심(640,1180)에서 퍼지는 방사선, 가장자리에서 안쪽으로 그려지며 왼→오 번짐
+  const CX = 640, CY = 1080, N = 300;
+  for (let i=0;i<N;i++){ const a = Math.PI*(1.06 + 0.88*i/N) + (r()-.5)*0.004;
+    const R2 = 770 + r()*14, R1 = 420 + r()*200;
+    const p = mk('path',{d:`M${(CX+Math.cos(a)*R2).toFixed(1)} ${(CY+Math.sin(a)*R2).toFixed(1)} L${(CX+Math.cos(a)*R1).toFixed(1)} ${(CY+Math.sin(a)*R1).toFixed(1)}`,
+      stroke: i%3===0 ? '#ff8a55' : (i%3===1 ? '#6e1a0d' : '#4a0f07'), 'stroke-width':(1.4+r()*2.6).toFixed(2), opacity:(0.45+r()*0.5).toFixed(2)}, sc);
+    drawOn(p, 9.52 + (i/N)*0.7 + r()*0.08, 0.3 + r()*0.2, 'power2.out'); }
+  const rim = mk('path',{d:'M-140 1080 A780 780 0 0 1 1420 1080', stroke:'#f0a07a', 'stroke-width':3, opacity:.55}, sc); drawOn(rim, 9.5, 0.6, 'power2.out');
+})();
+tl.fromTo('#disc',{opacity:0,y:14,filter:'blur(6px)'},{opacity:1,y:0,filter:'blur(0px)',duration:0.5,ease:'power3.out'},9.55);
+tl.fromTo('#scrib',{scale:1.06,svgOrigin:'640 720'},{scale:1,duration:1.5,ease:'power2.out'},9.5);
+
+/* ---------- i 타이틀 ---------- */
+OFF = 7.8;
+const mark = $('#mark');
+for (let i=0;i<8;i++){ const a = i*45 + (i%2?6:-4), L = i%2 ? 20 : 26, rad = a*Math.PI/180;
+  const ln = mk('line',{x1:0,y1:0,x2:(Math.cos(rad)*L).toFixed(2),y2:(Math.sin(rad)*L).toFixed(2)}, mark);
+  drawOn(ln, 12.6 + i*0.03, 0.4, 'power2.out'); }
+tl.fromTo('#opus',{opacity:0,y:22,filter:'blur(8px)'},{opacity:1,y:0,filter:'blur(0px)',duration:0.8,ease:'power2.out'},11.1);
+tl.to('#opus',{opacity:0,y:-10,filter:'blur(8px)',duration:0.35,ease:'power2.in'},12.35);
+tl.fromTo('#claude',{opacity:0,filter:'blur(8px)'},{opacity:1,filter:'blur(0px)',duration:0.5,ease:'power2.out'},12.55);
+tl.fromTo('#mark',{rotation:-40,svgOrigin:'0 0'},{rotation:0,duration:0.9,ease:'power3.out'},12.55);
+tl.fromTo('#glowB',{opacity:.7},{opacity:1,duration:3.5,ease:'none'},11.0);
+tl.to('#glowO',{opacity:.55,duration:1.2,ease:'power1.inOut'},13.3);
+// 마지막 비트: 왼쪽으로 밀리고 + 와 손그림 워드마크
+tl.to('#claude',{x:440,duration:0.6,ease:'power3.inOut'},14.5);
+tl.to('#plus',{opacity:1,duration:0.25},14.85);
+tl.fromTo('#plus',{scale:.4,svgOrigin:'630 370'},{scale:1,duration:0.4,ease:'back.out(2)'},14.85);
+// 손그림 블록 글자 LAB: 다각형 윤곽을 잘게 나눠 흔들고 두 겹으로 그린다
+const GL = [
+  [0,[[0,0],[22,0],[22,70],[56,70],[56,92],[0,92]]],
+  [70,[[0,92],[24,0],[50,0],[74,92],[51,92],[46,72],[28,72],[23,92]]], [70,[[32,54],[37,28],[42,54]]],
+  [158,[[0,0],[48,0],[62,12],[62,36],[54,46],[66,58],[66,80],[54,92],[0,92]]], [158,[[20,16],[42,16],[42,36],[20,36]]], [158,[[20,56],[46,56],[46,76],[20,76]]]
+];
+const jit = (pts, ox, amp) => { let d = ''; const P = pts.concat([pts[0]]);
+  for (let k=0;k<P.length-1;k++){ const [x1,y1]=P[k],[x2,y2]=P[k+1]; const n = Math.max(2,Math.round(Math.hypot(x2-x1,y2-y1)/7));
+    for (let i=0;i<n;i++){ const u=i/n; const X = (x1+(x2-x1)*u)*1.15+ox+(r()-.5)*amp, Y = (y1+(y2-y1)*u)*1.15+318+(r()-.5)*amp; d += (d?' L':'M')+X.toFixed(1)+' '+Y.toFixed(1); } }
+  return d + ' Z'; };
+[['#wmA',2.2,0],['#wmB',3.4,0.07]].forEach(([g,amp,dl])=>{ GL.forEach(([ox,pts],gi)=>{
+  const p = mk('path',{d:jit(pts, 690+ox, amp)}, $(g)); drawOn(p, 14.95+dl+gi*0.05, 0.6, 'power1.inOut'); }); });
+tl.set('#wm',{opacity:1},14.95);
+
+/* ---------- 새 비트들 (절대 시각) ---------- */
+OFF = 0;
+const at = (sel) => document.querySelector(sel);
+// w 파도: 물마루가 밀려오고 소용돌이가 감긴다
+for (let i=0;i<26;i++) mk('circle',{cx:(470+r()*260).toFixed(0), cy:(110+r()*170).toFixed(0), r:(1.5+r()*4).toFixed(1), opacity:(.4+r()*.5).toFixed(2)}, at('#spray'));
+TL.fromTo('#wave',{x:90,y:30},{x:-20,y:0,duration:0.8,ease:'power2.out'},1.0);
+TL.fromTo('#whirl',{rotation:-70,svgOrigin:'555 190'},{rotation:40,duration:0.8,ease:'power1.out'},1.0);
+document.querySelectorAll('#whirl path').forEach((p,i)=>{ const L=p.getTotalLength(); p.style.strokeDasharray=L+' '+L; TL.fromTo(p,{strokeDashoffset:L},{strokeDashoffset:0,duration:0.45,ease:'power2.out'},1.02+i*0.06); });
+TL.fromTo('#spray',{y:20,opacity:0},{y:-30,opacity:1,duration:0.7,ease:'power2.out'},1.05);
+// s 모래 언덕: 천천히 다가가고 꽃이 흔들린다
+TL.fromTo('#dune',{scale:1.1,svgOrigin:'640 700'},{scale:1,duration:0.7,ease:'power2.out'},4.6);
+TL.fromTo('#flower',{rotation:-8,svgOrigin:'600 452'},{rotation:6,duration:0.7,ease:'sine.inOut'},4.6);
+// br 빵: 금이 그어지며 속살이 벌어진다
+{ const c = at('#brCrack'), L = c.getTotalLength(); c.style.strokeDasharray = L+' '+L; TL.fromTo(c,{strokeDashoffset:L},{strokeDashoffset:0,duration:0.4,ease:'power2.out'},5.32); }
+TL.fromTo('#brIn',{opacity:0,x:30},{opacity:1,x:0,duration:0.4,ease:'power3.out'},5.45);
+TL.fromTo('#bread',{y:30},{y:-6,duration:0.7,ease:'power2.out'},5.3);
+// m 달: 분화구가 있는 흰 지평선이 떠오른다
+for (let i=0;i<34;i++){ const a = Math.PI*(1.22+r()*0.56), d = 760+r()*90; mk('ellipse',{cx:(640+Math.cos(a)*d).toFixed(0), cy:(1180+Math.sin(a)*d).toFixed(0), rx:(6+r()*26).toFixed(0), ry:(3+r()*9).toFixed(0), opacity:(.25+r()*.5).toFixed(2)}, at('#craters')); }
+TL.fromTo('#moon',{y:70},{y:0,duration:0.7,ease:'power3.out'},7.2);
+// r 붉은 기포: 가장자리를 따라 방울이 솟는다
+const rb = [];
+for (let i=0;i<16;i++){ const a = Math.PI*(1.12+i*0.05), R0 = 790; const x = 640+Math.cos(a)*1000*R0/780, y = 1180+Math.sin(a)*R0; const rr = 18+r()*34;
+  rb.push(mk('circle',{cx:x.toFixed(0), cy:(y-rr*.4).toFixed(0), r:rr.toFixed(0), fill:'url(#rBub)'}, at('#rbubs'))); }
+TL.fromTo(rb,{scale:0,transformOrigin:'50% 100%'},{scale:1,duration:0.35,ease:'back.out(2.2)',stagger:0.025},8.82);
+// hs 말: 둥근 언덕 위를 뛰어 지나간다
+const hx = {v:0}, legs = [...document.querySelectorAll('#horse .leg')];
+TL.fromTo(hx,{v:0},{v:1,duration:0.6,ease:'none',onUpdate(){ const u = hx.v, x = 240+u*820, y = 330 - Math.sin(u*Math.PI)*70;
+  at('#horse').setAttribute('transform',`translate(${x.toFixed(1)} ${y.toFixed(1)}) rotate(${(-8+u*14).toFixed(1)})`);
+  legs.forEach((g,i)=>{ const [px,py] = g.dataset.p.split(' '); g.setAttribute('transform',`rotate(${(Math.sin(u*18+i*1.7)*30).toFixed(1)} ${px} ${py})`); }); }},10.5);
+// l 잎과 물방울: 맺히고, 떨어지고, 수련 사이로 내려간다
+['#cfe3c0','#f2d9dc','#dce9cf','#e9dfe9','#c9ddb8'].forEach((c,i)=>{ for (let k=0;k<4;k++) mk('circle',{cx:(r()*1280).toFixed(0), cy:(r()*720).toFixed(0), r:(90+r()*140).toFixed(0), fill:c, opacity:.6}, at('#lBlobs')); });
+for (let i=0;i<14;i++) mk('ellipse',{cx:(r()*1280).toFixed(0), cy:(r()*720).toFixed(0), rx:(70+r()*90).toFixed(0), ry:(30+r()*40).toFixed(0), fill:i%2?'#9cbf74':'#b5cf8c', opacity:.75}, at('#pads'));
+TL.fromTo('#leaf',{rotation:-4,svgOrigin:'500 240'},{rotation:3,duration:0.9,ease:'sine.inOut'},11.1);
+TL.fromTo('#drop',{attr:{transform:'translate(840 318) scale(.25)'}},{attr:{transform:'translate(840 352) scale(1)'},duration:0.8,ease:'power2.out'},11.15);
+TL.to('#drop',{attr:{transform:'translate(840 370) scale(1.05 .92)'},duration:0.12,ease:'sine.inOut',yoyo:true,repeat:1},11.95);
+TL.to('#leafG',{y:-420,duration:0.6,ease:'power3.in'},12.2);
+TL.to('#drop',{attr:{transform:'translate(760 400) scale(1)'},duration:0.6,ease:'power2.inOut'},12.2);
+TL.to('#lBlobs',{y:-300,duration:0.6,ease:'power3.in'},12.2);
+TL.fromTo('#pads',{opacity:0,y:240},{opacity:1,y:0,duration:0.6,ease:'power3.out'},12.3);
+// tc 원반: 물방울이 떨어진 자리에서 동심원이 퍼진다(매치컷)
+for (let i=0;i<9;i++){ const a = r()*6.283, d = 80+r()*190; mk('ellipse',{cx:(560+Math.cos(a)*d).toFixed(0), cy:(380+Math.sin(a)*d).toFixed(0), rx:(14+r()*16).toFixed(0), ry:(7+r()*6).toFixed(0), transform:`rotate(${(r()*180).toFixed(0)} ${(560+Math.cos(a)*d).toFixed(0)} ${(380+Math.sin(a)*d).toFixed(0)})`}, at('#dleaves')); }
+const rings = [60,115,170,230].map(rr=>mk('circle',{cx:560,cy:380,r:rr}, at('#rings')));
+TL.fromTo(rings,{scale:0,opacity:1,svgOrigin:'560 380'},{scale:1,opacity:.85,duration:0.5,ease:'expo.out',stagger:0.05},12.9);
+TL.fromTo('#disc2',{rotation:-14,scale:1.08,svgOrigin:'560 380'},{rotation:6,scale:1,duration:0.6,ease:'power2.out'},12.9);
+// k 터미널: 타자 → 선 → 로직 → 글자가 살아난다
+const typeOn = (el, str, t0, cps) => { const o = {n:0}; el.textContent = ''; TL.to(o,{n:str.length,duration:str.length/(cps||26),ease:'none',onUpdate(){ el.textContent = str.slice(0, Math.round(o.n)); }},t0); };
+const blink = (t0, t1) => { for (let t=t0, k=0; t<t1; t+=0.22, k++) TL.set('#sK .kcur',{opacity:k%2?0:1},t); TL.set('#sK .kcur',{opacity:1},t1); };
+TL.set('#k1',{opacity:1},13.5); typeOn(at('#t1'),'started with a',13.55,24); blink(14.2,14.5); TL.set('#k1',{opacity:0},14.5);
+TL.set('#k2',{opacity:1},14.5); typeOn(at('#t2'),'and',14.52,18); blink(14.7,14.9);
+typeOn(at('#t2b'),' a',14.9,20);
+{ const kl = at('#kline'); TL.fromTo(kl,{attr:{x2:140}},{attr:{x2:1150},duration:0.45,ease:'expo.out'},15.0); }
+TL.fromTo('#klab',{opacity:0,y:8},{opacity:1,y:0,duration:0.25,ease:'power3.out'},15.25);
+TL.set('#k2',{opacity:0},15.6);
+TL.set('#k3',{opacity:1},15.6);
+typeOn(at('#t3a'),'typed',15.62,34); typeOn(at('#t3b'),' a little logic();',15.78,40); typeOn(at('#t3c'),'now the ',16.25,40);
+const fw = at('#flyw'); 'letters'.split('').forEach(ch=>{ const sp = document.createElement('span'); sp.className='flyc'; sp.textContent=ch; fw.appendChild(sp); });
+const fly = [...fw.children];
+TL.fromTo(fly,{opacity:0},{opacity:1,duration:0.01,stagger:0.025},16.45);
+fly.forEach((c,i)=> TL.to(c,{y:60+((i*37)%5)*26, x:i*22, scale:2.6+(i%3)*0.6, rotation:(i%2?12:-10), duration:0.45, ease:'back.out(1.6)'},16.65+i*0.02));
+TL.set('#k3',{opacity:0},16.95);
+TL.set('#k4',{opacity:1},16.95);
+typeOn(at('#t4'),'come alive',16.95,40);
+const bigL = at('#bigL'); 'LETTERS'.split('').forEach((ch,i)=>{ const sp = document.createElement('span'); sp.textContent = ch; sp.style.color = [0,3,6].includes(i) ? '#c6f432' : '#f2f2ee'; bigL.appendChild(sp); });
+TL.fromTo([...bigL.children],{y:140,opacity:0,rotation:(i)=>i%2?14:-12},{y:(i)=>[0,-14,10,-22,4,-10,6][i],opacity:1,rotation:(i)=>[-6,4,-3,7,-4,5,-2][i],duration:0.4,ease:'back.out(2.4)',stagger:0.035},17.0);
+
+/* ---------- 캔버스 시계: 모든 시간 함수가 이 트윈 하나에 묶인다 ---------- */
+const clk = {t:0};
+OFF = 0;
+const render = () => { const t = clk.t; if (t < 1.0) drawA(t*1.4); else if (t >= 2.8 && t < 3.8) drawD(t-2.8); else if (t >= 3.8 && t < 4.6) drawC(t-3.8); };
+TL.fromTo(clk,{t:0},{t:24.5,duration:24.5,ease:'none',onUpdate:render},0);
+drawA(0);
+Motion.ready();
+</script></body></html>

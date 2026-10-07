@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><title>제약이 만든 해법: 직접 만든 글꼴 · Constraint Font</title>
+<link rel="stylesheet" href="../../lib/stage.css">
+<style>
+.frame{background:#0b1012 !important;background-image:none !important}
+.scene{position:absolute;inset:0;overflow:hidden;font-family:Pretendard,'Noto Sans KR',sans-serif;color:#e9f1ef;letter-spacing:-.01em}
+.bg{position:absolute;inset:0;background:radial-gradient(55% 75% at 12% -5%,#15493e 0%,rgba(21,73,62,0) 70%),radial-gradient(55% 75% at 105% 105%,#2c2257 0%,rgba(44,34,87,0) 70%),#0b1012}
+.tag{position:absolute;display:flex;gap:8px;align-items:center;font:600 12px/1 'IBM Plex Mono',monospace;letter-spacing:.12em;color:#9fb3ae;text-transform:uppercase;white-space:nowrap}
+.tag b{background:#3ee6a8;color:#06231a;padding:3px 6px;border-radius:4px;font-weight:700}
+.panel{position:absolute;background:rgba(18,26,28,.82);border:1px solid rgba(255,255,255,.09);border-radius:12px}
+.code{font:13px/1.75 'IBM Plex Mono',monospace;color:#b9c9c4;white-space:pre}
+.chip{position:absolute;padding:7px 14px;border-radius:999px;border:1px solid rgba(62,230,168,.45);color:#bff5df;font:600 14px/1 Pretendard;background:rgba(62,230,168,.08);white-space:nowrap}
+.mint{color:#3ee6a8}.red{color:#ff5d4f}
+
+.rc{position:absolute;top:170px;width:220px;height:330px;border-radius:14px;padding:22px}
+.rc small{font:700 12px 'IBM Plex Mono';letter-spacing:.1em}
+.rc h3{font:900 34px/1.15 Pretendard;margin:10px 0 0}
+.rc p{position:absolute;left:22px;bottom:40px;font:500 13px/1.5 Pretendard;margin:0;color:#cfdcd8}
+.r1{left:90px;background:linear-gradient(160deg,rgba(62,230,168,.22),rgba(62,230,168,.05));border:2px solid #3ee6a8;color:#3ee6a8}
+.r2{left:970px;background:linear-gradient(160deg,rgba(255,93,79,.25),rgba(255,93,79,.05));border:2px solid #ff5d4f;color:#ff5d4f}
+.ed{position:absolute;left:350px;top:130px;width:580px;height:420px}
+.gl{position:absolute;left:0;right:0;height:1px;background:rgba(255,255,255,.18)}
+.gn{position:absolute;left:-2px;font:600 11px 'IBM Plex Mono';color:#7c8f8a;transform:translateX(-100%);padding-right:8px}
+.q{position:absolute;left:350px;right:350px;top:250px;text-align:center;font:900 140px Pretendard;color:#3a4644}
+.ofl{position:absolute;left:760px;top:120px;padding:8px 16px;border-radius:8px;background:#3ee6a8;color:#06231a;font:800 18px Pretendard;transform:rotate(-8deg)}
+.lab{position:absolute;left:0;right:0;top:580px;text-align:center;font:800 28px Pretendard}
+.hd{position:absolute;left:0;right:0;top:56px;text-align:center;font:800 26px Pretendard;color:#cfdcd8}
+</style></head>
+<body data-no="G09" data-cat="문법 · 제약" data-ko="제약이 만든 해법: 직접 만든 글꼴" data-en="Constraint → Own Font" data-meta="10초 · OFL만 + 외부 자료 금지 → 글꼴을 그려 라이선스 첨부" data-dur="10" data-poster="9.4" data-size="1280x720">
+<main class="scene"><div class="bg"></div>
+  <div class="hd" id="hd">극단적인 요구 두 개가 <span class="red">충돌</span>하면?</div>
+  <div class="rc r1" id="c1"><small>RULE 01</small><h3>OFL<br>폰트만</h3><p>SIL Open Font<br>License 1.1</p></div>
+  <div class="rc r2" id="c2"><small>RULE 02</small><h3>외부 자료<br>금지</h3><p>가져온 것은<br>쓰지 않는다</p></div>
+  <div class="q" id="q">?</div>
+  <div class="ed" id="ed">
+    <div class="gl" style="top:40px"></div><div class="gn" style="top:32px">ASCENT</div>
+    <div class="gl" style="top:200px"></div><div class="gn" style="top:192px">MIDDLE</div>
+    <div class="gl" style="top:380px"></div><div class="gn" style="top:372px">BASELINE</div>
+    <svg width="580" height="420" id="gs"></svg>
+  </div>
+  <div class="ofl" id="ofl">● OFL 1.1</div>
+  <div class="lab" id="lb">Claude가 <span class="mint">글꼴을 직접 그리고</span> 라이선스를 붙였다</div>
+</main>
+<script src="../../lib/gsap.min.js"></script><script src="../../lib/stage.js"></script>
+<script>
+// '글' 자를 사각 획(rect) 9개로 구성 — 한 획씩 자라난다
+const strokes = [[160,50,260,26],[394,50,26,120],[160,144,260,26],[120,200,340,26],[160,250,260,24],[396,250,24,74],[160,300,260,24],[160,300,24,80],[160,356,260,24]];
+document.getElementById('gs').innerHTML = strokes.map(s => `<rect class="st" x="${s[0]}" y="${s[1]}" width="${s[2]}" height="${s[3]}" fill="none" stroke="#e9f1ef" stroke-width="3"/>`).join('') + strokes.map(s => `<rect class="fl" x="${s[0]}" y="${s[1]}" width="${s[2]}" height="${s[3]}" fill="#e9f1ef" opacity="0"/>`).join('');
+const tl = Motion.timeline();
+tl.from('#hd', {y: -16, autoAlpha: 0, duration: .5}, .1);
+tl.from('#c1', {x: -60, autoAlpha: 0, duration: .6}, .3);
+tl.from('#c2', {x: 60, autoAlpha: 0, duration: .6}, .6);
+tl.from('#q', {scale: .6, autoAlpha: 0, duration: .5, ease: 'back.out(2)'}, 1.2);
+tl.to('#c1', {x: 40, duration: .5, ease: 'power2.in', yoyo: true, repeat: 1}, 1.8); tl.to('#c2', {x: -40, duration: .5, ease: 'power2.in', yoyo: true, repeat: 1}, 1.8);
+tl.to('#q', {autoAlpha: 0, scale: 1.3, duration: .4}, 2.9);
+tl.from('#ed .gl', {scaleX: 0, transformOrigin: 'left', stagger: .12, duration: .5}, 3.1);
+tl.from('#ed .gn', {autoAlpha: 0, stagger: .12, duration: .3}, 3.2);
+tl.from('.st', {scaleX: 0, scaleY: 0, transformOrigin: 'center', stagger: .18, duration: .35, ease: 'back.out(2)'}, 3.6);
+tl.to('.fl', {opacity: 1, stagger: .05, duration: .3}, 5.6);
+tl.to('#hd', {autoAlpha: 0, duration: .3}, 5.6);
+tl.from('#ofl', {scale: 0, rotation: 30, duration: .6, ease: 'back.out(3)'}, 6.4);
+tl.from('#lb', {y: 20, autoAlpha: 0, duration: .6}, 7.0);
+Motion.ready();
+</script></body></html>

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><title>SVG 선 그리기와 모핑 · SVG Draw &amp; Morph</title>
+<link rel="stylesheet" href="../../lib/stage.css">
+<style>
+.frame{background:#0b1012 !important;background-image:none !important}
+.scene{position:absolute;inset:0;overflow:hidden;font-family:Pretendard,'Noto Sans KR',sans-serif;color:#e9f1ef;letter-spacing:-.01em}
+.bg{position:absolute;inset:0;background:radial-gradient(55% 75% at 12% -5%,#15493e 0%,rgba(21,73,62,0) 70%),radial-gradient(55% 75% at 105% 105%,#2c2257 0%,rgba(44,34,87,0) 70%),#0b1012}
+.tag{position:absolute;display:flex;gap:8px;align-items:center;font:600 12px/1 'IBM Plex Mono',monospace;letter-spacing:.12em;color:#9fb3ae;text-transform:uppercase;white-space:nowrap}
+.tag b{background:#3ee6a8;color:#06231a;padding:3px 6px;border-radius:4px;font-weight:700}
+.panel{position:absolute;background:rgba(18,26,28,.82);border:1px solid rgba(255,255,255,.09);border-radius:12px}
+.code{font:13px/1.75 'IBM Plex Mono',monospace;color:#b9c9c4;white-space:pre}
+.chip{position:absolute;padding:7px 14px;border-radius:999px;border:1px solid rgba(62,230,168,.45);color:#bff5df;font:600 14px/1 Pretendard;background:rgba(62,230,168,.08);white-space:nowrap}
+.mint{color:#3ee6a8}.red{color:#ff5d4f}
+
+.ttl{position:absolute;left:64px;top:86px;font:800 38px/1.25 Pretendard}
+.p{top:190px;height:400px}
+.cap2{position:absolute;left:16px;top:14px;font:600 11px 'IBM Plex Mono';color:#7c8f8a;letter-spacing:.14em}
+.lb{position:absolute;left:16px;bottom:14px;font:700 17px Pretendard}
+</style></head>
+<body data-no="W04" data-cat="기술 · SVG" data-ko="선 그리기와 모양 변형" data-en="SVG Draw & Morph" data-meta="9초 · 아이콘·풍경 선 그리기, 도형 모핑" data-dur="9" data-poster="8.4" data-size="1280x720">
+<main class="scene"><div class="bg"></div>
+  <div class="tag" style="left:64px;top:50px"><b>04</b>02 / 05 · SVG</div>
+  <div class="ttl"><span class="mint">벡터</span> 그래픽을 직접 그리고 움직인다</div>
+  <div class="panel p" style="left:64px;width:330px"><span class="cap2">ICON.SVG</span>
+    <svg width="330" height="400"><g transform="translate(55,90)" fill="none" stroke="#3ee6a8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+      <rect class="dr" x="0" y="0" width="220" height="220" rx="48"/>
+      <circle class="dr" cx="110" cy="110" r="72"/>
+      <path class="dr" d="M88 70 L150 110 L88 150 Z"/></g>
+      <g id="nodes" fill="#0b1012" stroke="#3ee6a8" stroke-width="2"></g></svg>
+    <span class="lb">선이 그려진다</span></div>
+  <div class="panel p" style="left:414px;width:470px"><span class="cap2">SKYLINE.SVG</span>
+    <svg width="470" height="400"><path id="city" class="dr2" fill="none" stroke="#3ee6a8" stroke-width="2.5" stroke-linejoin="round"
+      d="M20 330 L60 330 L60 230 L100 230 L100 330 L120 330 L120 170 L170 170 L170 330 L190 330 L190 250 L215 250 L215 210 L245 210 L245 330 L265 330 L265 140 L315 140 L315 330 L335 330 L335 230 L380 230 L380 280 L410 280 L410 330 L450 330"/>
+      <circle id="sun" cx="350" cy="110" r="0" fill="none" stroke="#ffb547" stroke-width="2.5"/>
+      <line x1="20" y1="342" x2="450" y2="342" class="dr2" stroke="#3ee6a8" stroke-opacity=".5" stroke-width="2"/></svg>
+    <span class="lb">풍경이 그려진다</span></div>
+  <div class="panel p" style="left:904px;width:312px"><span class="cap2">MORPH</span>
+    <svg width="312" height="400"><path id="m" fill="#3ee6a8" fill-opacity=".9"/></svg>
+    <span class="lb" id="ml">원 → 별 → 물방울</span></div>
+</main>
+<script src="../../lib/gsap.min.js"></script><script src="../../lib/stage.js"></script>
+<script>
+// 점 개수가 같은 경로끼리는 GSAP 기본 기능만으로 d 속성을 보간할 수 있다(MorphSVG 플러그인 불필요).
+const cx = 156, cy = 200, K = 10;
+function shape(fn) { let d = ''; for (let i = 0; i < K * 2; i++) { const a = i / (K * 2) * Math.PI * 2 - Math.PI / 2, r = fn(i, a); d += (i ? ' L' : 'M') + (cx + Math.cos(a) * r).toFixed(1) + ' ' + (cy + Math.sin(a) * r).toFixed(1); } return d + ' Z'; }
+const circle = shape(() => 90), star = shape(i => i % 2 ? 46 : 110), drop = shape((i, a) => 70 + 50 * Math.max(0, -Math.sin(a)) ** 3 * 1.6 - 10 * Math.sin(a));
+document.getElementById('m').setAttribute('d', circle);
+const nodes = [[55,90],[275,90],[275,310],[55,310],[143,160],[205,200],[143,240]];
+document.getElementById('nodes').innerHTML = nodes.map(n => `<rect x="${n[0]-5}" y="${n[1]-5}" width="10" height="10"/>`).join('');
+document.querySelectorAll('.dr,.dr2').forEach(p => { const L = p.getTotalLength(); p.style.strokeDasharray = L; p.style.strokeDashoffset = L; });
+const tl = Motion.timeline();
+tl.from('.ttl,.p', {y: 24, autoAlpha: 0, stagger: .1, duration: .5}, 0);
+tl.from('#nodes rect', {scale: 0, transformOrigin: 'center', stagger: .08, duration: .3}, .5);
+tl.to('.dr', {strokeDashoffset: 0, stagger: .5, duration: 1.4, ease: 'power2.inOut'}, .8);
+tl.to('#nodes', {opacity: 0, duration: .5}, 3.2);
+tl.to('.dr2', {strokeDashoffset: 0, duration: 3, ease: 'power1.inOut'}, 1.6);
+tl.to('#sun', {attr: {r: 34}, duration: 1, ease: 'back.out(2)'}, 4.2);
+tl.to('#m', {attr: {d: star}, duration: 1.1, ease: 'power3.inOut'}, 2.2);
+tl.to('#m', {rotation: 36, transformOrigin: '156px 200px', duration: 1.1, ease: 'power3.inOut'}, 2.2);
+tl.to('#m', {attr: {d: drop}, fill: '#8b7bff', rotation: 0, duration: 1.2, ease: 'power3.inOut'}, 4.6);
+tl.to('#m', {attr: {d: circle}, fill: '#3ee6a8', duration: 1.1, ease: 'power3.inOut'}, 6.6);
+Motion.ready();
+</script></body></html>

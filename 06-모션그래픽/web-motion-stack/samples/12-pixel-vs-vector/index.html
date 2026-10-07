@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><title>픽셀과 벡터 · Pixel vs Vector</title>
+<link rel="stylesheet" href="../../lib/stage.css">
+<style>
+.frame{background:#0b1012 !important;background-image:none !important}
+.scene{position:absolute;inset:0;overflow:hidden;font-family:Pretendard,'Noto Sans KR',sans-serif;color:#e9f1ef;letter-spacing:-.01em}
+.bg{position:absolute;inset:0;background:radial-gradient(55% 75% at 12% -5%,#15493e 0%,rgba(21,73,62,0) 70%),radial-gradient(55% 75% at 105% 105%,#2c2257 0%,rgba(44,34,87,0) 70%),#0b1012}
+.tag{position:absolute;display:flex;gap:8px;align-items:center;font:600 12px/1 'IBM Plex Mono',monospace;letter-spacing:.12em;color:#9fb3ae;text-transform:uppercase;white-space:nowrap}
+.tag b{background:#3ee6a8;color:#06231a;padding:3px 6px;border-radius:4px;font-weight:700}
+.panel{position:absolute;background:rgba(18,26,28,.82);border:1px solid rgba(255,255,255,.09);border-radius:12px}
+.code{font:13px/1.75 'IBM Plex Mono',monospace;color:#b9c9c4;white-space:pre}
+.chip{position:absolute;padding:7px 14px;border-radius:999px;border:1px solid rgba(62,230,168,.45);color:#bff5df;font:600 14px/1 Pretendard;background:rgba(62,230,168,.08);white-space:nowrap}
+.mint{color:#3ee6a8}.red{color:#ff5d4f}
+
+.ph1{position:absolute;inset:0}
+#pix{position:absolute;left:290px;top:120px;width:700px;height:394px;image-rendering:pixelated;border-radius:6px}
+.dim{position:absolute;font:700 15px 'IBM Plex Mono';color:#cfdcd8}
+.res{position:absolute;left:0;right:0;top:560px;text-align:center;font:800 30px Pretendard}
+.ph2{position:absolute;inset:0;opacity:0}
+.box{position:absolute;top:150px;width:360px;height:360px;border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,.12)}
+.box canvas{width:100%;height:100%}
+.lb{position:absolute;top:118px;font:700 12px 'IBM Plex Mono';letter-spacing:.1em}
+.lb b{padding:3px 6px;border-radius:4px;color:#fff;margin-right:6px}
+.zoom{position:absolute;left:0;right:0;top:300px;text-align:center;font:800 54px 'IBM Plex Mono';color:#e9f1ef}
+.verd{position:absolute;top:530px;padding:6px 12px;border-radius:999px;font:700 14px Pretendard}
+</style></head>
+<body data-no="G04" data-cat="문법 · 비교" data-ko="픽셀과 벡터" data-en="Pixel vs Vector" data-meta="10초 · 830만 화소 계산 → ×40 확대 비교" data-dur="10" data-poster="9.4" data-size="1280x720">
+<main class="scene"><div class="bg"></div>
+  <div class="ph1" id="p1">
+    <canvas id="pix"></canvas>
+    <div class="dim" id="dw" style="left:560px;top:86px">가로 <span id="w" class="mint">160</span>개</div>
+    <div class="dim" id="dh" style="left:206px;top:300px">세로 <span id="h" class="mint">90</span>개</div>
+    <div class="res" id="rs"><span id="eq">3,840 × 2,160 = </span><span class="red" id="tot">0</span> 화소 / 장면 한 장</div>
+  </div>
+  <div class="ph2" id="p2">
+    <div class="lb" style="left:190px"><b style="background:#ff5d4f">PX</b>화소로 그린 원</div>
+    <div class="lb" style="left:730px"><b style="background:#1fb889">VEC</b>점·선·면으로 그린 원</div>
+    <div class="box" style="left:190px"><canvas id="cp"></canvas></div>
+    <div class="box" style="left:730px"><svg id="sv" width="360" height="360" viewBox="0 0 360 360"><polygon id="poly" fill="#e9f1ef"/></svg></div>
+    <div class="zoom">×<span id="z">1</span></div>
+    <div class="verd" style="left:190px;background:rgba(255,93,79,.15);color:#ff8a7f">흐릿하게 뭉개짐</div>
+    <div class="verd" style="left:730px;background:rgba(62,230,168,.15);color:#3ee6a8">확대해도 선명</div>
+  </div>
+</main>
+<script src="../../lib/gsap.min.js"></script><script src="../../lib/stage.js"></script>
+<script>
+// 1부: 해상도를 올리며 같은 풍경을 다시 그린다. 2부: 같은 확대율에서 래스터는 보간되고 벡터는 다시 계산된다.
+const pix = document.getElementById('pix'), pg = pix.getContext('2d');
+function scenePix(w, h) {
+  pix.width = w; pix.height = h;
+  const img = pg.createImageData(w, h);
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    const u = x / w, v = y / h, i = (y * w + x) * 4;
+    let c = [96, 140, 210];                                    // 하늘
+    if (v > .62 + .06 * Math.sin(u * 9)) c = [44, 120, 78];   // 언덕
+    if (v > .75 + .05 * Math.sin(u * 6 + 1)) c = [34, 96, 64];
+    const dx = (u - .62) * 16 / 9, dy = v - .32; if (dx * dx + dy * dy < .022) c = [255, 238, 170]; // 해
+    img.data.set([...c, 255], i);
+  }
+  pg.putImageData(img, 0, 0);
+}
+const res = {k: 0};
+function upd() { const w = Math.round(16 + (160 - 16) * res.k), h = Math.round(w * 9 / 16); scenePix(w, h); document.getElementById('w').textContent = (w * 24).toLocaleString(); document.getElementById('h').textContent = (h * 24).toLocaleString(); }
+const tot = {v: 0};
+// 2부 캔버스: 대각선 경계를 8x8 래스터로 → 확대 시 bilinear 보간으로 흐려짐
+const cp = document.getElementById('cp'), cg = cp.getContext('2d'), small = document.createElement('canvas'); small.width = small.height = 12;
+const sg = small.getContext('2d'); sg.fillStyle = '#0b1012'; sg.fillRect(0, 0, 12, 12); sg.fillStyle = '#e9f1ef'; sg.beginPath(); sg.arc(6, 6, 5, 0, 7); sg.fill();
+const DPR = window.devicePixelRatio || 1; cp.width = cp.height = 360 * DPR;
+const zz = {z: 1};
+function drawZoom() {
+  const z = zz.z; document.getElementById('z').textContent = Math.round(z);
+  cg.imageSmoothingEnabled = true; cg.fillStyle = '#0b1012'; cg.fillRect(0, 0, cp.width, cp.height);
+  // 원의 오른쪽 아래 가장자리 부근을 z배 확대해 보여 준다
+  const S = cp.width, view = 12 / z * 1.0, cx = 6 + 3.5 * (1 - 1 / z), cy = 6 + 3.5 * (1 - 1 / z);
+  cg.drawImage(small, cx - view / 2, cy - view / 2, view, view, 0, 0, S, S);
+  // 벡터: 같은 영역을 수식으로 다시 계산
+  const pts = []; for (let i = 0; i <= 240; i++) { const a = i / 240 * Math.PI * 2, x = 6 + Math.cos(a) * 5, y = 6 + Math.sin(a) * 5; pts.push(((x - (cx - view / 2)) / view * 360).toFixed(2) + ',' + ((y - (cy - view / 2)) / view * 360).toFixed(2)); }
+  document.getElementById('poly').setAttribute('points', pts.join(' '));
+}
+const tl = Motion.timeline();
+tl.to(res, {k: 1, duration: 3, ease: 'power2.inOut', onUpdate: upd}, .3);
+tl.from('#pix,.dim', {autoAlpha: 0, duration: .5}, 0);
+tl.from('#rs', {y: 20, autoAlpha: 0, duration: .5}, 2.6);
+tl.to(tot, {v: 8294400, duration: 1.2, ease: 'power2.out', onUpdate: () => document.getElementById('tot').textContent = Math.round(tot.v).toLocaleString()}, 2.8);
+tl.to('#p1', {autoAlpha: 0, duration: .5}, 4.6);
+tl.to('#p2', {opacity: 1, duration: .5}, 4.9);
+tl.to(zz, {z: 40, duration: 3.8, ease: 'power2.inOut', onUpdate: drawZoom}, 5.4);
+tl.from('.verd', {y: 16, autoAlpha: 0, stagger: .2, duration: .5}, 8.6);
+upd(); drawZoom();
+Motion.ready();
+</script></body></html>

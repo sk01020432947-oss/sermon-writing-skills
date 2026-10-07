@@ -1,0 +1,13 @@
+{
+  "name": "ask-exegesis-pipeline",
+  "version": "0.1.0",
+  "description": "김희석 「성경으로 설교하기」 8단계 본문주해 파이프라인 — 옵시디언 볼트와 연동되는 설교 준비 코칭 스킬 모음 (본문 확정·사역부터 설교 개요까지, 첫 실행 셋업 인터뷰 포함)",
+  "author": {
+    "name": "박한용 (Isaac Church)",
+    "email": "paul4you@isaacchurch.org"
+  },
+  "homepage": "https://github.com/paul4you-isaac/ask-exegesis-pipeline",
+  "repository": "https://github.com/paul4you-isaac/ask-exegesis-pipeline",
+  "license": "MIT",
+  "keywords": ["sermon", "exegesis", "bible", "preaching", "obsidian", "korean"]
+}

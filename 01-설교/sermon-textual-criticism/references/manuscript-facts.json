@@ -1,0 +1,524 @@
+{
+  "_meta": {
+    "title": "sermon-textual-criticism — 사본 메타데이터 정밀 사실 DB",
+    "purpose": "LLM의 사본 사실 주장(연대·소장처·계열·본문 범위) 할루시네이션 차단용 검증 DB",
+    "primary_sources": [
+      "Aland & Aland, The Text of the NT, 2nd ed. (Eerdmans, 1995)",
+      "Metzger & Ehrman, The Text of the NT, 4th ed. (Oxford, 2005)",
+      "Tov, Textual Criticism of the Hebrew Bible, 3rd ed. (Fortress, 2012)",
+      "Parker, An Introduction to the NT Manuscripts and Their Texts (Cambridge, 2008)",
+      "NA28 critical apparatus introduction",
+      "NTVMR (INTF Münster) - ntvmr.uni-muenster.de",
+      "Codex Sinaiticus Project - codexsinaiticus.org",
+      "Vatican Library Digital - digi.vatlib.it",
+      "Cambridge University Library Digital - cudl.lib.cam.ac.uk",
+      "DJD (Discoveries in the Judaean Desert) series, Oxford UP"
+    ],
+    "last_verified": "2026-05-16",
+    "policy": "검증은 항상 NA28/UBS5/BHS/ECM critical apparatus를 1차로 한다. 이 JSON 항목과 불일치하는 학자 견해가 있으면, 1차 자료를 재확인 후 보수적으로 일반화하라."
+  },
+  "nt_manuscripts": {
+    "P45": {
+      "official_name": "Chester Beatty Papyrus I",
+      "gregory_aland_number": 45,
+      "date": "c. 250 (3세기 중반)",
+      "text_type": "Alexandrian (자유롭고 일부 카이사레아 친화)",
+      "language": "Greek",
+      "script_type": "papyrus",
+      "contents": "사복음·사도행전 부분",
+      "location": "Dublin, Chester Beatty Library (P.Chester.Beatty I) + Vienna, Österreichische Nationalbibliothek (P.Vindob.G.31974)",
+      "discovery": "1930년대 이집트에서 출현, A. Chester Beatty 구입",
+      "significance": "복음서 본문비평에서 매우 중요"
+    },
+    "P46": {
+      "official_name": "Chester Beatty Papyrus II",
+      "gregory_aland_number": 46,
+      "date": "c. 200 (혹은 c. 175-225)",
+      "text_type": "Alexandrian",
+      "language": "Greek",
+      "script_type": "papyrus",
+      "contents": "바울서신(롬·고전·고후·엡·갈·빌·골·살전·히)",
+      "location": "Dublin, Chester Beatty Library + University of Michigan",
+      "discovery": "1930년대 이집트, Chester Beatty 구입",
+      "significance": "바울서신 가장 오래된 사본. 히브리서를 바울서신 묶음에 포함"
+    },
+    "P47": {
+      "official_name": "Chester Beatty Papyrus III",
+      "gregory_aland_number": 47,
+      "date": "3세기 후반",
+      "text_type": "Alexandrian (자유로움)",
+      "language": "Greek",
+      "script_type": "papyrus",
+      "contents": "요한계시록 9:10-17:2 부분",
+      "location": "Dublin, Chester Beatty Library",
+      "significance": "요한계시록 가장 오래된 주요 사본 중 하나"
+    },
+    "P52": {
+      "official_name": "Rylands Library Papyrus P52 (St. John's Fragment)",
+      "gregory_aland_number": 52,
+      "date": "c. 125 (학계 표준; Nongbri 2005는 c. 100-175 가능 범위 제기)",
+      "text_type": "단편이라 계열 분류 어려움",
+      "language": "Greek",
+      "script_type": "papyrus",
+      "contents": "요 18:31-33 (앞면)·요 18:37-38 (뒷면) 단편",
+      "location": "Manchester, John Rylands University Library",
+      "discovery": "Bernard P. Grenfell 1920 구입, C.H. Roberts 1934 식별·연대 추정",
+      "significance": "현존 가장 오래된 신약 본문 단편"
+    },
+    "P66": {
+      "official_name": "Papyrus Bodmer II",
+      "gregory_aland_number": 66,
+      "date": "c. 200 (혹은 3세기 초)",
+      "text_type": "Alexandrian (혼합, 일부 서방 영향)",
+      "language": "Greek",
+      "script_type": "papyrus codex",
+      "contents": "요 1:1-21:9 (대부분 보존)",
+      "location": "Cologny (Geneva), Bibliotheca Bodmeriana",
+      "discovery": "1952 발견, M. Martin 1956 출판",
+      "significance": "요한복음 가장 잘 보존된 초기 사본"
+    },
+    "P72": {
+      "official_name": "Papyrus Bodmer VII-VIII",
+      "gregory_aland_number": 72,
+      "date": "3-4세기",
+      "text_type": "Alexandrian",
+      "language": "Greek",
+      "script_type": "papyrus",
+      "contents": "벧전·벧후·유다 (전체)",
+      "location": "Vatican (Vat.gr. P.Bodmer VIII) + Cologny Bibliotheca Bodmeriana (P.Bodmer VII)",
+      "significance": "벧전·벧후·유다 가장 오래된 사본"
+    },
+    "P74": {
+      "official_name": "Papyrus Bodmer XVII",
+      "gregory_aland_number": 74,
+      "date": "7세기",
+      "text_type": "Alexandrian",
+      "language": "Greek",
+      "script_type": "papyrus",
+      "contents": "사도행전·공동서신 단편",
+      "location": "Cologny, Bibliotheca Bodmeriana"
+    },
+    "P75": {
+      "official_name": "Papyrus Bodmer XIV-XV",
+      "gregory_aland_number": 75,
+      "date": "c. 175-225 (2세기 후반-3세기 초)",
+      "text_type": "Alexandrian (B와 매우 가까움)",
+      "language": "Greek",
+      "script_type": "papyrus codex",
+      "contents": "눅 3:18-24:53·요 1:1-15:8 부분",
+      "location": "Vatican Library (2007년 이후 Cologny에서 이전; Hanna Papyri)",
+      "significance": "Codex Vaticanus(B)와의 직계 관계 입증, Westcott-Hort 본문 옹호의 결정적 증거"
+    },
+    "Sinaiticus": {
+      "official_name": "Codex Sinaiticus",
+      "gregory_aland_number": "01",
+      "siglum_symbol": "ℵ (Aleph)",
+      "date": "4세기 (c. 330-360)",
+      "text_type": "Alexandrian",
+      "language": "Greek",
+      "script_type": "uncial codex",
+      "contents": "구약 LXX의 약 절반 + 신약 전체 + 바나바서·헤르마스 목자",
+      "location": "주요부 영국 도서관 (Add MS 43725) + 라이프치히 대학 도서관 + 시내산 성 카타리나 수도원 + 상트페테르부르크 러시아 국립도서관 (4기관 분산)",
+      "discovery": "Constantin von Tischendorf 1844 첫 발견, 1853·1859 추가 입수",
+      "significance": "현존 가장 오래된 신약 완본 중 하나",
+      "digital": "codexsinaiticus.org"
+    },
+    "Vaticanus": {
+      "official_name": "Codex Vaticanus (Vat.gr.1209)",
+      "gregory_aland_number": "03",
+      "siglum_symbol": "B",
+      "date": "4세기 (c. 300-325, 시내 사본보다 약간 이름)",
+      "text_type": "Alexandrian",
+      "language": "Greek",
+      "script_type": "uncial codex",
+      "contents": "구약 LXX 대부분 + 신약 (히 9:14 이후·딤전·딤후·딛·몬·계 결손)",
+      "location": "Vatican Apostolic Library (Vat.gr.1209)",
+      "discovery": "1475년 이전 바티칸 카탈로그 첫 언급",
+      "significance": "현존 가장 정확한 신약 본문으로 평가",
+      "digital": "digi.vatlib.it"
+    },
+    "Alexandrinus": {
+      "official_name": "Codex Alexandrinus",
+      "gregory_aland_number": "02",
+      "siglum_symbol": "A",
+      "date": "5세기",
+      "text_type": "복음서는 비잔틴, 그 외 책들은 알렉산드리아",
+      "language": "Greek",
+      "script_type": "uncial codex",
+      "contents": "구약 LXX + 신약 (마 1:1-25:6·요 6:50-8:52·고후 4:13-12:6 결손)",
+      "location": "London, British Library (Royal MS 1 D V-VIII)",
+      "discovery": "1627 알렉산드리아 총대주교 Cyril Lucar가 영국 James 1세에 선물"
+    },
+    "Ephraemi": {
+      "official_name": "Codex Ephraemi Syri Rescriptus",
+      "gregory_aland_number": "04",
+      "siglum_symbol": "C",
+      "date": "5세기 (12세기 시리아인 에브라임 저작 위에 덧쓴 palimpsest)",
+      "text_type": "혼합",
+      "language": "Greek",
+      "script_type": "uncial codex (palimpsest)",
+      "contents": "구약 LXX·신약 단편 (전체 약 64% 보존)",
+      "location": "Paris, Bibliothèque nationale de France (Gr. 9)"
+    },
+    "Bezae": {
+      "official_name": "Codex Bezae Cantabrigiensis",
+      "gregory_aland_number": "05",
+      "siglum_symbol": "D (Dea, 복음서·행)",
+      "date": "5세기",
+      "text_type": "Western (서방 본문 대표)",
+      "language": "Greek/Latin bilingual",
+      "script_type": "uncial codex",
+      "contents": "사복음 + 사도행전 (요 3서 라틴어 부분만)",
+      "location": "Cambridge University Library (MS Nn.II.41)",
+      "discovery": "1581년 Theodore Beza가 케임브리지 대학에 기증",
+      "significance": "사도행전이 NA28보다 약 8.5% 더 김 (서방 본문 확장)",
+      "digital": "cudl.lib.cam.ac.uk"
+    },
+    "Claromontanus": {
+      "official_name": "Codex Claromontanus",
+      "gregory_aland_number": "06",
+      "siglum_symbol": "Dp (바울서신)",
+      "date": "6세기",
+      "text_type": "Western",
+      "language": "Greek/Latin bilingual",
+      "script_type": "uncial codex",
+      "contents": "바울서신 (히브리서 포함)",
+      "location": "Paris, Bibliothèque nationale de France (Gr. 107)",
+      "note": "D-Codex가 두 개 — Dea(05, Bezae, 복음서/행)와 Dp(06, Claromontanus, 바울서신). 혼동 주의"
+    },
+    "Washingtonianus": {
+      "official_name": "Codex Washingtonianus (Freer Gospels)",
+      "gregory_aland_number": "032",
+      "siglum_symbol": "W",
+      "date": "4-5세기",
+      "text_type": "복합 (마는 카이사레아 친화/서방 영향, 마태는 비잔틴, 요한 일부는 알렉산드리아, 누가 일부는 비잔틴)",
+      "language": "Greek",
+      "script_type": "uncial codex",
+      "contents": "사복음 (요 1:1-5:11 후대 보충)",
+      "location": "Washington DC, Smithsonian National Museum of Asian Art (구 Freer Gallery)",
+      "discovery": "Charles Lang Freer 1906 이집트 구입",
+      "significance": "막 16:14 후 *Freer Logion* (외경 추가절) 보유 — 유일하게 보존된 사본",
+      "digital": "asia.si.edu"
+    },
+    "Koridethi": {
+      "official_name": "Codex Koridethi",
+      "gregory_aland_number": "038",
+      "siglum_symbol": "Θ (Theta)",
+      "date": "9세기",
+      "text_type": "Caesarean (특히 마가에서 대표 사본)",
+      "language": "Greek",
+      "script_type": "uncial codex",
+      "contents": "사복음",
+      "location": "Tbilisi, Georgian National Centre of Manuscripts (Gr. 28)"
+    },
+    "Regius": {
+      "official_name": "Codex Regius",
+      "gregory_aland_number": "019",
+      "siglum_symbol": "L",
+      "date": "8세기",
+      "text_type": "Alexandrian 친화적",
+      "language": "Greek",
+      "script_type": "uncial codex",
+      "contents": "사복음",
+      "location": "Paris, Bibliothèque nationale de France (Gr. 62)",
+      "significance": "막 16의 짧은 결말(Shorter Ending)을 긴 결말 앞에 두는 대표 사본"
+    },
+    "Athous_Laurensis": {
+      "official_name": "Codex Athous Laurensis",
+      "gregory_aland_number": "044",
+      "siglum_symbol": "Ψ (Psi)",
+      "date": "8/9세기 (혹은 9/10세기)",
+      "text_type": "혼합",
+      "language": "Greek",
+      "script_type": "uncial codex",
+      "contents": "복음서 후반 + 행 + 공동서신 + 바울서신",
+      "location": "Mount Athos, Great Laura monastery (B' 52)"
+    },
+    "Laudianus": {
+      "official_name": "Codex Laudianus",
+      "gregory_aland_number": "08",
+      "siglum_symbol": "E (행에서 Eapr)",
+      "date": "c. 550 (6세기 후반)",
+      "text_type": "사도행전에서 서방 영향이 강한 혼합 본문",
+      "language": "Greek/Latin bilingual",
+      "script_type": "uncial codex",
+      "contents": "사도행전",
+      "location": "Oxford, Bodleian Library (Laud Gr. 35)",
+      "significance": "행 8:37 에디오피아 내시 신앙고백 포함하는 주요 그리스어 사본"
+    },
+    "33": {
+      "official_name": "Minuscule 33 (\"미누스큘의 여왕\", Queen of the Minuscules)",
+      "gregory_aland_number": "33",
+      "date": "9세기",
+      "text_type": "Alexandrian (특히 복음서 외 책에서)",
+      "language": "Greek",
+      "script_type": "minuscule",
+      "contents": "신약 (계 제외)",
+      "location": "Paris, Bibliothèque nationale de France (Gr. 14)"
+    },
+    "81": {
+      "official_name": "Minuscule 81",
+      "gregory_aland_number": "81",
+      "date": "1044년 (사본에 명시된 정확한 연대)",
+      "text_type": "Alexandrian (행·서신에서 특히 가치)",
+      "language": "Greek",
+      "script_type": "minuscule",
+      "contents": "사도행전·바울서신·공동서신",
+      "location": "London, British Library (Add. 20003) + Alexandria, Greek Patriarchal Library"
+    },
+    "1739": {
+      "official_name": "Minuscule 1739",
+      "gregory_aland_number": "1739",
+      "date": "10세기",
+      "text_type": "Alexandrian 친화적",
+      "language": "Greek",
+      "script_type": "minuscule",
+      "contents": "행·서신",
+      "location": "Mount Athos, Great Laura monastery (B' 64)",
+      "significance": "Origen 등 교부 본문 노트(scholia) 포함, 4-5세기 모범 사본 복사로 평가"
+    },
+    "f1": {
+      "official_name": "Family 1 (Lake Group)",
+      "siglum_symbol": "f¹",
+      "members": "1, 118, 131, 209, 1582 등",
+      "date": "12-14세기 사본군 (원형은 더 이름)",
+      "text_type": "Caesarean 친화",
+      "significance": "요 7:53-8:11 (간음한 여인)을 요한복음 21장 뒤로 이동",
+      "first_described": "Kirsopp Lake, *Codex 1 of the Gospels and Its Allies* (Cambridge, 1902)"
+    },
+    "f13": {
+      "official_name": "Family 13 (Ferrar Group)",
+      "siglum_symbol": "f¹³",
+      "members": "13, 69, 124, 230, 346, 543, 788, 826, 828, 983, 1689, 1709",
+      "date": "11-15세기 사본군",
+      "text_type": "Caesarean 친화",
+      "significance": "요 7:53-8:11을 눅 21:38 뒤로 이동",
+      "first_described": "William Hugh Ferrar (1868) → T.K. Abbott 1877 사후 출판"
+    },
+    "Byzantine": {
+      "official_name": "Byzantine Majority Text",
+      "siglum_symbol": "𝔐 (Mehrheitstext) / Byz",
+      "date": "5-15세기 (약 80% 이상의 그리스어 사본)",
+      "text_type": "Byzantine (Antiochene)",
+      "significance": "후대 표준 본문. KJV(TR) 기반. 학술적으로는 후대 confluence text로 평가",
+      "principal_editions": "Hodges-Farstad (1985), Robinson-Pierpont (1991, 2005, 2018)"
+    }
+  },
+  "ot_manuscripts": {
+    "1QIsa_a": {
+      "official_name": "Great Isaiah Scroll (1QIsaᵃ)",
+      "date": "c. BC 125 (방사성탄소 BC 335-122, 고체학 BC 150-100)",
+      "language": "Hebrew",
+      "contents": "이사야 전체 (1-66장)",
+      "location": "Jerusalem, Israel Museum, Shrine of the Book",
+      "discovery": "1947 Qumran Cave 1, Muhammed edh-Dhib (양치기 소년)",
+      "significance": "잘 보존된 가장 오래된 완전한 성경 책 사본",
+      "publication": "Burrows, Trever, Brownlee (ASOR, 1950)",
+      "digital": "dss.collections.imj.org.il"
+    },
+    "1QIsa_b": {
+      "official_name": "Hebrew University Isaiah Scroll (1QIsaᵇ)",
+      "date": "BC 1세기 후반",
+      "language": "Hebrew",
+      "contents": "이사야 부분 (특히 후반부)",
+      "location": "Jerusalem, Hebrew University → Israel Museum",
+      "significance": "마소라에 1QIsaᵃ보다 더 근접"
+    },
+    "4QSam_a": {
+      "official_name": "4QSamᵃ (Cave 4 Samuel a)",
+      "date": "BC 1세기 후반",
+      "language": "Hebrew",
+      "contents": "삼상·삼하 단편",
+      "location": "Jerusalem, Israel Museum",
+      "significance": "LXX와 가까운 본문, 마소라보다 더 긴 형 다수 보존"
+    },
+    "4QDeut_j": {
+      "official_name": "4QDeutⱼ",
+      "date": "BC 2-1세기",
+      "language": "Hebrew",
+      "contents": "신명기 단편",
+      "significance": "신 32:8 \"하나님의 아들들\"(bənê ʾĕlōhîm) 보존, MT의 \"이스라엘 자손\" 대신"
+    },
+    "11Q5": {
+      "official_name": "11QPsa (Great Psalms Scroll)",
+      "alternative_siglum": "11QPsa",
+      "date": "AD 1세기 초",
+      "language": "Hebrew",
+      "contents": "시편(주로 후반부)·비정경 시 일부",
+      "location": "Jerusalem, Israel Museum",
+      "discovery": "1956 Qumran Cave 11",
+      "significance": "시 145:13b NUN절 보존 (MT 누락)",
+      "publication": "J.A. Sanders, *The Psalms Scroll of Qumran Cave 11* (DJD IV, 1965)"
+    },
+    "Aleppo_Codex": {
+      "official_name": "Aleppo Codex (Keter Aram Tzova)",
+      "date": "c. 925-935 (Aron ben Asher 가족 작품)",
+      "language": "Hebrew",
+      "contents": "히브리어 성경 (1947년 폭동 후 약 40% 소실 — 창세기 대부분·신명기 일부·후기 예언서 부분)",
+      "location": "Jerusalem, Israel Museum, Shrine of the Book (1958 이후)",
+      "significance": "마소라 본문의 가장 정확한 본문으로 평가; HUBP의 기본 본문",
+      "digital": "aleppocodex.org",
+      "warning": "현재는 모세오경 일부·후기 예언서 일부 결손 — BHS/BHQ는 결손 부분에 Leningradensis로 대체"
+    },
+    "Leningradensis": {
+      "official_name": "Codex Leningradensis (Firkovich B19A)",
+      "official_id": "EBP I B19a, Russian National Library",
+      "date": "1008/1009 AD (Samuel ben Jacob 필사)",
+      "language": "Hebrew",
+      "contents": "히브리어 성경 전체 (가장 오래된 *완전한* 마소라 사본)",
+      "location": "Saint Petersburg, Russian National Library",
+      "significance": "BHS·BHQ·BHL의 기본 본문",
+      "digital": "West Semitic Research Project (usc.edu/dept/LAS/wsrp)"
+    },
+    "Cairensis": {
+      "official_name": "Codex Cairensis (Cairo Codex of the Prophets)",
+      "date": "전통적으로 895년 (Moshe ben Asher); 1983년 학계 일부는 11세기 재평가 제안",
+      "language": "Hebrew",
+      "contents": "전기 예언서·후기 예언서",
+      "location": "Cairo, Karaite Synagogue Mu'allaq → 학계 일부 사진 보관"
+    },
+    "Damascus_Pentateuch": {
+      "official_name": "Damascus Pentateuch",
+      "date": "10세기",
+      "language": "Hebrew",
+      "contents": "오경",
+      "location": "Jerusalem, National Library of Israel (Heb. 4° 5702)"
+    },
+    "Samaritan_Pentateuch": {
+      "official_name": "Samaritan Pentateuch",
+      "siglum_symbol": "SP / Smr",
+      "date": "가장 오래된 사본 12-13세기 (Abisha Scroll은 전통상 더 오래되었다고 주장)",
+      "language": "Hebrew (Samaritan script)",
+      "contents": "오경만",
+      "significance": "마소라와 약 6,000곳 차이 (대다수는 정자법·평행 동화)",
+      "key_edition": "von Gall (1914-18), Tal-Florentin (2010)"
+    },
+    "Septuagint_Codices": {
+      "official_name": "70인역 주요 코덱스",
+      "principal_witnesses": [
+        "Codex Vaticanus (B) — 4세기, LXX 본문 대부분",
+        "Codex Sinaiticus (ℵ) — 4세기, LXX 약 절반",
+        "Codex Alexandrinus (A) — 5세기, LXX 거의 전체"
+      ],
+      "papyri": "P.Ryl.III 458 (BC 2세기 신명기 단편), P.Fouad 266 (BC 1세기 신명기)",
+      "critical_editions": [
+        "Göttingen Septuaginta (1931-, 점진 출판, 책별 분권)",
+        "Rahlfs-Hanhart (2006, 휴대용 표준판)",
+        "Cambridge Septuagint (Brooke-McLean, 1906-40, 미완)"
+      ]
+    },
+    "Targum_Onkelos": {
+      "official_name": "Targum Onkelos",
+      "date": "AD 2세기 이후 (편집형 5-6세기)",
+      "language": "Jewish Babylonian Aramaic",
+      "contents": "오경",
+      "significance": "공식 회당 타르굼, 비교적 직역"
+    },
+    "Targum_Jonathan": {
+      "official_name": "Targum Jonathan",
+      "date": "AD 2세기 이후 (편집형 7-8세기)",
+      "language": "Jewish Babylonian Aramaic",
+      "contents": "선지서 (전기·후기)"
+    },
+    "Targum_PseudoJonathan": {
+      "official_name": "Targum Pseudo-Jonathan",
+      "date": "AD 7-8세기",
+      "language": "Aramaic",
+      "contents": "오경",
+      "significance": "강한 의역·아가다(설화)"
+    },
+    "Peshitta_OT": {
+      "official_name": "Peshitta Old Testament",
+      "date": "2-4세기 (사본은 5세기 이후)",
+      "language": "Syriac",
+      "significance": "Leiden Peshitta Edition (1972-) 비평본 진행 중"
+    },
+    "Vulgate_OT": {
+      "official_name": "Vulgata (Hebraica Veritas)",
+      "siglum_symbol": "vg",
+      "date": "390-405 (제롬, Bethlehem)",
+      "language": "Latin",
+      "significance": "히브리어에서 직역 (이전 LA Vetus Latina는 LXX에서 중역)",
+      "critical_editions": "Stuttgart Vulgate (Weber-Gryson 5판, 2007), Wordsworth-White (Oxford 1889-1954)"
+    }
+  },
+  "famous_variants": {
+    "Mark_16:9-20": {
+      "passage": "마가복음 16:9-20 (긴 결말)",
+      "NA28_status": "이중 대괄호 ⟦16:9-20⟧ — 후대 첨가로 평가하나 전승상 가치 인정",
+      "omitting_witnesses": "ℵ, B, 304, syr-s, sa-mss, 일부 Armenian·Georgian",
+      "including_witnesses": "A, C, D, K, W, X, Δ, Θ, Π, f¹³, 33, Byz, lat, syr-c·syr-p·syr-h, bo",
+      "alternative_endings": ["짧은 결말 (L, Ψ, 099, 0112, 274mg, 579, l 1602, k(it), bo-pt)", "Freer Logion (Codex W만)"],
+      "key_scholars": "Metzger (UBS Textual Commentary 1994), J.K. Elliott (반대 입장), N.B. Stonehouse, James Snapp Jr.(KJV-Only/Byzantine 옹호)"
+    },
+    "John_7:53-8:11": {
+      "passage": "요한복음 7:53-8:11 (간음한 여인, Pericope Adulterae)",
+      "NA28_status": "이중 대괄호 ⟦7:53-8:11⟧ — 요한복음 원본에는 없으나 신뢰할만한 전승",
+      "omitting_witnesses": "P66, P75, ℵ, A*, B, C, L, N, T, W, Δ, Θ, Ψ, 0141, 0211, 22, 33, 124, 157, 209, 565, 1230, 1241, 1242, 1253, 1424\\*, sa, bo, ach², syr-s, syr-c, syr-p, georg",
+      "including_witnesses": "D, K, M, U, Γ, 28, 700, 892, 1009, 1010, 1071, 1079, 1195, 1216, 1344, 1365, 1546, 1646, 2148, Byz, it, vg, syr-h, bo-pt",
+      "alternative_locations": "f¹은 요 21장 뒤, f¹³은 눅 21:38 뒤, 일부 사본은 요 7:36 뒤",
+      "key_scholars": "Chris Keith, *The Pericope Adulterae, the Gospel of John, and the Literacy of Jesus* (2009); Tommy Wasserman, Jennifer Knust"
+    },
+    "1John_5:7-8_Comma": {
+      "passage": "요한일서 5:7-8 (Comma Johanneum, 삼위일체 본문)",
+      "NA28_status": "본문에 없음 — 라틴어 사본에서 4세기 이후 점진 확산",
+      "omitting_witnesses": "P74?, ℵ, A, B, Ψ, K, L, P, 048, 049, 056, 0142, 33, 81, 88, 104, 326, 330, 365, 436, 451, 614, 629\\*, 630, 945, 1241, 1505, 1739, 1881, 2127, 2412, 2492, Byz, vg-cl(부분)·vg-ww·vg-st (4세기 이전 모든 그리스어 사본)",
+      "including_witnesses": "61 (Codex Montfortianus, c. 1520, Erasmus를 위해 만들어진 의혹), 629 corr, 918 (16세기), 2318 (18세기), 2473 (17세기), 비판본 일부 라틴어 사본; vg-cl (Clementine Vulgate)에서만 정착",
+      "history": "Priscillian (4세기) 첫 명시 인용; Erasmus 1516년 1·2판 제외 → 1522년 3판부터 포함 (Codex Montfortianus 발견 후) → TR/KJV로 전승",
+      "doctrinal_safeguard": "삼위일체 교리는 마 28:19·고후 13:13·요 1:1·요 14:26 등에서 충분히 지지"
+    },
+    "Matt_6:13_Doxology": {
+      "passage": "마태복음 6:13 (주기도문 송영부)",
+      "NA28_status": "본문에 없음",
+      "omitting_witnesses": "ℵ, B, D, Z, 0170, f¹, l 547, lat (a, b, ff¹, h, l), vg, cop (sa, bo, mae)",
+      "including_witnesses": "L, W, Δ, Θ, 0233, f¹³, 33, 565, 579, 700, 892, 1241, 1424, Byz, syr (c, h, p), Didache 8:2",
+      "alternative_forms": "ὅτι σοῦ ἐστιν ἡ βασιλεία καὶ ἡ δύναμις καὶ ἡ δόξα εἰς τοὺς αἰῶνας ἀμήν (대다수 변종)"
+    },
+    "Acts_8:37": {
+      "passage": "사도행전 8:37 (에디오피아 내시의 신앙고백)",
+      "NA28_status": "본문에 없음 (해당 절 번호 자체 누락)",
+      "omitting_witnesses": "P45, P74, ℵ, A, B, C, Ψ, 33, 81, 614, vg, syr-p, cop (sa, bo), Byz pt",
+      "including_witnesses": "E (Codex Laudianus), 4, 36, 88, 242, 257, 323, 467, 629, 945, 1739, 1877, 2818, it (특히), vg-mss, Irenaeus, Cyprian",
+      "irenaeus_citation": "*Adversus Haereses* III.12.8 (c. 180)"
+    }
+  },
+  "ne_principles": [
+    {
+      "name": "Lectio difficilior potior",
+      "korean": "어려운 독법이 우선",
+      "note": "필사자는 어려운 본문을 쉽게 만들지, 그 반대로는 잘 안 한다"
+    },
+    {
+      "name": "Lectio brevior potior",
+      "korean": "짧은 독법이 우선",
+      "note": "필사자는 첨가하는 경향이 있다 (단, homoioteleuton/homoioarchton 누락 예외)"
+    },
+    {
+      "name": "Author style",
+      "korean": "저자 문체 일치"
+    },
+    {
+      "name": "Context fit",
+      "korean": "문맥 적합성"
+    },
+    {
+      "name": "Explanatory power",
+      "korean": "다른 독법 발생을 설명할 수 있는 독법 우선"
+    }
+  ],
+  "methodologies": {
+    "Reasoned_Eclecticism": "외부·내부 증거 함께 평가. NA28 본문 결정의 기본",
+    "Thoroughgoing_Eclecticism": "내부 증거 우선 (Kilpatrick·J.K. Elliott)",
+    "Genealogical_Method": "Westcott-Hort 19세기 — 사본 계열의 계통도 추적",
+    "CBGM": {
+      "full_name": "Coherence-Based Genealogical Method",
+      "developer": "Gerd Mink (INTF Münster)",
+      "applied_in": "NA28의 공동서신·사도행전, ECM 본문 결정",
+      "future": "NA29에서 마가복음 적용 예정"
+    },
+    "Byzantine_Priority": {
+      "advocates": "Hodges-Farstad (1985), Maurice Robinson & William Pierpont (1991, 2005, 2018)",
+      "principle": "비잔틴 다수 사본 우선"
+    }
+  }
+}

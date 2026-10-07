@@ -1,0 +1,250 @@
+{
+  "_meta": {
+    "purpose": "검증된 헬라어/히브리어 핵심 단어 카탈로그. 본 스킬이 원어 분석을 할 때 본 카탈로그의 음역·기본 의미·BDAG/BDB/HALOT 정의를 그대로 사용한다. 카탈로그에 없는 단어는 *'표준 어휘사전 직접 확인 권장'*으로 우회 또는 BDAG/HALOT 직접 인용으로만 사용.",
+    "lexicon_sources": ["BDAG (NT Greek)", "BDB (OT Hebrew)", "HALOT (OT Hebrew/Aramaic)", "LSJ (Classical Greek)"],
+    "last_updated": "2026-05-16"
+  },
+  "greek_NT": {
+    "χάρις": {
+      "transliteration": "charis",
+      "korean_phonetic": "카리스",
+      "basic_meaning": "grace, favor, kindness, gift",
+      "BDAG_summary": "(1) practical application of goodwill, favor; (2) state of being kindly disposed; (3) gift, benefaction; (4) gratitude",
+      "verified_passages": ["엡 2:8", "롬 3:24", "고후 12:9"]
+    },
+    "πίστις": {
+      "transliteration": "pistis",
+      "korean_phonetic": "피스티스",
+      "basic_meaning": "faith, trust, faithfulness, belief",
+      "BDAG_summary": "(1) state of being someone in whom confidence can be placed, faithfulness; (2) state of believing on the basis of reliability, trust; (3) that which is believed, body of faith/belief/teaching",
+      "verified_passages": ["엡 2:8", "롬 1:17", "히 11:1", "갈 5:22"]
+    },
+    "ἀγάπη": {
+      "transliteration": "agapē",
+      "korean_phonetic": "아가페",
+      "basic_meaning": "love, esp. self-giving love",
+      "BDAG_summary": "(1) the quality of warm regard for and interest in another, love; (2) a common meal eaten in connection with worship",
+      "verified_passages": ["요 3:16", "고전 13:1-13", "요일 4:7-8", "갈 5:22"],
+      "WARNING": "신약 헬라어에서 ἀγάπη와 φιλέω가 *항상* 구분된 의미를 갖는다는 가정은 과장된 어원학. 요한복음에서 두 단어 상호교환 사용 (요 5:20, 11:3,5,36). D.A. Carson Exegetical Fallacies 표준 비판."
+    },
+    "φιλέω": {
+      "transliteration": "phileō",
+      "korean_phonetic": "필레오",
+      "basic_meaning": "to love, to have affection for, to kiss",
+      "BDAG_summary": "(1) to have a special interest in someone, have affection for, like; (2) to kiss",
+      "verified_passages": ["요 21:15-17", "요 5:20", "요 11:3,36"],
+      "WARNING": "ἀγαπάω와의 상호교환 사용 다수. 단어 구분으로 의미 만들기 금지."
+    },
+    "λόγος": {
+      "transliteration": "logos",
+      "korean_phonetic": "로고스",
+      "basic_meaning": "word, message, account, reason",
+      "BDAG_summary": "(1) communication of thought, word; (2) computation, reckoning; (3) the personalized expression of God's plan (요 1:1)",
+      "verified_passages": ["요 1:1", "히 4:12", "골 3:16"]
+    },
+    "σώζω": {
+      "transliteration": "sōzō",
+      "korean_phonetic": "소조",
+      "basic_meaning": "to save, deliver, rescue",
+      "BDAG_summary": "(1) to preserve or rescue from natural dangers and afflictions; (2) to save or preserve from transcendent danger or destruction",
+      "verified_passages": ["엡 2:5", "엡 2:8", "행 16:31", "롬 10:9"],
+      "morphology_notes": "σεσῳσμένοι (sesōsmenoi, 엡 2:8) = 완료수동분사 nom pl masc"
+    },
+    "ποίημα": {
+      "transliteration": "poiēma",
+      "korean_phonetic": "포이에마",
+      "basic_meaning": "that which is made, work, workmanship",
+      "BDAG_summary": "that which is made by someone, work, what is made",
+      "verified_passages": ["엡 2:10", "롬 1:20"],
+      "etymology_note": "영어 *poem*의 어원. ποιέω(만들다)에서 파생."
+    },
+    "δικαιοσύνη": {
+      "transliteration": "dikaiosynē",
+      "korean_phonetic": "디카이오쉬네",
+      "basic_meaning": "righteousness, justice",
+      "BDAG_summary": "(1) the quality, state, or practice of judicial responsibility w. focus on fairness, justice; (2) quality or state of juridical correctness with focus on redemptive action; (3) the quality or characteristic of upright behavior, uprightness",
+      "verified_passages": ["롬 1:17", "롬 3:21-26", "마 6:33"]
+    },
+    "μετανοέω": {
+      "transliteration": "metanoeō",
+      "korean_phonetic": "메타노에오",
+      "basic_meaning": "to change one's mind, to repent",
+      "BDAG_summary": "(1) change one's mind; (2) feel remorse, repent, be converted",
+      "verified_passages": ["마 4:17", "막 1:15", "행 2:38"]
+    },
+    "μακάριος": {
+      "transliteration": "makarios",
+      "korean_phonetic": "마카리오스",
+      "basic_meaning": "blessed, fortunate, happy",
+      "BDAG_summary": "pert. to being especially favored, blessed, fortunate, happy",
+      "verified_passages": ["마 5:3-12", "눅 6:20-22", "약 1:12"],
+      "LXX_correspondence": "히브리어 אַשְׁרֵי (ashre, 시 1:1 등)의 70인역 표준 번역"
+    },
+    "καρπός": {
+      "transliteration": "karpos",
+      "korean_phonetic": "카르포스",
+      "basic_meaning": "fruit, produce, result",
+      "BDAG_summary": "(1) the edible product of plants; (2) result or outcome",
+      "verified_passages": ["갈 5:22", "요 15:1-8", "마 7:16-20"],
+      "morphology_notes": "갈 5:22 단수 καρπός (vs ἔργα 복수, 5:19) — 학계 다수 강조점"
+    },
+    "λαῖλαψ": {
+      "transliteration": "lailaps",
+      "korean_phonetic": "라일랍스",
+      "basic_meaning": "whirlwind, hurricane, violent storm",
+      "BDAG_summary": "a violent storm whirling about, hurricane, whirlwind, fierce gust of wind",
+      "verified_passages": ["막 4:37", "눅 8:23", "벧후 2:17"]
+    },
+    "φιμόω": {
+      "transliteration": "phimoō",
+      "korean_phonetic": "피모오",
+      "basic_meaning": "to muzzle, silence",
+      "BDAG_summary": "(1) muzzle; (2) silence, put to silence",
+      "verified_passages": ["막 1:25", "막 4:39", "마 22:34"],
+      "morphology_notes": "막 4:39 πεφίμωσο = 완료수동명령 2sg (Wallace, Greek Grammar Beyond the Basics)"
+    },
+    "παρακαλέω": {
+      "transliteration": "parakaleō",
+      "korean_phonetic": "파라칼레오",
+      "basic_meaning": "to call to one's side, urge, exhort, comfort",
+      "BDAG_summary": "(1) call to one's side; (2) urge, exhort; (3) request, implore; (4) comfort, encourage; (5) try to console",
+      "verified_passages": ["롬 12:1", "고후 1:3-7", "엡 4:1"]
+    },
+    "θυσία": {
+      "transliteration": "thysia",
+      "korean_phonetic": "튀시아",
+      "basic_meaning": "sacrifice, offering",
+      "BDAG_summary": "(1) the act of offering; (2) that which is offered as a sacrifice",
+      "verified_passages": ["롬 12:1", "엡 5:2", "히 13:15-16"]
+    },
+    "λογικός": {
+      "transliteration": "logikos",
+      "korean_phonetic": "로기코스",
+      "basic_meaning": "rational, spiritual, reasonable",
+      "BDAG_summary": "pert. to being carefully thought through, thoughtful; pert. to being rational/spiritual",
+      "verified_passages": ["롬 12:1", "벧전 2:2"],
+      "interpretation_debate": "롬 12:1 λογικὴν 번역 학계 논쟁 — 영적/이성적/합당한. Moo(NICNT), Cranfield(ICC) 모두 양면 의미 인정."
+    },
+    "μεταμορφόω": {
+      "transliteration": "metamorphoō",
+      "korean_phonetic": "메타모르포오",
+      "basic_meaning": "to transform, transfigure",
+      "BDAG_summary": "to change in a manner visible to others, be transfigured / transformed",
+      "verified_passages": ["롬 12:2", "고후 3:18", "마 17:2"],
+      "morphology_notes": "롬 12:2 현재수동명령 — 지속적 변화 (Wallace 표준)"
+    },
+    "ἐγὼ εἰμί": {
+      "transliteration": "egō eimi",
+      "korean_phonetic": "에고 에이미",
+      "basic_meaning": "I am",
+      "BDAG_summary": "Predicative or absolute self-designation",
+      "verified_passages": ["요 6:35,48", "요 8:12", "요 8:58", "요 10:7,9,11,14", "요 11:25", "요 14:6", "요 15:1,5", "출 3:14 LXX"],
+      "WARNING": "요한복음 '나는 ~다' 7가지 한정은 임의 분류. 서술형 ego eimi가 4:26, 8:24,28,58, 13:19, 18:5 등 다수 추가. 7=완전수 의미 부여 곡해."
+    },
+    "ὅμοιον": {
+      "transliteration": "homoion",
+      "korean_phonetic": "호모이온",
+      "basic_meaning": "like, similar to",
+      "BDAG_summary": "pert. to being similar in kind",
+      "verified_passages": ["계 1:13", "계 14:14"]
+    },
+    "ἀρχή": {
+      "transliteration": "archē",
+      "korean_phonetic": "아르케",
+      "basic_meaning": "beginning, origin, ruler, principality",
+      "BDAG_summary": "(1) the commencement of something as an action, process, or state of being, beginning; (2) a power or authority, ruler",
+      "verified_passages": ["요 1:1", "계 1:8", "계 21:6", "사 44:6 LXX 평행"]
+    }
+  },
+  "hebrew_OT": {
+    "חֶסֶד": {
+      "transliteration": "ḥesed",
+      "korean_phonetic": "헤세드",
+      "basic_meaning": "steadfast love, covenant loyalty, mercy",
+      "BDB_HALOT_summary": "loyal love, kindness, especially within covenant context",
+      "verified_passages": ["시 23:6", "출 34:6-7", "호 6:6", "미 6:8"],
+      "scholarly_note": "Nelson Glueck 1927년 박사논문 (Das Wort hesed im alttestamentlichen Sprachgebrauche) 이후 *언약적 신실한 사랑*으로 학계 표준 정의."
+    },
+    "רֹעֶה": {
+      "transliteration": "roʿeh",
+      "korean_phonetic": "로에",
+      "basic_meaning": "shepherd, pastor",
+      "BDB_HALOT_summary": "shepherd; metaphorical: leader, ruler",
+      "verified_passages": ["시 23:1", "사 40:11", "겔 34장", "창 49:24"]
+    },
+    "צַלְמָוֶת": {
+      "transliteration": "tsalmaveth",
+      "korean_phonetic": "찰마벳",
+      "basic_meaning": "deep darkness, shadow of death",
+      "BDB_HALOT_summary": "traditional reading: 'shadow of death' (tsel + maveth); modern alternative: 'deep darkness' (single root tslmt)",
+      "verified_passages": ["시 23:4", "욥 3:5", "욥 10:21-22", "사 9:2", "암 5:8"],
+      "etymology_debate": "전통적 tsel+mavet (그늘+죽음) vs 단일어원 tsalmut (깊은 어둠). NRSV·ESV *darkest valley*로 후자 채택. 학계 양쪽 견해 모두 정통."
+    },
+    "אַשְׁרֵי": {
+      "transliteration": "ashre",
+      "korean_phonetic": "아쉐레",
+      "basic_meaning": "blessed, happy",
+      "BDB_HALOT_summary": "construct plural exclamation: 'O the happinesses of'",
+      "verified_passages": ["시 1:1", "시 32:1-2", "시 119:1-2"],
+      "LXX_correspondence": "헬라어 μακάριος (마 5:3-12)의 히브리어 평행"
+    },
+    "אֶבֶן": {
+      "transliteration": "even",
+      "korean_phonetic": "에벤",
+      "basic_meaning": "stone",
+      "BDB_HALOT_summary": "stone, rock; building stone; weight",
+      "verified_passages": ["삼상 17:40", "시 118:22", "단 2:34-35"]
+    },
+    "קֶלַע": {
+      "transliteration": "qelaʿ",
+      "korean_phonetic": "켈라",
+      "basic_meaning": "sling; curtain (homonym)",
+      "BDB_HALOT_summary": "sling (weapon); curtain or hanging (separate root)",
+      "verified_passages": ["삼상 17:40", "삼상 17:49-50", "삿 20:16"]
+    },
+    "נָסָה": {
+      "transliteration": "nasah",
+      "korean_phonetic": "나사",
+      "basic_meaning": "to test, prove, try",
+      "BDB_HALOT_summary": "to test, try, prove (often of God testing humans)",
+      "verified_passages": ["창 22:1", "출 16:4", "신 8:2"]
+    },
+    "יָחִיד": {
+      "transliteration": "yachid",
+      "korean_phonetic": "야히드",
+      "basic_meaning": "only, only one, solitary",
+      "BDB_HALOT_summary": "only, only one, beloved (unique)",
+      "verified_passages": ["창 22:2,12,16", "사 49:21", "암 8:10", "슥 12:10"],
+      "LXX_correspondence": "70인역에서 ἀγαπητός (agapētos, 사랑하는)로 번역 — 막 1:11, 9:7 의도적 평행"
+    },
+    "עָקַד": {
+      "transliteration": "ʿaqad",
+      "korean_phonetic": "아카드",
+      "basic_meaning": "to bind",
+      "BDB_HALOT_summary": "to bind (especially of binding for sacrifice)",
+      "verified_passages": ["창 22:9"],
+      "etymology_note": "유대 전통 명칭 *Akedah* (אֲקֵדָה, 결박)의 어원"
+    },
+    "יְהוָה יִרְאֶה": {
+      "transliteration": "YHWH yireh",
+      "korean_phonetic": "여호와 이레",
+      "basic_meaning": "YHWH will see / will provide",
+      "BDB_HALOT_summary": "place name in Gen 22:14, from root ra'ah (see); play on 'YHWH sees and provides'",
+      "verified_passages": ["창 22:14"]
+    },
+    "טוֹב": {
+      "transliteration": "tov",
+      "korean_phonetic": "토브",
+      "basic_meaning": "good",
+      "BDB_HALOT_summary": "good (in moral, aesthetic, practical senses)",
+      "verified_passages": ["창 1:4,10,12,18,21,25,31", "시 23:6", "시 34:8"]
+    }
+  },
+  "_usage_protocol": {
+    "rule_1": "본 카탈로그에 *있는* 단어를 인용할 때는 카탈로그의 음역·의미·BDAG/HALOT 요약을 그대로 사용한다.",
+    "rule_2": "본 카탈로그에 *없는* 단어를 인용할 때는 'BDAG/HALOT 직접 확인 권장' 명시하고 신중하게.",
+    "rule_3": "WARNING 표시가 있는 단어는 그 경고를 반드시 응답에 반영한다 (예: ἀγάπη·φιλέω 구분 곡해).",
+    "rule_4": "morphology_notes는 Wallace Greek Grammar 표준 문법 분석. 임의 변형 금지.",
+    "rule_5": "verified_passages에 있는 본문에 한해 그 단어 사용을 단정. 그 외 본문은 *해당 본문에서도 사용되는지* 별도 확인 필요."
+  }
+}

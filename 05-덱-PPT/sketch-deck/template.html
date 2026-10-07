@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sketch Deck — Chat과 Work, 언제 쓸까?</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+/* ═══ 토큰 (영상 프레임 실측값 — 변경 금지) ═══ */
+:root{
+  --paper:#F8F7F2;   /* 미색 종이. 순백·회색 금지 */
+  --ink:#1B1B1B;     /* 잉크. 순검정 금지 */
+  --blue:#1F6FE5;    /* 유일한 유채색: 키워드·키커·번호·밑줄 */
+  --gray:#6F6F6F;    /* 보조 라벨·우상단 노트 (종이 위 4.6:1) */
+  --line:#2A2A2A;    /* 손그림 박스 테두리 */
+  --stroke:3px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;background:#2b2a27;overflow:hidden}
+body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Noto Sans KR",sans-serif;color:var(--ink);word-break:keep-all}
+
+/* ═══ 스테이지 16:9 ═══ */
+#stage{position:absolute;top:50%;left:50%;width:1920px;height:1080px;
+  transform:translate(-50%,-50%) scale(var(--scale,1));transform-origin:center;background:var(--paper)}
+.slide{position:absolute;inset:0;display:none;background:var(--paper)}
+.slide.active{display:block}
+
+/* 좌상단 키커 · 우상단 노트 */
+.kicker{position:absolute;top:56px;left:128px;font-size:20px;font-weight:600;color:var(--blue);letter-spacing:-0.01em}
+.note{position:absolute;top:58px;right:128px;font-size:18px;font-weight:500;color:var(--gray)}
+
+/* 헤드라인: 좌상단, 800, 부분 파랑 + 손그림 밑줄 */
+h1{position:absolute;top:92px;left:128px;right:128px;font-size:56px;font-weight:800;letter-spacing:-0.025em;line-height:1.25}
+em{font-style:normal;color:var(--blue)}
+h1 em.ul{position:relative;display:inline-block}
+h1 em.ul::after{content:"";position:absolute;left:-2%;right:-4%;bottom:-10px;height:12px;
+  background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 12' preserveAspectRatio='none'><path d='M2 7 Q60 2 100 6 T198 5' fill='none' stroke='%231F6FE5' stroke-width='4' stroke-linecap='round'/></svg>") no-repeat center/100% 100%;
+  transform:scaleX(0);transform-origin:left}
+.active h1 em.ul::after{animation:draw .45s .55s ease both}
+@keyframes draw{to{transform:scaleX(1)}}
+
+/* 무대: 헤드라인 아래 ~ 자막 위 */
+.stage{position:absolute;top:220px;left:128px;right:128px;height:560px}
+
+/* 하단 대형 자막: 한 슬라이드 = 자막 한 줄 */
+.cap{position:absolute;bottom:88px;left:0;right:0;text-align:center;font-size:64px;font-weight:800;letter-spacing:-0.03em}
+
+/* ═══ 손그림 부품 ═══ */
+/* 박스: 테두리를 가상요소에 두고 거기만 거칠게 — 글자는 선명 */
+.box{position:relative;padding:26px 30px;background:var(--paper)}
+.box::before{content:"";position:absolute;inset:0;border:var(--stroke) solid var(--line);border-radius:8px 10px 7px 11px;filter:url(#rough);pointer-events:none}
+.box .lab{font-size:17px;font-weight:600;color:var(--blue);margin-bottom:6px}
+.box .t{font-size:30px;font-weight:800;line-height:1.3}
+.box .s{font-size:19px;color:var(--gray);margin-top:6px;font-weight:500}
+.box .n{font-size:18px;font-weight:700;color:var(--blue);margin-bottom:8px}
+.bar{height:4px;background:var(--blue);border-radius:2px;margin-top:14px}
+
+/* 말풍선: 박스 + 꼬리 */
+.bubble{padding:22px 30px}
+.bubble::after{content:"";position:absolute;left:34px;bottom:-16px;width:26px;height:26px;background:var(--paper);
+  border-left:var(--stroke) solid var(--line);border-bottom:var(--stroke) solid var(--line);transform:skewY(-30deg) rotate(-25deg);filter:url(#rough)}
+.bubble .t{font-size:28px}
+
+/* 인용/요청문 박스 */
+.quote{padding:22px 34px;font-size:26px;font-weight:600}
+
+/* 라벨 (그림 밑 설명) */
+.tag{font-size:18px;font-weight:600;color:var(--ink);text-align:center;margin-top:12px}
+.tag.blue{color:var(--blue);font-size:24px;font-weight:800}
+.small{font-size:20px;font-weight:600}
+
+/* 체크리스트 */
+.check{display:flex;flex-direction:column;gap:22px;font-size:26px;font-weight:700}
+.check li{list-style:none;display:flex;align-items:center;gap:14px}
+.check li::before{content:"";width:22px;height:22px;flex:none;
+  background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M4 12l5 5L20 6' fill='none' stroke='%231F6FE5' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'/></svg>") no-repeat center/contain}
+
+/* 화살표(손그림) */
+.arrow{width:70px;height:24px;flex:none;
+  background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 70 24'><path d='M3 12 Q35 10 60 12 M50 5 l11 7 -11 7' fill='none' stroke='%231B1B1B' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/></svg>") no-repeat center/contain}
+.arrow.blue{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 70 24'><path d='M3 12 Q35 10 60 12 M50 5 l11 7 -11 7' fill='none' stroke='%231F6FE5' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/></svg>")}
+.mini{display:inline-flex;align-items:center;gap:8px;font-size:20px;font-weight:600;color:var(--blue)}
+.mini .arrow{width:34px;height:16px}
+
+/* 캐릭터·오브젝트 (SVG 심볼 + 거친 필터) */
+.art{display:flex;flex-direction:column;align-items:center}
+.art svg{stroke:var(--ink);stroke-width:2.6;fill:none;stroke-linecap:round;stroke-linejoin:round;filter:url(#rough)}
+/* 심볼 내부 채움은 <symbol> 안에 fill 속성으로 직접 지정 (use 섀도 트리에는 문서 CSS 클래스가 닿지 않는다) */
+
+/* 레이아웃 도우미 */
+.row{display:flex;align-items:center;gap:40px}
+.col{display:flex;flex-direction:column;gap:22px}
+.panel{position:relative;padding:34px 36px}
+.panel .head{display:flex;align-items:baseline;gap:22px;margin-bottom:18px}
+.panel .head b{font-size:34px;font-weight:800;color:var(--blue)}
+.panel .head span{font-size:22px;font-weight:600}
+
+/* ═══ 등장 모션: 새 요소만 .in, 전 장면에서 이어진 요소는 클래스 없음 ═══ */
+.active .in{animation:fadeUp .5s ease both}
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+.active .d1{animation-delay:.15s}.active .d2{animation-delay:.3s}.active .d3{animation-delay:.45s}
+.active .d4{animation-delay:.6s}.active .d5{animation-delay:.75s}.active .d6{animation-delay:.9s}
+.slide:not(.active) .in{opacity:0}
+@media (prefers-reduced-motion:reduce){.in,h1 em.ul::after{animation:none!important;opacity:1!important;transform:none!important}}
+
+/* 내레이션 패널 (N 키) */
+#narr{position:fixed;left:0;right:0;bottom:0;background:rgba(20,20,20,.92);color:#fff;font-size:22px;line-height:1.6;
+  padding:18px 40px;display:none;z-index:98;font-weight:500}
+#narr.on{display:block}
+#nav{position:fixed;right:22px;bottom:18px;color:#fff;font-size:15px;font-weight:600;z-index:99}
+
+@media print{
+  html,body{overflow:visible;background:#fff}
+  #stage{position:static;transform:none;width:auto;height:auto}
+  .slide{display:block;position:relative;width:1920px;height:1080px;page-break-after:always}
+  .in,h1 em.ul::after{animation:none!important;opacity:1!important;transform:none!important}
+  h1 em.ul::after{transform:scaleX(1)!important}
+  #nav,#narr{display:none}
+}
+@page{size:1920px 1080px;margin:0}
+</style>
+</head>
+<body>
+
+<!-- ═══ SVG 심볼 라이브러리: 거친 필터 + 캐릭터·오브젝트 ═══ -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <filter id="rough" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="2.4" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <!-- 남자(발표 준비하는 나): 안경·파란 넥타이 -->
+    <symbol id="man" viewBox="0 0 120 180">
+      <path d="M40 40 Q42 16 60 15 Q78 16 80 40"/><path d="M44 26 Q52 20 60 22 M62 20 Q72 20 78 30"/>
+      <path d="M40 40 Q38 66 60 68 Q82 66 80 40"/>
+      <path d="M40 46 q-5 0 -4 7 M80 46 q5 0 4 7"/>
+      <circle cx="50" cy="45" r="7.5"/><circle cx="70" cy="45" r="7.5"/><path d="M57.5 45h5M42.5 44l-3-1M77.5 44l3-1"/>
+      <circle cx="50" cy="45.5" r="1.6" fill="#1B1B1B" stroke="none"/><circle cx="70" cy="45.5" r="1.6" fill="#1B1B1B" stroke="none"/>
+      <path d="M54 57 Q60 61 66 57"/>
+      <path d="M55 68v6M65 68v6"/>
+      <path d="M36 78 L55 73 L60 84 L65 73 L84 78 L88 122 L32 122 Z"/>
+      <path d="M53 74 L60 84 L67 74"/>
+      <path d="M60 85 l-5 8 l4 36 l1 3 l1 -3 l4 -36 z" fill="#1F6FE5"/>
+      <path d="M36 82 L23 124 M84 82 L97 124"/><circle cx="22" cy="127" r="4.5"/><circle cx="98" cy="127" r="4.5"/>
+      <path d="M36 122 H84 V166 H63 V134 H57 V166 H36 Z"/>
+      <path d="M34 166 h25 v7 h-27 z M61 166 h25 v7 h-27 z"/>
+    </symbol>
+    <!-- 로봇(챗GPT) -->
+    <symbol id="bot" viewBox="0 0 120 150">
+      <path d="M60 14V5"/><circle cx="60" cy="4" r="3" fill="#1B1B1B" stroke="none"/>
+      <rect x="30" y="14" width="60" height="44" rx="15"/>
+      <rect x="21" y="30" width="9" height="14" rx="3"/><rect x="90" y="30" width="9" height="14" rx="3"/>
+      <circle cx="47" cy="35" r="3.6" fill="#1B1B1B" stroke="none"/><circle cx="73" cy="35" r="3.6" fill="#1B1B1B" stroke="none"/>
+      <circle cx="40" cy="44" r="3.4" fill="#F3B5B5" stroke="none" opacity=".8"/><circle cx="80" cy="44" r="3.4" fill="#F3B5B5" stroke="none" opacity=".8"/>
+      <path d="M52 45 Q60 51 68 45"/>
+      <path d="M54 58v7M66 58v7"/>
+      <rect x="34" y="65" width="52" height="46" rx="13"/><circle cx="60" cy="86" r="5.5" fill="#1F6FE5"/>
+      <path d="M34 76 L18 98 M86 76 L102 98"/><circle cx="17" cy="101" r="4.5"/><circle cx="103" cy="101" r="4.5"/>
+      <path d="M48 111v22M72 111v22"/>
+      <rect x="37" y="133" width="22" height="8" rx="3"/><rect x="61" y="133" width="22" height="8" rx="3"/>
+    </symbol>
+    <!-- 노트북 책상 -->
+    <symbol id="desk" viewBox="0 0 220 140">
+      <path d="M10 92 H210 M30 92 V134 M190 92 V134 M60 92 V126 M160 92 V126"/>
+      <rect x="70" y="30" width="80" height="52" rx="4"/><path d="M62 82 H158 l6 8 H56 z"/><rect x="82" y="40" width="56" height="30" rx="2" fill="#E8EEF8"/>
+      <path d="M180 80 q-4 -22 10 -30 M182 80 q6 -18 20 -20 M181 80 v12 h12 v-12 z"/>
+      <path d="M22 92 q-2 -14 8 -16 M24 92 q4 -12 14 -12"/>
+    </symbol>
+    <!-- 메모 -->
+    <symbol id="memo" viewBox="0 0 60 60">
+      <path d="M8 6 H52 V54 H8 Z"/><path d="M52 42 L40 54 L40 42 Z" fill="#E8EEF8"/><path d="M16 18 h28 M16 27 h28 M16 36 h18"/>
+    </symbol>
+    <!-- 두루마리(첨부 파일) -->
+    <symbol id="scroll" viewBox="0 0 90 110">
+      <path d="M14 20 q-8 0 -8 8 q0 8 8 8 h48 q8 0 8 -8 q0 -8 -8 -8 z"/>
+      <path d="M22 36 V86 q0 10 10 10 h34 q10 0 10 -10 V36" /><path d="M62 96 q10 0 10 -10 q0 -8 -8 -8 q-8 0 -8 8"/>
+      <path d="M30 48 h24 M30 58 h30 M30 68 h20 M30 78 h26"/>
+    </symbol>
+    <!-- 폴더 -->
+    <symbol id="folder" viewBox="0 0 80 64">
+      <path d="M6 14 h24 l6 8 h38 v34 H6 z"/><path d="M6 26 h68" /><rect x="6" y="26" width="68" height="30" fill="#E8EEF8"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div id="stage">
+<!-- SLIDES START — 아래 예시 슬라이드를 지우고 여기에 채운다 -->
+
+<!-- ════ 장면 1: 문제 제기 ════ -->
+<section class="slide" data-narr="챗GPT의 Chat과 Work, 이름만 보면 언제 무엇을 써야 할지 헷갈립니다.">
+  <div class="kicker">챗GPT · 두 가지 시작점</div>
+  <h1 class="in">Chat과 Work, 언제 쓸까?</h1>
+  <div class="stage">
+    <div class="art in d1" style="position:absolute;left:0;top:0"><svg width="200" height="300"><use href="#man"/></svg><div class="tag">발표를 준비하는 나</div></div>
+    <div class="art in d4" style="position:absolute;right:0;top:40px"><svg width="180" height="225"><use href="#bot"/></svg><div class="tag">챗GPT</div></div>
+    <div class="in d2" style="position:absolute;left:300px;top:20px;font-size:34px;font-weight:800;color:var(--blue)">?</div>
+    <div class="row in d3" style="position:absolute;left:340px;top:6px;gap:60px">
+      <div class="box" style="padding:20px 60px"><div class="t" style="font-size:40px;color:var(--blue)">Chat</div></div>
+      <div class="box" style="padding:20px 60px"><div class="t" style="font-size:40px;color:var(--blue)">Work</div></div>
+    </div>
+    <div class="in d4" style="position:absolute;left:340px;top:130px;width:380px;height:3px;background:var(--line)"></div>
+  </div>
+  <p class="cap in d2"><em>Chat</em>과 <em>Work</em>, 언제 쓸까?</p>
+</section>
+
+<!-- 장면 1-2: 같은 헤드라인, 요소 추가 (이어진 요소는 .in 없음) -->
+<section class="slide" data-narr="같은 발표를 준비하는 상황으로 두 모드의 차이를 알아볼게요.">
+  <div class="kicker">챗GPT · 두 가지 시작점</div>
+  <h1>Chat과 Work, 언제 쓸까?</h1>
+  <div class="stage">
+    <div class="art" style="position:absolute;left:0;top:0"><svg width="200" height="300"><use href="#man"/></svg><div class="tag">발표를 준비하는 나</div></div>
+    <div class="art" style="position:absolute;right:0;top:40px"><svg width="180" height="225"><use href="#bot"/></svg><div class="tag">챗GPT</div></div>
+    <div style="position:absolute;left:300px;top:20px;font-size:34px;font-weight:800;color:var(--blue)">?</div>
+    <div class="row" style="position:absolute;left:340px;top:6px;gap:60px">
+      <div class="box" style="padding:20px 60px"><div class="t" style="font-size:40px;color:var(--blue)">Chat</div></div>
+      <div class="box" style="padding:20px 60px"><div class="t" style="font-size:40px;color:var(--blue)">Work</div></div>
+    </div>
+    <div class="box bubble in d1" style="position:absolute;left:340px;top:150px;width:700px;text-align:center"><div class="t" style="font-size:26px;font-weight:600">어느 쪽으로 시작하지?</div></div>
+    <div class="row in d3" style="position:absolute;left:400px;top:300px;gap:18px;align-items:flex-start">
+      <svg width="64" height="64" viewBox="0 0 60 60" style="stroke:var(--ink);stroke-width:2.6;fill:none;filter:url(#rough)"><path d="M10 12h40v36H10zM10 20h40M20 12v36"/><path d="M26 40 l6 -10 l6 6 l8 -12" style="stroke:var(--blue)"/></svg>
+      <div><div style="font-size:26px;font-weight:800">같은 발표 준비</div><div style="font-size:19px;color:var(--gray);font-weight:500">하나의 사례로 비교해요</div><div class="bar" style="width:220px;margin-top:10px"></div></div>
+    </div>
+  </div>
+  <p class="cap in d1"><em>같은 발표</em> 준비로 비교</p>
+</section>
+
+<!-- ════ 장면 2: 선택 기준 ════ -->
+<section class="slide" data-narr="Chat은 질문을 주고받으며 생각을 정리할 때 좋습니다.">
+  <div class="kicker">선택 기준</div>
+  <h1 class="in">생각을 정리할까, 결과를 만들까?</h1>
+  <div class="stage">
+    <div class="box panel in d1" style="position:absolute;left:0;top:0;width:760px;height:400px">
+      <div class="head"><b>Chat</b><span>질문하며 생각 정리</span></div>
+      <div class="row" style="align-items:flex-start;gap:30px">
+        <div class="art"><svg width="150" height="190"><use href="#bot"/></svg></div>
+        <div class="col" style="gap:16px;padding-top:6px">
+          <div class="box bubble" style="padding:16px 26px;width:330px"><div class="t" style="font-size:24px;font-weight:600">어떻게 설명하지?</div></div>
+          <div class="mini" style="color:var(--ink);margin-top:14px">질문 <span class="arrow blue"></span> 수정 <span class="arrow blue"></span> 정리</div>
+          <div style="font-size:24px;font-weight:800">대화하며 방향 잡기</div><div class="bar" style="width:300px;margin-top:2px"></div>
+        </div>
+      </div>
+    </div>
+    <div class="box panel in d3" style="position:absolute;right:0;top:0;width:760px;height:400px">
+      <div class="head"><b>Work</b><span>결과물 준비 맡기기</span></div>
+      <div class="art" style="align-items:flex-start"><svg width="150" height="190"><use href="#bot"/></svg></div>
+    </div>
+  </div>
+  <p class="cap in d1"><em>Chat</em> · 생각 정리</p>
+</section>
+
+<section class="slide" data-narr="Work는 만들 결과와 조건을 정해 주고, 여러 단계를 거쳐 그 결과물을 준비하는 일을 맡길 때 좋고요. 기준은 내가 원하는 결과입니다.">
+  <div class="kicker">선택 기준</div>
+  <h1>생각을 정리할까, 결과를 만들까?</h1>
+  <div class="stage">
+    <div class="box panel" style="position:absolute;left:0;top:0;width:760px;height:400px">
+      <div class="head"><b>Chat</b><span>질문하며 생각 정리</span></div>
+      <div class="row" style="align-items:flex-start;gap:30px">
+        <div class="art"><svg width="150" height="190"><use href="#bot"/></svg></div>
+        <div class="col" style="gap:16px;padding-top:6px">
+          <div class="box bubble" style="padding:16px 26px;width:330px"><div class="t" style="font-size:24px;font-weight:600">어떻게 설명하지?</div></div>
+          <div class="mini" style="color:var(--ink);margin-top:14px">질문 <span class="arrow blue"></span> 수정 <span class="arrow blue"></span> 정리</div>
+          <div style="font-size:24px;font-weight:800">대화하며 방향 잡기</div><div class="bar" style="width:300px;margin-top:2px"></div>
+        </div>
+      </div>
+    </div>
+    <div class="box panel" style="position:absolute;right:0;top:0;width:760px;height:400px">
+      <div class="head"><b>Work</b><span>결과물 준비 맡기기</span></div>
+      <div class="row" style="align-items:flex-start;gap:30px">
+        <div class="art"><svg width="150" height="190"><use href="#bot"/></svg></div>
+        <div class="col in d1" style="gap:14px;padding-top:6px">
+          <div class="row" style="gap:14px"><div class="box" style="padding:12px 18px"><div class="t" style="font-size:22px">결과</div></div><div class="box" style="padding:12px 18px"><div class="t" style="font-size:22px">조건</div></div><div class="box" style="padding:12px 18px"><div class="t" style="font-size:22px">단계</div></div></div>
+          <div style="font-size:24px;font-weight:800;margin-top:10px">기준은 <em>내가 원하는 결과</em></div><div class="bar" style="width:300px;margin-top:2px"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="cap in d1"><em>Work</em> · 결과물 준비</p>
+</section>
+
+<!-- ════ 장면 3: 사례 ════ -->
+<section class="slide" data-narr="예를 들어 내일 동료들에게 챗GPT를 소개해야 한다고 해 볼게요. 듣는 사람은 모두 AI 초보자입니다. 발표는 5분. 참고할 메모도 있습니다.">
+  <div class="kicker">하나의 사례로 따라가기</div>
+  <div class="note">설명용 예시</div>
+  <h1 class="in">내일, 챗GPT를 소개해야 한다면</h1>
+  <div class="stage">
+    <div class="box in d1" style="position:absolute;left:0;top:0;padding:14px 40px"><div class="t" style="font-size:24px;font-weight:700">발표 · 내일</div></div>
+    <div class="in d1" style="position:absolute;left:34px;top:70px;width:3px;height:260px;background:var(--line)"></div>
+    <div class="art in d2" style="position:absolute;left:40px;top:180px"><svg width="520" height="330"><use href="#desk"/></svg></div>
+    <div class="in d3" style="position:absolute;left:40px;top:520px;font-size:20px;font-weight:600">발표 준비를 시작합니다</div>
+    <div class="col in d4" style="position:absolute;right:60px;top:80px;gap:26px">
+      <div class="box" style="width:460px"><div class="n">듣는 사람</div><div class="t">모두 AI 초보자</div></div>
+      <div class="box" style="width:460px"><div class="n">시간</div><div class="t">발표 5분</div></div>
+      <div class="box" style="width:460px"><div class="n">재료</div><div class="t">참고할 메모 있음</div></div>
+    </div>
+  </div>
+  <p class="cap in d1"><em>AI 초보자</em>에게 5분 발표</p>
+</section>
+
+<!-- ════ 장면 4: CHAT 방향 잡기 ════ -->
+<section class="slide" data-narr="먼저 어떤 내용을 담을지 정해야겠죠. 이럴 때 Chat에 물어보세요. AI를 처음 쓰는 사람에게 챗GPT를 설명하려고 해, 어떤 순서로 말하면 좋을까?">
+  <div class="kicker">CHAT · 방향 잡기</div>
+  <h1 class="in">물어보고, <em class="ul">다듬고</em></h1>
+  <div class="stage">
+    <div class="art in d1" style="position:absolute;left:0;top:10px"><svg width="200" height="300"><use href="#man"/></svg><div class="tag">발표를 준비하는 나</div></div>
+    <div class="art in d2" style="position:absolute;left:230px;top:70px"><svg width="170" height="212"><use href="#bot"/></svg><div class="tag">챗GPT</div></div>
+    <div class="box bubble in d3" style="position:absolute;left:600px;top:20px;width:900px"><div class="lab">이어서 묻기</div><div class="t">어떤 순서로 설명할까?</div></div>
+  </div>
+  <p class="cap in d1">질문하며 <em>방향 잡기</em></p>
+</section>
+
+<section class="slide" data-narr="답을 보면서 '용어를 더 쉽게 풀어 줘', '직장에서 쓸 만한 예시도 넣어 줘' 하고 이어가면 됩니다. 답을 한 번 받고 끝낼 필요는 없습니다.">
+  <div class="kicker">CHAT · 방향 잡기</div>
+  <h1>물어보고, <em class="ul">다듬고</em></h1>
+  <div class="stage">
+    <div class="art" style="position:absolute;left:0;top:10px"><svg width="200" height="300"><use href="#man"/></svg><div class="tag">발표를 준비하는 나</div></div>
+    <div class="art" style="position:absolute;left:230px;top:70px"><svg width="170" height="212"><use href="#bot"/></svg><div class="tag">챗GPT</div></div>
+    <div class="art in d1" style="position:absolute;left:520px;top:22px"><svg width="60" height="60"><use href="#memo"/></svg></div>
+    <div class="box bubble in d1" style="position:absolute;left:600px;top:20px;width:900px"><div class="lab">이어서 묻기</div><div class="t">직장 예시도 넣어 줘</div></div>
+    <div class="row in d3" style="position:absolute;left:600px;top:190px;gap:26px;align-items:stretch">
+      <div class="box" style="width:270px"><div class="n">01</div><div class="t">소개</div><div class="s">어려운 말 없이</div></div>
+      <div class="box" style="width:270px"><div class="n">02</div><div class="t">예시</div><div class="s">메일 · 회의 준비</div></div>
+      <div class="box" style="width:270px"><div class="n">03</div><div class="t">정리</div><div class="s">핵심 한 가지</div></div>
+    </div>
+    <div class="in d5" style="position:absolute;left:600px;top:390px;font-size:22px;font-weight:700;color:var(--blue)">초보자에게 맞게 내용 다듬기<div class="bar" style="width:100%;margin-top:6px;height:3px"></div></div>
+  </div>
+  <p class="cap in d1"><em>더 쉽게</em>, 예시도 추가</p>
+</section>
+
+<section class="slide" data-narr="메모 파일을 첨부해서 핵심 내용을 요약해 달라고 하거나, 두 가지 설명 중 어느 쪽이 쉬운지도 비교할 수 있습니다. Chat에서도 파일을 다룹니다.">
+  <div class="kicker">CHAT · 내용 다듬기</div>
+  <h1 class="in">파일도 <em class="ul">함께 살펴봐요</em></h1>
+  <div class="stage">
+    <div class="art in d1" style="position:absolute;left:40px;top:40px"><svg width="220" height="270"><use href="#scroll"/></svg><div class="tag">메모 파일 첨부</div></div>
+    <div class="in d2" style="position:absolute;left:290px;top:120px"><span class="arrow blue" style="display:block;width:110px;height:38px"></span></div>
+    <div class="box in d2" style="position:absolute;left:440px;top:20px;width:1000px"><div class="lab">핵심 요약</div><div class="t">읽는 사람에게 맞는 설명으로</div></div>
+    <div class="box in d3" style="position:absolute;left:440px;top:190px;width:470px"><div class="lab">설명 A</div><div class="t">생성형 인공지능 활용</div><div class="s">용어 중심</div></div>
+    <div class="box in d4" style="position:absolute;left:970px;top:190px;width:470px"><div class="lab">설명 B</div><div class="t">AI에게 초안 부탁하기</div><div class="s">익숙한 말로</div><div class="bar"></div></div>
+    <div class="in d5" style="position:absolute;left:970px;top:380px;font-size:20px;font-weight:600;color:var(--blue)">초보자에게 더 쉬운 표현</div>
+    <div class="in d5" style="position:absolute;left:440px;top:440px;font-size:24px;font-weight:700;color:var(--blue)">✓ Chat에서도 파일 활용</div>
+  </div>
+  <p class="cap in d1"><em>Chat도</em> 파일 요약·비교</p>
+</section>
+
+<!-- ════ 장면 5: WORK ════ -->
+<section class="slide" data-narr="만들 자료가 정해졌다면 Work에 정리한 메모를 첨부하고 이렇게 요청하면 됩니다. 이 메모를 초보자용 발표자료 여섯 장으로 만들어 줘. 어려운 말은 풀어 쓰고 각 장에 발표자 메모를 넣어 줘.">
+  <div class="kicker">WORK · 결과물을 만드는 과정</div>
+  <div class="note">설명용 예시</div>
+  <h1 class="in">메모에서, <em class="ul">발표자료까지</em></h1>
+  <div class="stage">
+    <div class="art in d1" style="position:absolute;left:0;top:10px"><svg width="200" height="300"><use href="#man"/></svg><div class="tag">발표를 준비하는 나</div></div>
+    <div class="art in d3" style="position:absolute;left:320px;top:170px"><svg width="90" height="90"><use href="#memo"/></svg><div class="tag">정리한 메모</div></div>
+    <div class="art in d4" style="position:absolute;left:1060px;top:40px"><svg width="200" height="250"><use href="#bot"/></svg><div class="tag">챗GPT</div></div>
+    <div class="box bubble in d2" style="position:absolute;left:300px;top:0;width:640px;padding:18px 30px">
+      <div style="font-size:24px;font-weight:600">이 메모로 초보자용</div><div class="t" style="font-size:28px;color:var(--blue)">발표자료 6장을 만들어 줘</div><div class="s" style="color:var(--ink)">각 장에 발표자 메모도 넣어 줘</div>
+    </div>
+  </div>
+  <p class="cap in d1">메모로 <em>발표자료 6장</em></p>
+</section>
+
+<section class="slide" data-narr="Work는 이런 목표를 바탕으로 자료를 읽고 구성을 잡고, 사용할 수 있는 도구로 발표 파일을 만드는 식으로 일을 진행합니다. 도중에 진행 상황을 보고 방향을 바꿀 수도 있고요.">
+  <div class="kicker">WORK · 여러 단계를 이어서</div>
+  <div class="note">설명용 예시</div>
+  <h1 class="in">목표를 따라, 작업을 이어가요</h1>
+  <div class="stage">
+    <div class="art in d1" style="position:absolute;left:0;top:30px"><svg width="220" height="275"><use href="#bot"/></svg><div class="tag">챗GPT</div></div>
+    <div class="row in d2" style="position:absolute;left:300px;top:40px;gap:22px;align-items:stretch">
+      <div class="box" style="width:250px"><div class="n">01</div><div class="t">자료 확인</div><div class="s">첨부한 메모 읽기</div><div class="bar"></div></div><span class="arrow" style="align-self:center"></span>
+      <div class="box" style="width:250px"><div class="n">02</div><div class="t">구성</div><div class="s">발표 순서 잡기</div><div class="bar"></div></div><span class="arrow" style="align-self:center"></span>
+      <div class="box" style="width:250px"><div class="n">03</div><div class="t">파일 작성</div><div class="s">사용 가능한 도구</div><div class="bar"></div></div><span class="arrow" style="align-self:center"></span>
+      <div class="box" style="width:250px"><div class="n">04</div><div class="t">점검</div><div class="s">초안 살펴보기</div><div class="bar"></div></div>
+    </div>
+    <div class="box quote in d5" style="position:absolute;left:300px;top:300px;width:1180px">“이 부분은 더 쉽게 설명해 줘”</div>
+  </div>
+  <p class="cap in d1">진행 중에도 <em>방향 조정</em></p>
+</section>
+
+<section class="slide" data-narr="결과가 나오면 파일을 열어 보세요. 설명이 너무 어렵지 않은지, 출처와 숫자가 맞는지 확인합니다. '세 번째 장을 더 쉽게 바꿔 줘'처럼 고칠 부분도 짚어 주면 됩니다.">
+  <div class="kicker">WORK · 결과는 직접 확인</div>
+  <div class="note">설명용 예시</div>
+  <h1 class="in">열어보고, 고칠 부분을 짚어 주세요</h1>
+  <div class="stage">
+    <div class="art in d1" style="position:absolute;left:0;top:10px"><svg width="200" height="300"><use href="#man"/></svg><div class="tag">검토하는 나</div></div>
+    <ul class="check in d2" style="position:absolute;left:260px;top:60px">
+      <li>내용</li><li>출처</li><li>숫자</li>
+    </ul>
+    <div class="box in d3" style="position:absolute;left:560px;top:0;width:920px">
+      <div class="lab">03 · 질문하는 법</div><div class="t" style="font-size:36px">어려운 표현이 있나요?</div>
+      <div style="font-size:26px;font-weight:600;margin-top:12px;line-height:1.5">어려운 설명을 찾아<br>초보자가 쓰는 말로 바꿔요</div>
+      <div class="s">발표자 메모 · 듣는 사람의 눈높이로 설명하기</div>
+    </div>
+    <div class="box quote in d5" style="position:absolute;left:560px;top:360px;width:920px">“세 번째 장을 더 쉽게 바꿔 줘”</div>
+  </div>
+  <p class="cap in d1"><em>고칠 부분</em>을 콕 짚기</p>
+</section>
+
+<!-- ════ 장면 6: 겹치는 기능 ════ -->
+<section class="slide" data-narr="여기서 기능을 딱 잘라 나누진 마세요. Chat도 파일을 요약하고 자료를 비교할 수 있고, Work에서도 대화를 이어갑니다.">
+  <div class="kicker">CHAT + WORK · 함께 알아둘 점</div>
+  <h1 class="in"><em class="ul">겹치는 기능</em>도 있어요</h1>
+  <div class="stage">
+    <div class="art in d1" style="position:absolute;left:60px;top:0"><div class="tag blue" style="margin:0 0 10px">Chat</div><svg width="220" height="275"><use href="#bot"/></svg></div>
+    <div class="art in d3" style="position:absolute;right:60px;top:0"><div class="tag blue" style="margin:0 0 10px">Work</div><svg width="220" height="275"><use href="#bot"/></svg></div>
+    <div class="in d2" style="position:absolute;left:300px;top:150px;width:220px;height:3px;background:var(--blue);transform:rotate(-6deg)"></div>
+    <div class="in d2" style="position:absolute;right:300px;top:150px;width:220px;height:3px;background:var(--blue);transform:rotate(6deg)"></div>
+    <div class="in d2" style="position:absolute;left:0;right:0;top:60px;text-align:center;font-size:20px;font-weight:600;color:var(--blue)">두 모드 모두</div>
+    <div class="box in d2" style="position:absolute;left:640px;top:100px;width:400px;padding:30px 40px">
+      <div class="row" style="gap:26px"><div class="art"><svg width="70" height="56"><use href="#folder"/></svg></div><div><div class="t">대화</div><div class="t">자료 활용</div></div></div>
+    </div>
+  </div>
+  <p class="cap in d1"><em>겹치는 기능</em>도 있어요</p>
+</section>
+
+<!-- ════ 장면 7: 상황에 대입 ════ -->
+<section class="slide" data-narr="어떻게 설명할지 고민이라면 Chat으로 시작해 보세요. 이 자료로 발표 초안을 만들어야 한다면 Work를 골라 보세요.">
+  <div class="kicker">10 / 상황에 맞는 시작점</div>
+  <h1 class="in">내 상황에 대입해 고르기</h1>
+  <div class="stage">
+    <div class="box in d1" style="position:absolute;left:0;top:0;width:640px;height:420px;padding:30px 34px">
+      <div class="small">어떻게 설명하지?</div>
+      <div class="row" style="gap:40px;margin-top:20px"><div class="art"><svg width="180" height="225"><use href="#bot"/></svg></div><div><div style="font-size:44px;font-weight:800;color:var(--blue)">Chat</div><div class="s" style="color:var(--ink);font-size:22px">조언</div><div class="bar" style="width:220px"></div></div></div>
+    </div>
+    <div class="art in d2" style="position:absolute;left:0;right:0;top:0;align-items:center"><svg width="60" height="60" style="margin-bottom:6px"><use href="#memo"/></svg><svg width="170" height="255"><use href="#man"/></svg><div class="tag">내가 하려는 일</div></div>
+    <div class="box in d3" style="position:absolute;right:0;top:0;width:640px;height:420px;padding:30px 34px">
+      <div class="small">이 자료로 발표 초안</div>
+      <div class="row" style="gap:40px;margin-top:20px"><div class="art"><svg width="180" height="225"><use href="#bot"/></svg></div><div><div style="font-size:44px;font-weight:800;color:var(--blue)">Work</div><div class="s" style="color:var(--ink);font-size:22px">완성할 결과</div><div class="bar" style="width:220px"></div></div></div>
+    </div>
+  </div>
+  <p class="cap in d1">결과물을 맡길 땐 <em>Work</em></p>
+</section>
+
+<!-- ════ 장면 8: 네 가지 재료 ════ -->
+<section class="slide" data-narr="Work에 일을 맡길 때는 네 가지를 적어 보세요. 무엇을 만들지, 어떤 자료를 쓸지, 누굴 위해 어떤 조건으로 만들지, 마지막으로 무엇을 확인할지.">
+  <div class="kicker">11 / 일을 맡길 때</div>
+  <h1 class="in">Work 요청의 네 가지 재료</h1>
+  <div class="stage">
+    <div class="row" style="position:absolute;left:0;right:0;top:20px;gap:40px;justify-content:center;align-items:stretch">
+      <div class="box in d1" style="width:360px;text-align:center;padding:30px 24px"><div class="n" style="text-align:left"><em>01</em> <span style="color:var(--ink)">결과</span></div><div class="art"><svg width="80" height="64"><use href="#folder"/></svg></div><div class="t" style="margin-top:14px">발표자료<br>6장</div></div>
+      <div class="box in d2" style="width:360px;text-align:center;padding:30px 24px"><div class="n" style="text-align:left"><em>02</em> <span style="color:var(--ink)">자료</span></div><div class="art"><svg width="64" height="64"><use href="#memo"/></svg></div><div class="t" style="margin-top:14px">정리한<br>메모 파일</div></div>
+      <div class="box in d3" style="width:360px;text-align:center;padding:30px 24px"><div class="n" style="text-align:left"><em>03</em> <span style="color:var(--ink)">조건</span></div><div class="art"><svg width="64" height="80"><use href="#man"/></svg></div><div class="t" style="margin-top:14px">초보자용 ·<br>발표자 메모</div></div>
+      <div class="box in d4" style="width:360px;text-align:center;padding:30px 24px"><div class="n" style="text-align:left"><em>04</em> <span style="color:var(--ink)">확인</span></div><ul class="check" style="align-items:center;gap:8px;font-size:22px"><li>없는 내용 표시</li><li>초안 보여 주기</li></ul></div>
+    </div>
+    <div class="in d5" style="position:absolute;left:0;right:0;top:440px;text-align:center;font-size:24px;font-weight:600;color:var(--gray)">길게 쓰기보다, 내가 받을 것이 분명히 보이게</div>
+  </div>
+  <p class="cap in d1"><em>결과</em>·자료·조건·확인</p>
+</section>
+
+<!-- ════ 장면 9: 마무리 흐름 ════ -->
+<section class="slide" data-narr="처음에는 Chat으로 방향을 잡고, 만들 결과가 정해지면 Work로 이어가도 좋습니다. 오늘 하려던 일을 한 문장으로 적으면서 시작해 보세요.">
+  <div class="kicker">12 / 함께 쓰는 흐름</div>
+  <h1 class="in">방향을 잡고, 결과로 이어가기</h1>
+  <div class="stage">
+    <div class="row" style="position:absolute;left:0;right:0;top:0;justify-content:center;gap:34px;align-items:center">
+      <div class="art in d1"><div class="tag blue" style="margin:0 0 8px">Chat</div><svg width="170" height="212"><use href="#bot"/></svg><div class="tag">방향 잡기</div></div>
+      <span class="arrow in d2" style="width:110px;height:38px"></span>
+      <div class="art in d2"><div class="tag" style="visibility:hidden;margin:0 0 8px">.</div><svg width="150" height="225"><use href="#man"/></svg><div class="tag">내가 메모 정리</div></div>
+      <div class="art in d3"><svg width="60" height="60"><use href="#memo"/></svg><div class="tag" style="font-size:16px;color:var(--gray)">내가 직접 전달</div></div>
+      <span class="arrow in d3" style="width:110px;height:38px"></span>
+      <div class="art in d4"><div class="tag blue" style="margin:0 0 8px">Work</div><svg width="170" height="212"><use href="#bot"/></svg><div class="tag">결과 만들기</div></div>
+      <span class="arrow in d5" style="width:110px;height:38px"></span>
+      <div class="art in d5"><div class="tag" style="visibility:hidden;margin:0 0 8px">.</div><svg width="120" height="96"><use href="#folder"/></svg><div class="tag">검토할<br>발표자료</div></div>
+    </div>
+  </div>
+  <p class="cap in d1">오늘 할 일을 <em>한 문장으로</em></p>
+</section>
+
+<!-- SLIDES END -->
+</div>
+
+<div id="narr"></div>
+<div id="nav"></div>
+
+<script>
+const slides=[...document.querySelectorAll('.slide')],nav=document.getElementById('nav'),narr=document.getElementById('narr');
+let cur=0;
+function show(n){
+  cur=Math.max(0,Math.min(slides.length-1,n));
+  slides.forEach((s,i)=>s.classList.toggle('active',i===cur));
+  nav.textContent=(cur+1)+' / '+slides.length;
+  narr.textContent=slides[cur].dataset.narr||'';
+}
+addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key===' ')show(cur+1);
+  else if(e.key==='ArrowLeft')show(cur-1);
+  else if(e.key==='Home')show(0);
+  else if(e.key==='End')show(slides.length-1);
+  else if(e.key==='n'||e.key==='N')narr.classList.toggle('on');
+});
+addEventListener('click',e=>{if(e.clientX<innerWidth/2)show(cur-1);else show(cur+1)});
+let tx=null;
+addEventListener('touchstart',e=>tx=e.touches[0].clientX);
+addEventListener('touchend',e=>{if(tx===null)return;const dx=e.changedTouches[0].clientX-tx;if(dx<-40)show(cur+1);else if(dx>40)show(cur-1);tx=null});
+function fit(){document.getElementById('stage').style.setProperty('--scale',Math.min(innerWidth/1920,innerHeight/1080))}
+addEventListener('resize',fit);addEventListener('load',fit);fit();
+const q=new URLSearchParams(location.search);
+const h=parseInt(location.hash.slice(1));show(isNaN(h)?0:h-1);
+addEventListener('hashchange',()=>{const n=parseInt(location.hash.slice(1));if(!isNaN(n))show(n-1)});
+if(q.has('shot'))nav.style.display='none';
+// ?auto=4 → 4초마다 자동 진행 (화면 녹화용). 마지막 장에서 멈춘다.
+const auto=parseFloat(q.get('auto'));
+if(auto>0)setInterval(()=>{if(cur<slides.length-1)show(cur+1)},auto*1000);
+</script>
+</body>
+</html>

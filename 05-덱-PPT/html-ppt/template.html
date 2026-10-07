@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="aurora">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>html-ppt · 샘플 덱</title>
+<link rel="stylesheet" href="assets/fonts.css">
+<link rel="stylesheet" href="assets/base.css">
+<link rel="stylesheet" id="theme-link" href="assets/themes/aurora.css">
+<link rel="stylesheet" href="assets/animations/animations.css">
+<style>body{font-family:'Noto Sans KR',Inter,sans-serif}</style>
+</head>
+<body data-themes="aurora,minimal-white,tokyo-night,neo-brutalism,glassmorphism,japanese-minimal,cyberpunk-neon,sunset-warm" data-theme-base="assets/themes/">
+
+<div class="deck">
+
+  <!-- 1. 표지 · 캔버스 FX(starfield) -->
+  <section class="slide" data-title="표지">
+    <div style="position:absolute;inset:0;" data-fx="starfield"></div>
+    <div class="deck-header"><span class="eyebrow">html-ppt · HTML PPT Studio</span><span class="eyebrow">발표 현장용</span></div>
+    <div style="position:relative">
+      <p class="kicker">테마 36 · 레이아웃 31 · 애니메이션 47</p>
+      <h1 class="h1 anim-rise-in" data-anim="rise-in">발표장에서 <span class="gradient-text">살아 움직이는</span><br>HTML 프레젠테이션</h1>
+      <p class="lede">캔버스 FX 20종과 프레젠터 모드를 갖춘 정적 HTML 덱. 빌드 없이 파일 하나로 발표한다.</p>
+      <div class="row wrap mt-l" style="gap:8px">
+        <span class="pill pill-accent">캔버스 FX</span>
+        <span class="pill">프레젠터 모드</span>
+        <span class="pill">한글 최적화</span>
+        <span class="pill">키보드 내비</span>
+      </div>
+    </div>
+    <div class="deck-footer"><span class="dim2">aiden-44/html-ppt-skill</span><span class="slide-number" data-current="1" data-total="3"></span></div>
+    <div class="notes">표지 뒤에서 별이 흐르고 있습니다. data-fx="starfield" 한 줄이면 됩니다.</div>
+  </section>
+
+  <!-- 2. 자산 그리드 -->
+  <section class="slide" data-title="자산">
+    <p class="kicker">무엇이 들어 있나</p>
+    <h2 class="h2">테마·레이아웃·모션이 <span class="gradient-text">토큰 한 겹</span>으로 분리된다</h2>
+    <div class="grid g2 mt-l anim-stagger-list" data-anim-target>
+      <div class="card card-accent"><h4>테마 36종</h4><p class="dim">minimal-white부터 cyberpunk-neon, tokyo-night까지. <b>T</b> 키로 발표 중에도 갈아입는다.</p></div>
+      <div class="card card-accent"><h4>레이아웃 31종</h4><p class="dim">표지·목차·2단·타임라인·차트·인용 — 데모 데이터가 채워진 채로 온다.</p></div>
+      <div class="card card-accent"><h4>애니메이션 47종</h4><p class="dim">CSS 진입 효과 27종 + 캔버스 FX 20종(파티클·불꽃·매트릭스 레인·지식그래프).</p></div>
+      <div class="card card-accent"><h4>한글 최적화</h4><p class="dim">Noto Sans/Serif KR 내장, 한국어 트리거. Aiden 포크가 얹은 부분.</p></div>
+    </div>
+    <div class="deck-footer"><span class="dim2">assets</span><span class="slide-number" data-current="2" data-total="3"></span></div>
+    <div class="notes">기존 덱 스킬들과의 차이는 3·4번 카드 — 움직이는 효과와 발표 현장 도구입니다.</div>
+  </section>
+
+  <!-- 3. 프레젠터 모드 -->
+  <section class="slide" data-title="프레젠터 모드">
+    <p class="kicker">S 키 · Presenter Mode</p>
+    <h2 class="h2">발표자에게만 보이는 <span class="gradient-text">네 장의 카드</span></h2>
+    <div class="grid g4 mt-l anim-stagger-list" data-anim-target>
+      <div class="card"><p class="kicker">CURRENT</p><h4>지금 슬라이드</h4><p class="dim">청중이 보는 화면 미리보기</p></div>
+      <div class="card"><p class="kicker">NEXT</p><h4>다음 슬라이드</h4><p class="dim">다음에 올 화면을 미리 확인</p></div>
+      <div class="card card-accent"><p class="kicker">SCRIPT</p><h4>발표 대본</h4><p class="dim">슬라이드별 150~300자 축어 원고</p></div>
+      <div class="card"><p class="kicker">TIMER</p><h4>타이머</h4><p class="dim">경과 시간 · R 키로 리셋</p></div>
+    </div>
+    <p class="dim mt-l" style="font-size:15px">←/→ 이동 · <b>T</b> 테마 · <b>A</b> 모션 · <b>F</b> 전체화면 · <b>O</b> 개요 · <b>S</b> 프레젠터 · <b>N</b> 노트</p>
+    <div class="deck-footer"><span class="dim2">presenter</span><span class="slide-number" data-current="3" data-total="3"></span></div>
+    <div class="notes">대본이 필요한 실제 발표가 이 스킬의 존재 이유입니다. presenter-mode-reveal 템플릿을 쓰세요.</div>
+  </section>
+
+</div>
+<script src="assets/runtime.js"></script>
+<script src="assets/animations/fx-runtime.js"></script>
+</body></html>

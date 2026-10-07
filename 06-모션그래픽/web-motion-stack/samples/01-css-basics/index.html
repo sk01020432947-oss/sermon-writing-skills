@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><title>CSS 기본 움직임 · CSS Basics</title>
+<link rel="stylesheet" href="../../lib/stage.css">
+<style>
+.frame{background:#0b1012 !important;background-image:none !important}
+.scene{position:absolute;inset:0;overflow:hidden;font-family:Pretendard,'Noto Sans KR',sans-serif;color:#e9f1ef;letter-spacing:-.01em}
+.bg{position:absolute;inset:0;background:radial-gradient(55% 75% at 12% -5%,#15493e 0%,rgba(21,73,62,0) 70%),radial-gradient(55% 75% at 105% 105%,#2c2257 0%,rgba(44,34,87,0) 70%),#0b1012}
+.tag{position:absolute;display:flex;gap:8px;align-items:center;font:600 12px/1 'IBM Plex Mono',monospace;letter-spacing:.12em;color:#9fb3ae;text-transform:uppercase;white-space:nowrap}
+.tag b{background:#3ee6a8;color:#06231a;padding:3px 6px;border-radius:4px;font-weight:700}
+.panel{position:absolute;background:rgba(18,26,28,.82);border:1px solid rgba(255,255,255,.09);border-radius:12px}
+.code{font:13px/1.75 'IBM Plex Mono',monospace;color:#b9c9c4;white-space:pre}
+.chip{position:absolute;padding:7px 14px;border-radius:999px;border:1px solid rgba(62,230,168,.45);color:#bff5df;font:600 14px/1 Pretendard;background:rgba(62,230,168,.08);white-space:nowrap}
+.mint{color:#3ee6a8}.red{color:#ff5d4f}
+
+.ttl{position:absolute;left:64px;top:86px;font:800 44px/1.2 Pretendard}
+.codep{left:64px;top:200px;width:430px;height:400px;padding:22px 24px}
+.hl{position:absolute;left:12px;right:12px;height:24px;border-radius:5px;background:rgba(62,230,168,.13);border-left:3px solid #3ee6a8}
+.tile{position:absolute;width:300px;height:180px}
+.tile .lab{position:absolute;left:18px;top:16px;font:600 13px/1 'IBM Plex Mono';color:#8fa39e;letter-spacing:.08em}
+.tile .nm{position:absolute;left:18px;bottom:16px;font:700 20px/1 Pretendard}
+.obj{position:absolute;left:115px;top:55px;width:70px;height:70px;border-radius:14px;background:linear-gradient(135deg,#3ee6a8,#1fb889)}
+.word{position:absolute;left:0;right:0;top:66px;text-align:center;font:800 40px/1 Pretendard;color:#3ee6a8}
+</style></head>
+<body data-no="W01" data-cat="기술 · CSS" data-ko="CSS 기본 움직임" data-en="CSS Basics" data-meta="8초 · 나타나기·이동·크기·회전" data-dur="8" data-poster="7.4" data-size="1280x720">
+<main class="scene"><div class="bg"></div>
+  <div class="tag" style="left:64px;top:50px"><b>01</b>CSS · 스타일</div>
+  <div class="ttl">CSS만으로도 <span class="mint">움직인다</span></div>
+  <div class="panel codep"><div class="hl" id="hl" style="top:22px"></div><div class="code" style="position:relative">.title {
+  animation: rise 1s ease both;
+}
+@keyframes rise {
+  from { opacity: 0;
+         transform: translateY(40px); }
+  to   { opacity: 1;
+         transform: translateY(0); }
+}
+.icon { transition: transform .6s; }
+.icon:hover {
+  transform: scale(1.4) rotate(90deg);
+}</div></div>
+  <div class="panel tile" id="t1" style="left:540px;top:200px"><span class="lab">opacity</span><div class="word" id="o1">안녕</div><span class="nm">나타나기</span></div>
+  <div class="panel tile" id="t2" style="left:870px;top:200px"><span class="lab">translate</span><div class="obj" id="o2"></div><span class="nm">이동</span></div>
+  <div class="panel tile" id="t3" style="left:540px;top:420px"><span class="lab">scale</span><div class="obj" id="o3"></div><span class="nm">크기</span></div>
+  <div class="panel tile" id="t4" style="left:870px;top:420px"><span class="lab">rotate</span><div class="obj" id="o4"></div><span class="nm">회전</span></div>
+</main>
+<script src="../../lib/gsap.min.js"></script><script src="../../lib/stage.js"></script>
+<script>
+// 렌더용: CSS @keyframes는 seek가 안 되므로 같은 CSS 속성을 GSAP 타임라인이 대신 움직인다.
+const tl = Motion.timeline();
+tl.from('.ttl', {y: 30, autoAlpha: 0, duration: .7}, .2);
+tl.from('.codep', {x: -30, autoAlpha: 0, duration: .6}, .4);
+tl.from('.tile', {y: 30, autoAlpha: 0, stagger: .12, duration: .5}, .6);
+const lines = [0, 3, 4, 6, 9, 11];
+lines.forEach((l, i) => tl.to('#hl', {y: l * 22.75, duration: .35, ease: 'power2.inOut'}, 1.2 + i * 1));
+tl.fromTo('#o1', {autoAlpha: 0, y: 30}, {autoAlpha: 1, y: 0, duration: .9}, 1.4);
+tl.fromTo('#o2', {x: -80}, {x: 80, duration: 1.2, ease: 'power2.inOut', yoyo: true, repeat: 2}, 2.2);
+tl.fromTo('#o3', {scale: .4}, {scale: 1.4, duration: .9, ease: 'back.out(2)', yoyo: true, repeat: 3}, 3.1);
+tl.fromTo('#o4', {rotation: 0}, {rotation: 270, duration: 2.2, ease: 'power3.inOut'}, 4.3);
+tl.to('.tile', {borderColor: 'rgba(62,230,168,.5)', duration: .4, stagger: .1}, 6.6);
+Motion.ready();
+</script></body></html>

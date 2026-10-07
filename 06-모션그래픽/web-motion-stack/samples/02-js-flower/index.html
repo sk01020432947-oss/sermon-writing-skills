@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><title>자바스크립트로 프로그래밍한 움직임 · JS Flower</title>
+<link rel="stylesheet" href="../../lib/stage.css">
+<style>
+.frame{background:#0b1012 !important;background-image:none !important}
+.scene{position:absolute;inset:0;overflow:hidden;font-family:Pretendard,'Noto Sans KR',sans-serif;color:#e9f1ef;letter-spacing:-.01em}
+.bg{position:absolute;inset:0;background:radial-gradient(55% 75% at 12% -5%,#15493e 0%,rgba(21,73,62,0) 70%),radial-gradient(55% 75% at 105% 105%,#2c2257 0%,rgba(44,34,87,0) 70%),#0b1012}
+.tag{position:absolute;display:flex;gap:8px;align-items:center;font:600 12px/1 'IBM Plex Mono',monospace;letter-spacing:.12em;color:#9fb3ae;text-transform:uppercase;white-space:nowrap}
+.tag b{background:#3ee6a8;color:#06231a;padding:3px 6px;border-radius:4px;font-weight:700}
+.panel{position:absolute;background:rgba(18,26,28,.82);border:1px solid rgba(255,255,255,.09);border-radius:12px}
+.code{font:13px/1.75 'IBM Plex Mono',monospace;color:#b9c9c4;white-space:pre}
+.chip{position:absolute;padding:7px 14px;border-radius:999px;border:1px solid rgba(62,230,168,.45);color:#bff5df;font:600 14px/1 Pretendard;background:rgba(62,230,168,.08);white-space:nowrap}
+.mint{color:#3ee6a8}.red{color:#ff5d4f}
+
+.codep{left:64px;top:150px;width:520px;height:440px;padding:46px 24px 22px}
+.res{left:620px;top:150px;width:596px;height:440px}
+.cap2{position:absolute;left:18px;top:16px;font:600 12px/1 'IBM Plex Mono';color:#7c8f8a;letter-spacing:.12em}
+.k{color:#c792ea}.n{color:#ffb547}.f{color:#82aaff}
+#tv{position:absolute;left:24px;bottom:22px;font:600 14px 'IBM Plex Mono';color:#ffb547}
+.ttl{position:absolute;left:64px;top:610px;font:700 26px/1.3 Pretendard;color:#cfdcd8}
+</style></head>
+<body data-no="W02" data-cat="기술 · JAVASCRIPT" data-ko="수식으로 그리는 움직임" data-en="JS Flower" data-meta="8초 · 점 24개를 수식으로 배치" data-dur="8" data-poster="6" data-size="1280x720">
+<main class="scene"><div class="bg"></div>
+  <div class="tag" style="left:64px;top:100px"><b>02</b>JAVASCRIPT · 프로그래밍</div>
+  <div class="panel codep"><span class="cap2">● ● ●  flower.js</span><div class="code"><span class="k">for</span> (<span class="k">let</span> i = <span class="n">0</span>; i &lt; <span class="n">24</span>; i++) {
+  <span class="k">const</span> a = (i / <span class="n">24</span>) * Math.PI * <span class="n">2</span> + t;
+  <span class="k">const</span> r = <span class="n">150</span> + <span id="amp" class="n">0</span> * Math.<span class="f">cos</span>(<span class="n">6</span> * a);
+  dot[i].x = cx + Math.<span class="f">cos</span>(a) * r;
+  dot[i].y = cy + Math.<span class="f">sin</span>(a) * r;
+}</div><div id="tv">t = 0.00</div></div>
+  <div class="panel res"><span class="cap2">RESULT</span><svg id="sv" width="596" height="440"></svg></div>
+  <div class="ttl">숫자 하나(<span class="mint">60</span>)를 바꾸면 원이 꽃이 된다 — 움직임을 <span class="mint">수식</span>으로 짠다</div>
+</main>
+<script src="../../lib/gsap.min.js"></script><script src="../../lib/stage.js"></script>
+<script>
+const sv = document.getElementById('sv'), N = 24, cx = 298, cy = 228;
+let html = '<path id="pp" fill="none" stroke="#3ee6a8" stroke-opacity=".55" stroke-width="2"/>';
+for (let i = 0; i < N; i++) html += `<circle class="d" r="5" fill="#3ee6a8"/>`;
+sv.innerHTML = html;
+const dots = [...sv.querySelectorAll('.d')], pp = document.getElementById('pp');
+const st = {t: 0, A: 0, line: 0};
+function draw() {
+  const pts = [];
+  for (let i = 0; i < N; i++) {
+    const a = i / N * Math.PI * 2 + st.t;
+    const r = 150 + st.A * Math.cos(6 * a);
+    const x = cx + Math.cos(a) * r, y = cy + Math.sin(a) * r;
+    dots[i].setAttribute('cx', x); dots[i].setAttribute('cy', y); pts.push([x, y]);
+  }
+  // 점을 잇는 부드러운 곡선(Catmull-Rom → Bezier)
+  let d = `M${pts[0][0]},${pts[0][1]}`;
+  for (let i = 0; i < N; i++) {
+    const p0 = pts[(i - 1 + N) % N], p1 = pts[i], p2 = pts[(i + 1) % N], p3 = pts[(i + 2) % N];
+    d += ` C${p1[0] + (p2[0] - p0[0]) / 6},${p1[1] + (p2[1] - p0[1]) / 6} ${p2[0] - (p3[0] - p1[0]) / 6},${p2[1] - (p3[1] - p1[1]) / 6} ${p2[0]},${p2[1]}`;
+  }
+  pp.setAttribute('d', d); pp.style.opacity = st.line;
+  document.getElementById('amp').textContent = Math.round(st.A);
+  document.getElementById('tv').textContent = 't = ' + st.t.toFixed(2);
+}
+const tl = Motion.timeline();
+tl.from('.codep,.res', {y: 24, autoAlpha: 0, stagger: .15, duration: .6}, .1);
+tl.from('.d', {attr: {r: 0}, stagger: .02, duration: .3}, .5);
+tl.to(st, {t: 2.4, duration: 8, ease: 'none', onUpdate: draw}, 0);
+tl.to(st, {A: 60, duration: 1.6, ease: 'power3.inOut'}, 2.4);
+tl.to(st, {line: 1, duration: .8}, 3.6);
+tl.from('.ttl', {y: 20, autoAlpha: 0, duration: .6}, 4.2);
+draw();
+Motion.ready();
+</script></body></html>

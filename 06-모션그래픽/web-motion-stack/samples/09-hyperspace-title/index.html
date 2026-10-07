@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><title>하이퍼스페이스 타이틀 · Hyperspace Title</title>
+<link rel="stylesheet" href="../../lib/stage.css">
+<style>
+.frame{background:#0b1012 !important;background-image:none !important}
+.scene{position:absolute;inset:0;overflow:hidden;font-family:Pretendard,'Noto Sans KR',sans-serif;color:#e9f1ef;letter-spacing:-.01em}
+.bg{position:absolute;inset:0;background:radial-gradient(55% 75% at 12% -5%,#15493e 0%,rgba(21,73,62,0) 70%),radial-gradient(55% 75% at 105% 105%,#2c2257 0%,rgba(44,34,87,0) 70%),#0b1012}
+.tag{position:absolute;display:flex;gap:8px;align-items:center;font:600 12px/1 'IBM Plex Mono',monospace;letter-spacing:.12em;color:#9fb3ae;text-transform:uppercase;white-space:nowrap}
+.tag b{background:#3ee6a8;color:#06231a;padding:3px 6px;border-radius:4px;font-weight:700}
+.panel{position:absolute;background:rgba(18,26,28,.82);border:1px solid rgba(255,255,255,.09);border-radius:12px}
+.code{font:13px/1.75 'IBM Plex Mono',monospace;color:#b9c9c4;white-space:pre}
+.chip{position:absolute;padding:7px 14px;border-radius:999px;border:1px solid rgba(62,230,168,.45);color:#bff5df;font:600 14px/1 Pretendard;background:rgba(62,230,168,.08);white-space:nowrap}
+.mint{color:#3ee6a8}.red{color:#ff5d4f}
+
+#cv{position:absolute;inset:0;width:1280px;height:720px}
+.ttl{position:absolute;left:0;right:0;top:250px;text-align:center;font:300 150px/1 Pretendard;color:#f2fffa;text-shadow:0 0 40px rgba(62,230,168,.55);white-space:nowrap}
+.sub{position:absolute;left:0;right:0;top:450px;text-align:center;font:600 22px Pretendard;color:#cfdcd8}
+</style></head>
+<body data-no="G01" data-cat="문법 · 오프닝" data-ko="하이퍼스페이스 타이틀" data-en="Hyperspace Title" data-meta="6초 · 빛줄기 워프 + 글자 블러인" data-dur="6" data-poster="4.6" data-size="1280x720">
+<main class="scene">
+  <canvas id="cv"></canvas>
+  <div class="ttl" id="tt">역동적인</div>
+  <div class="sub" id="sb">이 영상은 <span class="mint">전부 코드</span>로 만들었습니다</div>
+</main>
+<script src="../../lib/gsap.min.js"></script><script src="../../lib/stage.js"></script>
+<script>
+const cv = document.getElementById('cv'), W = 1280, H = 720, DPR = window.devicePixelRatio || 1;
+cv.width = W * DPR; cv.height = H * DPR; const g = cv.getContext('2d'); g.scale(DPR, DPR);
+const r = Motion.rand(9), S = [];
+for (let i = 0; i < 520; i++) S.push({a: r() * Math.PI * 2, z0: r(), w: .6 + r() * 1.6, c: r() < .75 ? '120,240,200' : '200,190,255'});
+const st = {t: 0, speed: 0, glow: 0};
+function draw() {
+  g.fillStyle = '#05080a'; g.fillRect(0, 0, W, H);
+  const gr = g.createRadialGradient(W / 2, H / 2, 0, W / 2, H / 2, 420); gr.addColorStop(0, `rgba(62,230,168,${.25 * st.glow})`); gr.addColorStop(1, 'rgba(0,0,0,0)');
+  g.fillStyle = gr; g.fillRect(0, 0, W, H);
+  // 별의 거리 z = (z0 + 누적이동) mod 1. 누적이동 = 속도의 적분 → 시간의 순수함수
+  const travel = st.t * .08 + st.speed;
+  for (const s of S) {
+    const z = 1 - ((s.z0 + travel) % 1), z2 = Math.min(1, z + .02 + st.speed * .06);
+    const p = d => 30 + 900 * (1 - d) ** 2.2;
+    const r1 = p(z2), r2 = p(z);
+    g.strokeStyle = `rgba(${s.c},${Math.min(1, (1 - z) * 1.6)})`; g.lineWidth = s.w * (1 - z) * 2;
+    g.beginPath(); g.moveTo(W / 2 + Math.cos(s.a) * r1, H / 2 + Math.sin(s.a) * r1); g.lineTo(W / 2 + Math.cos(s.a) * r2, H / 2 + Math.sin(s.a) * r2); g.stroke();
+  }
+}
+const tl = Motion.timeline();
+tl.to(st, {t: 6, duration: 6, ease: 'none', onUpdate: draw}, 0);
+tl.to(st, {speed: 2.2, duration: 2.6, ease: 'power2.in'}, 0);
+tl.to(st, {speed: 2.6, duration: 2, ease: 'power3.out'}, 2.6);
+tl.to(st, {glow: 1, duration: 1}, 1.8);
+tl.fromTo('#tt', {autoAlpha: 0, scale: 1.6, letterSpacing: '60px', filter: 'blur(24px)'}, {autoAlpha: 1, scale: 1, letterSpacing: '4px', filter: 'blur(0px)', duration: 1.4, ease: 'expo.out'}, 2.2);
+tl.from('#sb', {y: 20, autoAlpha: 0, duration: .7}, 3.4);
+draw();
+Motion.ready();
+</script></body></html>

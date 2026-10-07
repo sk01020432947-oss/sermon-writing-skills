@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nike Deck</title>
+<!-- Futura ND / Helvetica Now는 사유 폰트. 지오메트릭 대체로 Jost(Futura 계열),
+     UI는 Inter, 한글은 Pretendard가 받는다. -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Jost:wght@500;600&family=Inter:wght@400;500&display=swap">
+<style>
+:root{
+  --ink:#111;              /* CTA는 이 검정이다. 근사흑 회색으로 바꾸지 않는다 */
+  --canvas:#fff; --cloud:#f5f5f5;
+  --charcoal:#39393b; --ash:#4b4b4d; --mute:#707072; --stone:#9e9ea0;
+  --hairline:#cacacb; --hairline-soft:#e5e5e5;
+  --sale:#d30005; --sale-deep:#780700;   /* 가격 행에만 */
+  --success:#007d48; --success-bright:#1eaa52; --info:#1151ff;
+  /* 카테고리 악센트 — 주 크롬에 쓰지 않는다 */
+  --pink:#ed1aa0; --pink-soft:#ffb0dd; --purple-soft:#beaffd; --teal:#0a7281;
+  /* ── 타입 (원본 × 2) ── */
+  --campaign:192px; --h-xl:64px; --h-lg:48px; --h-md:32px;
+  --body:32px; --btn-lg:48px; --btn:32px; --btn-sm:28px;
+  --cap:28px; --cap-sm:24px; --util:18px;
+  /* ── 여백 (× 2) ── */
+  --xxs:4px; --xs:8px; --sm:16px; --md:24px; --lg:36px; --xl:48px; --xxl:60px; --sec:96px;
+  --pad:96px;
+  /* ── 라운딩 (× 2) ── */
+  --r-sm:36px; --r-md:48px; --pill:60px; --full:9999px;
+  --f-disp:"Nike Futura ND","Jost","Pretendard Variable",Helvetica,Arial,sans-serif;
+  --f:"Helvetica Now Text","Inter","Pretendard Variable",Helvetica,Arial,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;background:#000;overflow:hidden}
+body{font-family:var(--f);color:var(--ink);-webkit-font-smoothing:antialiased}
+
+#stage{position:absolute;top:50%;left:50%;width:1920px;height:1080px;
+  transform:translate(-50%,-50%) scale(var(--scale,1));transform-origin:center;background:var(--canvas)}
+.slide{position:absolute;inset:0;display:none;background:var(--canvas);
+  padding:var(--sec) var(--pad);overflow:hidden}
+.slide.active{display:flex;flex-direction:column;justify-content:center}
+.slide.cloud{background:var(--cloud)}
+.slide.bleed{padding:0}          /* 풀블리드 캠페인 */
+
+/* ═════ 캠페인 히어로 — 사진이 말하고 크롬은 물러난다 ═════ */
+.campaign{position:absolute;inset:0;background:var(--img,linear-gradient(135deg,#2b2b2d,#6d6d70))
+  center/cover no-repeat;display:flex;flex-direction:column;justify-content:flex-end;
+  padding:var(--sec) var(--pad)}
+.campaign::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(0,0,0,.15) 0%,rgba(0,0,0,0) 40%,rgba(0,0,0,.45) 100%)}
+.campaign>*{position:relative;z-index:1}
+/* 96px 푸투라 대문자 락업 — 캠페인 히어로에만 쓴다 */
+.lockup{font-family:var(--f-disp);font-size:var(--campaign);font-weight:500;line-height:.9;
+  text-transform:uppercase;color:#fff;letter-spacing:0}
+/* 한글 락업은 행간 0.9에서 받침이 윗줄에 붙는다. 한글 문구에는 .ko를 붙인다 */
+.lockup.ko{line-height:1.02}
+.lockup.ink{color:var(--ink)}
+.kicker{font-size:var(--cap);font-weight:500;color:#fff;margin-bottom:var(--md)}
+
+/* ═════ 타이포 ═════ */
+h2{font-family:var(--f-disp);font-size:var(--h-xl);font-weight:500;line-height:1.2}
+h3{font-size:var(--h-lg);font-weight:500;line-height:1.2}
+h4{font-size:var(--h-md);font-weight:500;line-height:1.75}
+p{font-size:var(--body);font-weight:400;line-height:1.5;color:var(--charcoal);max-width:32em}
+.strong{font-size:var(--body);font-weight:500}
+.cap{font-size:var(--cap);font-weight:500;color:var(--mute)}
+.cap-sm{font-size:var(--cap-sm);font-weight:500;color:var(--mute)}
+.util{font-size:var(--util);font-weight:500;color:var(--stone)}
+a.link{font-size:var(--body);font-weight:500;color:var(--ink);text-decoration:underline}
+
+/* ═════ 버튼 — pill 아니면 원형. 세 번째 형태는 없다 ═════ */
+.btns{display:flex;gap:var(--sm);margin-top:var(--xl);flex-wrap:wrap;align-items:center}
+.btn{display:inline-flex;align-items:center;justify-content:center;background:var(--ink);
+  color:#fff;font-size:var(--btn);font-weight:500;border-radius:var(--pill);
+  padding:24px 48px;min-height:96px;text-decoration:none}
+.btn.sec{background:var(--cloud);color:var(--ink)}
+.btn.on-image{background:#fff;color:var(--ink)}
+.btn.lg{font-size:var(--btn-lg)}
+.icon{width:80px;height:80px;border-radius:var(--full);background:var(--cloud);
+  display:inline-flex;align-items:center;justify-content:center;font-size:30px}
+.chip{display:inline-flex;align-items:center;border-radius:var(--pill);background:var(--canvas);
+  border:1px solid var(--hairline);padding:14px 32px;font-size:var(--btn-sm);font-weight:500}
+.chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.search{display:inline-flex;align-items:center;gap:var(--sm);background:var(--cloud);
+  border-radius:var(--r-md);padding:18px 32px;font-size:var(--body);color:var(--mute);min-width:420px}
+
+/* ═════ 제품 카드 — 여백 0, 라운딩 0. 사진이 끝까지 나간다 ═════ */
+.cards{display:grid;grid-template-columns:repeat(var(--cols,4),1fr);gap:var(--sm);margin-top:var(--xl)}
+.pcard{display:flex;flex-direction:column;gap:var(--xs)}
+.pcard .shot{aspect-ratio:1/1;background:var(--img,var(--cloud)) center/cover no-repeat;
+  border-radius:0}
+.pcard .tag{font-size:var(--cap-sm);font-weight:500;color:var(--sale);margin-top:var(--xs)}
+.pcard .t{font-size:var(--body);font-weight:500;line-height:1.5}
+.pcard .m{font-size:var(--body);font-weight:400;color:var(--mute)}
+.pcard .price{font-size:var(--body);font-weight:500}
+.pcard .price s{color:var(--mute);font-weight:400;margin-right:12px}
+.pcard .price .off{color:var(--sale)}   /* 세일 빨강은 가격 행에만 */
+.swatches{display:flex;gap:10px;margin-top:var(--xs)}
+.swatches i{width:24px;height:24px;border-radius:var(--full);background:var(--c,#ccc);display:block}
+.swatches i.on{box-shadow:0 0 0 4px #fff,0 0 0 8px var(--ink)}
+
+/* ═════ 캠페인 타일 2분할 — 같은 스케일 두 장을 나란히 놓지 않는다 ═════ */
+.tiles{position:absolute;inset:0;display:flex;gap:var(--xs)}
+.tile{position:relative;background:var(--img,linear-gradient(140deg,#3a3a3d,#7c7c80)) center/cover
+  no-repeat;display:flex;flex-direction:column;justify-content:flex-end;padding:var(--xl)}
+.tile.big{flex:1.7}.tile.small{flex:1}
+.tile::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(180deg,rgba(0,0,0,0) 45%,rgba(0,0,0,.5) 100%)}
+.tile>*{position:relative;z-index:1}
+.tile h3{color:#fff;font-family:var(--f-disp);text-transform:uppercase;line-height:1}
+
+/* ═════ 공시 행 — 24px 여백 + 헤어라인 ═════ */
+.rows{margin-top:var(--xl)}
+.row{display:flex;gap:var(--xl);align-items:baseline;padding:var(--md) 0;
+  border-bottom:1px solid var(--hairline-soft)}
+.row .k{flex:0 0 26%;font-size:var(--body);font-weight:500}
+.row .v{flex:1;font-size:var(--body);color:var(--charcoal)}
+.row .n{font-size:var(--h-lg);font-weight:500;white-space:nowrap}
+
+/* ═════ 멤버 카드 — 어두운 사진 배경 + 하단 카피 ═════ */
+.member{background:var(--img,linear-gradient(150deg,#232326,#4a4a4e)) center/cover no-repeat;
+  min-height:520px;display:flex;flex-direction:column;justify-content:flex-end;padding:var(--xl);
+  color:#fff}
+.member h3{color:#fff}
+
+/* ═════ 모션 — 사진은 정지, 텍스트만 든다 ═════ */
+.in{opacity:0}
+.active .in{animation:rise .55s cubic-bezier(.2,.8,.2,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+.active .d1{animation-delay:.05s}.active .d2{animation-delay:.15s}.active .d3{animation-delay:.25s}
+.active .d4{animation-delay:.35s}.active .d5{animation-delay:.45s}.active .d6{animation-delay:.55s}
+
+#nav{position:fixed;right:24px;bottom:18px;font-size:15px;font-weight:500;color:var(--stone);z-index:99}
+#nav .hint{margin-right:16px;color:var(--hairline)}
+body.notes #nav{bottom:auto;top:18px}
+
+/* ═════ 발표자 노트 — S 토글. 좌우 여백 = 본문 끝선(--pad 96px) ═════ */
+body.notes #stage{top:0;transform:translateX(-50%) scale(var(--scale,1));transform-origin:top center}
+#notes{position:fixed;left:0;right:0;bottom:0;max-height:40vh;overflow:auto;display:none;
+  background:var(--cloud);border-top:1px solid var(--hairline);z-index:100;
+  padding:20px var(--npad,30px) 26px}
+body.notes #notes{display:block}
+#notes .nlab{font-family:var(--f-disp);font-size:13px;font-weight:500;text-transform:uppercase;
+  letter-spacing:1px;color:var(--ink);margin-bottom:10px}
+#notes .ntext{font-size:18px;line-height:1.6;color:var(--charcoal)}
+#notes .ntext b{font-weight:500;color:var(--ink)}
+#notes .ntext span{color:var(--mute)}
+
+@media print{
+  html,body,#stage{overflow:visible;position:static;transform:none;width:auto;height:auto}
+  .slide{display:flex!important;position:relative;width:1920px;height:1080px;page-break-after:always}
+  .in{animation:none!important;opacity:1!important;transform:none!important}
+  #nav,#notes{display:none!important}
+}
+</style>
+</head>
+<body>
+<div id="stage">
+
+<!-- ═════ N1. 캠페인 히어로 — 96px 대문자 락업 ═════ -->
+<section class="slide bleed" data-note="여는 장. <b>96px(덱 192px) 푸투라 대문자 락업은 캠페인 히어로에만</b> 쓴다 — 다른 장에 쓰면 즉시 무너진다.<br>온이미지 CTA는 <b>흰 pill을 좌하단</b>에 앵커한다. 이 위치가 규약이다.">
+  <div class="campaign">
+    <div class="kicker in d1">CAMPAIGN · 2026</div>
+    <div class="lockup ko in d2">한 문장으로<br>말한다</div>
+    <div class="btns in d3"><a class="btn on-image">시작하기</a></div>
+  </div>
+</section>
+
+<!-- ═════ N2. 캠페인 타일 2분할 — 스케일을 다르게 ═════ -->
+<section class="slide bleed" data-note="타일 두 장. <b>같은 스케일 두 캠페인 타일을 한 행에 놓지 않는다</b>(스펙 금지 항목) — 그래서 1.7 : 1로 크기를 어긋나게 잡았다.">
+  <div class="tiles">
+    <div class="tile big in d1">
+      <h3 style="font-size:var(--h-xl)">큰 쪽<br>주제</h3>
+      <div class="btns" style="margin-top:var(--md)"><a class="btn on-image">자세히</a></div>
+    </div>
+    <div class="tile small in d2">
+      <h3 style="font-size:var(--h-lg)">작은 쪽<br>주제</h3>
+      <div class="btns" style="margin-top:var(--md)"><a class="btn on-image">자세히</a></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════ N3. 제품 카드 그리드 — 여백 0 · 라운딩 0 ═════ -->
+<section class="slide" data-note="카드 그리드. 제품 카드는 <b>여백 0, 라운딩 0</b>이고 사진이 카드 끝까지 나간다. 메타는 사진 아래 8px 간격에 놓는다. 그림자·엘리베이션 금지.">
+  <div>
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <h2 class="in d1">항목 넷</h2>
+      <div class="btns in d1" style="margin:0">
+        <div class="chip on">전체</div><div class="chip">A</div><div class="chip">B</div>
+      </div>
+    </div>
+    <div class="cards" style="--cols:4">
+      <div class="pcard in d2"><div class="shot"></div>
+        <div class="tag">신규</div><div class="t">첫 번째 항목</div>
+        <div class="m">부가 설명</div><div class="price">120,000원</div>
+        <div class="swatches"><i class="on" style="--c:#111"></i><i style="--c:#d30005"></i><i style="--c:#1151ff"></i></div></div>
+      <div class="pcard in d3"><div class="shot"></div>
+        <div class="tag">신규</div><div class="t">두 번째 항목</div>
+        <div class="m">부가 설명</div><div class="price">98,000원</div></div>
+      <div class="pcard in d4"><div class="shot"></div>
+        <div class="t" style="margin-top:var(--xs)">세 번째 항목</div>
+        <div class="m">부가 설명</div>
+        <div class="price"><s>140,000원</s><span class="off">112,000원</span></div></div>
+      <div class="pcard in d5"><div class="shot"></div>
+        <div class="t" style="margin-top:var(--xs)">네 번째 항목</div>
+        <div class="m">부가 설명</div><div class="price">85,000원</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════ N4. 2단 — 텍스트 + 멤버 카드 ═════ -->
+<section class="slide cloud" data-note="제품 사진은 <b>soft-cloud(#f5f5f5) 회색 배경</b>에 올린다. 멤버 카드는 어두운 사진 위 하단 카피 형식이다.">
+  <div style="display:flex;gap:var(--xl);align-items:center">
+    <div style="flex:0 0 42%">
+      <h2 class="in d1">이렇게<br>움직인다</h2>
+      <p class="in d2" style="margin-top:var(--md)">설명은 짧게. 이 시스템에서 말하는 것은 사진이고 글자는 자리를 비켜 준다.</p>
+      <div class="btns in d3"><a class="btn">자세히 보기</a><a class="btn sec">비교하기</a></div>
+    </div>
+    <div style="flex:1;min-width:0"><div class="member in d2">
+      <div class="cap-sm" style="color:#fff">MEMBER</div>
+      <h3 style="margin-top:var(--sm)">어두운 사진 위<br>하단 카피</h3>
+    </div></div>
+  </div>
+</section>
+
+<!-- ═════ N5. 수치 ═════ -->
+<section class="slide" data-note="지표. 숫자도 <b>weight 500</b>이다. 이 시스템에는 굵은 700이 거의 없다 — 대비는 크기와 사진이 만든다.">
+  <div>
+    <h2 class="in d1">숫자로 본다</h2>
+    <div class="cards" style="--cols:4">
+      <div class="in d2"><div style="font-family:var(--f-disp);font-size:var(--campaign);
+        font-weight:500;line-height:.9">2.4</div><div class="cap">첫 번째 지표</div></div>
+      <div class="in d3"><div style="font-family:var(--f-disp);font-size:var(--campaign);
+        font-weight:500;line-height:.9">180</div><div class="cap">두 번째 지표</div></div>
+      <div class="in d4"><div style="font-family:var(--f-disp);font-size:var(--campaign);
+        font-weight:500;line-height:.9">99</div><div class="cap">세 번째 지표</div></div>
+      <div class="in d5"><div style="font-family:var(--f-disp);font-size:var(--campaign);
+        font-weight:500;line-height:.9">40</div><div class="cap">네 번째 지표</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════ N6. 공시 행 ═════ -->
+<section class="slide" data-note="항목 나열. PDP 공시 행 형식 — 24px(덱 48px) 상하 여백에 헤어라인 구분선. <b>밑줄은 링크와 활성 내비에만</b> 쓴다.">
+  <div>
+    <h2 class="in d1">무엇이 다른가</h2>
+    <div class="rows">
+      <div class="row in d2"><div class="k">항목 A</div><div class="v">설명을 한 줄로 적는다</div><div class="n">480</div></div>
+      <div class="row in d3"><div class="k">항목 B</div><div class="v">설명을 한 줄로 적는다</div><div class="n">550</div></div>
+      <div class="row in d4"><div class="k">항목 C</div><div class="v">설명을 한 줄로 적는다</div><div class="n">727</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════ N7. 선언 — 검정 면 대문자 락업 ═════ -->
+<section class="slide bleed" data-note="선언 장. 사진 없이 <b>검정 면 + 대문자 락업</b>으로 간다. 캠페인 히어로와 같은 락업을 쓰는 유일한 예외이며 전체에서 1회.">
+  <div class="campaign" style="--img:none;background:var(--ink)">
+    <div class="lockup ko in d1">여기서 한 번<br>못을 박는다</div>
+    <p class="in d2" style="color:#fff;margin-top:var(--md)">문장 하나만 남긴다.</p>
+  </div>
+</section>
+
+<!-- ═════ N8. 클로징 ═════ -->
+<section class="slide" data-note="닫는 장. <b>검정 pill은 뷰포트당 하나</b>이고 짝은 soft-cloud 보조 버튼뿐이다. 푸터는 4열 + 9px(덱 18px) 미세 법적 문구.">
+  <div>
+    <h2 class="in d1">다음 단계</h2>
+    <p class="in d2" style="margin-top:var(--md)">청중이 취할 행동 하나만 남긴다.</p>
+    <div class="btns in d3"><a class="btn">시작하기</a><a class="btn sec">문의하기</a></div>
+    <div class="rows in d4" style="margin-top:var(--sec)">
+      <div class="row" style="border-bottom:0;padding-bottom:0">
+        <div class="k cap">자료</div><div class="k cap">연락</div>
+        <div class="k cap">출처</div><div class="k cap">라이선스</div>
+      </div>
+    </div>
+    <div class="util in d5" style="margin-top:var(--md)">© 2026 · 발표자 · 이 자료의 수치는 원자료를 따른다.</div>
+  </div>
+</section>
+
+</div>
+
+<div id="nav"><span class="hint">S NOTES</span><span id="navPage"></span></div>
+<div id="notes"><div class="nlab">Speaker notes</div><div class="ntext" id="noteText"></div></div>
+
+<script>
+const slides=[...document.querySelectorAll('.slide')];
+let cur=-1;
+const navPage=document.getElementById('navPage');
+const noteText=document.getElementById('noteText');
+function show(n){
+  cur=Math.max(0,Math.min(slides.length-1,n));
+  slides.forEach((s,i)=>s.classList.toggle('active',i===cur));
+  navPage.textContent=(cur+1)+' / '+slides.length;
+  noteText.innerHTML=slides[cur].dataset.note||'<span>이 장에는 노트가 없습니다.</span>';
+}
+addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key===' ')show(cur+1);
+  else if(e.key==='ArrowLeft')show(cur-1);
+  else if(e.key==='Home')show(0);
+  else if(e.key==='End')show(slides.length-1);
+  else if(e.key==='s'||e.key==='S'){document.body.classList.toggle('notes');fit();}
+});
+addEventListener('click',e=>{
+  if(e.target.closest('#notes'))return;
+  if(e.clientX<innerWidth/2)show(cur-1);else show(cur+1);
+});
+let tx=null;
+addEventListener('touchstart',e=>tx=e.touches[0].clientX);
+addEventListener('touchend',e=>{if(tx===null)return;
+  const dx=e.changedTouches[0].clientX-tx;
+  if(dx<-40)show(cur+1);else if(dx>40)show(cur-1);tx=null});
+function fit(){
+  const avail=document.body.classList.contains('notes')?innerHeight*.58:innerHeight;
+  const s=Math.min(innerWidth/1920,avail/1080);
+  document.getElementById('stage').style.setProperty('--scale',s);
+  document.documentElement.style.setProperty('--npad',
+    Math.round((innerWidth-1920*s)/2+96*s)+'px');
+}
+addEventListener('resize',fit);addEventListener('load',fit);fit();
+const _h=parseInt(location.hash.slice(1));show(isNaN(_h)?0:_h-1);
+addEventListener('hashchange',()=>{const n=parseInt(location.hash.slice(1));if(!isNaN(n))show(n-1)});
+if(location.search.indexOf('shot')>-1)document.getElementById('nav').style.display='none';
+</script>
+</body>
+</html>

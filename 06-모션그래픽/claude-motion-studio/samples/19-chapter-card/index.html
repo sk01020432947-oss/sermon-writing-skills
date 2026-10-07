@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><title>챕터 타이틀 카드 · Chapter Card</title>
+<link rel="stylesheet" href="../../lib/stage.css">
+<style>
+  .frame{background:#000 !important;background-image:none !important}
+  .scene{position:absolute;inset:0;overflow:hidden;background:#000}
+  .grid{position:absolute;left:-65px;top:-65px}
+  .ttl{position:absolute;left:0;right:0;top:310px;text-align:center;font:700 88px/1 'Gmarket Sans TTF';color:#33FF00;letter-spacing:0;white-space:nowrap}
+  .gl{position:absolute;opacity:0}
+</style></head>
+<body data-no="S19" data-cat="타이포 · TYPE" data-ko="챕터 타이틀 카드" data-en="Chapter Card" data-meta="6초 · 형광 초록 장 제목 두 장" data-dur="6" data-poster="5.5" data-size="1280x720">
+<main class="scene">
+  <svg width="0" height="0" style="position:absolute">
+    <filter id="f1" x="-60%" y="-60%" width="220%" height="220%"><feTurbulence type="fractalNoise" baseFrequency="0.003 0.22" numOctaves="1" seed="4" result="n"/><feDisplacementMap class="dm" in="SourceGraphic" in2="n" scale="0" xChannelSelector="R" yChannelSelector="G" result="d"/><feGaussianBlur class="gb" in="d" stdDeviation="0 0"/></filter>
+    <filter id="f2" x="-60%" y="-60%" width="220%" height="220%"><feTurbulence type="fractalNoise" baseFrequency="0.003 0.22" numOctaves="1" seed="9" result="n"/><feDisplacementMap class="dm" in="SourceGraphic" in2="n" scale="0" xChannelSelector="R" yChannelSelector="G" result="d"/><feGaussianBlur class="gb" in="d" stdDeviation="0 0"/></filter>
+  </svg>
+  <svg class="grid" id="grid" width="1420" height="860"></svg>
+  <div class="ttl t1" style="filter:url(#f1)">2. 레퍼런스 따라하기</div>
+  <div class="ttl t2" style="filter:url(#f2)">3. 음악에 맞추기</div>
+  <div id="glitch"></div>
+</main>
+<script src="../../lib/gsap.min.js"></script><script src="../../lib/stage.js"></script>
+<script>
+const r = Motion.rand(19);
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+// hand-drawn grid: 32.5px cells, slightly wobbly strokes
+const C = 32.5, W = 1420, H = 860; let d = '';
+const wob = (n, len, vert) => { let p = ''; for (let s = 0; s <= len; s += 65) {
+  const j = (r() - 0.5) * 2.2; p += (s ? ' L' : 'M') + (vert ? `${(n + j).toFixed(1)} ${s}` : `${s} ${(n + j).toFixed(1)}`); } return p; };
+for (let x = 0; x <= W; x += C) d += wob(x, H, true) + ' ';
+for (let y = 0; y <= H; y += C) d += wob(y, W, false) + ' ';
+$('#grid').innerHTML = `<path d="${d}" fill="none" stroke="#1b1b1b" stroke-width="2" stroke-linejoin="round"/>`;
+// glitch blocks (green / magenta / white), shown for a few frames
+const GL = [[350,170,560,22,'#33FF00'],[350,240,180,36,'#33FF00'],[520,300,260,40,'#FF00FF'],[760,360,300,26,'#ffffff'],[300,430,420,18,'#33FF00'],[640,470,220,30,'#FF00FF'],[880,250,140,16,'#ffffff']];
+GL.forEach(g => $('#glitch').insertAdjacentHTML('beforeend', `<div class="gl" style="left:${g[0]}px;top:${g[1]}px;width:${g[2]}px;height:${g[3]}px;background:${g[4]}"></div>`));
+
+const tl = Motion.timeline();
+tl.fromTo('#grid', {x: 0, y: 0}, {x: -65, y: -32.5, duration: 6, ease: 'none'}, 0); // slow grid drift
+gsap.set('.ttl', {autoAlpha: 0});
+
+function enter(sel, f, t) {
+  tl.set(sel, {autoAlpha: 1}, t);
+  // 원본처럼 제자리에서 비스듬한 번짐으로 나타나 3~4프레임 만에 선명해진다
+  tl.fromTo(sel, {x: 46, skewX: -16, scaleX: 1.05}, {x: 0, skewX: 0, scaleX: 1, duration: 0.24, ease: 'expo.out'}, t);
+  tl.fromTo(`${f} .gb`, {attr: {stdDeviation: '34 3'}}, {attr: {stdDeviation: '0 0'}, duration: 0.24, ease: 'power3.out'}, t);
+  tl.fromTo(`${f} .dm`, {attr: {scale: 0}}, {attr: {scale: 26}, duration: 0.06, ease: 'none', immediateRender: false}, t + 0.18); // wavy jitter frame
+  tl.to(`${f} .dm`, {attr: {scale: 0}, duration: 0.07, ease: 'none'}, t + 0.25);
+}
+enter('.t1', '#f1', 0.35);
+
+// glitch cut 2 → 3
+const gl = $$('.gl');
+[2.80, 2.87, 2.94].forEach((t, k) => {
+  gl.forEach((g, i) => tl.set(g, {opacity: (i + k) % 2 ? 1 : 0, x: (k - 1) * 40 * (i % 2 ? 1 : -1)}, t));
+});
+tl.to('#f1 .dm', {attr: {scale: 40}, duration: 0.12, ease: 'none'}, 2.8);
+tl.set('.t1', {x: -30}, 2.87);
+tl.set('.t1', {autoAlpha: 0}, 2.98);
+tl.set('.gl', {opacity: 0}, 3.01);
+
+enter('.t2', '#f2', 3.25);
+Motion.ready();
+</script></body></html>

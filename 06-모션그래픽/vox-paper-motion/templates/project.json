@@ -1,0 +1,543 @@
+{
+ "title": "<제목>",
+ "out": "<파일이름>",
+ "fps": 30,
+ "formats": {
+  "16:9": [
+   1920,
+   1080
+  ],
+  "9:16": [
+   1080,
+   1920
+  ]
+ },
+ "style": {
+  "seed": 30814,
+  "chaos": 0.45,
+  "hold": 2,
+  "palette": {
+   "ink": "#1B1A17",
+   "paper": "#EFE6D2",
+   "grey": "#8C877D",
+   "accent": "#C8432B"
+  },
+  "newsprint": {
+   "count": 14,
+   "opacity": 0.35
+  },
+  "finish": {
+   "grain": 0.05,
+   "vignette": 0.3,
+   "halftone": 0.6,
+   "chroma": 1
+  }
+ },
+ "voice": {
+  "engine": "omnivoice",
+  "instruct": "male, middle-aged, low pitch",
+  "language": "Korean",
+  "speed": 0.95,
+  "seed": 42,
+  "verify": true
+ },
+ "captions": {
+  "9:16": true,
+  "16:9": false
+ },
+ "transition": {
+  "type": "wipe",
+  "dur": 0.9
+ },
+ "scenes": [
+  {
+   "say": "주후 오십 년경. 바울은 마게도냐를 지나 남쪽으로 내려갑니다.",
+   "caption": "주후 50년경. 바울은 마게도냐를 지나 남쪽으로 내려갑니다.",
+   "transition": "leak",
+   "camera": [
+    {
+     "t": 0,
+     "zoom": 1.0,
+     "tilt": 0
+    },
+    {
+     "t": 1.2,
+     "zoom": 1.0,
+     "tilt": 0
+    },
+    {
+     "t": "end",
+     "zoom": 1.12,
+     "tilt": 26
+    }
+   ],
+   "layers": [
+    {
+     "src": "소재/map.png",
+     "fit": "cover",
+     "depth": 0.3
+    },
+    {
+     "route": {
+      "points": [
+       [
+        0.78,
+        0.36
+       ],
+       [
+        0.69,
+        0.31
+       ],
+       [
+        0.65,
+        0.35
+       ],
+       [
+        0.63,
+        0.41
+       ],
+       [
+        0.67,
+        0.5
+       ],
+       [
+        0.62,
+        0.52
+       ]
+      ],
+      "at": 0.2,
+      "dur": 4.6,
+      "dash": [
+       16,
+       11
+      ],
+      "width": 6
+     },
+     "depth": 0.3
+    },
+    {
+     "src": "소재/ship.png",
+     "key": "#FFFFFF",
+     "tol": 30,
+     "torn": true,
+     "bw": true,
+     "auto_back": false,
+     "width": 0.07,
+     "depth": 0.3,
+     "path": {
+      "points": [
+       [
+        0.78,
+        0.36
+       ],
+       [
+        0.69,
+        0.31
+       ],
+       [
+        0.65,
+        0.35
+       ],
+       [
+        0.63,
+        0.41
+       ],
+       [
+        0.67,
+        0.5
+       ],
+       [
+        0.62,
+        0.52
+       ]
+      ],
+      "at": 0.2,
+      "dur": 4.6,
+      "rotate": true,
+      "rotate_max": 10
+     }
+    },
+    {
+     "text": "바울의 둘째 여행 · 경로는 예시",
+     "size": 34,
+     "color": "#FFFFFF",
+     "box": "ink",
+     "x": 0.5,
+     "y": 0.08,
+     "depth": 0.0,
+     "chaos": false
+    }
+   ],
+   "layers_v": [
+    {
+     "src": "소재/map.png",
+     "fit": "cover",
+     "depth": 0.3
+    },
+    {
+     "route": {
+      "points": [
+       [
+        0.78,
+        0.36
+       ],
+       [
+        0.69,
+        0.31
+       ],
+       [
+        0.65,
+        0.35
+       ],
+       [
+        0.63,
+        0.41
+       ],
+       [
+        0.67,
+        0.5
+       ],
+       [
+        0.62,
+        0.52
+       ]
+      ],
+      "at": 0.2,
+      "dur": 4.6,
+      "dash": [
+       16,
+       11
+      ],
+      "width": 6
+     },
+     "depth": 0.3
+    },
+    {
+     "text": "바울의 둘째 여행",
+     "size": 60,
+     "color": "#FFFFFF",
+     "box": "ink",
+     "x": 0.47,
+     "y": 0.12,
+     "depth": 0.0,
+     "chaos": false
+    },
+    {
+     "text": "경로는 예시",
+     "size": 36,
+     "x": 0.47,
+     "y": 0.18,
+     "depth": 0.0,
+     "chaos": false
+    }
+   ],
+   "style": {
+    "newsprint": null,
+    "finish": {
+     "grain": 0.05,
+     "vignette": 0.3
+    }
+   }
+  },
+  {
+   "say": "그 후에 바울이 아덴을 떠나 고린도에 이르러.",
+   "transition": "whip",
+   "camera": [
+    {
+     "t": 0,
+     "zoom": 1.0,
+     "x": -0.02
+    },
+    {
+     "t": 2.6,
+     "zoom": 1.04,
+     "x": 0.0
+    },
+    {
+     "t": 3.2,
+     "zoom": 1.2,
+     "x": 0.02,
+     "ease": "expo"
+    },
+    {
+     "t": "end",
+     "zoom": 1.22,
+     "x": 0.025
+    }
+   ],
+   "layers": [
+    {
+     "src": "소재/engraving.png",
+     "fit": "cover",
+     "depth": 0.1,
+     "bw": true
+    },
+    {
+     "text": "고린도",
+     "size": 220,
+     "serif": true,
+     "x": 0.4,
+     "y": 0.3,
+     "depth": 0.0,
+     "at": 0.3,
+     "enter": {
+      "type": "mask",
+      "dur": 1.0
+     }
+    },
+    {
+     "src": "소재/figure_bw.png",
+     "key": "#FFFFFF",
+     "tol": 30,
+     "torn": true,
+     "bw": true,
+     "accent": "duotone",
+     "width": 0.16,
+     "x": 0.62,
+     "y": 0.66,
+     "depth": 0.6,
+     "at": 0.0,
+     "enter": {
+      "type": "bottom",
+      "dur": 1.0,
+      "ease": "expo",
+      "dist": 0.6
+     }
+    },
+    {
+     "text": "사도행전 18:1",
+     "size": 40,
+     "color": "#1B1A17",
+     "box": "#F2C14E",
+     "x": 0.25,
+     "y": 0.46,
+     "depth": 0.0,
+     "at": 1.2,
+     "enter": "pop"
+    }
+   ],
+   "layers_v": [
+    {
+     "src": "소재/engraving.png",
+     "fit": "cover",
+     "depth": 0.1,
+     "bw": true
+    },
+    {
+     "text": "고린도",
+     "size": 210,
+     "serif": true,
+     "x": 0.47,
+     "y": 0.2,
+     "depth": 0.0,
+     "at": 0.3,
+     "enter": {
+      "type": "mask",
+      "dur": 1.0
+     }
+    },
+    {
+     "src": "소재/figure_bw.png",
+     "key": "#FFFFFF",
+     "tol": 30,
+     "torn": true,
+     "bw": true,
+     "accent": "duotone",
+     "width": 0.36,
+     "x": 0.5,
+     "y": 0.6,
+     "depth": 0.6,
+     "at": 0.0,
+     "enter": {
+      "type": "bottom",
+      "dur": 1.0,
+      "ease": "expo",
+      "dist": 0.6
+     }
+    },
+    {
+     "text": "사도행전 18:1",
+     "size": 44,
+     "color": "#1B1A17",
+     "box": "#F2C14E",
+     "x": 0.47,
+     "y": 0.275,
+     "depth": 0.0,
+     "at": 1.2,
+     "enter": "pop"
+    }
+   ]
+  },
+  {
+   "say": "그곳에서, 받은 복음을 전합니다.",
+   "tail": 1.6,
+   "bg": "paper",
+   "camera": [
+    {
+     "t": 0,
+     "zoom": 1.0
+    },
+    {
+     "t": "end",
+     "zoom": 1.05
+    }
+   ],
+   "layers": [
+    {
+     "src": "소재/crowd.png",
+     "key": "#FFFFFF",
+     "tol": 30,
+     "torn": true,
+     "bw": true,
+     "auto_back": false,
+     "width": 1.1,
+     "x": 0.5,
+     "y": 0.86,
+     "depth": 0.5
+    },
+    {
+     "text": "받은 복음",
+     "size": 170,
+     "serif": true,
+     "x": 0.5,
+     "y": 0.27,
+     "depth": 0.0,
+     "at": 0.1,
+     "enter": {
+      "type": "mask",
+      "dur": 1.05
+     }
+    },
+    {
+     "rect": [
+      0.34,
+      10
+     ],
+     "color": "accent",
+     "x": 0.5,
+     "y": 0.4,
+     "depth": 0.0,
+     "at": 0.9,
+     "enter": {
+      "type": "wipe",
+      "dur": 1.2,
+      "linear": true
+     }
+    },
+    {
+     "text": "고린도전서 15:1-11",
+     "size": 44,
+     "color": "#FFFFFF",
+     "box": "ink",
+     "x": 0.5,
+     "y": 0.48,
+     "depth": 0.0,
+     "at": 1.4,
+     "enter": "fade"
+    }
+   ],
+   "layers_v": [
+    {
+     "src": "소재/crowd.png",
+     "key": "#FFFFFF",
+     "tol": 30,
+     "torn": true,
+     "bw": true,
+     "auto_back": false,
+     "width": 1.7,
+     "x": 0.5,
+     "y": 0.9,
+     "depth": 0.5
+    },
+    {
+     "text": "받은 복음",
+     "size": 170,
+     "serif": true,
+     "x": 0.47,
+     "y": 0.2,
+     "depth": 0.0,
+     "at": 0.1,
+     "enter": {
+      "type": "mask",
+      "dur": 1.05
+     }
+    },
+    {
+     "rect": [
+      0.6,
+      12
+     ],
+     "color": "accent",
+     "x": 0.47,
+     "y": 0.27,
+     "depth": 0.0,
+     "at": 0.9,
+     "enter": {
+      "type": "wipe",
+      "dur": 1.2,
+      "linear": true
+     }
+    },
+    {
+     "text": "고린도전서 15:1-11",
+     "size": 50,
+     "color": "#FFFFFF",
+     "box": "ink",
+     "x": 0.47,
+     "y": 0.33,
+     "depth": 0.0,
+     "at": 1.4,
+     "enter": "fade"
+    }
+   ]
+  }
+ ],
+ "thumbnail": {
+  "size": [
+   1280,
+   720
+  ],
+  "bg": "paper",
+  "t": 0.99,
+  "layers": [
+   {
+    "src": "소재/engraving.png",
+    "fit": "cover",
+    "depth": 0.1,
+    "bw": true,
+    "blur": 2
+   },
+   {
+    "text": "고린도에 온",
+    "size": 96,
+    "serif": true,
+    "x": 0.33,
+    "y": 0.22,
+    "depth": 0.0
+   },
+   {
+    "text": "바울",
+    "size": 200,
+    "serif": true,
+    "color": "#FFFFFF",
+    "box": "accent",
+    "x": 0.3,
+    "y": 0.5,
+    "depth": 0.0,
+    "rot": -2
+   },
+   {
+    "src": "소재/figure_bw.png",
+    "key": "#FFFFFF",
+    "tol": 30,
+    "torn": true,
+    "bw": true,
+    "accent": "duotone",
+    "width": 0.22,
+    "x": 0.72,
+    "y": 0.6,
+    "depth": 0.5
+   }
+  ]
+ }
+}

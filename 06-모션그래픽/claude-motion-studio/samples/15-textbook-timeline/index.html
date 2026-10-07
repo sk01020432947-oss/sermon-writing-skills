@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><title>교재 연표 · Textbook Timeline</title>
+<link rel="stylesheet" href="../../lib/stage.css">
+<style>
+  .frame{background:#0d0f12 !important;background-image:none !important}
+  .scene{position:absolute;inset:0;overflow:hidden}
+  :root{--np:#EDE4D0;--ink:#1B1712;--yel:#F6C82B;--red:#D8321F;--bp:#2D5C9A}
+  /* 종이 배경(느린 층) */
+  .paper{position:absolute;left:-200px;top:-120px;width:3200px;height:960px;background:
+    radial-gradient(ellipse at 20% 30%,rgba(255,250,236,.7),transparent 55%),
+    radial-gradient(ellipse at 70% 70%,rgba(190,170,130,.25),transparent 60%),
+    linear-gradient(180deg,#EFE6D2,#E6DBC2)}
+  .paper .fold{position:absolute;top:0;bottom:0;width:2px;background:linear-gradient(180deg,transparent,rgba(120,100,70,.18),transparent)}
+  .paper .tone{position:absolute;border-radius:50%;opacity:.16;
+    background-image:radial-gradient(#5a4a30 1.6px,transparent 1.8px);background-size:9px 9px;
+    -webkit-mask-image:radial-gradient(circle,#000 0%,transparent 70%)}
+  .paper .rule{position:absolute;height:1px;background:rgba(110,90,60,.18)}
+  .grain{position:absolute;inset:0;pointer-events:none;mix-blend-mode:multiply;opacity:.55;z-index:30;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .3 0 0 0 0 .25 0 0 0 0 .17 0 0 0 .22 0'/></filter><rect width='300' height='300' filter='url(%23n)'/></svg>")}
+  .vig{position:absolute;inset:0;z-index:29;pointer-events:none;background:radial-gradient(ellipse at 50% 50%,transparent 55%,rgba(70,50,20,.28))}
+  /* 카메라 층 */
+  .world{position:absolute;left:0;top:0;width:3400px;height:720px;transform-origin:0 0}
+  .line{position:absolute;left:0;top:0;overflow:visible}
+  .node{position:absolute;top:0;width:0;height:720px}
+  .dot{position:absolute;left:-13px;top:547px;width:26px;height:26px;border-radius:50%;background:var(--ink);border:5px solid var(--np);box-shadow:0 0 0 3px var(--ink)}
+  .year{position:absolute;left:-470px;top:224px;width:330px;height:150px}
+  .year .bar{position:absolute;left:-10px;right:10px;top:70px;height:62px;background:var(--yel);transform-origin:0 50%;mix-blend-mode:multiply}
+  .year .win{position:absolute;inset:0;overflow:hidden}
+  .year .y{display:block;font-family:Pretendard;font-weight:900;font-size:150px;line-height:150px;letter-spacing:-.04em;color:var(--ink);transform:scaleX(.8);transform-origin:0 50%}
+  .year .ko{position:absolute;left:4px;top:160px;font:500 15px/1 "IBM Plex Mono",monospace;letter-spacing:.14em;color:#5A4E3C;white-space:nowrap}
+  .card{position:absolute;left:-110px;top:132px;width:400px;height:300px;background:#fff;padding:10px;
+    box-shadow:0 2px 0 rgba(0,0,0,.08),6px 14px 22px rgba(60,40,10,.32)}
+  .card svg{display:block;width:380px;height:280px}
+  .tape{position:absolute;width:96px;height:30px;background:rgba(232,220,180,.82);box-shadow:0 1px 2px rgba(0,0,0,.12)}
+  .tape::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 6px,rgba(255,255,255,.2) 6px 7px)}
+  .lab{position:absolute;left:0;top:598px;transform:translateX(-50%);white-space:nowrap}
+  .lab .slip{position:relative;background:#FBF8EF;padding:11px 22px 10px;font:800 25px/1.1 Pretendard;letter-spacing:-.02em;color:var(--ink);box-shadow:3px 5px 8px rgba(60,40,10,.25)}
+  .lab .tape{left:50%;top:-16px;margin-left:-48px;transform:rotate(-4deg)}
+  .mk{fill:none;stroke:var(--red);stroke-width:7;stroke-linecap:round;stroke-linejoin:round}
+  .title{position:absolute;left:0;right:0;top:205px;text-align:center;opacity:0;z-index:5}
+  .title h1{display:inline-block;position:relative;margin:0;font:900 76px/1 Pretendard;letter-spacing:-.04em;color:var(--ink)}
+  .title h1 b{color:var(--red)}
+  .title p{margin:18px 0 0;font:500 17px/1 "IBM Plex Mono",monospace;letter-spacing:.3em;color:#5A4E3C}
+  .title svg{position:absolute;left:-10px;top:74px;overflow:visible}
+</style></head>
+<body data-no="S15" data-cat="교재 · TEXTBOOK" data-ko="종교개혁 연표" data-en="Textbook Timeline" data-meta="Vox 레트로 종이 · 카메라 팬 · 패럴랙스" data-dur="16" data-size="1280x720" data-poster="15.5">
+<main class="scene">
+  <div class="paper" id="paper">
+    <i class="fold" style="left:900px"></i><i class="fold" style="left:2100px"></i>
+    <i class="tone" style="left:40px;top:60px;width:420px;height:420px"></i>
+    <i class="tone" style="left:1300px;top:500px;width:520px;height:520px"></i>
+    <i class="tone" style="left:2500px;top:40px;width:460px;height:460px"></i>
+    <i class="rule" style="left:0;right:0;top:170px"></i><i class="rule" style="left:0;right:0;top:820px"></i>
+  </div>
+
+  <div class="world" id="world">
+    <svg class="line" width="3400" height="720">
+      <path id="axis" d="M60 560 H3300" stroke="#1B1712" stroke-width="5" fill="none" stroke-linecap="round"/>
+      <path id="head" d="M3276 542 L3306 560 L3276 578" stroke="#1B1712" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <g id="ticks" stroke="#1B1712" stroke-width="2"></g>
+    </svg>
+
+    <!-- 1517 -->
+    <div class="node" id="n0" style="left:640px">
+      <div class="year"><i class="bar"></i><div class="win"><span class="y">1517</span></div><div class="ko">WITTENBERG · 10.31</div></div>
+      <div class="card" style="transform:rotate(-2deg)">
+        <svg viewBox="0 0 380 280">
+          <defs><pattern id="ht1" width="7" height="7" patternUnits="userSpaceOnUse"><circle cx="3.5" cy="3.5" r="1.5" fill="#2a1c10" opacity=".35"/></pattern></defs>
+          <rect width="380" height="280" fill="#C9B58F"/>
+          <g stroke="#a8936a" stroke-width="2" opacity=".7"><path d="M0 40H380M0 90H380M0 140H380M0 190H380M0 240H380"/><path d="M60 0V40M180 0V40M300 0V40M120 40V90M240 40V90M60 90V140M300 90V140M120 140V190M240 190V240M60 240V280M300 240V280"/></g>
+          <path d="M95 280 V110 Q95 30 190 30 Q285 30 285 110 V280Z" fill="#3B2615"/>
+          <path d="M110 280 V114 Q110 46 190 46 Q270 46 270 114 V280Z" fill="#6B4528"/>
+          <g stroke="#4a2f1a" stroke-width="3"><path d="M150 52V280M190 46V280M230 52V280"/></g>
+          <rect x="110" y="40" width="160" height="240" fill="url(#ht1)"/>
+          <g fill="#1d140c"><rect x="110" y="96" width="70" height="10" rx="3"/><rect x="110" y="216" width="70" height="10" rx="3"/><rect x="200" y="96" width="70" height="10" rx="3"/><rect x="200" y="216" width="70" height="10" rx="3"/></g>
+          <circle cx="248" cy="170" r="11" fill="none" stroke="#1d140c" stroke-width="5"/>
+          <g id="sheet" transform="rotate(-3 150 150)">
+            <rect x="118" y="88" width="104" height="132" fill="#F7F1E1" stroke="#cbbf9f"/>
+            <text x="170" y="112" text-anchor="middle" font-family="Pretendard" font-weight="900" font-size="20" fill="#1B1712">95</text>
+            <g stroke="#6a5f4c" stroke-width="2.4"><path d="M130 124H210M130 134H204M130 144H210M130 154H198M130 164H210M130 174H206M130 184H192M130 194H210M130 204H200"/></g>
+            <circle cx="170" cy="94" r="4" fill="#2b2b2b"/>
+          </g>
+          <path class="mk" id="mk0" d="M108 120 C100 70 220 62 238 110 C254 160 236 236 170 238 C110 240 96 190 104 146" />
+        </svg>
+        <i class="tape" style="left:-28px;top:-8px;transform:rotate(-38deg)"></i>
+        <i class="tape" style="right:-30px;bottom:-6px;transform:rotate(-36deg)"></i>
+      </div>
+      <div class="lab"><div class="slip">루터, 95개조 논제<i class="tape"></i></div></div>
+      <i class="dot"></i>
+    </div>
+
+    <!-- 1536 -->
+    <div class="node" id="n1" style="left:1400px">
+      <div class="year"><i class="bar"></i><div class="win"><span class="y">1536</span></div><div class="ko">BASEL · 초판 6장</div></div>
+      <div class="card" style="transform:rotate(1.6deg)">
+        <svg viewBox="0 0 380 280">
+          <defs><pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M20 0H0V20" fill="none" stroke="#2D5C9A" stroke-width=".7" opacity=".35"/></pattern></defs>
+          <rect width="380" height="280" fill="#E9EEF3"/><rect width="380" height="280" fill="url(#grid)"/>
+          <g fill="none" stroke="#2D5C9A" stroke-width="2.6" stroke-linejoin="round">
+            <path d="M90 92 L230 62 L310 98 L170 132Z" fill="#D7E1EC"/>
+            <path d="M90 92 L90 182 L170 222 L170 132Z" fill="#C3D2E3"/>
+            <path d="M170 132 L310 98 L310 186 L170 222Z" fill="#F2F5F8"/>
+            <path d="M178 140 L302 110M178 152 L302 122M178 164 L302 134M178 176 L302 146M178 188 L302 158M178 200 L302 170" stroke-width="1.2" opacity=".7"/>
+            <path d="M104 112 L156 138M104 190 L156 214" stroke-width="2"/>
+          </g>
+          <text x="130" y="168" transform="rotate(26.6 130 168)" text-anchor="middle" font-family="IBM Plex Mono" font-size="10" letter-spacing="1.5" fill="#2D5C9A">INSTITVTIO</text>
+          <g stroke="#2D5C9A" stroke-width="1.2" fill="#2D5C9A" font-family="IBM Plex Mono" font-size="11">
+            <path d="M70 92V182M64 92H76M64 182H76"/><text x="36" y="141" stroke="none">THICK</text>
+            <path d="M176 238 L314 204" /><text x="214" y="246" stroke="none">CH. 1–6</text>
+          </g>
+          <text x="20" y="266" font-family="IBM Plex Mono" font-size="10" letter-spacing="2" fill="#2D5C9A">DIAGRAM — CHRISTIANAE RELIGIONIS</text>
+          <path class="mk" id="mk1" d="M252 52 C226 40 200 48 186 60 M196 46 L184 62 L204 66" />
+        </svg>
+        <i class="tape" style="left:50%;top:-16px;margin-left:-48px;transform:rotate(3deg)"></i>
+      </div>
+      <div class="lab"><div class="slip">칼뱅, 『기독교 강요』 초판<i class="tape"></i></div></div>
+      <i class="dot"></i>
+    </div>
+
+    <!-- 1563 -->
+    <div class="node" id="n2" style="left:2160px">
+      <div class="year"><i class="bar"></i><div class="win"><span class="y">1563</span></div><div class="ko">HEIDELBERG · 129문답</div></div>
+      <div class="card" style="transform:rotate(-1.4deg)">
+        <svg viewBox="0 0 380 280">
+          <rect width="380" height="280" fill="#D9CDB3"/>
+          <path d="M40 40 H190 V250 H40Z" fill="#8E2A1E"/><path d="M190 40 H340 V250 H190Z" fill="#8E2A1E"/>
+          <path d="M48 46 H188 V244 H48Z" fill="#FAF5E8"/><path d="M192 46 H332 V244 H192Z" fill="#F4EEDD"/>
+          <path d="M190 44V246" stroke="#b9ab8a" stroke-width="2"/>
+          <text x="62" y="78" font-family="Pretendard" font-weight="900" font-size="20" fill="#1B1712">문 1.</text>
+          <text x="62" y="106" font-family="Pretendard" font-weight="600" font-size="14" fill="#1B1712">사나 죽으나</text>
+          <rect id="hl2" x="58" y="113" width="116" height="20" fill="#F6C82B" opacity=".85"/>
+          <text x="62" y="128" font-family="Pretendard" font-weight="800" font-size="14" fill="#1B1712">당신의 유일한 위로는</text>
+          <text x="62" y="150" font-family="Pretendard" font-weight="600" font-size="14" fill="#1B1712">무엇입니까?</text>
+          <g stroke="#9c927c" stroke-width="2.4"><path d="M62 178H170M62 192H160M62 206H172M62 220H150"/></g>
+          <text x="206" y="78" font-family="Pretendard" font-weight="900" font-size="20" fill="#1B1712">답.</text>
+          <g stroke="#9c927c" stroke-width="2.4"><path d="M206 100H316M206 114H306M206 128H318M206 142H296M206 156H316M206 170H310M206 184H290M206 198H316M206 212H300"/></g>
+          <text x="306" y="236" font-family="IBM Plex Mono" font-size="10" fill="#8a7f68">1</text>
+          <path class="mk" id="mk2" d="M58 136 C96 139 140 134 178 137" />
+        </svg>
+        <i class="tape" style="left:-24px;top:40px;transform:rotate(-84deg)"></i>
+        <i class="tape" style="right:-24px;top:40px;transform:rotate(86deg)"></i>
+      </div>
+      <div class="lab"><div class="slip">하이델베르크 요리문답<i class="tape"></i></div></div>
+      <i class="dot"></i>
+    </div>
+
+    <!-- 1647 -->
+    <div class="node" id="n3" style="left:2920px">
+      <div class="year"><i class="bar"></i><div class="win"><span class="y">1647</span></div><div class="ko">WESTMINSTER · 33장</div></div>
+      <div class="card" style="transform:rotate(2deg)">
+        <svg viewBox="0 0 380 280">
+          <rect width="380" height="280" fill="#E9EEF3"/>
+          <g fill="none" stroke="#2D5C9A" stroke-width="1.6" opacity=".55">
+            <path d="M30 120 L190 34 L350 120Z"/><path d="M44 120V262M84 120V262M296 120V262M336 120V262"/><path d="M20 262H360"/>
+          </g>
+          <path d="M96 64 H284 V238 H96Z" fill="#F1E6C8"/>
+          <rect x="84" y="52" width="212" height="22" rx="11" fill="#D9C79E" stroke="#a8936a" stroke-width="2"/>
+          <rect x="84" y="228" width="212" height="22" rx="11" fill="#D9C79E" stroke="#a8936a" stroke-width="2"/>
+          <text x="190" y="104" text-anchor="middle" font-family="Pretendard" font-weight="900" font-size="20" fill="#1B1712">신앙고백</text>
+          <text x="190" y="128" text-anchor="middle" font-family="Pretendard" font-weight="600" font-size="13" fill="#4a3f2c">제1장 성경에 관하여</text>
+          <g stroke="#9c8e70" stroke-width="2.2"><path d="M118 148H262M118 160H250M118 172H262M118 184H240M118 196H256"/></g>
+          <circle cx="250" cy="206" r="20" fill="#B3261A"/><circle cx="250" cy="206" r="13" fill="none" stroke="#7d160d" stroke-width="2"/>
+          <text x="250" y="211" text-anchor="middle" font-family="IBM Plex Mono" font-weight="700" font-size="12" fill="#f3d2c8">W</text>
+          <path class="mk" id="mk3" d="M222 186 C226 170 276 168 280 196 C284 228 236 236 222 214 C214 200 220 190 232 184" />
+        </svg>
+        <i class="tape" style="left:-26px;top:-6px;transform:rotate(-34deg)"></i>
+        <i class="tape" style="right:-26px;top:-6px;transform:rotate(34deg)"></i>
+      </div>
+      <div class="lab"><div class="slip">웨스트민스터 신앙고백<i class="tape"></i></div></div>
+      <i class="dot"></i>
+    </div>
+  </div>
+
+  <div class="title" id="title">
+    <h1>종교개혁 <b>130</b>년<svg width="420" height="30"><path class="mk" id="ul" d="M4 18 C80 8 180 24 260 12 C320 4 380 16 410 12"/></svg></h1>
+    <p>1517 — 1647</p>
+  </div>
+  <div class="vig"></div><div class="grain"></div>
+</main>
+<script src="../../lib/gsap.min.js"></script><script src="../../lib/stage.js"></script>
+<script>
+const tl = Motion.timeline();
+const CX = [640,1400,2160,2920];
+const W = document.getElementById('world'), P = document.getElementById('paper');
+// 눈금
+const ticks = document.getElementById('ticks');
+for (let x = 100; x < 3280; x += 38) ticks.insertAdjacentHTML('beforeend', `<path d="M${x} 554V566"/>`);
+
+// stroke 그리기 준비
+function prep(el){ const L = el.getTotalLength(); gsap.set(el,{strokeDasharray:L,strokeDashoffset:L}); return L; }
+const axis = document.getElementById('axis'); const AL = prep(axis);
+['mk0','mk1','mk2','mk3','ul'].forEach(id => prep(document.getElementById(id)));
+
+// 카메라: world x = 640 - cx, 종이는 절반 속도(패럴랙스)
+const cam = {x:0, y:0, s:1};
+function applyCam(){ gsap.set(W,{x:cam.x,y:cam.y,scale:cam.s}); gsap.set(P,{x:cam.x*0.45,y:cam.y*0.3}); }
+applyCam();
+const axisTo = x => AL - (x - 60) / 3240 * AL; // x 지점까지 그린 상태의 offset
+
+// 초기 상태
+gsap.set('.node .dot',{scale:0});
+gsap.set('.card',{opacity:0});
+gsap.set('.year .bar',{scaleX:0});
+gsap.set('.year .y',{yPercent:110});
+gsap.set('.year .ko',{opacity:0});
+gsap.set('.lab',{opacity:0});
+gsap.set('#head',{opacity:0});
+gsap.set('#hl2',{scaleX:0,transformOrigin:'0 50%'});
+
+// 오프닝: 살짝 당겨진 카메라에서 시작
+cam.s = 1.06; cam.x = -38; cam.y = -22; applyCam();
+tl.to(cam,{s:1,x:0,y:0,duration:1.4,ease:'power2.out',onUpdate:applyCam},0);
+tl.to(axis,{strokeDashoffset:axisTo(820),duration:1.0,ease:'power2.inOut'},0.1);
+
+function build(i, t0){
+  const n = '#n'+i;
+  tl.to(n+' .dot',{scale:1,duration:0.45,ease:'back.out(2.4)'},t0);
+  tl.fromTo(n+' .card',{opacity:0,y:-60,scale:1.12,rotation:i%2?9:-9},
+    {opacity:1,y:0,scale:1,rotation:i%2?1.6:-2,duration:0.7,ease:'back.out(1.5)'},t0+0.1);
+  tl.to(n+' .bar',{scaleX:1,duration:0.4,ease:'power2.out'},t0+0.45);
+  tl.to(n+' .y',{yPercent:0,duration:0.6,ease:'power3.out'},t0+0.55);
+  tl.to(n+' .ko',{opacity:1,duration:0.3},t0+0.95);
+  tl.fromTo(n+' .lab',{opacity:0,scale:1.25,rotation:-5},{opacity:1,scale:1,rotation:i%2?1.2:-1.2,duration:0.35,ease:'back.out(2)'},t0+0.85);
+  tl.to('#mk'+i,{strokeDashoffset:0,duration:0.6,ease:'power2.inOut'},t0+1.25);
+}
+function pan(i, t0, dur){
+  tl.to(cam,{x:640-CX[i],duration:dur,ease:'power3.inOut',onUpdate:applyCam},t0);
+  tl.to(axis,{strokeDashoffset:axisTo(CX[i]+180),duration:dur,ease:'power2.inOut'},t0);
+  tl.to('#n'+(i-1),{opacity:.55,duration:dur*0.6},t0+0.1); // 초점은 하나(이전 카드는 흐리게 남김)
+  // 05 원본의 휘핑 블러: 팬 가운데서만 가로 흐림
+  tl.fromTo(W,{filter:'blur(0px)'},{filter:'blur(5px)',duration:dur*0.45,ease:'power2.in',yoyo:true,repeat:1,immediateRender:false},t0);
+}
+// 다음 카드는 팬 도중(t0+0.2)에 떨어지기 시작 → 팬 한가운데 빈 화면 없음
+build(0,0.35);
+pan(1,3.3,0.9);  build(1,3.5);
+pan(2,6.6,0.9);  build(2,6.8);
+tl.to('#hl2',{scaleX:1,duration:0.45,ease:'power2.out'},7.7);
+pan(3,9.9,0.9);  build(3,10.1);
+// 풀백: 전체 연표 + 제목
+const S = 0.37, LEFT = 170, RIGHT = 3330;
+// 12.3 풀백 → 13.85 이후 완성 정지(≥2초)
+tl.to(axis,{strokeDashoffset:0,duration:0.8,ease:'power2.inOut'},12.3);
+tl.to('#head',{opacity:1,duration:0.2},13.0);
+tl.to(cam,{s:S,x:(1280-(LEFT+RIGHT)*S)/2,y:395-132*S,duration:1.3,ease:'power3.inOut',onUpdate:applyCam},12.3);
+tl.to(['#n0','#n1','#n2'],{opacity:1,duration:0.6},12.4);
+tl.to('.lab',{scale:1.9,y:14,duration:1.1,ease:'power3.inOut'},12.5);
+// 연도 아래 캡션(지명·날짜)도 키워 카드 아래로 내림: 축소 0.37배에서도 읽히게
+tl.to('.year .ko',{scale:2.2,y:72,color:'#3a3022',transformOrigin:'0 0',duration:1.1,ease:'power3.inOut'},12.5);
+tl.fromTo('#title',{opacity:0,y:-24},{opacity:1,y:0,duration:0.6,ease:'power3.out'},12.9);
+tl.to('#ul',{strokeDashoffset:0,duration:0.55,ease:'power2.inOut'},13.3);
+// 홀드 전 마무리: 점이 연대순으로 한 번씩 뛰며 '이어진 130년'을 읽어 줌 + 아주 느린 밀기
+[0,1,2,3].forEach(i=> tl.fromTo('#n'+i+' .dot',{scale:1},{scale:1.7,duration:.16,yoyo:true,repeat:1,ease:'power2.out'},13.95+i*.2));
+tl.fromTo('#title',{scale:1},{scale:1.03,duration:1.2,ease:'sine.out',immediateRender:false},13.9);
+Motion.ready();
+</script></body></html>

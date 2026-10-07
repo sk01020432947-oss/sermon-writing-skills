@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Neonwire Deck</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+:root{
+  /* ── 실측 토큰 (WL_qu7l3fgQ 프레임 픽셀 계측) — 변경 금지 ── */
+  --bg:#080D12;        /* 청기 도는 근사흑. 화면의 88%가 이 색이다 */
+  --panel:#0D1722;     /* 넓은 목업 패널 바닥 */
+  --card:#131E2D;      /* 떠 있는 카드/노드 바닥 */
+  --line:#1E2A3C;      /* 헤어라인 · 비활성 테두리 */
+  --ink:#F2F5F8;       /* 헤드라인 */
+  --dim:#7C8794;       /* 보조문장 */
+  --micro:#4E5A68;     /* 마이크로 라벨 */
+
+  /* ── 상태 3색: 색이 곧 상태다. 장식으로 쓰지 않는다 ── */
+  --cyan:#1ECCC6;      /* 연결됨 · 해결 · 작동 */
+  --amber:#FCA81E;     /* 문제 제기 · 비용 · 의문 */
+  --red:#FC6C6C;       /* 차단 · 실패 · 불가 */
+  --cyan-d:#18AEA8;    /* 시안 저채도(비활성 흐름) */
+
+  --st:var(--cyan);    /* 요소별 상태색. slide/요소에 style="--st:var(--red)" */
+  --mono:ui-monospace,"SFMono-Regular",Menlo,Consolas,"D2Coding",monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;background:#000;overflow:hidden}
+body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Noto Sans KR",sans-serif;color:var(--ink)}
+
+#stage{position:absolute;top:50%;left:50%;width:1920px;height:1080px;
+  transform:translate(-50%,-50%) scale(var(--scale,1));transform-origin:center;background:var(--bg)}
+.slide{position:absolute;inset:0;display:none;background:var(--bg);overflow:hidden}
+.slide.active{display:block}
+
+/* ───────── 선택적 b-roll: 거의 안 보일 만큼 죽인다 ───────── */
+.bg{position:absolute;inset:0;background:var(--img,none) center/cover no-repeat;
+  filter:brightness(.20) saturate(.55) blur(2px);transform:scale(1.05);z-index:0}
+.active .bg{animation:ken 26s ease-out both}
+@keyframes ken{from{transform:scale(1.05)}to{transform:scale(1.14)}}
+.bg::after{content:"";position:absolute;inset:0;
+  background:radial-gradient(120% 95% at 50% 50%,rgba(8,13,18,.55) 20%,rgba(8,13,18,.96) 100%)}
+
+/* ───────── 헤더 블록 (모든 슬라이드 공통) ───────── */
+.head{position:absolute;left:124px;top:96px;z-index:6;max-width:840px}
+.head.right{left:auto;right:124px;text-align:right}
+.head.mid{top:50%;transform:translateY(-50%)}
+.eyebrow{display:flex;align-items:center;gap:12px;font-size:15px;font-weight:600;
+  letter-spacing:.26em;text-transform:uppercase;color:var(--st);white-space:nowrap}
+.head.right .eyebrow{justify-content:flex-end}
+.eyebrow.dash::before{content:"";width:26px;height:2px;background:currentColor;flex:none}
+.eyebrow svg{width:16px;height:16px;flex:none}
+.head h1{margin-top:14px;font-size:48px;font-weight:700;line-height:1.26;
+  letter-spacing:-.022em;color:var(--ink)}
+.head h1 em{font-style:normal;color:var(--st)}                 /* 한 구절만 상태색 */
+.head h1.mono{font-family:var(--mono);font-size:44px;letter-spacing:.02em;color:var(--st)}
+.head p{margin-top:12px;font-size:20px;font-weight:400;line-height:1.5;color:var(--dim);letter-spacing:-.01em}
+
+/* ───────── 다이어그램 좌표계 (1920×700, 상단 300px에서 시작) ───────── */
+/* SVG viewBox와 HTML 노드가 같은 px 좌표를 쓴다 — 좌표를 그대로 옮겨 적으면 맞는다 */
+.diagram{position:absolute;left:0;right:0;top:300px;height:700px;z-index:4}
+.diagram > svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+
+/* SVG 선 — pathLength="1" 필수 (길이 계산 없이 스스로 그려진다) */
+/* 선택자를 .diagram > svg 로 한정한다: 노드/패널 안의 아이콘 SVG까지 물들이면
+   상태색 규칙이 무너진다(차단 장의 회색 노드가 빨개진다) */
+.diagram > svg path,.diagram > svg line,.diagram > svg circle,
+.diagram > svg rect,.diagram > svg polyline{
+  fill:none;stroke:var(--st);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;
+  filter:drop-shadow(0 0 5px var(--st))}
+.diagram > svg .faint{stroke:var(--line);filter:none;stroke-width:1.5}
+.diagram > svg .dash{stroke-dasharray:5 7;filter:none;opacity:.65}
+.draw{stroke-dasharray:1;stroke-dashoffset:1}
+.active .draw{animation:dash 1.15s cubic-bezier(.32,.75,.3,1) both}
+@keyframes dash{to{stroke-dashoffset:0}}
+
+/* ───────── 노드 (HTML, .diagram 안에 px 좌표로 절대배치) ───────── */
+.node{position:absolute;width:118px;height:118px;border-radius:22px;border:2px solid var(--st);
+  background:var(--card);display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 22px -4px var(--st),inset 0 0 26px -14px var(--st);z-index:2}
+.node.round{border-radius:50%}
+.node.off{border-color:var(--line);box-shadow:none;background:#101722}
+.node.sm{width:78px;height:78px;border-radius:16px}
+/* 아이콘 광은 도형마다가 아니라 svg 하나에만 건다 — 도형별로 걸면 네모난 얼룩이 생긴다 */
+.node svg,.node img{width:56px;height:56px;fill:none;filter:drop-shadow(0 0 4px var(--st))}
+.node svg *{stroke:var(--st);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.node.sm svg,.node.sm img{width:36px;height:36px}
+.node.off svg{filter:none}
+.node.off svg *{stroke:#8D97A4}
+.node b{position:absolute;top:calc(100% + 16px);left:50%;transform:translateX(-50%);
+  font-family:var(--mono);font-size:14px;font-weight:400;letter-spacing:.2em;
+  color:var(--micro);text-transform:uppercase;white-space:nowrap}
+/* 링 파동 (신호 발신 노드) */
+.node.pulse::after{content:"";position:absolute;inset:-14px;border-radius:inherit;
+  border:1.5px solid var(--st);opacity:0}
+.active .node.pulse::after{animation:ring 2.4s 1s ease-out infinite}
+@keyframes ring{0%{opacity:.55;transform:scale(.94)}100%{opacity:0;transform:scale(1.22)}}
+
+/* ───────── 배지 / 스탬프 / 칩 / 명령줄 ───────── */
+.badge{position:absolute;font-family:var(--mono);font-size:16px;letter-spacing:.18em;
+  color:var(--st);border:1.5px solid var(--st);border-radius:999px;padding:7px 18px;
+  background:var(--bg);text-transform:uppercase;z-index:3;white-space:nowrap}
+.stamp{position:absolute;transform:rotate(var(--rot,0deg));
+  border:2.5px solid var(--st);border-radius:18px;padding:26px 46px;
+  color:var(--st);text-align:center;box-shadow:0 0 30px -6px var(--st);background:rgba(8,13,18,.6);z-index:3}
+.stamp .big{font-family:var(--mono);font-size:58px;font-weight:700;letter-spacing:.02em}
+.stamp .sub{margin-top:6px;font-family:var(--mono);font-size:20px;letter-spacing:.34em}
+.chip{position:absolute;display:flex;align-items:center;gap:14px;padding:14px 22px;
+  border-radius:12px;background:var(--card);border:1px solid var(--line);z-index:3}
+.chip i{width:10px;height:10px;border-radius:50%;background:var(--st);flex:none;
+  box-shadow:0 0 10px var(--st)}
+.chip.off i{background:#5C6673;box-shadow:none}
+.chip span{font-size:19px;font-weight:600;color:var(--ink)}
+.chip{flex-wrap:wrap}
+.chip u{flex-basis:100%;width:120px;height:4px;margin:2px 0 0 24px;border-radius:2px;
+  background:var(--line);text-decoration:none}
+.cmd{position:absolute;display:flex;align-items:center;gap:14px;padding:20px 28px;
+  border:1.5px solid var(--st);border-radius:12px;background:rgba(19,30,45,.75);
+  box-shadow:0 0 26px -8px var(--st);z-index:3}
+.cmd code{font-family:var(--mono);font-size:26px;color:var(--ink);letter-spacing:.01em}
+.cmd code i{font-style:normal;color:var(--st)}
+.cmd b{position:absolute;top:calc(100% + 12px);left:2px;font-family:var(--mono);font-size:14px;
+  font-weight:400;letter-spacing:.24em;color:var(--micro)}
+
+/* ───────── 패널 목업 (파일트리 · 코드 · 표) ───────── */
+.panel{position:absolute;background:var(--panel);border:1px solid var(--line);border-radius:14px;
+  overflow:hidden;z-index:2;box-shadow:0 30px 70px -30px #000}
+.panel .phead{font-family:var(--mono);font-size:14px;letter-spacing:.22em;color:var(--micro);
+  text-transform:uppercase;padding:20px 26px 0}
+.panel .split{position:absolute;top:0;bottom:0;width:1px;background:var(--line)}
+.row{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:17px;
+  color:#9AA6B4;padding:5px 26px}
+.row.on{color:var(--st)}
+.row svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8;flex:none}
+.bar{height:7px;border-radius:4px;background:var(--line)}
+.bar.on{background:var(--st);opacity:.55}
+.tag{font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:var(--st);
+  border:1px solid var(--st);border-radius:4px;padding:1px 7px;opacity:.8}
+
+/* ───────── 하단 내레이션 자막 ───────── */
+.cap{position:absolute;left:10%;right:10%;bottom:52px;text-align:center;z-index:8;
+  font-size:30px;font-weight:700;letter-spacing:-.015em;color:#FFF;line-height:1.5;
+  text-shadow:0 2px 12px rgba(0,0,0,.95)}
+
+/* ───────── 등장 모션 ───────── */
+.active .in{animation:rise .7s cubic-bezier(.2,.72,.2,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+/* 회전한 요소(스탬프)도 pop을 쓴다 — 키프레임이 --rot를 물고 있어야 회전이 지워지지 않는다 */
+.active .pop{animation:pop .55s cubic-bezier(.16,1,.3,1) both}
+@keyframes pop{from{opacity:0;transform:rotate(var(--rot,0deg)) scale(.82)}
+               to{opacity:1;transform:rotate(var(--rot,0deg)) scale(1)}}
+.slide:not(.active) .in,.slide:not(.active) .pop{opacity:0}
+.active .d1{animation-delay:.08s}.active .d2{animation-delay:.22s}.active .d3{animation-delay:.36s}
+.active .d4{animation-delay:.50s}.active .d5{animation-delay:.64s}.active .d6{animation-delay:.78s}
+.active .d7{animation-delay:.92s}.active .d8{animation-delay:1.10s}
+
+#nav{position:fixed;right:22px;bottom:14px;z-index:99;color:#4E5A68;
+  font-family:var(--mono);font-size:14px;letter-spacing:.12em}
+body.notes #nav{bottom:auto;top:14px}
+
+/* ═════ 발표자 노트 — 기본 숨김. S 로 토글 ═════ */
+body.notes #stage{top:0;transform:translateX(-50%) scale(var(--scale,1));transform-origin:top center}
+#notes{position:fixed;left:0;right:0;bottom:0;max-height:40vh;overflow:auto;display:none;
+  background:#0D1722;border-top:2px solid var(--cyan);z-index:100;
+  padding:18px var(--npad,30px) 22px;color:#C9D3DE}
+body.notes #notes{display:block}
+#notes .nlab{font-family:var(--mono);font-size:13px;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--cyan);margin-bottom:10px}
+#notes .ntext{font-size:18px;line-height:1.7}
+#notes .ntext b{font-weight:700;color:#FFF}
+#notes .ntext span{color:#6F7A87}
+
+@media print{
+  html,body,#stage{overflow:visible;position:static;transform:none;width:auto;height:auto}
+  .slide{display:block!important;position:relative;width:1920px;height:1080px;page-break-after:always}
+  /* transform은 되돌리지 않는다 — animation:none이면 각 요소의 기본 transform(스탬프 회전)이 산다 */
+  .in,.pop,.draw,.bg{animation:none!important;opacity:1!important;stroke-dashoffset:0!important}
+  #nav,#notes{display:none!important}
+}
+@page{size:1920px 1080px;margin:0}
+</style>
+</head>
+<body>
+<div id="stage">
+
+<!-- ═════ N1 · 흐름 체인 — 가장 자주 쓰는 장. A가 B에 닿는다 ═════ -->
+<section class="slide" data-note="흐름 장. <b>선이 그려지는 1.15초가 이 장의 내용</b>이다 — 정지 상태로 보면 아무 말도 하지 않는다. 노드는 둘, 많아야 셋. 넷이면 장을 쪼갠다.">
+  <div class="head">
+    <div class="eyebrow dash in d1">WORLD AS INPUT</div>
+    <h1 class="in d2">바깥 세상을 <em>끌어쓴다</em></h1>
+    <p class="in d3">세상이 곧 재료가 된다</p>
+  </div>
+  <div class="diagram">
+    <svg viewBox="0 0 1920 700">
+      <path class="draw d4" pathLength="1" d="M 560 340 C 760 300, 1080 300, 1290 340"/>
+      <polyline class="draw d5" pathLength="1" points="1268,326 1292,340 1268,354"/>
+    </svg>
+    <div class="node round pulse pop d3" style="left:320px;top:230px;width:220px;height:220px">
+      <svg viewBox="0 0 24 24" style="width:96px;height:96px"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18a15 15 0 0 1 0-18"/></svg>
+      <b>World</b>
+    </div>
+    <div class="node pop d6" style="left:1290px;top:281px">
+      <svg viewBox="0 0 24 24"><rect x="4" y="7" width="16" height="12" rx="3"/><path d="M12 3v4M9 12h.01M15 12h.01M9 16h6"/></svg>
+      <b>Agent</b>
+    </div>
+  </div>
+  <div class="cap in d8">세상을 재료로 쓰기 시작했다는 뜻입니다</div>
+</section>
+
+<!-- ═════ N2 · 차단 분기 — 길이 막혔다 (red) ═════ -->
+<section class="slide" style="--st:var(--red)" data-note="차단 장. <b>차단은 빨강, 남은 경로는 회색</b>이다. 빨강이 두 군데를 넘어가면 화면이 비명을 지른다 — ⊘ 두 개 + 배지 하나가 상한선.">
+  <div class="head">
+    <div class="eyebrow dash in d1">Blocked</div>
+    <h1 class="in d2">두 길 다 막혔다</h1>
+  </div>
+  <div class="diagram">
+    <svg viewBox="0 0 1920 700">
+      <path class="faint dash draw d4" pathLength="1" d="M 900 250 L 640 460"/>
+      <path class="faint dash draw d4" pathLength="1" d="M 1020 250 L 1280 460"/>
+      <g class="pop d6"><circle cx="700" cy="415" r="34"/><path d="M 676 391 L 724 439"/></g>
+      <g class="pop d6"><circle cx="1220" cy="415" r="34"/><path d="M 1196 391 L 1244 439"/></g>
+    </svg>
+    <div class="node off pop d3" style="left:901px;top:130px">
+      <svg viewBox="0 0 24 24"><rect x="4" y="7" width="16" height="12" rx="3"/><path d="M12 3v4M9 12h.01M15 12h.01M9 16h6"/></svg>
+    </div>
+    <div class="badge pop d7" style="left:860px;top:396px">No route</div>
+    <div class="node off sm pop d5" style="left:520px;top:470px">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M8 14h8M9.5 11h.01M14.5 11h.01"/></svg>
+      <b>Reddit</b>
+    </div>
+    <div class="node off sm pop d5" style="left:1322px;top:470px">
+      <svg viewBox="0 0 24 24"><path d="M5 5l14 14M19 5L5 19"/></svg>
+      <b>X</b>
+    </div>
+  </div>
+  <div class="cap in d8">그런데 녀석은 갈 수가 없습니다</div>
+</section>
+
+<!-- ═════ N3 · 수렴 — 여러 갈래가 한 줄로 (amber → cyan) ═════ -->
+<section class="slide" data-note="수렴 장. 이 스타일의 <b>해결 선언</b> 문법이다. 들어오는 갈래는 앰버(문제), 나가는 한 줄은 시안(해결) — 색이 바뀌는 지점이 곧 메시지다.">
+  <div class="head mid">
+    <div class="eyebrow in d1">One line</div>
+    <h1 class="in d2">엉킨 설정이 <em>하나의 명령</em>으로</h1>
+  </div>
+  <div class="diagram">
+    <svg viewBox="0 0 1920 700">
+      <g style="--st:var(--amber)">
+        <path class="draw d3" pathLength="1" d="M 800 180 C 950 190, 990 300, 1060 320"/>
+        <path class="draw d3" pathLength="1" d="M 800 250 C 950 258, 990 308, 1060 320"/>
+        <path class="draw d3" pathLength="1" d="M 800 320 L 1060 320"/>
+        <path class="draw d3" pathLength="1" d="M 800 390 C 950 382, 990 332, 1060 320"/>
+        <path class="draw d3" pathLength="1" d="M 800 460 C 950 450, 990 340, 1060 320"/>
+      </g>
+      <circle class="pop d5" cx="1078" cy="320" r="13"/>
+      <path class="draw d6" pathLength="1" d="M 1091 320 L 1180 320"/>
+    </svg>
+    <div class="cmd pop d7" style="left:1180px;top:281px">
+      <svg viewBox="0 0 24 24" style="width:26px;height:26px;stroke:var(--st);fill:none;stroke-width:2"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M8 10l3 2-3 2"/></svg>
+      <code><i>$</i> pip install agent-reach</code>
+      <b>One line · done</b>
+    </div>
+  </div>
+  <div class="cap in d8">이 문제를 한 줄로 끝냅니다</div>
+</section>
+
+<!-- ═════ N4 · 상태 반전 — 되던 게 안 된다 (cyan → red) ═════ -->
+<section class="slide" data-note="반전 장. <b>한 선 안에서 시안이 빨강으로 꺾인다.</b> 두 개의 그림이 아니라 하나의 선이라는 점이 핵심 — 나눠 그리면 인과가 사라진다.">
+  <div class="head mid">
+    <div class="eyebrow in d1" style="--st:var(--red)">No response</div>
+    <h1 class="in d2">해내지<br>못한다</h1>
+    <p class="in d3">기본적인 일조차 자주 멈춘다</p>
+  </div>
+  <div class="diagram">
+    <svg viewBox="0 0 1920 700">
+      <g class="pop d4" style="--st:var(--red)"><circle cx="770" cy="230" r="26"/>
+        <circle cx="770" cy="230" r="4"/>
+        <path d="M 762 222 a 11 11 0 0 0 0 16 M 778 222 a 11 11 0 0 1 0 16"/></g>
+      <path class="draw d5" pathLength="1" d="M 800 230 C 850 230, 855 160, 905 160 C 955 160, 950 230, 1000 230"/>
+      <path class="draw d6" pathLength="1" style="--st:var(--red)" d="M 1000 230 L 1560 230"/>
+      <g class="pop d7" style="--st:var(--red)"><circle cx="1600" cy="230" r="30"/><path d="M 1586 216 L 1614 244 M 1614 216 L 1586 244"/></g>
+    </svg>
+    <div class="badge pop d8" style="left:1520px;top:288px;border:none;padding:0;--st:var(--red)">cannot reach</div>
+  </div>
+  <div class="cap in d8">그 간단한 작업조차 해내지 못하는 경우가 많죠</div>
+</section>
+
+<!-- ═════ N5 · 패널 목업 — 도구 안을 열어 보인다 ═════ -->
+<section class="slide" data-note="목업 장. 실제 스크린샷 대신 <b>같은 토큰으로 다시 그린 목업</b>을 쓴다. 스크린샷을 붙이면 그 순간 화면 온도가 깨진다. 강조할 한 줄만 시안, 나머지는 회색.">
+  <div class="head">
+    <div class="eyebrow in d1">Repo access</div>
+    <h1 class="in d2">저장소 안으로 들어간다</h1>
+    <p class="in d3">코드를 직접 연다</p>
+  </div>
+  <div class="diagram">
+    <svg viewBox="0 0 1920 700">
+      <path class="draw d5" pathLength="1" d="M 372 120 L 372 220 L 960 220"/>
+      <polyline class="draw d6" pathLength="1" points="940,208 962,220 940,232"/>
+      <circle class="pop d5" cx="372" cy="120" r="6" style="filter:drop-shadow(0 0 6px var(--st))"/>
+    </svg>
+    <div style="position:absolute;left:262px;top:92px;font-family:var(--mono);font-size:14px;
+      letter-spacing:.24em;color:var(--micro)" class="in d4">ENTER</div>
+    <div class="panel in d4" style="left:440px;top:0;width:1020px;height:530px">
+      <div class="split" style="left:510px"></div>
+      <div class="phead">Files</div>
+      <div style="padding-top:14px">
+        <div class="row on"><svg viewBox="0 0 24 24"><path d="M4 6h6l2 3h8v10H4z"/></svg>agent-router</div>
+        <div class="row" style="padding-left:52px"><svg viewBox="0 0 24 24"><path d="M4 6h6l2 3h8v10H4z"/></svg>src</div>
+        <div class="row on" style="padding-left:78px"><svg viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/></svg>router.ts</div>
+        <div class="row" style="padding-left:78px"><svg viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/></svg>index.ts</div>
+        <div class="row" style="padding-left:52px"><svg viewBox="0 0 24 24"><path d="M4 6h6l2 3h8v10H4z"/></svg>docs</div>
+        <div class="row" style="padding-left:78px"><svg viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/></svg>README.md</div>
+      </div>
+      <div style="position:absolute;left:540px;top:56px;right:34px">
+        <div class="row on" style="padding:0 0 18px 0">router.ts <span class="tag">reading</span></div>
+        <div class="bar" style="width:78%;margin-bottom:14px"></div>
+        <div class="bar" style="width:64%;margin-bottom:14px"></div>
+        <div class="bar" style="width:82%;margin-bottom:14px"></div>
+        <div class="bar on" style="width:71%;margin-bottom:14px"></div>
+        <div class="bar" style="width:58%;margin-bottom:14px"></div>
+        <div class="bar" style="width:44%"></div>
+      </div>
+    </div>
+  </div>
+  <div class="cap in d8">이렇게 GitHub를 직접 읽고 검색할 수 있습니다</div>
+</section>
+
+<!-- ═════ N6 · 스탬프 — 수치·조건 한 방 ═════ -->
+<section class="slide" data-note="스탬프 장. <b>전체에서 두 번을 넘기지 않는다.</b> 기울인 각도는 −8도 고정 — 각도를 키우면 밈이 된다. 취소선(사선)은 앞의 것을 지우는 뜻이므로 반드시 스탬프보다 먼저 등장한다.">
+  <div class="head">
+    <div class="eyebrow in d1">No cost</div>
+    <h1 class="in d2">결제 단계가 <em>사라진다</em></h1>
+  </div>
+  <div class="diagram">
+    <svg viewBox="0 0 1920 700">
+      <g class="faint" style="opacity:.5">
+        <rect class="pop d3" x="760" y="180" width="110" height="76" rx="8"/>
+        <path class="pop d3" d="M 760 208 h 110 M 786 238 h 22"/>
+        <circle class="pop d3" cx="978" cy="196" r="20"/>
+        <path class="pop d3" d="M 966 210 L 936 244 M 944 236 l 10 10"/>
+      </g>
+      <path class="draw d6" pathLength="1" d="M 700 300 L 1170 148" style="stroke-width:5"/>
+    </svg>
+    <div style="position:absolute;left:775px;top:290px;font-family:var(--mono);font-size:14px;
+      letter-spacing:.2em;color:var(--micro)" class="in d3">CARD</div>
+    <div style="position:absolute;left:930px;top:290px;font-family:var(--mono);font-size:14px;
+      letter-spacing:.2em;color:var(--micro)" class="in d3">API KEY</div>
+    <div class="stamp pop d7" style="left:1190px;top:140px;--rot:-8deg">
+      <div class="big">$0</div><div class="sub">FREE</div>
+    </div>
+  </div>
+  <div class="cap in d8">API 키요? 결제 없습니다</div>
+</section>
+
+<!-- ═════ N7 · 말풍선 카드 — 반론·의문을 인물처럼 세운다 (amber) ═════ -->
+<section class="slide" style="--st:var(--amber)" data-note="반론 장. 청중 머릿속 질문을 <b>화면 밖 인물의 말</b>로 세운다. 점선은 '아직 확정 아님'의 표식 — 답하는 장에서는 실선 시안으로 갚아 준다.">
+  <div class="diagram" style="top:200px">
+    <svg viewBox="0 0 1920 700">
+      <path class="dash draw d3" pathLength="1" d="M 560 220 L 830 232"/>
+      <g class="pop d2"><circle cx="806" cy="150" r="30"/><path d="M 798 141 a 8 8 0 1 1 8 12 v 6 M 806 170 h .01"/></g>
+    </svg>
+    <div class="node round off pop d1" style="left:340px;top:150px;width:150px;height:150px;border:none;
+      background:none;box-shadow:none">
+      <svg viewBox="0 0 24 24" style="width:120px;height:120px">
+        <path d="M12 5v14M12 5a3.5 3.5 0 0 0-7 1.2A3 3 0 0 0 4 12a3 3 0 0 0 1.2 5A3.2 3.2 0 0 0 12 19"/>
+        <path d="M12 5a3.5 3.5 0 0 1 7 1.2A3 3 0 0 1 20 12a3 3 0 0 1-1.2 5A3.2 3.2 0 0 1 12 19"/>
+      </svg>
+    </div>
+    <div class="panel pop d4" style="left:860px;top:100px;width:860px;height:280px;border-radius:24px;
+      background:var(--card);padding:56px 60px">
+      <div class="eyebrow" style="--st:var(--amber)">Hold on</div>
+      <div style="margin-top:16px;font-size:40px;font-weight:700;letter-spacing:-.02em">이미 다 알고 있지 않나?</div>
+      <div style="margin-top:12px;font-size:20px;color:var(--dim)">학습 데이터에 다 들어 있을 텐데?</div>
+    </div>
+  </div>
+  <div class="cap in d8">당연히 아는 거 아니야?</div>
+</section>
+
+<!-- ═════ N8 · 칩 스택 — 목록을 카드 몇 장으로 (닫는 장) ═════ -->
+<section class="slide" data-note="닫는 장. 목록을 <b>어긋나게 쌓은 칩 3장</b>으로 놓는다 — 정렬을 맞추면 표가 되고, 어긋내면 대화가 된다. 마지막 장에는 청중이 취할 행동 하나만 남긴다.">
+  <div class="head">
+    <div class="eyebrow in d1">
+      <svg viewBox="0 0 24 24" style="stroke:currentColor;fill:none;stroke-width:2"><path d="M21 12a8 8 0 0 1-8 8H7l-4 3V12a8 8 0 0 1 8-8h2a8 8 0 0 1 8 8z"/></svg>
+      Comments
+    </div>
+    <h1 class="in d2">댓글로 함께</h1>
+    <p class="in d3">다음 시간에 같이 해보기</p>
+  </div>
+  <div class="diagram">
+    <div class="chip pop d4" style="left:326px;top:180px;width:360px">
+      <i></i><span>트렌드 수집</span><u></u></div>
+    <div class="chip off pop d5" style="left:550px;top:312px;width:294px">
+      <i></i><span>문서 번역</span><u></u></div>
+    <div class="chip pop d6" style="left:330px;top:424px;width:320px">
+      <i></i><span>에러 정리</span><u></u></div>
+  </div>
+  <div class="cap in d8">그런 걸 댓글로 남겨주시면 좋겠습니다</div>
+</section>
+
+</div>
+
+<div id="nav"><span id="navPage"></span></div>
+<div id="notes"><div class="nlab">Presenter note</div><div class="ntext" id="noteText"></div></div>
+
+<script>
+const slides=[...document.querySelectorAll('.slide')];
+let cur=-1;
+const navPage=document.getElementById('navPage');
+const noteText=document.getElementById('noteText');
+function show(n){
+  cur=Math.max(0,Math.min(slides.length-1,n));
+  slides.forEach((s,i)=>s.classList.toggle('active',i===cur));
+  navPage.textContent=(cur+1)+' / '+slides.length;
+  noteText.innerHTML=slides[cur].dataset.note||'<span>이 장에는 노트가 없습니다.</span>';
+}
+addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key===' ')show(cur+1);
+  else if(e.key==='ArrowLeft')show(cur-1);
+  else if(e.key==='Home')show(0);
+  else if(e.key==='End')show(slides.length-1);
+  else if(e.key==='s'||e.key==='S'){document.body.classList.toggle('notes');fit();}
+});
+addEventListener('click',e=>{
+  if(e.target.closest('#notes'))return;
+  if(e.clientX<innerWidth/2)show(cur-1);else show(cur+1);
+});
+let tx=null;
+addEventListener('touchstart',e=>tx=e.touches[0].clientX);
+addEventListener('touchend',e=>{if(tx===null)return;
+  const dx=e.changedTouches[0].clientX-tx;
+  if(dx<-40)show(cur+1);else if(dx>40)show(cur-1);tx=null});
+function fit(){
+  const avail=document.body.classList.contains('notes')?innerHeight*.58:innerHeight;
+  const s=Math.min(innerWidth/1920,avail/1080);
+  document.getElementById('stage').style.setProperty('--scale',s);
+  // 노트 패널 좌우 여백 = 헤더 블록 좌측 기준선(124px)과 같은 위치
+  document.documentElement.style.setProperty('--npad',
+    Math.round((innerWidth-1920*s)/2+124*s)+'px');
+}
+addEventListener('resize',fit);addEventListener('load',fit);fit();
+const _h=parseInt(location.hash.slice(1));show(isNaN(_h)?0:_h-1);
+addEventListener('hashchange',()=>{const n=parseInt(location.hash.slice(1));if(!isNaN(n))show(n-1)});
+if(location.search.indexOf('shot')>-1)document.getElementById('nav').style.display='none';
+</script>
+</body>
+</html>

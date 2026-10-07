@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><title>스스로 되돌아보는 개선 루프 · Self-Review Loop</title>
+<link rel="stylesheet" href="../../lib/stage.css">
+<style>
+.frame{background:#0b1012 !important;background-image:none !important}
+.scene{position:absolute;inset:0;overflow:hidden;font-family:Pretendard,'Noto Sans KR',sans-serif;color:#e9f1ef;letter-spacing:-.01em}
+.bg{position:absolute;inset:0;background:radial-gradient(55% 75% at 12% -5%,#15493e 0%,rgba(21,73,62,0) 70%),radial-gradient(55% 75% at 105% 105%,#2c2257 0%,rgba(44,34,87,0) 70%),#0b1012}
+.tag{position:absolute;display:flex;gap:8px;align-items:center;font:600 12px/1 'IBM Plex Mono',monospace;letter-spacing:.12em;color:#9fb3ae;text-transform:uppercase;white-space:nowrap}
+.tag b{background:#3ee6a8;color:#06231a;padding:3px 6px;border-radius:4px;font-weight:700}
+.panel{position:absolute;background:rgba(18,26,28,.82);border:1px solid rgba(255,255,255,.09);border-radius:12px}
+.code{font:13px/1.75 'IBM Plex Mono',monospace;color:#b9c9c4;white-space:pre}
+.chip{position:absolute;padding:7px 14px;border-radius:999px;border:1px solid rgba(62,230,168,.45);color:#bff5df;font:600 14px/1 Pretendard;background:rgba(62,230,168,.08);white-space:nowrap}
+.mint{color:#3ee6a8}.red{color:#ff5d4f}
+
+.ph{position:absolute;inset:0}
+.hd{position:absolute;left:64px;top:60px;font:800 32px Pretendard}
+.ref{left:90px;top:170px;width:300px;height:300px}
+.att{position:absolute;top:170px;width:170px;height:200px}
+.att .pn{position:absolute;inset:0}
+.att span{position:absolute;left:0;right:0;bottom:-34px;text-align:center;font:700 15px Pretendard}
+.cap2{position:absolute;left:14px;top:12px;font:600 11px 'IBM Plex Mono';color:#7c8f8a;letter-spacing:.12em}
+.ring{position:absolute;left:390px;top:130px}
+.nd{position:absolute;padding:8px 16px;border-radius:999px;border:1.5px solid #3ee6a8;background:#0e1715;font:700 16px Pretendard;color:#bff5df}
+.qb{position:absolute;left:1000px;top:170px;width:24px;height:300px;border-radius:12px;background:rgba(255,255,255,.08);overflow:hidden}
+.qb div{position:absolute;left:0;right:0;bottom:0;height:0;background:linear-gradient(#3ee6a8,#1fb889)}
+.qn{position:absolute;left:968px;top:490px;width:90px;text-align:center;font:800 30px 'IBM Plex Mono';color:#3ee6a8}
+.ql{position:absolute;left:985px;top:140px;font:600 12px Pretendard;color:#9fb3ae}
+</style></head>
+<body data-no="G07" data-cat="문법 · 품질" data-ko="스스로 되돌아보는 개선 루프" data-en="Self-Review Loop" data-meta="11초 · 1차✗→4차✓, 만들기→보기→고치기 89%" data-dur="11" data-poster="10.4" data-size="1280x720">
+<main class="scene"><div class="bg"></div>
+  <div class="ph" id="a">
+    <div class="hd">이미지를 보고 <span class="mint">SVG로 따라 그리기</span> — 결과를 여러 번 확인하며</div>
+    <div class="panel ref"><span class="cap2">참조 이미지</span>
+      <svg width="300" height="300"><g transform="translate(40,60)"><rect x="10" y="80" width="200" height="110" rx="12" fill="#e9e3d2"/><circle cx="70" cy="50" r="42" fill="#e9e3d2"/><circle cx="160" cy="50" r="42" fill="#e9e3d2"/><circle cx="70" cy="50" r="16" fill="#1d2523"/><circle cx="160" cy="50" r="16" fill="#1d2523"/><rect x="60" y="120" width="100" height="14" rx="7" fill="#3ee6a8"/><rect x="216" y="100" width="14" height="60" rx="5" fill="#3ee6a8"/><circle cx="34" cy="104" r="6" fill="#ff5d4f"/></g></svg></div>
+    <div id="atts"></div>
+  </div>
+  <div class="ph" id="b" style="opacity:0">
+    <div class="hd">결과물을 스스로 되돌아보게 하면 <span class="mint">품질이 올라간다</span></div>
+    <svg class="ring" width="520" height="520"><circle cx="260" cy="260" r="190" fill="none" stroke="rgba(62,230,168,.35)" stroke-width="2" stroke-dasharray="4 8"/><circle id="orb" r="8" fill="#e9f1ef"/></svg>
+    <div class="nd" style="left:600px;top:120px">‹/› 만들기</div><div class="nd" style="left:790px;top:470px">◉ 보기</div><div class="nd" style="left:420px;top:470px">✎ 고치기</div>
+    <div class="panel" style="left:600px;top:330px;width:120px;height:110px"></div>
+    <div class="ql">품질</div><div class="qb"><div id="qf"></div></div><div class="qn" id="qn">0%</div>
+  </div>
+</main>
+<script src="../../lib/gsap.min.js"></script><script src="../../lib/stage.js"></script>
+<script>
+// 4번의 시도: 형태 오차를 줄여 간다(마지막만 통과)
+const err = [[34, -22, .6], [18, -12, .75], [8, 6, .88], [0, 0, 1]];
+document.getElementById('atts').innerHTML = err.map((e, i) => `<div class="panel att" style="left:${430 + i * 190}px"><span class="cap2">SVG ${i + 1}차</span><svg class="pn" width="170" height="200" viewBox="0 0 300 300"><g transform="translate(40,60) translate(${e[0]},${e[1]}) scale(${e[2]})" fill="none" stroke="${i == 3 ? '#3ee6a8' : '#ff5d4f'}" stroke-width="5"><rect x="10" y="80" width="200" height="110" rx="12"/><circle cx="${70 + e[0]}" cy="50" r="${42 - e[0] / 2}"/><circle cx="160" cy="${50 + e[1]}" r="42"/><rect x="60" y="120" width="${100 - e[0]}" height="14" rx="7"/>${i > 1 ? '<rect x="216" y="100" width="14" height="60" rx="5"/>' : ''}</g></svg><span style="color:${i == 3 ? '#3ee6a8' : '#ff8a7f'}">${i + 1}차 ${i == 3 ? '✓' : '✗'}</span></div>`).join('');
+const orb = {a: -Math.PI / 2}, q = {v: 0};
+const tl = Motion.timeline();
+tl.from('#a .hd,#a .ref', {y: 20, autoAlpha: 0, stagger: .1, duration: .5}, 0);
+tl.from('.att', {y: 24, autoAlpha: 0, stagger: .9, duration: .5}, .9);
+tl.to('#a', {autoAlpha: 0, duration: .5}, 5.0);
+tl.to('#b', {opacity: 1, duration: .5}, 5.3);
+tl.to(orb, {a: Math.PI * 2 * 2.2 - Math.PI / 2, duration: 5, ease: 'power1.inOut', onUpdate() { const o = document.getElementById('orb'); o.setAttribute('cx', 260 + Math.cos(orb.a) * 190); o.setAttribute('cy', 260 + Math.sin(orb.a) * 190); }}, 5.6);
+tl.to(q, {v: 89, duration: 4.6, ease: 'power2.out', onUpdate() { document.getElementById('qf').style.height = q.v + '%'; document.getElementById('qn').textContent = Math.round(q.v) + '%'; }}, 5.8);
+Motion.ready();
+</script></body></html>

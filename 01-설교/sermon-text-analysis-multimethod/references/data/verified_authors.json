@@ -1,0 +1,394 @@
+{
+  "_meta": {
+    "purpose": "검증된 학자·작품·연도·출판사 화이트리스트. 본 카탈로그에 없으면 인용을 회피하거나 '표준 학술 주석 직접 확인 권장'으로 우회한다.",
+    "verified_against": "이전 TEST-REPORT.md V1·V2 통과 항목 + 출판사 공식 카탈로그 + 학술 도서 표준 검색",
+    "last_updated": "2026-05-16"
+  },
+  "commentary_series": {
+    "NICOT": {
+      "full_name": "New International Commentary on the Old Testament",
+      "publisher": "Eerdmans",
+      "general_editor_history": ["E.J. Young (1965-1968)", "R.K. Harrison (1968-1992)", "Robert L. Hubbard Jr. (1992-2010)", "Bill T. Arnold (2010-)"],
+      "type": "evangelical reformed"
+    },
+    "NICNT": {
+      "full_name": "New International Commentary on the New Testament",
+      "publisher": "Eerdmans",
+      "type": "evangelical reformed"
+    },
+    "NIGTC": {
+      "full_name": "New International Greek Testament Commentary",
+      "publisher": "Eerdmans / Paternoster",
+      "type": "evangelical critical Greek"
+    },
+    "BECNT": {
+      "full_name": "Baker Exegetical Commentary on the New Testament",
+      "publisher": "Baker Academic",
+      "type": "evangelical exegetical"
+    },
+    "WBC": {
+      "full_name": "Word Biblical Commentary",
+      "publisher": "Word Books (1982-2009) / Zondervan (2009-)",
+      "type": "evangelical exegetical"
+    },
+    "PNTC": {
+      "full_name": "Pillar New Testament Commentary",
+      "publisher": "Eerdmans / Apollos",
+      "type": "evangelical exegetical"
+    },
+    "ICC": {
+      "full_name": "International Critical Commentary",
+      "publisher": "T&T Clark",
+      "type": "critical scholarly"
+    },
+    "AB": {
+      "full_name": "Anchor Bible Commentary",
+      "publisher_history": "Doubleday (1956-2007) → Yale University Press (2008-)",
+      "type": "critical scholarly",
+      "WARNING": "초판 인용 시 Doubleday, 2008년 이후 Yale UP. Joel Marcus Mark 1-8 (2000) = Doubleday 초판."
+    },
+    "Hermeneia": {
+      "full_name": "Hermeneia: A Critical and Historical Commentary",
+      "publisher": "Fortress Press",
+      "type": "critical scholarly"
+    },
+    "NIVAC": {
+      "full_name": "NIV Application Commentary",
+      "publisher": "Zondervan",
+      "type": "evangelical application"
+    },
+    "EBC": {
+      "full_name": "Expositor's Bible Commentary",
+      "publisher": "Zondervan",
+      "type": "evangelical"
+    },
+    "TNTC": {
+      "full_name": "Tyndale New Testament Commentary",
+      "publisher": "IVP / Eerdmans",
+      "type": "evangelical concise"
+    },
+    "TOTC": {
+      "full_name": "Tyndale Old Testament Commentary",
+      "publisher": "IVP / Eerdmans",
+      "type": "evangelical concise"
+    }
+  },
+  "verified_authors": {
+    "Calvin, John (1509-1564)": {
+      "works": [
+        "Institutes of the Christian Religion (1559 final ed.)",
+        "Commentaries on the Old and New Testament (genevan corpus)"
+      ],
+      "korean_translations": "박건택·박종숙 등 다수",
+      "tradition": "Reformed"
+    },
+    "Augustine of Hippo (354-430)": {
+      "works": [
+        "Confessions (Confessiones, 397-400)",
+        "City of God (De Civitate Dei, 413-426)",
+        "On Christian Doctrine (De Doctrina Christiana, 397/426)",
+        "On the Trinity (De Trinitate, 399-419)",
+        "Tractates on the Gospel of John",
+        "Expositions of the Psalms (Enarrationes in Psalmos)"
+      ],
+      "tradition": "Latin Father"
+    },
+    "Luther, Martin (1483-1546)": {
+      "works": [
+        "Lectures on Romans (1515-1516, WA 56)",
+        "Lectures on Galatians (1535, WA 40)",
+        "Bondage of the Will (De servo arbitrio, 1525)"
+      ],
+      "edition": "Weimar Ausgabe (WA) standard critical edition",
+      "tradition": "Lutheran"
+    },
+    "Wallace, Daniel B.": {
+      "works": [
+        "Greek Grammar Beyond the Basics: An Exegetical Syntax of the New Testament (Zondervan, 1996)"
+      ],
+      "type": "Greek grammar reference",
+      "tradition": "evangelical"
+    },
+    "Carson, D.A.": {
+      "works": [
+        "Exegetical Fallacies (Baker, 1984; 2nd ed. 1996)",
+        "The Gospel According to John (PNTC, Eerdmans/Apollos, 1991)",
+        "Matthew (Expositor's Bible Commentary, Zondervan, 1984/2010 rev.)"
+      ],
+      "tradition": "evangelical reformed"
+    },
+    "Moo, Douglas J.": {
+      "works": [
+        "The Epistle to the Romans (NICNT, Eerdmans, 1996; 2nd ed. 2018)",
+        "Galatians (BECNT, Baker Academic, 2013)",
+        "The Letter of James (PNTC, Eerdmans, 2000)"
+      ],
+      "tradition": "evangelical reformed"
+    },
+    "Schreiner, Thomas R.": {
+      "works": [
+        "Romans (BECNT, Baker Academic, 1998; 2nd ed. 2018)",
+        "Galatians (ZECNT, Zondervan, 2010)",
+        "1, 2 Peter, Jude (NAC, B&H, 2003)"
+      ],
+      "tradition": "evangelical reformed"
+    },
+    "Bruce, F.F. (1910-1990)": {
+      "works": [
+        "The Epistle to the Galatians (NIGTC, Eerdmans/Paternoster, 1982)",
+        "The Book of Acts (NICNT, Eerdmans, 1988 rev.)",
+        "The Epistle to the Hebrews (NICNT, Eerdmans, 1964; rev. 1990)"
+      ],
+      "tradition": "evangelical"
+    },
+    "Morris, Leon (1914-2006)": {
+      "works": [
+        "The Gospel According to John (NICNT, Eerdmans, 1971; rev. 1995)",
+        "The Epistle to the Romans (PNTC, Eerdmans, 1988)"
+      ],
+      "tradition": "evangelical reformed"
+    },
+    "Hoehner, Harold W.": {
+      "works": [
+        "Ephesians: An Exegetical Commentary (Baker Academic, 2002)"
+      ],
+      "tradition": "evangelical dispensational"
+    },
+    "Wenham, Gordon J.": {
+      "works": [
+        "Genesis 1-15 (WBC, Word Books, 1987)",
+        "Genesis 16-50 (WBC, Word Books, 1994)",
+        "Numbers (TOTC, IVP, 1981)"
+      ],
+      "tradition": "evangelical"
+    },
+    "Brueggemann, Walter": {
+      "works": [
+        "Genesis (Interpretation, John Knox Press, 1982)",
+        "The Message of the Psalms (Augsburg, 1984)",
+        "Praying the Psalms (Augsburg, 1982; rev. 2007)",
+        "Theology of the Old Testament (Fortress, 1997)"
+      ],
+      "tradition": "mainline reformed (UCC-leaning)"
+    },
+    "France, R.T. (1938-2012)": {
+      "works": [
+        "The Gospel of Matthew (NICNT, Eerdmans, 2007)",
+        "The Gospel of Mark (NIGTC, Eerdmans/Paternoster, 2002)"
+      ],
+      "tradition": "evangelical"
+    },
+    "Marcus, Joel": {
+      "works": [
+        "Mark 1-8 (Anchor Bible 27, Doubleday, 2000; reprinted Yale UP)",
+        "Mark 8-16 (Anchor Bible 27A, Yale UP, 2009)"
+      ],
+      "WARNING": "Mark 1-8 초판은 Doubleday 2000; Yale UP는 시리즈 이전(2008) 후 재발행본",
+      "tradition": "critical scholarly"
+    },
+    "Stein, Robert H.": {
+      "works": [
+        "Mark (BECNT, Baker Academic, 2008)",
+        "Luke (NAC, Broadman & Holman, 1992)"
+      ],
+      "tradition": "evangelical"
+    },
+    "Beale, G.K.": {
+      "works": [
+        "The Book of Revelation (NIGTC, Eerdmans/Paternoster, 1999)",
+        "A New Testament Biblical Theology (Baker Academic, 2011)"
+      ],
+      "tradition": "reformed"
+    },
+    "Bauckham, Richard": {
+      "works": [
+        "The Climax of Prophecy: Studies on the Book of Revelation (T&T Clark, 1993)",
+        "Jesus and the Eyewitnesses (Eerdmans, 2006; 2nd ed. 2017)"
+      ],
+      "tradition": "evangelical critical"
+    },
+    "McCarter, P. Kyle Jr.": {
+      "works": [
+        "I Samuel (Anchor Bible 8, Doubleday, 1980)",
+        "II Samuel (Anchor Bible 9, Doubleday, 1984)"
+      ],
+      "tradition": "critical scholarly"
+    },
+    "Tsumura, David Toshio": {
+      "works": [
+        "The First Book of Samuel (NICOT, Eerdmans, 2007)",
+        "The Second Book of Samuel (NICOT, Eerdmans, 2019)"
+      ],
+      "tradition": "evangelical"
+    },
+    "Cranfield, C.E.B. (1915-2015)": {
+      "works": [
+        "A Critical and Exegetical Commentary on the Epistle to the Romans (ICC, T&T Clark, 1975/1979 2 vols.)"
+      ],
+      "tradition": "reformed critical"
+    },
+    "Davies, W.D. & Allison, Dale C.": {
+      "works": [
+        "A Critical and Exegetical Commentary on the Gospel According to Saint Matthew (ICC, T&T Clark, 1988-1997, 3 vols.)"
+      ],
+      "tradition": "critical scholarly"
+    },
+    "Allison, Dale C. Jr.": {
+      "works": [
+        "The Sermon on the Mount: Inspiring the Moral Imagination (Crossroad, 1999)",
+        "The New Moses: A Matthean Typology (Fortress, 1993)"
+      ],
+      "tradition": "critical scholarly"
+    },
+    "Murray, John (1898-1975)": {
+      "works": [
+        "The Epistle to the Romans (NICNT, Eerdmans, 1959/1965, 2 vols.)",
+        "Principles of Conduct (Eerdmans, 1957)",
+        "Redemption Accomplished and Applied (Eerdmans, 1955)"
+      ],
+      "tradition": "reformed Westminster"
+    },
+    "O'Donovan, Oliver": {
+      "works": [
+        "Resurrection and Moral Order (IVP/Eerdmans, 1986; 2nd ed. 1994)"
+      ],
+      "tradition": "Anglican evangelical"
+    },
+    "Bavinck, Herman (1854-1921)": {
+      "works": [
+        "Reformed Dogmatics (Gereformeerde Dogmatiek 1895-1901; ET Baker Academic 2003-2008, 4 vols.)",
+        "Our Reasonable Faith (Magnalia Dei, 1909)",
+        "Christian Worldview (Christelijke Wereldbeschouwing, 1904)"
+      ],
+      "tradition": "Dutch Reformed neo-Calvinist"
+    },
+    "Lenski, R.C.H. (1864-1936)": {
+      "works": [
+        "Commentary on the New Testament (Wartburg/Augsburg, 1933-1946, 12 vols.)",
+        "Interpretation of St. Paul's Epistles to the Galatians, to the Ephesians and to the Philippians (Wartburg, 1937)"
+      ],
+      "tradition": "Lutheran"
+    },
+    "Lloyd-Jones, D. Martyn (1899-1981)": {
+      "works": [
+        "Studies in the Sermon on the Mount (IVP, 1959-1960, 2 vols.)",
+        "Romans series (Banner of Truth, 1970-2003, 14 vols.)",
+        "Preaching and Preachers (Hodder & Stoughton, 1971)"
+      ],
+      "tradition": "Welsh reformed evangelical"
+    },
+    "Park, Yune-Sun 박윤선 (1905-1988)": {
+      "works": [
+        "성경주석 (영음사, 1949-1979) — 한국 보수 개혁주의 표준 주석"
+      ],
+      "tradition": "Korean Presbyterian (Hapdong)"
+    },
+    "Park, Hyung-Nong 박형룡 (1897-1978)": {
+      "works": [
+        "교의신학 (한국기독교교육연구원, 1964-1978, 7권) — 한국 장로교 합동 표준 조직신학"
+      ],
+      "tradition": "Korean Presbyterian (Hapdong)"
+    },
+    "Wellhausen, Julius (1844-1918)": {
+      "works": [
+        "Geschichte Israels I (Berlin, 1878)",
+        "Prolegomena zur Geschichte Israels (Berlin, 1883; ET 1885)"
+      ],
+      "tradition": "critical (JEDP 자료가설)"
+    },
+    "Gunkel, Hermann (1862-1932)": {
+      "works": [
+        "Genesis (HKAT, 1901)",
+        "Einleitung in die Psalmen (Vandenhoeck & Ruprecht, 1933; posthumous, completed by Joachim Begrich)"
+      ],
+      "tradition": "form criticism (Formgeschichte) founder"
+    },
+    "Noth, Martin (1902-1968)": {
+      "works": [
+        "Überlieferungsgeschichtliche Studien (Halle, 1943) — Deuteronomistic History hypothesis",
+        "Das System der zwölf Stämme Israels (Stuttgart, 1930)"
+      ],
+      "tradition": "critical (Deuteronomistic History)"
+    },
+    "Rost, Leonhard (1896-1979)": {
+      "works": [
+        "Die Überlieferung von der Thronnachfolge Davids (Stuttgart, 1926)"
+      ],
+      "tradition": "critical (Succession Narrative hypothesis)"
+    },
+    "Robinson, J.A.T. (1919-1983)": {
+      "works": [
+        "Redating the New Testament (SCM Press, 1976)"
+      ],
+      "tradition": "critical but conservative on dating"
+    },
+    "Kierkegaard, Søren (1813-1855)": {
+      "works": [
+        "Fear and Trembling (Frygt og Bæven, Copenhagen, 1843)",
+        "The Sickness Unto Death (Sygdommen til Døden, 1849)"
+      ],
+      "tradition": "Christian existentialist"
+    },
+    "Fletcher, Joseph (1905-1991)": {
+      "works": [
+        "Situation Ethics: The New Morality (Westminster Press, 1966)"
+      ],
+      "tradition": "Episcopalian liberal — situation ethics founder"
+    },
+    "MacIntyre, Alasdair": {
+      "works": [
+        "After Virtue (University of Notre Dame Press, 1981; 2nd ed. 1984; 3rd ed. 2007)"
+      ],
+      "tradition": "virtue ethics revival"
+    },
+    "Beavis, Mary Ann": {
+      "works": [
+        "Mark's Audience: The Literary and Social Setting of Mark 4:11-12 (JSNTSup 33, Sheffield Academic Press, 1989)"
+      ],
+      "WARNING": "마가 4:11-12 청중 설정 작품 — 마가 4:35-41 키아스무스와 무관"
+    },
+    "Dewey, Joanna": {
+      "works": [
+        "Markan Public Debate: Literary Technique, Concentric Structure, and Theology in Mark 2:1-3:6 (SBL Dissertation Series 48, Scholars Press, 1980)"
+      ],
+      "WARNING": "마가 2:1-3:6 동심원 구조 작품 — 마가 4:35-41 키아스무스 직접 옹호자 아님"
+    }
+  },
+  "primary_critical_editions": {
+    "NA28": "Nestle-Aland Novum Testamentum Graece, 28th edition (Deutsche Bibelgesellschaft, 2012)",
+    "UBS5": "United Bible Societies Greek New Testament, 5th edition (Deutsche Bibelgesellschaft, 2014)",
+    "BHS": "Biblia Hebraica Stuttgartensia (Deutsche Bibelgesellschaft, 1977; rev. 1997)",
+    "BHQ": "Biblia Hebraica Quinta (Deutsche Bibelgesellschaft, 2004- ongoing)",
+    "Rahlfs-Hanhart": "Septuaginta (LXX) editio altera (Deutsche Bibelgesellschaft, 2006)",
+    "BDAG": "Bauer-Danker Greek-English Lexicon of the New Testament, 3rd edition (Univ. of Chicago Press, 2000)",
+    "HALOT": "The Hebrew and Aramaic Lexicon of the Old Testament (Brill, 1994-2000, 5 vols.)",
+    "BDB": "Brown-Driver-Briggs Hebrew and English Lexicon (Hendrickson reprint of 1906 ed.)",
+    "LSJ": "Liddell-Scott-Jones Greek-English Lexicon (9th ed., Oxford, 1996)",
+    "TDNT": "Theological Dictionary of the New Testament, eds. Kittel & Friedrich, ET Bromiley (Eerdmans, 1964-1976, 10 vols.)",
+    "TDOT": "Theological Dictionary of the Old Testament, eds. Botterweck & Ringgren (Eerdmans, 1974- ongoing)",
+    "NIDOTTE": "New International Dictionary of Old Testament Theology and Exegesis, ed. VanGemeren (Zondervan, 1997, 5 vols.)",
+    "NIDNTTE": "New International Dictionary of New Testament Theology and Exegesis, ed. Silva (Zondervan, 2014, 5 vols.)"
+  },
+  "korean_bible_translations": {
+    "개역개정": {
+      "year": "1998 (제4판)",
+      "publisher": "대한성서공회",
+      "type": "한국 장로교 합동 표준"
+    },
+    "개역한글": {
+      "year": "1961",
+      "publisher": "대한성서공회",
+      "type": "20세기 한국 교회 표준"
+    },
+    "새번역": {
+      "year": "2001 (개정판)",
+      "publisher": "대한성서공회",
+      "type": "현대어 의역"
+    },
+    "공동번역": {
+      "year": "1977 (개정판 1999)",
+      "publisher": "대한성서공회",
+      "type": "에큐메니컬"
+    }
+  }
+}

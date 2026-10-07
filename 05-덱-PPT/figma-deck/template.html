@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Figma Deck</title>
+<!-- figmaSans는 사유 폰트. 스펙이 지정한 오픈소스 대체는 Inter(가변) + JetBrains Mono.
+     Inter 가변축이 320/330/340/480/540 같은 비표준 웨이트를 그대로 받아 준다. 한글은 Pretendard. -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --ink:#000; --canvas:#fff; --inv-canvas:#000; --inv-ink:#fff;
+  --hairline:#e6e6e6; --hairline-soft:#f1f1f1; --surface-soft:#f7f7f5;
+  /* ── 컬러블록 7종 — 섹션당 딱 하나 ── */
+  --lime:#dceeb1; --lilac:#c5b0f4; --cream:#f4ecd6; --pink:#efd4d4;
+  --mint:#c8e6cd; --coral:#f3c9b6; --navy:#1f1d3d;
+  --magenta:#ff3d8b;      /* 프로모 CTA 전용 */
+  --success:#1ea64a;
+  /* ── 타입 (원본 × 2. 음수 자간도 2배) ── */
+  --d-xl:172px; --d-lg:128px; --headline:52px; --subhead:52px; --card-t:48px;
+  --body-lg:40px; --body:36px; --body-sm:32px; --link:40px; --eyebrow:36px; --cap:24px;
+  /* ── 여백 (× 2) ── */
+  --xxs:8px; --xs:16px; --sm:24px; --md:32px; --lg:48px; --xl:64px; --xxl:96px; --sec:192px;
+  --pad:112px;
+  /* ── 라운딩 (× 2, full 제외) ── */
+  --r-xs:4px; --r-sm:12px; --r-md:16px; --r-lg:48px; --r-xl:64px; --pill:100px; --full:9999px;
+  --f:"figmaSans","Inter","Pretendard Variable","SF Pro Display",system-ui,helvetica,sans-serif;
+  --f-mono:"figmaMono","JetBrains Mono","SF Mono",menlo,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;background:#000;overflow:hidden}
+body{font-family:var(--f);color:var(--ink);font-kerning:normal;-webkit-font-smoothing:antialiased}
+
+#stage{position:absolute;top:50%;left:50%;width:1920px;height:1080px;
+  transform:translate(-50%,-50%) scale(var(--scale,1));transform-origin:center;background:var(--canvas)}
+.slide{position:absolute;inset:0;display:none;background:var(--canvas);
+  padding:var(--xxl) var(--pad);overflow:hidden}
+.slide.active{display:flex;flex-direction:column;justify-content:center}
+.slide.soft{background:var(--surface-soft)}
+.slide.black{background:var(--inv-canvas);color:var(--inv-ink)}
+
+/* ═════ 컬러블록 — 한 화면에 하나. 그림자 금지 ═════ */
+/* 흰 캔버스가 블록 두 개 사이마다 돌아와야 한다(스펙 명시) */
+.block{border-radius:var(--r-lg);padding:var(--xxl);background:var(--blk,var(--lime));
+  display:flex;flex-direction:column;gap:var(--md);flex:1;justify-content:center}
+.block.navy{background:var(--navy);color:var(--inv-ink)}
+.block.full{border-radius:0;margin:calc(var(--xxl) * -1) calc(var(--pad) * -1);
+  padding:var(--sec) var(--pad)}
+
+/* ═════ 타이포 — 위계는 웨이트로. 중간 회색 텍스트를 쓰지 않는다 ═════ */
+h1{font-size:var(--d-xl);font-weight:340;line-height:1.0;letter-spacing:-3.44px}
+h2{font-size:var(--d-lg);font-weight:340;line-height:1.10;letter-spacing:-1.92px}
+h3{font-size:var(--headline);font-weight:540;line-height:1.35;letter-spacing:-.52px}
+.subhead{font-size:var(--subhead);font-weight:340;line-height:1.35;letter-spacing:-.52px;
+  max-width:26em}
+.card-t{font-size:var(--card-t);font-weight:700;line-height:1.45}
+p{font-size:var(--body);font-weight:320;line-height:1.45;letter-spacing:-.52px;max-width:32em}
+.lead{font-size:var(--body-lg);font-weight:330;line-height:1.4;letter-spacing:-.28px}
+.small{font-size:var(--body-sm);font-weight:330;line-height:1.45;letter-spacing:-.28px}
+/* mono는 eyebrow와 캡션에만. 본문에 넣지 않는다. 항상 대문자 */
+.eyebrow{font-family:var(--f-mono);font-size:var(--eyebrow);font-weight:400;letter-spacing:1.08px;
+  text-transform:uppercase;margin-bottom:var(--md)}
+.cap{font-family:var(--f-mono);font-size:var(--cap);font-weight:400;letter-spacing:1.2px;
+  text-transform:uppercase;line-height:1}
+b,strong{font-weight:540}
+
+/* ═════ 버튼 — 모든 CTA는 pill, 모든 아이콘 버튼은 원 ═════ */
+.btns{display:flex;gap:var(--xs);margin-top:var(--lg);flex-wrap:wrap;align-items:center}
+.btn{display:inline-flex;align-items:center;justify-content:center;background:var(--ink);
+  color:var(--canvas);font-size:var(--link);font-weight:480;letter-spacing:-.2px;
+  border-radius:var(--pill);padding:20px 40px;text-decoration:none}
+.btn.sec{background:var(--canvas);color:var(--ink);padding:16px 36px 20px}
+.btn.promo{background:var(--magenta);color:var(--canvas);padding:20px 36px}
+.black .btn{background:var(--canvas);color:var(--ink)}
+.black .btn.sec{background:transparent;color:var(--canvas);box-shadow:inset 0 0 0 2px var(--canvas)}
+.icon{width:80px;height:80px;border-radius:var(--full);background:var(--surface-soft);
+  display:inline-flex;align-items:center;justify-content:center;font-size:34px}
+a.link{font-size:var(--link);font-weight:480;letter-spacing:-.2px;color:var(--ink);
+  text-decoration:none;border-bottom:2px solid var(--ink);padding-bottom:2px}
+
+/* ═════ 카드 ═════ */
+.cards{display:grid;grid-template-columns:repeat(var(--cols,3),1fr);gap:var(--sm);margin-top:var(--xl)}
+.card{background:var(--canvas);border:1px solid var(--hairline);border-radius:var(--r-lg);
+  padding:var(--lg);display:flex;flex-direction:column;gap:var(--sm)}
+.card.tile{background:var(--surface-soft);border-color:transparent;border-radius:var(--r-md);
+  padding:var(--md)}
+.card p{font-size:var(--body-sm);font-weight:330;letter-spacing:-.28px;max-width:none}
+.card .n{font-size:var(--d-lg);font-weight:340;letter-spacing:-1.92px;line-height:1}
+.card .n em{font-style:normal;font-size:.35em;font-weight:480}
+.feat{display:flex;flex-direction:column;gap:0;margin-top:var(--md)}
+.feat .r{display:flex;align-items:center;gap:var(--sm);padding:var(--sm) 0;
+  border-bottom:1px solid var(--hairline-soft);font-size:var(--body-sm);font-weight:330}
+.check{width:32px;height:32px;border-radius:var(--full);background:var(--success);color:#fff;
+  display:inline-flex;align-items:center;justify-content:center;font-size:18px;flex:none}
+
+/* ═════ 마퀴 스트립 — 검정 리본 ═════ */
+.marquee{background:var(--ink);color:var(--canvas);padding:var(--sm) var(--lg);
+  font-family:var(--f-mono);font-size:var(--body-sm);letter-spacing:1.2px;text-transform:uppercase;
+  white-space:nowrap;overflow:hidden;margin:0 calc(var(--pad) * -1)}
+.marquee span{display:inline-block;padding-right:80px}
+
+/* ═════ 2단 ═════ */
+.two{display:flex;gap:var(--xxl);align-items:center;flex:1}
+.two>.tx{flex:0 0 42%}
+.two>.vis{flex:1;min-width:0;display:flex}
+
+/* ═════ 모션 — 가볍고 명랑하게 ═════ */
+.in{opacity:0}
+.active .in{animation:rise .6s cubic-bezier(.2,.8,.2,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+.active .d1{animation-delay:.04s}.active .d2{animation-delay:.14s}.active .d3{animation-delay:.24s}
+.active .d4{animation-delay:.34s}.active .d5{animation-delay:.44s}.active .d6{animation-delay:.54s}
+
+#nav{position:fixed;right:24px;bottom:18px;font-family:var(--f-mono);font-size:14px;color:#999;
+  z-index:99;letter-spacing:1px}
+#nav .hint{margin-right:16px;color:#c4c4c4}
+body.notes #nav{bottom:auto;top:18px}
+
+/* ═════ 발표자 노트 — S 토글. 좌우 여백 = 본문 끝선(--pad 112px) ═════ */
+body.notes #stage{top:0;transform:translateX(-50%) scale(var(--scale,1));transform-origin:top center}
+#notes{position:fixed;left:0;right:0;bottom:0;max-height:40vh;overflow:auto;display:none;
+  background:var(--surface-soft);border-top:2px solid var(--ink);z-index:100;
+  padding:20px var(--npad,30px) 26px}
+body.notes #notes{display:block}
+#notes .nlab{font-family:var(--f-mono);font-size:12px;letter-spacing:1.2px;text-transform:uppercase;
+  color:var(--ink);margin-bottom:10px}
+#notes .ntext{font-size:18px;font-weight:330;line-height:1.65;color:var(--ink)}
+#notes .ntext b{font-weight:540}
+#notes .ntext span{font-weight:330;opacity:.62}
+
+@media print{
+  html,body,#stage{overflow:visible;position:static;transform:none;width:auto;height:auto}
+  .slide{display:flex!important;position:relative;width:1920px;height:1080px;page-break-after:always}
+  .in{animation:none!important;opacity:1!important;transform:none!important}
+  #nav,#notes{display:none!important}
+}
+</style>
+</head>
+<body>
+<div id="stage">
+
+<!-- ═════ F1. 히어로 — 흑백 ═════ -->
+<section class="slide" data-note="여는 장. 이 시스템의 기본 프레임은 <b>엄격한 흑백</b>이고, 컬러는 섹션 블록으로만 등장한다. 히어로에 색을 넣지 않는다.<br>디스플레이 웨이트가 <b>340</b>이라는 점이 특이하다 — 300도 400도 아니다. Inter 가변축이라 그대로 낼 수 있다.">
+  <div>
+    <div class="eyebrow in d1">Presentation · 2026</div>
+    <h1 class="in d2">한 문장으로<br>말한다</h1>
+    <p class="lead in d3" style="margin-top:var(--md);max-width:26em">
+      부제는 두 줄까지. 위계는 회색이 아니라 <b>웨이트</b>로 만든다.</p>
+    <div class="btns in d4"><a class="btn">시작하기</a><a class="btn sec">문서 보기</a></div>
+  </div>
+</section>
+
+<!-- ═════ F2. 컬러블록 — 섹션당 하나 ═════ -->
+<section class="slide" data-note="컬러블록 섹션. <b>한 화면에 블록은 하나</b>이고, 블록 두 개 사이에는 반드시 흰 캔버스가 돌아와야 한다(스펙 명시). 블록에 그림자를 넣지 않는다.">
+  <div class="block in d1" style="--blk:var(--lime)">
+    <div class="eyebrow">Chapter 01</div>
+    <h2>여기서 색이<br>들어온다</h2>
+    <p class="subhead" style="margin-top:var(--sm)">블록 하나에 문장 하나. 라임·라일락·크림·민트·핑크·코랄 중 섹션당 하나를 고른다.</p>
+  </div>
+</section>
+
+<!-- ═════ F3. 흰 캔버스 복귀 — 블록 사이에 반드시 ═════ -->
+<section class="slide" data-note="흰 캔버스 복귀 장. 이 장을 빼고 컬러블록을 연달아 놓으면 <b>스펙 위반</b>이다 — 색이 사건이 아니라 배경이 되어 버린다.">
+  <div class="two">
+    <div class="tx">
+      <div class="eyebrow in d1">Detail</div>
+      <h3 class="in d2">흰 바탕이<br>색을 사건으로 만든다</h3>
+      <p class="in d3" style="margin-top:var(--md)">설명은 흰 면에서 한다. 컬러블록은 선언에, 흰 캔버스는 설명에 쓴다.</p>
+      <a class="link in d4" style="display:inline-block;margin-top:var(--lg)">자세히 보기</a>
+    </div>
+    <div class="vis">
+      <div class="cards" style="--cols:2;margin:0;flex:1">
+        <div class="card tile in d3"><div class="cap">01</div><div class="card-t">항목</div>
+          <p>타일은 off-white에 16px(덱 32px) 라운딩.</p></div>
+        <div class="card tile in d4"><div class="cap">02</div><div class="card-t">항목</div>
+          <p>카드와 타일의 라운딩 등급이 다르다.</p></div>
+        <div class="card tile in d5"><div class="cap">03</div><div class="card-t">항목</div>
+          <p>중간 회색 글자를 쓰지 않는다.</p></div>
+        <div class="card tile in d6"><div class="cap">04</div><div class="card-t">항목</div>
+          <p>위계는 웨이트로 만든다.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════ F4. 마퀴 + 카드 ═════ -->
+<section class="slide" data-note="마퀴 스트립은 검정 리본에 흰 대문자 mono다. 목록·키워드를 빠르게 흘릴 때 쓰고, <b>mono는 여기와 eyebrow·캡션에만</b> 등장한다.">
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:var(--xl)">
+    <div class="marquee in d1"><span>키워드 하나 · 키워드 둘 · 키워드 셋 · 키워드 넷 · 키워드 다섯 · 키워드 여섯</span></div>
+    <div>
+      <div class="eyebrow in d2">Features</div>
+      <h3 class="in d3">세 가지</h3>
+      <div class="cards" style="--cols:3">
+        <div class="card in d4"><div class="card-t">첫 번째</div>
+          <p>카드 제목만 weight 700이다. 이 시스템의 유일한 굵은 자리.</p>
+          <div class="icon" style="margin-top:auto">→</div></div>
+        <div class="card in d5"><div class="card-t">두 번째</div>
+          <p>아이콘 버튼은 언제나 원형이다.</p>
+          <div class="icon" style="margin-top:auto">→</div></div>
+        <div class="card in d6"><div class="card-t">세 번째</div>
+          <p>카드 라운딩은 24px(덱 48px).</p>
+          <div class="icon" style="margin-top:auto">→</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════ F5. 두 번째 컬러블록 (다른 색) ═════ -->
+<section class="slide" data-note="두 번째 컬러블록. <b>앞 블록과 다른 색</b>을 쓰고, 사이에 흰 장이 하나 있었는지 확인한다. 라일락은 프로모·강조 성격이 강하다.">
+  <div class="block in d1" style="--blk:var(--lilac)">
+    <div class="eyebrow">Chapter 02</div>
+    <h2>색이 바뀌면<br>장이 바뀐다</h2>
+    <p class="subhead" style="margin-top:var(--sm)">블록 색을 챕터 표식으로 쓴다. 한 챕터 안에서는 같은 색을 유지한다.</p>
+  </div>
+</section>
+
+<!-- ═════ F6. 비교 — 초록 원 체크 ═════ -->
+<section class="slide" data-note="비교표. 체크마크는 <b>16px 초록 원</b>(#1ea64a)이다. 행 구분선은 hairline-soft(#f1f1f1)로 아주 얕게.">
+  <div>
+    <div class="eyebrow in d1">Comparison</div>
+    <h3 class="in d2">무엇이 포함되나</h3>
+    <div class="cards" style="--cols:3">
+      <div class="card in d3"><div class="cap">Basic</div><div class="n">0<em>원</em></div>
+        <div class="feat">
+          <div class="r"><span class="check">✓</span>첫 번째 항목</div>
+          <div class="r"><span class="check">✓</span>두 번째 항목</div>
+        </div></div>
+      <div class="card in d4"><div class="cap">Pro</div><div class="n">12<em>만</em></div>
+        <div class="feat">
+          <div class="r"><span class="check">✓</span>첫 번째 항목</div>
+          <div class="r"><span class="check">✓</span>두 번째 항목</div>
+          <div class="r"><span class="check">✓</span>세 번째 항목</div>
+        </div></div>
+      <div class="card in d5"><div class="cap">Enterprise</div><div class="n">문의</div>
+        <div class="feat">
+          <div class="r"><span class="check">✓</span>모든 항목</div>
+          <div class="r"><span class="check">✓</span>전담 지원</div>
+        </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════ F7. 네이비 블록 — 반전 ═════ -->
+<section class="slide" data-note="네이비 블록(#1f1d3d)은 파스텔 계열의 반전 짝이다. 흰 글자를 얹고 <b>이 장에도 그림자를 넣지 않는다</b>. 전체에서 1회.">
+  <div class="block navy full in d1">
+    <div class="eyebrow">Statement</div>
+    <h2>여기서 한 번<br>못을 박는다</h2>
+    <p class="subhead" style="margin-top:var(--sm);color:#fff">문장 하나와 버튼 하나만 놓는다.</p>
+    <div class="btns"><a class="btn">자세히 보기</a></div>
+  </div>
+</section>
+
+<!-- ═════ F8. 클로징 — pill 쌍 ═════ -->
+<section class="slide" data-note="닫는 장. <b>검정 pill + 흰 pill 짝</b>이 이 브랜드의 서명 리듬이다. 마젠타(#ff3d8b)는 프로모 CTA 전용이므로 꼭 필요할 때만 세 번째 버튼으로 쓴다.">
+  <div style="text-align:center;align-self:center;max-width:32em;margin:0 auto">
+    <div class="eyebrow in d1">Next</div>
+    <h2 class="in d2">다음 단계</h2>
+    <p class="in d3" style="margin:var(--md) auto 0">청중이 취할 행동 하나만 남긴다.</p>
+    <div class="btns in d4" style="justify-content:center">
+      <a class="btn">시작하기</a><a class="btn sec">문의하기</a>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<div id="nav"><span class="hint">S NOTES</span><span id="navPage"></span></div>
+<div id="notes"><div class="nlab">Speaker notes</div><div class="ntext" id="noteText"></div></div>
+
+<script>
+const slides=[...document.querySelectorAll('.slide')];
+let cur=-1;
+const navPage=document.getElementById('navPage');
+const noteText=document.getElementById('noteText');
+function show(n){
+  cur=Math.max(0,Math.min(slides.length-1,n));
+  slides.forEach((s,i)=>s.classList.toggle('active',i===cur));
+  navPage.textContent=(cur+1)+' / '+slides.length;
+  noteText.innerHTML=slides[cur].dataset.note||'<span>이 장에는 노트가 없습니다.</span>';
+}
+addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key===' ')show(cur+1);
+  else if(e.key==='ArrowLeft')show(cur-1);
+  else if(e.key==='Home')show(0);
+  else if(e.key==='End')show(slides.length-1);
+  else if(e.key==='s'||e.key==='S'){document.body.classList.toggle('notes');fit();}
+});
+addEventListener('click',e=>{
+  if(e.target.closest('#notes'))return;
+  if(e.clientX<innerWidth/2)show(cur-1);else show(cur+1);
+});
+let tx=null;
+addEventListener('touchstart',e=>tx=e.touches[0].clientX);
+addEventListener('touchend',e=>{if(tx===null)return;
+  const dx=e.changedTouches[0].clientX-tx;
+  if(dx<-40)show(cur+1);else if(dx>40)show(cur-1);tx=null});
+function fit(){
+  const avail=document.body.classList.contains('notes')?innerHeight*.58:innerHeight;
+  const s=Math.min(innerWidth/1920,avail/1080);
+  document.getElementById('stage').style.setProperty('--scale',s);
+  document.documentElement.style.setProperty('--npad',
+    Math.round((innerWidth-1920*s)/2+112*s)+'px');
+}
+addEventListener('resize',fit);addEventListener('load',fit);fit();
+const _h=parseInt(location.hash.slice(1));show(isNaN(_h)?0:_h-1);
+addEventListener('hashchange',()=>{const n=parseInt(location.hash.slice(1));if(!isNaN(n))show(n-1)});
+if(location.search.indexOf('shot')>-1)document.getElementById('nav').style.display='none';
+</script>
+</body>
+</html>

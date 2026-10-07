@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spotify Deck</title>
+<!-- SpotifyMixUI는 사유 폰트. Circular 계열 대체로 Inter, 한글은 Pretendard -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
+<style>
+:root{
+  --green:#1ed760; --green-border:#1db954;   /* 기능색. 장식·배경으로 쓰지 않는다 */
+  --canvas:#121212; --s1:#181818; --s2:#1f1f1f; --card:#252525; --card2:#272727;
+  --border:#4d4d4d; --border-light:#7c7c7c; --sep:#b3b3b3; --light:#eee;
+  --white:#fff; --silver:#b3b3b3; --near:#cbcbcb;
+  --neg:#f3727f; --warn:#ffa42b; --info:#539df5;
+  /* ── 타입 (원본 × 2. 앱 스케일이라 최댓값이 24px → 48px) ── */
+  --hero:112px;      /* 덱 표지 전용 확장 — 스킬 문서의 '스케일 확장' 참조 */
+  --title:48px; --feature:36px; --body:32px; --btn:28px; --cap:28px; --sm:24px;
+  --badge:21px; --micro:20px;
+  --track:2.8px;     /* 대문자 버튼 라벨 자간 1.4px × 2 */
+  /* ── 여백 (× 2, 8px 기준) ── */
+  --xs:8px; --s:16px; --m:24px; --l:32px; --xl:40px; --xxl:64px; --sec:96px;
+  --pad:96px;
+  /* ── 라운딩 (× 2, pill 제외) ── */
+  --r-sm:8px; --r-md:12px; --r-lg:16px; --r-xl:40px; --pill:500px; --full:9999px;
+  --shadow:rgba(0,0,0,.4) 0 16px 16px;   /* 어두운 면에서는 그림자가 진해야 보인다 */
+  --f:"SpotifyMixUI","Inter","Pretendard Variable","Helvetica Neue",helvetica,arial,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;background:#000;overflow:hidden}
+body{font-family:var(--f);color:var(--white);-webkit-font-smoothing:antialiased}
+
+#stage{position:absolute;top:50%;left:50%;width:1920px;height:1080px;
+  transform:translate(-50%,-50%) scale(var(--scale,1));transform-origin:center;background:var(--canvas)}
+/* 라이트 배경을 주 화면으로 쓰지 않는다 — 어둠 속 몰입이 이 시스템의 핵심 */
+.slide{position:absolute;inset:0;display:none;background:var(--canvas);
+  padding:var(--sec) var(--pad);overflow:hidden}
+.slide.active{display:flex;flex-direction:column;justify-content:center}
+.slide.s1{background:var(--s1)}
+.slide.s2{background:var(--s2)}
+/* 앨범아트가 색을 만든다 — 상단에서 은은히 번지는 아트 글로우 */
+.glow{position:absolute;left:0;right:0;top:0;height:52%;pointer-events:none;
+  background:linear-gradient(180deg,var(--art,#3d6b52) 0%,rgba(18,18,18,0) 100%);opacity:.55}
+.slide>*:not(.glow){position:relative;z-index:1}
+
+/* ═════ 타이포 — 조밀하게. 느슨한 행간을 쓰지 않는다 ═════ */
+h1{font-size:var(--hero);font-weight:700;line-height:1.02;letter-spacing:-2px}
+h2{font-size:var(--title);font-weight:700;line-height:1.15}
+h3{font-size:var(--feature);font-weight:600;line-height:1.30}
+p{font-size:var(--body);font-weight:400;line-height:1.4;color:var(--near);max-width:32em}
+.cap{font-size:var(--cap);font-weight:400;color:var(--silver)}
+.cap-b{font-size:var(--cap);font-weight:700;line-height:1.5}
+.sm{font-size:var(--sm);font-weight:400;color:var(--silver)}
+.sm-b{font-size:var(--sm);font-weight:700}
+.micro{font-size:var(--micro);color:var(--silver)}
+b,strong{font-weight:700;color:var(--white)}
+
+/* ═════ 버튼 — 전부 pill, 재생만 원형 ═════ */
+.btns{display:flex;gap:var(--s);margin-top:var(--xl);flex-wrap:wrap;align-items:center}
+.btn{display:inline-flex;align-items:center;justify-content:center;background:var(--green);
+  color:#000;font-size:var(--btn);font-weight:700;border-radius:var(--pill);
+  padding:24px 56px;text-decoration:none}
+.btn.dark{background:var(--s2);color:var(--white)}
+.btn.light{background:var(--light);color:var(--s1)}
+.btn.outline{background:transparent;color:var(--white);border:1px solid var(--border-light)}
+.btn.caps{text-transform:uppercase;letter-spacing:var(--track);font-weight:600}
+.play{width:112px;height:112px;border-radius:50%;background:var(--green);color:#000;
+  display:inline-flex;align-items:center;justify-content:center;font-size:44px;
+  box-shadow:var(--shadow);flex:none}
+.play.dark{background:var(--s2);color:var(--white)}
+.chips{display:flex;gap:var(--s);flex-wrap:wrap}
+.chip{background:var(--s2);color:var(--silver);border-radius:var(--full);padding:14px 36px;
+  font-size:var(--cap);font-weight:700}
+.chip.on{background:var(--light);color:var(--s1)}
+
+/* ═════ 카드 — 앨범아트가 색을 담당한다 ═════ */
+.cards{display:grid;grid-template-columns:repeat(var(--cols,4),1fr);gap:var(--m);margin-top:var(--xl)}
+.card{background:var(--s1);border-radius:var(--r-lg);padding:var(--m);display:flex;
+  flex-direction:column;gap:var(--s);position:relative}
+.card.lift{box-shadow:var(--shadow)}
+.card .art{aspect-ratio:1/1;border-radius:var(--r-md);
+  background:var(--art,linear-gradient(140deg,#2b6b4f,#0f3d2a)) center/cover no-repeat}
+.card .art.round{border-radius:50%}
+.card .t{font-size:var(--cap);font-weight:700;line-height:1.3}
+.card .m{font-size:var(--sm);color:var(--silver);line-height:1.4}
+.card .n{font-size:var(--title);font-weight:700;line-height:1.1}
+.card .n em{font-style:normal;font-size:.5em;color:var(--silver)}
+/* 카드 위 초록 재생 버튼 — 이 시스템의 상징 */
+.card .fab{position:absolute;right:var(--m);bottom:118px;width:80px;height:80px;border-radius:50%;
+  background:var(--green);color:#000;display:flex;align-items:center;justify-content:center;
+  font-size:32px;box-shadow:var(--shadow)}
+
+/* ═════ 리스트 행 — 조밀하게 ═════ */
+.rows{margin-top:var(--xl)}
+.row{display:flex;gap:var(--l);align-items:center;padding:var(--s) var(--m);border-radius:var(--r-sm)}
+.row:nth-child(odd){background:rgba(255,255,255,.03)}
+.row .idx{width:56px;font-size:var(--cap);color:var(--silver)}
+.row .thumb{width:72px;height:72px;border-radius:6px;
+  background:var(--art,linear-gradient(140deg,#3a3a3a,#222));flex:none}
+.row .k{flex:1;font-size:var(--cap);font-weight:700}
+.row .k small{display:block;font-size:var(--sm);font-weight:400;color:var(--silver);margin-top:4px}
+.row .v{flex:0 0 30%;font-size:var(--cap);color:var(--silver)}
+.row .n{font-size:var(--cap);color:var(--silver);width:120px;text-align:right}
+
+/* ═════ 2단 ═════ */
+.two{display:flex;gap:var(--xxl);align-items:flex-end}
+.two>.tx{flex:0 0 40%}
+.two>.vis{flex:1;min-width:0}
+.bigart{aspect-ratio:1/1;width:520px;border-radius:var(--r-lg);box-shadow:var(--shadow);
+  background:var(--art,linear-gradient(140deg,#2b6b4f,#0f3d2a)) center/cover no-repeat}
+
+/* ═════ 검색 pill ═════ */
+.search{display:inline-flex;align-items:center;gap:var(--s);background:var(--s2);
+  border-radius:var(--pill);padding:24px 48px;font-size:var(--body);color:var(--silver);
+  min-width:560px}
+
+/* ═════ 모션 — 짧고 매끈하게 ═════ */
+.in{opacity:0}
+.active .in{animation:rise .5s cubic-bezier(.3,0,.2,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.active .d1{animation-delay:.04s}.active .d2{animation-delay:.12s}.active .d3{animation-delay:.20s}
+.active .d4{animation-delay:.28s}.active .d5{animation-delay:.36s}.active .d6{animation-delay:.44s}
+
+#nav{position:fixed;right:24px;bottom:18px;font-size:15px;font-weight:700;color:#6a6a6a;z-index:99}
+#nav .hint{margin-right:16px;color:#4d4d4d}
+body.notes #nav{bottom:auto;top:18px}
+
+/* ═════ 발표자 노트 — S 토글. 좌우 여백 = 본문 끝선(--pad 96px) ═════ */
+body.notes #stage{top:0;transform:translateX(-50%) scale(var(--scale,1));transform-origin:top center}
+#notes{position:fixed;left:0;right:0;bottom:0;max-height:40vh;overflow:auto;display:none;
+  background:var(--s1);border-top:1px solid var(--border);z-index:100;
+  padding:20px var(--npad,30px) 26px}
+body.notes #notes{display:block}
+#notes .nlab{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1.4px;
+  color:var(--green);margin-bottom:10px}
+#notes .ntext{font-size:18px;line-height:1.6;color:var(--near)}
+#notes .ntext b{font-weight:700;color:var(--white)}
+#notes .ntext span{color:var(--silver)}
+
+@media print{
+  html,body,#stage{overflow:visible;position:static;transform:none;width:auto;height:auto}
+  .slide{display:flex!important;position:relative;width:1920px;height:1080px;page-break-after:always}
+  .in{animation:none!important;opacity:1!important;transform:none!important}
+  #nav,#notes{display:none!important}
+}
+</style>
+</head>
+<body>
+<div id="stage">
+
+<!-- ═════ S1. 표지 — 아트 글로우 + 원형 재생 ═════ -->
+<section class="slide" data-note="여는 장. <b>색은 앨범아트가 만들고 UI는 무채색으로 물러난다</b>. 상단 글로우의 색(--art)을 주제 이미지에서 뽑아 쓰면 원본에 가장 가깝다.<br><span>스케일 확장 알림: 원본은 앱 UI라 최대 타입이 24px다. 덱 표지용으로 112px 히어로를 확장해 썼고, 나머지 토큰은 원본 × 2를 지킨다.</span>">
+  <div class="glow" style="--art:#2f7a55"></div>
+  <div>
+    <div class="chips in d1"><div class="chip on">발표</div><div class="chip">2026</div></div>
+    <h1 class="in d2" style="margin-top:var(--m)">한 문장으로<br>들려준다</h1>
+    <p class="in d3" style="margin-top:var(--m)">부제는 두 줄까지. 이 시스템의 타이포는 조밀하다.</p>
+    <div class="btns in d4"><div class="play">▶</div><a class="btn dark caps">자세히 보기</a></div>
+  </div>
+</section>
+
+<!-- ═════ S2. 카드 그리드 — 아트 타일 ═════ -->
+<section class="slide s1" data-note="카드 그리드. 카드 배경은 #181818, 아트 타일이 유일한 색이다. 카드 위 <b>초록 원형 재생 버튼</b>이 이 시스템의 상징이므로 강조할 카드 하나에만 붙인다.">
+  <div>
+    <h2 class="in d1">항목 넷</h2>
+    <div class="cards" style="--cols:4">
+      <div class="card lift in d2"><div class="art" style="--art:linear-gradient(140deg,#2b6b4f,#0f3d2a)"></div>
+        <div class="fab">▶</div><div class="t">첫 번째 항목</div><div class="m">부가 설명 한 줄</div></div>
+      <div class="card in d3"><div class="art" style="--art:linear-gradient(140deg,#6b3d2b,#3d1f0f)"></div>
+        <div class="t">두 번째 항목</div><div class="m">부가 설명 한 줄</div></div>
+      <div class="card in d4"><div class="art" style="--art:linear-gradient(140deg,#2b3d6b,#0f1f3d)"></div>
+        <div class="t">세 번째 항목</div><div class="m">부가 설명 한 줄</div></div>
+      <div class="card in d5"><div class="art round" style="--art:linear-gradient(140deg,#5a2b6b,#2c0f3d)"></div>
+        <div class="t">네 번째 항목</div><div class="m">원형 아트는 인물·팟캐스트</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════ S3. 2단 — 큰 아트 + 목록 ═════ -->
+<section class="slide" data-note="큰 아트 + 목록. 그림자는 <b>0.3~0.5 불투명도로 진하게</b> 준다 — 어두운 면에서 얕은 그림자는 보이지 않는다.">
+  <div class="glow" style="--art:#3d2b6b"></div>
+  <div class="two">
+    <div class="tx">
+      <div class="sm-b in d1">목록</div>
+      <h2 class="in d2" style="margin-top:var(--xs)">이 순서로<br>진행합니다</h2>
+      <div class="btns in d3"><div class="play">▶</div><a class="btn outline caps">전체 보기</a></div>
+    </div>
+    <div class="vis">
+      <div class="rows" style="margin-top:0">
+        <div class="row in d3"><div class="idx">1</div><div class="thumb" style="--art:linear-gradient(140deg,#2b6b4f,#0f3d2a)"></div>
+          <div class="k">첫 번째 항목<small>부가 설명</small></div><div class="n">4:12</div></div>
+        <div class="row in d4"><div class="idx">2</div><div class="thumb" style="--art:linear-gradient(140deg,#6b3d2b,#3d1f0f)"></div>
+          <div class="k">두 번째 항목<small>부가 설명</small></div><div class="n">3:48</div></div>
+        <div class="row in d5"><div class="idx">3</div><div class="thumb" style="--art:linear-gradient(140deg,#2b3d6b,#0f1f3d)"></div>
+          <div class="k">세 번째 항목<small>부가 설명</small></div><div class="n">5:02</div></div>
+        <div class="row in d6"><div class="idx">4</div><div class="thumb" style="--art:linear-gradient(140deg,#5a2b6b,#2c0f3d)"></div>
+          <div class="k">네 번째 항목<small>부가 설명</small></div><div class="n">2:57</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════ S4. 수치 ═════ -->
+<section class="slide s2" data-note="지표. <b>초록을 숫자에 칠하지 않는다</b> — 초록은 재생·활성·주 CTA에만 쓰는 기능색이다. 숫자는 흰색이다.">
+  <div>
+    <h2 class="in d1">숫자로 보기</h2>
+    <div class="cards" style="--cols:4">
+      <div class="card in d2"><div class="n">2.4<em>×</em></div><div class="m">첫 번째 지표</div></div>
+      <div class="card in d3"><div class="n">180<em>ms</em></div><div class="m">두 번째 지표</div></div>
+      <div class="card in d4"><div class="n">99.9<em>%</em></div><div class="m">세 번째 지표</div></div>
+      <div class="card in d5"><div class="n">40<em>%</em></div><div class="m">네 번째 지표</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════ S5. 필터 + 목록 ═════ -->
+<section class="slide" data-note="필터 칩 + 목록. 활성 칩은 <b>밝은 면(#eeeeee)에 어두운 글자</b>다 — 초록으로 칠하지 않는다. 목록 행은 조밀하게 유지한다.">
+  <div>
+    <div class="chips in d1">
+      <div class="chip on">전체</div><div class="chip">항목 A</div><div class="chip">항목 B</div>
+      <div class="chip">항목 C</div>
+    </div>
+    <div class="search in d2" style="margin-top:var(--l)">🔍 무엇을 찾고 있나요?</div>
+    <div class="rows">
+      <div class="row in d3"><div class="idx">01</div><div class="k">항목 A<small>부가 설명</small></div>
+        <div class="v">분류</div><div class="n">480</div></div>
+      <div class="row in d4"><div class="idx">02</div><div class="k">항목 B<small>부가 설명</small></div>
+        <div class="v">분류</div><div class="n">550</div></div>
+      <div class="row in d5"><div class="idx">03</div><div class="k">항목 C<small>부가 설명</small></div>
+        <div class="v">분류</div><div class="n">727</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════ S6. 선언 — 아트 글로우 전면 ═════ -->
+<section class="slide" data-note="선언 장. 글로우 색을 크게 올려 한 장면으로 만든다. 이 장에도 <b>초록은 버튼에만</b> 등장한다.">
+  <div class="glow" style="--art:#1e5c3c;height:100%;opacity:.5"></div>
+  <div style="text-align:center;align-self:center;max-width:30em;margin:0 auto">
+    <h1 class="in d1" style="font-size:var(--title);font-weight:700">여기서 한 번<br>멈춘다</h1>
+    <p class="in d2" style="margin:var(--m) auto 0">문장 하나만 남긴다.</p>
+    <div class="btns in d3" style="justify-content:center"><a class="btn">계속하기</a></div>
+  </div>
+</section>
+
+<!-- ═════ S7. 카드 3-up (설명형) ═════ -->
+<section class="slide s1" data-note="설명 카드. 아트 없이 텍스트만 담는 카드는 배경을 #252525로 한 단계 올려 목록 카드와 구분한다.">
+  <div>
+    <h2 class="in d1">세 가지</h2>
+    <div class="cards" style="--cols:3">
+      <div class="card in d2" style="background:var(--card)"><h3>첫 번째</h3>
+        <p style="font-size:var(--cap)">본문은 두세 줄. 은색(#b3b3b3)으로 낮춘다.</p></div>
+      <div class="card in d3" style="background:var(--card)"><h3>두 번째</h3>
+        <p style="font-size:var(--cap)">면 밝기 차이로 위계를 만든다.</p></div>
+      <div class="card in d4" style="background:var(--card)"><h3>세 번째</h3>
+        <p style="font-size:var(--cap)">회색 테두리를 노출하지 않는다.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════ S8. 클로징 ═════ -->
+<section class="slide" data-note="닫는 장. <b>초록 pill 하나</b>로 닫는다. 초록이 이 덱에서 등장하는 마지막 자리다.">
+  <div class="glow" style="--art:#2f7a55"></div>
+  <div>
+    <h2 class="in d1">다음 단계</h2>
+    <p class="in d2" style="margin-top:var(--m)">청중이 취할 행동 하나만 남긴다.</p>
+    <div class="btns in d3"><a class="btn">시작하기</a><a class="btn outline caps">문의하기</a></div>
+    <div class="micro in d4" style="margin-top:var(--xxl)">© 2026 · 발표자 · 연락처</div>
+  </div>
+</section>
+
+</div>
+
+<div id="nav"><span class="hint">S 발표자 노트</span><span id="navPage"></span></div>
+<div id="notes"><div class="nlab">발표자 노트</div><div class="ntext" id="noteText"></div></div>
+
+<script>
+const slides=[...document.querySelectorAll('.slide')];
+let cur=-1;
+const navPage=document.getElementById('navPage');
+const noteText=document.getElementById('noteText');
+function show(n){
+  cur=Math.max(0,Math.min(slides.length-1,n));
+  slides.forEach((s,i)=>s.classList.toggle('active',i===cur));
+  navPage.textContent=(cur+1)+' / '+slides.length;
+  noteText.innerHTML=slides[cur].dataset.note||'<span>이 장에는 노트가 없습니다.</span>';
+}
+addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key===' ')show(cur+1);
+  else if(e.key==='ArrowLeft')show(cur-1);
+  else if(e.key==='Home')show(0);
+  else if(e.key==='End')show(slides.length-1);
+  else if(e.key==='s'||e.key==='S'){document.body.classList.toggle('notes');fit();}
+});
+addEventListener('click',e=>{
+  if(e.target.closest('#notes'))return;
+  if(e.clientX<innerWidth/2)show(cur-1);else show(cur+1);
+});
+let tx=null;
+addEventListener('touchstart',e=>tx=e.touches[0].clientX);
+addEventListener('touchend',e=>{if(tx===null)return;
+  const dx=e.changedTouches[0].clientX-tx;
+  if(dx<-40)show(cur+1);else if(dx>40)show(cur-1);tx=null});
+function fit(){
+  const avail=document.body.classList.contains('notes')?innerHeight*.58:innerHeight;
+  const s=Math.min(innerWidth/1920,avail/1080);
+  document.getElementById('stage').style.setProperty('--scale',s);
+  document.documentElement.style.setProperty('--npad',
+    Math.round((innerWidth-1920*s)/2+96*s)+'px');
+}
+addEventListener('resize',fit);addEventListener('load',fit);fit();
+const _h=parseInt(location.hash.slice(1));show(isNaN(_h)?0:_h-1);
+addEventListener('hashchange',()=>{const n=parseInt(location.hash.slice(1));if(!isNaN(n))show(n-1)});
+if(location.search.indexOf('shot')>-1)document.getElementById('nav').style.display='none';
+</script>
+</body>
+</html>

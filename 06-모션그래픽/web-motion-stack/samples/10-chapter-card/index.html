@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><title>챕터 카드 · Chapter Card</title>
+<link rel="stylesheet" href="../../lib/stage.css">
+<style>
+.frame{background:#0b1012 !important;background-image:none !important}
+.scene{position:absolute;inset:0;overflow:hidden;font-family:Pretendard,'Noto Sans KR',sans-serif;color:#e9f1ef;letter-spacing:-.01em}
+.bg{position:absolute;inset:0;background:radial-gradient(55% 75% at 12% -5%,#15493e 0%,rgba(21,73,62,0) 70%),radial-gradient(55% 75% at 105% 105%,#2c2257 0%,rgba(44,34,87,0) 70%),#0b1012}
+.tag{position:absolute;display:flex;gap:8px;align-items:center;font:600 12px/1 'IBM Plex Mono',monospace;letter-spacing:.12em;color:#9fb3ae;text-transform:uppercase;white-space:nowrap}
+.tag b{background:#3ee6a8;color:#06231a;padding:3px 6px;border-radius:4px;font-weight:700}
+.panel{position:absolute;background:rgba(18,26,28,.82);border:1px solid rgba(255,255,255,.09);border-radius:12px}
+.code{font:13px/1.75 'IBM Plex Mono',monospace;color:#b9c9c4;white-space:pre}
+.chip{position:absolute;padding:7px 14px;border-radius:999px;border:1px solid rgba(62,230,168,.45);color:#bff5df;font:600 14px/1 Pretendard;background:rgba(62,230,168,.08);white-space:nowrap}
+.mint{color:#3ee6a8}.red{color:#ff5d4f}
+
+.ghost{position:absolute;right:-30px;top:40px;font:900 560px/1 Pretendard;color:transparent;-webkit-text-stroke:2px rgba(62,230,168,.10);letter-spacing:-20px}
+.ch{position:absolute;left:150px;top:228px;font:600 14px 'IBM Plex Mono';letter-spacing:.2em;color:#9fb3ae}
+.num{position:absolute;left:146px;top:256px;font:900 150px/1 Pretendard;color:#3ee6a8;letter-spacing:-4px}
+.ttl{position:absolute;left:150px;top:430px;font:800 46px/1 Pretendard;overflow:hidden;padding-bottom:6px}
+.ttl span{display:inline-block}
+.bar{position:absolute;left:120px;top:230px;width:3px;height:260px;background:#3ee6a8;transform-origin:top}
+.side{position:absolute;right:120px;top:230px;font:600 13px Pretendard;color:#7c8f8a}
+</style></head>
+<body data-no="G02" data-cat="문법 · 구성" data-ko="챕터 카드" data-en="Chapter Card" data-meta="5초 · 큰 번호 + 유령 숫자 + 줄 마스크" data-dur="5" data-poster="3" data-size="1280x720">
+<main class="scene"><div class="bg"></div>
+  <div class="ghost" id="gh">05</div>
+  <div class="bar" id="bar"></div>
+  <div class="ch" id="ch">CHAPTER 05</div>
+  <div class="num" id="nm">00</div>
+  <div class="ttl"><span id="tt">수정하고, 출력하기</span></div>
+  <div class="side" id="sd">코드로 만드는 영상</div>
+</main>
+<script src="../../lib/gsap.min.js"></script><script src="../../lib/stage.js"></script>
+<script>
+const n = {v: 0};
+const tl = Motion.timeline();
+tl.fromTo('#gh', {x: 80, autoAlpha: 0}, {x: 0, autoAlpha: 1, duration: 4.6, ease: 'power1.out'}, 0);
+tl.from('#bar', {scaleY: 0, duration: .7, ease: 'expo.out'}, .2);
+tl.from('#ch,#sd', {x: -20, autoAlpha: 0, duration: .5}, .4);
+tl.from('#nm', {y: 40, autoAlpha: 0, duration: .6}, .5);
+tl.to(n, {v: 5, duration: .8, ease: 'power2.out', onUpdate: () => document.getElementById('nm').textContent = String(Math.round(n.v)).padStart(2, '0')}, .5);
+tl.from('#tt', {yPercent: 110, duration: .8, ease: 'expo.out'}, 1.0);
+tl.to('#tt,#nm,#ch,#sd,#bar', {autoAlpha: 0, x: -30, stagger: .04, duration: .45, ease: 'power2.in'}, 4.3);
+Motion.ready();
+</script></body></html>

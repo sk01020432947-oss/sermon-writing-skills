@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><title>교회 주간 일정 보드 · Church Weekly Board</title>
+<link rel="stylesheet" href="../../lib/stage.css">
+<style>
+  .frame{background:#0b0c0e !important;background-image:none !important}
+  .scene{position:absolute;inset:0;overflow:hidden}
+  :root{--amber:#F6B60B;--glyph:#ECE8DF;--tile:#1a1b1e;--dim:#7d8088}
+  .bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 70% at 50% 45%,#16181b,#08090a)}
+  .panel{position:absolute;left:32px;top:84px;width:1216px;height:528px;border-radius:12px;
+    background:linear-gradient(180deg,#2a2c30,#202226 60%,#1c1e21);border:1px solid #393c42;
+    box-shadow:0 30px 60px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.06)}
+  .head{position:absolute;left:32px;right:32px;top:24px;height:30px;display:flex;align-items:center;justify-content:space-between;
+    font-family:var(--mono);font-size:14px;letter-spacing:.14em;color:#c9c6bf;border-bottom:1px solid #3a3d43;padding-bottom:14px;box-sizing:content-box}
+  .head .l::before{content:"";display:inline-block;width:9px;height:9px;background:var(--amber);margin-right:12px;vertical-align:1px}
+  .head .r{display:flex;gap:14px;align-items:center}
+  .tag{font-family:var(--sans);font-weight:700;font-size:11px;letter-spacing:.08em;color:var(--amber);border:1px solid rgba(246,182,11,.55);padding:3px 8px;border-radius:3px}
+  .cols{position:absolute;left:32px;top:88px;font-family:var(--mono);font-size:11px;letter-spacing:.16em;color:var(--dim)}
+  .cols span{position:absolute;white-space:nowrap}
+  .cols b{color:#a9a6a0;font-weight:400;margin-right:8px;font-family:var(--sans);letter-spacing:.04em;font-size:12px}
+  .rows{position:absolute;left:32px;top:116px}
+  .row{position:absolute;left:0;height:64px}
+  /* 플랩 타일 */
+  .t{position:absolute;width:44px;height:64px;perspective:300px;font-family:var(--sans);font-weight:800;font-size:36px;color:var(--glyph)}
+  .t.big{width:92px;height:128px;font-size:78px;perspective:600px}
+  .t.mid{width:64px;height:88px;font-size:56px;perspective:420px}
+  .t .sh{position:absolute;left:0;right:0;top:50%;height:50%;border-radius:0 0 4px 4px;background:linear-gradient(rgba(0,0,0,.85),rgba(0,0,0,.15));opacity:0;z-index:1}
+  .t .pin{position:absolute;top:50%;margin-top:-5px;width:3px;height:10px;background:#0b0b0c;border-radius:1px;z-index:4}
+  .t>div{position:absolute;left:0;width:100%;height:50%;overflow:hidden;background:var(--tile);border-radius:4px}
+  .t .top,.t .ft{top:0;border-radius:4px 4px 0 0;background:linear-gradient(#202125,#1b1c1f)}
+  .t .bot,.t .fb{top:50%;border-radius:0 0 4px 4px;background:linear-gradient(#18191c,#141517)}
+  .t .ft{transform-origin:50% 100%;backface-visibility:hidden;z-index:2}
+  .t .fb{transform-origin:50% 0;backface-visibility:hidden;z-index:2}
+  .t .g{position:absolute;left:0;width:100%;height:200%;display:flex;align-items:center;justify-content:center;line-height:1}
+  .t .top .g,.t .ft .g{top:0}.t .bot .g,.t .fb .g{top:-100%}
+  .t::after{content:"";position:absolute;left:0;right:0;top:50%;height:2px;margin-top:-1px;background:#0a0a0b;z-index:3}
+  .t.amb{color:var(--amber)}
+  .led{position:absolute;width:28px;height:40px;top:12px;display:grid;grid-template-columns:repeat(3,6px);gap:5px 5px}
+  .led i{width:6px;height:6px;border-radius:50%;background:#3a3c40;display:block}
+  .led.on i{background:var(--amber);box-shadow:0 0 6px rgba(246,182,11,.7)}
+  .msg{position:absolute;left:0;right:0;top:170px;height:128px}
+  .clockline{position:absolute;left:0;right:0;top:328px;text-align:center;font-family:var(--sans);font-weight:600;font-size:17px;letter-spacing:.06em !important;letter-spacing:.22em;color:#b4b1aa;opacity:0}
+  .ck{position:absolute;left:0;top:372px;height:88px}
+  .colon{position:absolute;width:28px;height:88px;font-family:var(--sans);font-weight:800;font-size:48px;color:var(--amber);display:flex;align-items:center;justify-content:center}
+  .foot{position:absolute;left:64px;right:64px;top:640px;display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;letter-spacing:.16em;color:#5d6067}
+</style></head>
+<body data-no="S13" data-cat="교회 · CHURCH" data-ko="교회 주간 일정 보드" data-en="Church Weekly Board" data-meta="스플릿 플랩 출발 안내판" data-dur="12" data-size="1280x720" data-poster="11.6">
+<main class="scene">
+  <div class="bg"></div>
+  <div class="panel" id="panel">
+    <div class="head"><span class="l" id="hl">이번 주 일정 · WEEKLY BOARD</span><span class="r"><span class="tag">예시</span><span>2026. 10. 04</span></span></div>
+    <div class="cols" id="cols"></div>
+    <div class="rows" id="rows"></div>
+    <div class="msg" id="msg"></div>
+    <div class="clockline" id="cl">토 10:00 · 카페 · 새가족 환영회</div>
+    <div class="ck" id="clock"></div>
+  </div>
+  <div class="foot"><span>PLATFORM · 본당 로비</span><span id="ft">SAT 10:00 · 접수중</span></div>
+</main>
+<script src="../../lib/gsap.min.js"></script><script src="../../lib/stage.js"></script>
+<script>
+const tl = Motion.timeline();
+const R = Motion.rand(13);
+const HAN = '가나다라마바사아자차카타파하예배기도주일본당수금토환영찬양말씀', DIG = '0123456789';
+const rg = ch => { const P = /[0-9:]/.test(ch) ? DIG : HAN; return P[Math.floor(R()*P.length)]; };   // 숫자 칸은 숫자만
+const FL = 0.08, STEP = 0.075;
+const TW = 47, CG = 26;                       // 타일 간격, 칸 사이
+const COLS = [['시간','TIME',8],['모임','SERVICE',7],['장소','PLACE',4],['상태','STATUS',3]];
+const DATA = [ // 바꿔 쓰기: 이 4줄
+  ['주일 11:00','주일예배','본당','정시',0],
+  ['수 19:30','수요예배','본당','정시',0],
+  ['금 21:00','금요기도회','소예배실','정시',0],
+  ['토 10:00','새가족 환영회','카페','접수중',1],
+];
+const tiles = [];
+function makeTile(parent, x, y, big, amb){
+  const el = document.createElement('div');
+  el.className = 't' + (big===2?' mid':big?' big':'') + (amb?' amb':'');
+  el.style.left = x+'px'; el.style.top = y+'px';
+  el.innerHTML = '<div class="top"><span class="g"></span></div><div class="bot"><span class="g"></span></div><div class="ft"><span class="g"></span></div><div class="fb"><span class="g"></span></div><i class="sh"></i><i class="pin" style="left:-1px"></i><i class="pin" style="right:-1px"></i>';
+  parent.appendChild(el);
+  const g = el.querySelectorAll('.g');
+  const T = {el, g, ft:el.children[2], fb:el.children[3], sh:el.children[4], fl: FL*(0.9+R()*0.25), seq:[{t:0,ch:' '}], key:''};
+  tiles.push(T); return T;
+}
+// 무작위 글자를 거쳐 정착: start부터 STEP마다 한 장씩, settle에 최종 글자
+function spin(T, ch, start, settle){
+  if (ch === ' ') { T.seq.push({t:settle, ch:' '}); return; }
+  for (let t = start; t < settle - 0.02; t += STEP) T.seq.push({t, ch:rg(ch)});
+  T.seq.push({t:settle, ch});
+}
+// 칼럼 머리
+const cols = document.getElementById('cols'); let cx = 0; const colX = [];
+COLS.forEach(([ko,en,n])=>{ colX.push(cx); cols.insertAdjacentHTML('beforeend',`<span style="left:${cx}px"><b>${ko}</b>${en}</span>`); cx += n*TW + CG; });
+// 행
+const rows = document.getElementById('rows'); const leds = [];
+DATA.forEach((d,ri)=>{
+  const row = document.createElement('div'); row.className='row'; row.style.top = ri*82+'px'; rows.appendChild(row);
+  const t0 = 0.7 + ri*0.42;
+  COLS.forEach(([,,n],ci)=>{
+    const txt = d[ci].padEnd(n,' ');
+    for (let k=0;k<n;k++){
+      const T = makeTile(row, colX[ci]+k*TW, 0, false, ci===3 && d[4]);
+      const idx = colX[ci]/TW + k;          // 왼→오 지연
+      spin(T, txt[k], t0 + 0.05*k, t0 + 0.55 + idx*0.034 + R()*0.12);
+      T.seq.push({t: 6.5 + ri*0.06 + idx*0.018, ch:' '});   // 2막 전 비우기
+    }
+  });
+  const led = document.createElement('div'); led.className='led'; led.style.left = (cx-CG+18)+'px';
+  led.innerHTML = '<i></i>'.repeat(9); row.appendChild(led); leds.push([led,d[4]]);
+});
+// 2막: 큰 메시지
+const MSG = '새가족을 환영합니다';                  // 바꿔 쓰기
+const msg = document.getElementById('msg'); const BW = 100, mw = MSG.length*BW - 8, mx = (1216-mw)/2;
+[...MSG].forEach((ch,i)=>{ const T = makeTile(msg, mx+i*BW, 0, true, true); spin(T, ch, 7.35 + i*0.04, 8.15 + i*0.07); });
+// 시계 09:59:50 → 1초마다 넘김
+const clock = document.getElementById('clock');
+const CW = 70, CC = 32;   // 시계: 중간 크기 타일
+const CK = [0,9,null,5,9,null,5,0]; const cw = 6*CW + 2*CC - 6, ox = (1216-cw)/2; let x = ox; const ck = [];
+CK.forEach(v=>{ if (v===null){ clock.insertAdjacentHTML('beforeend',`<div class="colon" style="left:${x-4}px">:</div>`); x += CC; return; }
+  const T = makeTile(clock, x, 0, 2, false); spin(T, String(v), 8.5, 8.9 + ck.length*0.05); ck.push(T); x += CW; });
+for (let s=1; s<=3; s++) ck[5].seq.push({t: 9 + s, ch: String(s)});   // 초 단위 틱
+document.querySelectorAll('.colon').forEach(c=>c.style.opacity=0);
+
+// 결정론 렌더: 시각 t에서 모든 타일 상태를 계산
+tiles.forEach(T=>T.seq.sort((a,b)=>a.t-b.t));
+function draw(t){
+  for (const T of tiles){
+    let k = 0; while (k+1 < T.seq.length && T.seq[k+1].t <= t) k++;
+    const cur = T.seq[k].ch, prev = k ? T.seq[k-1].ch : cur, p = k ? (t - T.seq[k].t)/T.fl : 1;
+    const last = k === T.seq.length-1 || T.seq[k+1].ch === ' ' || T.seq[k+1].t - T.seq[k].t > 0.3;
+    const ph = p >= 1 ? 2 : p < .5 ? 0 : 1;
+    const q = ph===0 ? (p/.5)**2 : ph===1 ? ((p-.5)/.5)**2 : 0;            // 중력처럼 가속
+    const st = ph===2 && last && p < 1 + 0.1/T.fl ? (p-1)*T.fl/0.1 : -1;    // 정착 후 작은 튐
+    const a = ph===0 ? -90*q : ph===1 ? 90*(1-q) : st >= 0 ? 9*Math.sin(Math.PI*st)*(1-st) : 0;
+    const key = cur+prev+ph+a.toFixed(1)+q.toFixed(2);
+    if (key === T.key) continue; T.key = key;
+    T.g[0].textContent = cur; T.g[1].textContent = ph===2 ? cur : prev;
+    T.g[2].textContent = prev; T.g[3].textContent = cur;
+    T.ft.style.display = ph===0 ? 'block' : 'none'; T.fb.style.display = ph===1 || st >= 0 ? 'block' : 'none';
+    T.ft.style.transform = `rotateX(${a}deg)`; T.fb.style.transform = `rotateX(${a}deg)`;
+    T.ft.style.filter = `brightness(${1-0.55*q})`; T.fb.style.filter = ph===1 ? `brightness(${0.45+0.55*q})` : 'none';
+    T.sh.style.opacity = ph===0 ? 0.7*q : ph===1 && q < .5 ? 0.7*(1-q) : 0;   // 떨어지는 판 그림자, 펼쳐진 뒤 한 프레임
+  }
+}
+const clk = {t:0}, hl = document.getElementById('hl');
+tl.to(clk,{t:Motion.dur,duration:Motion.dur,ease:'none',onUpdate(){ draw(clk.t); hl.textContent = clk.t < 7.2 ? '이번 주 일정 · WEEKLY BOARD' : '이번 주 환영 · WELCOME'; }},0);
+
+tl.from('#panel',{opacity:0,y:16,duration:.6,ease:'expo.out'},0);
+tl.from('.head',{opacity:0,duration:.4},.25);
+tl.from('#cols span',{opacity:0,y:-6,stagger:.06,duration:.35},.45);
+leds.forEach(([l,amb],i)=>{ tl.set(l,{attr:{class:'led on'}},1.4+i*0.42); if(amb) for(let k=0;k<10;k++) tl.set(l,{attr:{class: k%2?'led on':'led'}},3.6+k*0.5); else tl.set(l,{attr:{class:'led'}},1.6+i*0.42); });
+// 2막 전환
+tl.to(['#cols','#rows .led'],{opacity:0,duration:.3},6.5);
+tl.set('#rows',{display:'none'},7.25);
+tl.fromTo('#msg',{opacity:0},{opacity:1,duration:.25},7.2);
+tl.fromTo('#clock',{opacity:0},{opacity:1,duration:.3},8.3);
+tl.fromTo('#cl',{opacity:0,y:6},{opacity:1,y:0,duration:.5},8.3);
+tl.to('.colon',{opacity:1,duration:.3},8.6);
+for (let s=0;s<6;s++) tl.set('.colon',{opacity: s%2?1:.35},9+s*0.5);
+Motion.ready();
+</script></body></html>

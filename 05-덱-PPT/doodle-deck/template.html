@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Doodle Deck</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Nanum+Pen+Script&display=swap">
+<style>
+:root{
+  --paper:#F5F3EF;      /* 따뜻한 미색 종이. 순백(#fff) 금지 */
+  --ink:#353535;        /* 소프트 블랙 마커. 순검정(#000) 금지 */
+  --red:#CE2E3C;        /* 현재 어절 하이라이트 · 붉은 손글씨 주석 */
+  --gray:#ABA9A7;       /* 아직 안 읽은 어절 */
+  --pill:#FFFEFC;       /* 자막 알약 바탕 */
+  --stroke:5px;         /* 손그림 기본 획 (1920 기준 4~6px) */
+  /* 파스텔 채색 — 이 6색 밖으로 나가지 않는다 */
+  --p-blue:#D8EAFB; --p-green:#CEF3DF; --p-peach:#FDE0C1;
+  --p-pink:#F3C3A8; --p-brown:#C89766; --p-sky:#D9E8FA;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;background:#111;overflow:hidden}
+body{font-family:Gaegu,"Nanum Pen Script","Pretendard Variable",sans-serif;color:var(--ink)}
+
+#stage{position:absolute;top:50%;left:50%;width:1920px;height:1080px;
+  transform:translate(-50%,-50%) scale(var(--scale,1));transform-origin:center;background:var(--paper)}
+.slide{position:absolute;inset:0;display:none;background:var(--paper)}
+.slide.active{display:block}
+
+/* ───────── 그림 배치: .art 하나 = 좌표계 하나(1px = SVG 1단위) ───────── */
+.art{position:absolute}
+/* 잉크 규칙은 .art의 '직계' svg에만 — 손 아이콘 svg까지 먹지 않게 */
+.art>svg{display:block;overflow:visible;filter:url(#rough)}
+.art>svg path,.art>svg line,.art>svg circle,.art>svg ellipse{
+  fill:none;stroke:var(--ink);stroke-width:var(--stroke);
+  stroke-linecap:round;stroke-linejoin:round}
+
+/* 선이 그려진다 — 모든 애니메이션 path에 pathLength="100" 필수 */
+.draw{stroke-dasharray:100;stroke-dashoffset:100}
+.active .draw{animation:drawIn var(--dur,1.1s) var(--d,0s) ease forwards}
+@keyframes drawIn{to{stroke-dashoffset:0}}
+
+/* 채색은 선이 다 그려진 뒤 톡 들어온다.
+   색은 반드시 style="--c:var(--p-blue)"로 준다 — fill 속성은 위 CSS(fill:none)에 진다 */
+.art .fill{fill:var(--c,var(--ink));stroke:none;opacity:0;transform-box:fill-box;transform-origin:center}
+.active .fill{animation:popIn .42s var(--d,0s) cubic-bezier(.3,1.5,.5,1) forwards}
+@keyframes popIn{from{opacity:0;transform:scale(.86)}to{opacity:1;transform:scale(1)}}
+
+/* 손글씨 라벨 (검정/빨강) */
+.label{position:absolute;font-size:52px;font-weight:700;white-space:nowrap;opacity:0}
+.label.red{color:var(--red)}
+.active .label{animation:popIn .4s var(--d,0s) ease forwards}
+
+/* ───────── 연필 쥔 손 — 그려지는 획을 따라간다 ───────── */
+.hand{position:absolute;left:0;top:0;width:130px;height:130px;opacity:0;z-index:3;
+  offset-distance:0%;offset-rotate:0deg;offset-anchor:7% 93%;pointer-events:none;
+  filter:drop-shadow(0 6px 8px rgba(0,0,0,.14))}
+.hand svg{width:130px;height:130px;display:block}
+.active .hand{animation:trace var(--dur,1.1s) var(--d,0s) ease forwards,
+                        handFade var(--dur,1.1s) var(--d,0s) ease forwards}
+@keyframes trace{from{offset-distance:0%}to{offset-distance:100%}}
+@keyframes handFade{0%{opacity:0}6%{opacity:1}88%{opacity:1}100%{opacity:0}}
+
+/* ───────── 하단 자막 알약 (어절 단위 카라오케) ───────── */
+.cap{position:absolute;left:50%;bottom:7.5%;transform:translateX(-50%);z-index:9;
+  display:flex;align-items:center;gap:44px;max-width:82%;flex-wrap:nowrap;
+  background:var(--pill);border:3.5px solid var(--ink);border-radius:999px;
+  padding:16px 40px;box-shadow:0 9px 20px rgba(0,0,0,.10)}
+.cap .w{font-size:40px;font-weight:700;color:var(--ink);white-space:nowrap;
+  padding:2px 6px;border-radius:10px;transition:color .18s,background .18s}
+.cap .w.ahead{color:var(--gray)}
+.cap .w.now{background:var(--red);color:#fff;padding:4px 16px}
+
+@media print{
+  html,body{overflow:visible;background:var(--paper)}
+  #stage{position:static;transform:none;width:auto;height:auto}
+  .slide{display:block!important;position:relative;width:1920px;height:1080px;page-break-after:always}
+  .draw{stroke-dashoffset:0!important;animation:none!important}
+  .fill,.label{opacity:1!important;animation:none!important;transform:none!important}
+  .hand{display:none}
+  #nav{display:none}
+}
+@page{size:1920px 1080px;margin:0}
+#nav{position:fixed;right:24px;bottom:16px;z-index:99;color:#999;font-size:16px;font-family:Gaegu,sans-serif}
+</style>
+</head>
+<body>
+
+<!-- 손그림 떨림 필터 — 반듯한 path를 손으로 그린 선처럼 만든다 -->
+<svg width="0" height="0" style="position:absolute">
+  <filter id="rough">
+    <feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="3" seed="7" result="n"/>
+    <feDisplacementMap in="SourceGraphic" in2="n" scale="2.6" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</svg>
+
+<div id="stage">
+
+<!-- ═══ D1. 캐릭터 + 말풍선 ═══ -->
+<section class="slide" data-cap="아니요 오히려 말도 더 멀쩡하게 잘 돌아갔습니다">
+  <div class="art" style="left:1150px;top:330px;width:300px;height:360px">
+    <svg viewBox="0 0 300 360" width="300" height="360">
+      <path class="draw" style="--d:.1s" pathLength="100" d="M150 78 v-40 M150 32 a6 6 0 1 0 .1 0"/>
+      <path class="draw" style="--d:.3s;--dur:1.3s" pathLength="100" d="M92 132 h116 a26 26 0 0 1 26 26 v54 a26 26 0 0 1-26 26 H92 a26 26 0 0 1-26-26 v-54 a26 26 0 0 1 26-26 z"/>
+      <ellipse class="fill" style="--c:var(--ink);--d:1.5s" cx="122" cy="185" rx="17" ry="20"/>
+      <ellipse class="fill" style="--c:var(--ink);--d:1.6s" cx="178" cy="185" rx="17" ry="20"/>
+      <path class="fill" style="--c:var(--p-blue);--d:1.7s" d="M100 250 h100 a22 22 0 0 1 22 22 v54 a22 22 0 0 1-22 22 H100 a22 22 0 0 1-22-22 v-54 a22 22 0 0 1 22-22 z"/>
+      <path class="draw" style="--d:1.4s;--dur:1.2s" pathLength="100" d="M100 250 h100 a22 22 0 0 1 22 22 v54 a22 22 0 0 1-22 22 H100 a22 22 0 0 1-22-22 v-54 a22 22 0 0 1 22-22 z"/>
+      <path class="draw" style="--d:2s" pathLength="100" d="M78 268 l-32 26 M222 268 l34-30 M124 348 v22 M176 348 v22 M108 372 h32 M160 372 h32"/>
+      <path class="draw" style="--d:2.2s" pathLength="100" d="M258 232 l24-18 M262 252 l28-2 M250 214 l14-24"/>
+    </svg>
+    <div class="hand" style="--d:.3s;--dur:1.3s;offset-path:path('M92 132 h116 a26 26 0 0 1 26 26 v54 a26 26 0 0 1-26 26 H92 a26 26 0 0 1-26-26 v-54 a26 26 0 0 1 26-26 z')"><svg viewBox="0 0 130 130"><path d="M42 92c24 4 44 16 51 33 5 13-6 22-22 20-20-2-42-15-51-30-7-11 4-27 22-23z" fill="#F6C9AE"/><path d="M56 104c14 3 25 10 29 19 3 7-4 12-13 11-12-1-25-9-30-17-4-6 3-15 14-13z" fill="#EBB294"/><path d="M9 121l19-19 9 9-19 19z" fill="#3A3A3A"/><path d="M28 102L90 40l18 18-62 62z" fill="#E65C37"/><path d="M90 40l10-10a13 13 0 0 1 18 18l-10 10z" fill="#F2A38C"/></svg></div>
+  </div>
+
+  <div class="art" style="left:470px;top:250px;width:520px;height:330px">
+    <svg viewBox="0 0 520 330" width="520" height="330">
+      <path class="fill" style="--c:var(--p-blue);--d:1.2s" d="M20 60 h150 a44 44 0 0 1 0 88 H20 a44 44 0 0 1 0-88z"/>
+      <path class="draw" style="--d:.2s;--dur:1s" pathLength="100" d="M20 60 h150 a44 44 0 0 1 0 88 H20 a44 44 0 0 1 0-88z M60 148 l-14 34 34-34"/>
+      <path class="fill" style="--c:var(--p-green);--d:1.6s" d="M70 120 h150 a44 44 0 0 1 0 88 H70 a44 44 0 0 1 0-88z"/>
+      <path class="draw" style="--d:.7s;--dur:1s" pathLength="100" d="M70 120 h150 a44 44 0 0 1 0 88 H70 a44 44 0 0 1 0-88z M110 208 l-14 34 34-34"/>
+      <path class="fill" style="--c:var(--p-peach);--d:2s" d="M110 178 h150 a44 44 0 0 1 0 88 H110 a44 44 0 0 1 0-88z"/>
+      <path class="draw" style="--d:1.2s;--dur:1s" pathLength="100" d="M110 178 h150 a44 44 0 0 1 0 88 H110 a44 44 0 0 1 0-88z M150 266 l-14 34 34-34"/>
+      <path class="draw" style="--d:1.8s;--dur:1s" pathLength="100" d="M300 40 h180 a16 16 0 0 1 16 16 v76 a16 16 0 0 1-16 16 H300 a16 16 0 0 1-16-16 V56 a16 16 0 0 1 16-16z M300 148 l-24 40 44-40"/>
+      <circle class="fill" style="--c:var(--ink);--d:2.6s" cx="358" cy="94" r="11"/>
+      <circle class="fill" style="--c:var(--ink);--d:2.7s" cx="420" cy="94" r="11"/>
+    </svg>
+  </div>
+  <div class="label" style="left:1020px;top:470px;--d:2.9s;font-size:78px">?</div>
+</section>
+
+<!-- ═══ D2. 오브젝트 + 화살표 + 손글씨 라벨 ═══ -->
+<section class="slide" data-cap="버나드 바스가 말한 글로벌 워크스페이스 이론입니다">
+  <div class="art" style="left:380px;top:360px;width:420px;height:320px">
+    <svg viewBox="0 0 420 320" width="420" height="320">
+      <path class="fill" style="--c:var(--p-pink);--d:1.6s" d="M40 150 c0-70 60-120 130-118 70-2 130 48 130 118 0 62-56 108-130 108S40 212 40 150z"/>
+      <path class="draw" style="--d:.1s;--dur:1.7s" pathLength="100" d="M40 150 c0-70 60-120 130-118 70-2 130 48 130 118 0 62-56 108-130 108S40 212 40 150z"/>
+      <path class="draw" style="--d:1.2s;--dur:1.3s" pathLength="100" d="M170 34 v220 M104 70 c40 20 40 60 0 80 c40 20 40 60 0 80 M236 70 c-40 20-40 60 0 80 c-40 20-40 60 0 80"/>
+    </svg>
+    <div class="hand" style="--d:.1s;--dur:1.7s;offset-path:path('M40 150 c0-70 60-120 130-118 70-2 130 48 130 118 0 62-56 108-130 108S40 212 40 150z')"><svg viewBox="0 0 130 130"><path d="M42 92c24 4 44 16 51 33 5 13-6 22-22 20-20-2-42-15-51-30-7-11 4-27 22-23z" fill="#F6C9AE"/><path d="M56 104c14 3 25 10 29 19 3 7-4 12-13 11-12-1-25-9-30-17-4-6 3-15 14-13z" fill="#EBB294"/><path d="M9 121l19-19 9 9-19 19z" fill="#3A3A3A"/><path d="M28 102L90 40l18 18-62 62z" fill="#E65C37"/><path d="M90 40l10-10a13 13 0 0 1 18 18l-10 10z" fill="#F2A38C"/></svg></div>
+  </div>
+  <div class="art" style="left:830px;top:430px;width:280px;height:80px">
+    <svg viewBox="0 0 280 80" width="280" height="80">
+      <path class="draw" style="--d:2.4s;--dur:.7s" pathLength="100" d="M10 50 H250 M214 24 l38 26-38 26"/>
+    </svg>
+  </div>
+  <div class="label" style="left:1140px;top:400px;--d:3s;font-size:64px">Global Workspace</div>
+</section>
+
+<!-- ═══ D3. 프레임 / 무대를 그린다 ═══ -->
+<section class="slide" data-cap="그 무대 위에서 전부 유창하게 벌어졌습니다">
+  <div class="art" style="left:660px;top:300px;width:600px;height:440px">
+    <svg viewBox="0 0 600 440" width="600" height="440">
+      <path class="fill" style="--c:#3D3B44;--d:1.8s" d="M60 100 c0-46 84-70 240-70s240 24 240 70 v220 H60z"/>
+      <path class="draw" style="--d:.1s;--dur:1.6s" pathLength="100" d="M60 100 c0-46 84-70 240-70s240 24 240 70 v220 H60z"/>
+      <path class="fill" style="--c:var(--p-brown);--d:2.1s" d="M60 100 c30 0 54 10 62 40 8 40-2 120 6 180h-68z"/>
+      <path class="fill" style="--c:var(--p-brown);--d:2.2s" d="M540 100 c-30 0-54 10-62 40-8 40 2 120-6 180h68z"/>
+      <path class="draw" style="--d:1.4s;--dur:1s" pathLength="100" d="M60 100 c30 0 54 10 62 40 8 40-2 120 6 180 M540 100 c-30 0-54 10-62 40-8 40 2 120-6 180"/>
+      <path class="draw" style="--d:2.4s;--dur:.9s" pathLength="100" d="M40 320 h520 M40 320 v56 h520 v-56"/>
+      <path class="draw" style="--d:3s;--dur:.8s" pathLength="100" d="M120 320 v56 M200 320 v56 M280 320 v56 M360 320 v56 M440 320 v56"/>
+    </svg>
+    <div class="hand" style="--d:.1s;--dur:1.6s;offset-path:path('M60 100 c0-46 84-70 240-70s240 24 240 70 v220 H60z')"><svg viewBox="0 0 130 130"><path d="M42 92c24 4 44 16 51 33 5 13-6 22-22 20-20-2-42-15-51-30-7-11 4-27 22-23z" fill="#F6C9AE"/><path d="M56 104c14 3 25 10 29 19 3 7-4 12-13 11-12-1-25-9-30-17-4-6 3-15 14-13z" fill="#EBB294"/><path d="M9 121l19-19 9 9-19 19z" fill="#3A3A3A"/><path d="M28 102L90 40l18 18-62 62z" fill="#E65C37"/><path d="M90 40l10-10a13 13 0 0 1 18 18l-10 10z" fill="#F2A38C"/></svg></div>
+  </div>
+</section>
+
+<!-- ═══ D4. 나열 : 카드 여러 장 + 라벨 상자 ═══ -->
+<section class="slide" data-cap="그 무대는 바로 의식입니다">
+  <div class="art" style="left:300px;top:470px;width:400px;height:280px">
+    <svg viewBox="0 0 400 280" width="400" height="280">
+      <path class="fill" style="--c:var(--p-sky);--d:1.3s" d="M30 60 l86-22 44 172-86 22z"/>
+      <path class="draw" style="--d:.1s;--dur:.9s" pathLength="100" d="M30 60 l86-22 44 172-86 22z"/>
+      <path class="fill" style="--c:var(--p-green);--d:1.6s" d="M118 40 h92 v176 h-92z"/>
+      <path class="draw" style="--d:.6s;--dur:.9s" pathLength="100" d="M118 40 h92 v176 h-92z"/>
+      <path class="fill" style="--c:var(--p-peach);--d:1.9s" d="M212 44 l86 18-34 172-86-18z"/>
+      <path class="draw" style="--d:1.1s;--dur:.9s" pathLength="100" d="M212 44 l86 18-34 172-86-18z"/>
+    </svg>
+    <div class="hand" style="--d:.1s;--dur:.9s;offset-path:path('M30 60 l86-22 44 172-86 22z')"><svg viewBox="0 0 130 130"><path d="M42 92c24 4 44 16 51 33 5 13-6 22-22 20-20-2-42-15-51-30-7-11 4-27 22-23z" fill="#F6C9AE"/><path d="M56 104c14 3 25 10 29 19 3 7-4 12-13 11-12-1-25-9-30-17-4-6 3-15 14-13z" fill="#EBB294"/><path d="M9 121l19-19 9 9-19 19z" fill="#3A3A3A"/><path d="M28 102L90 40l18 18-62 62z" fill="#E65C37"/><path d="M90 40l10-10a13 13 0 0 1 18 18l-10 10z" fill="#F2A38C"/></svg></div>
+  </div>
+  <div class="art" style="left:880px;top:300px;width:520px;height:240px">
+    <svg viewBox="0 0 520 240" width="520" height="240">
+      <path class="draw" style="--d:2.1s;--dur:1.2s" pathLength="100" d="M40 190 V70 a30 30 0 0 1 30-30 h380 a30 30 0 0 1 30 30 v120 M14 190 h492"/>
+    </svg>
+  </div>
+  <div class="label" style="left:1090px;top:380px;--d:3.2s;font-size:70px">의식</div>
+</section>
+
+<!-- ═══ D5. 붉은 손글씨 주석 ═══ -->
+<section class="slide" data-cap="계산에서도 같은 일이 벌어졌습니다">
+  <div class="art" style="left:640px;top:360px;width:640px;height:360px">
+    <svg viewBox="0 0 640 360" width="640" height="360">
+      <path class="draw" style="--d:.1s;--dur:1.8s" pathLength="100" d="M40 40 h560 a18 18 0 0 1 18 18 v244 a18 18 0 0 1-18 18 H40 a18 18 0 0 1-18-18 V58 a18 18 0 0 1 18-18z"/>
+    </svg>
+    <div class="hand" style="--d:.1s;--dur:1.8s;offset-path:path('M40 40 h560 a18 18 0 0 1 18 18 v244 a18 18 0 0 1-18 18 H40 a18 18 0 0 1-18-18 V58 a18 18 0 0 1 18-18z')"><svg viewBox="0 0 130 130"><path d="M42 92c24 4 44 16 51 33 5 13-6 22-22 20-20-2-42-15-51-30-7-11 4-27 22-23z" fill="#F6C9AE"/><path d="M56 104c14 3 25 10 29 19 3 7-4 12-13 11-12-1-25-9-30-17-4-6 3-15 14-13z" fill="#EBB294"/><path d="M9 121l19-19 9 9-19 19z" fill="#3A3A3A"/><path d="M28 102L90 40l18 18-62 62z" fill="#E65C37"/><path d="M90 40l10-10a13 13 0 0 1 18 18l-10 10z" fill="#F2A38C"/></svg></div>
+  </div>
+  <div class="label red" style="left:300px;top:180px;--d:2.2s;font-size:60px">통째로 철거</div>
+</section>
+
+<!-- ═══ D6. 판정 : 체크박스 + 짧은 라벨 ═══ -->
+<section class="slide" data-cap="질문에 대한 답은 그대로였습니다">
+  <div class="art" style="left:640px;top:280px;width:620px;height:260px">
+    <svg viewBox="0 0 620 260" width="620" height="260">
+      <path class="draw" style="--d:.1s;--dur:1.3s" pathLength="100" d="M30 30 h480 l60 56 v130 a14 14 0 0 1-14 14 H30 a14 14 0 0 1-14-14 V44 a14 14 0 0 1 14-14z M510 30 v56 h60"/>
+    </svg>
+    <div class="hand" style="--d:.1s;--dur:1.3s;offset-path:path('M30 30 h480 l60 56 v130 a14 14 0 0 1-14 14 H30 a14 14 0 0 1-14-14 V44 a14 14 0 0 1 14-14z')"><svg viewBox="0 0 130 130"><path d="M42 92c24 4 44 16 51 33 5 13-6 22-22 20-20-2-42-15-51-30-7-11 4-27 22-23z" fill="#F6C9AE"/><path d="M56 104c14 3 25 10 29 19 3 7-4 12-13 11-12-1-25-9-30-17-4-6 3-15 14-13z" fill="#EBB294"/><path d="M9 121l19-19 9 9-19 19z" fill="#3A3A3A"/><path d="M28 102L90 40l18 18-62 62z" fill="#E65C37"/><path d="M90 40l10-10a13 13 0 0 1 18 18l-10 10z" fill="#F2A38C"/></svg></div>
+  </div>
+  <div class="label" style="left:770px;top:370px;--d:1.6s;font-size:58px">질문: 다리 몇 개?</div>
+  <div class="art" style="left:1330px;top:290px;width:200px;height:200px">
+    <svg viewBox="0 0 200 200" width="200" height="200">
+      <path class="fill" style="--c:var(--p-green);--d:2.4s" d="M20 20 h140 v140 H20z"/>
+      <path class="draw" style="--d:2s;--dur:.8s" pathLength="100" d="M20 20 h140 v140 H20z"/>
+      <path class="draw" style="--d:2.7s;--dur:.5s" pathLength="100" d="M46 92 l36 40 66-82"/>
+    </svg>
+  </div>
+  <div class="label" style="left:1340px;top:510px;--d:3s;font-size:44px">그대로</div>
+</section>
+
+</div>
+
+<div id="nav"><span id="navPage"></span></div>
+
+<script>
+const slides=[...document.querySelectorAll('.slide')];
+const navPage=document.getElementById('navPage');
+const WORD_MS=520;              // 어절당 머무는 시간
+const SHOT=location.search.indexOf('shot')>-1;   // 캡처 모드: 자막을 다 읽은 상태로 고정
+let cur=-1,timer=null;
+
+function buildCap(slide){
+  if(slide.querySelector('.cap')||!slide.dataset.cap)return;
+  const cap=document.createElement('div');
+  cap.className='cap';
+  slide.dataset.cap.trim().split(/\s+/).forEach(w=>{
+    const s=document.createElement('span');
+    s.className='w ahead';s.textContent=w;cap.appendChild(s);
+  });
+  slide.appendChild(cap);
+}
+slides.forEach(buildCap);
+
+function runCap(slide){
+  clearInterval(timer);
+  const ws=[...slide.querySelectorAll('.cap .w')];
+  if(!ws.length)return;
+  if(SHOT){ws.forEach(w=>w.className='w');return;}
+  ws.forEach(w=>{w.className='w ahead'});
+  let i=0;
+  const step=()=>{
+    ws.forEach((w,k)=>w.className='w'+(k===i?' now':k>i?' ahead':''));
+    if(++i>=ws.length){clearInterval(timer);
+      setTimeout(()=>ws.forEach(w=>w.className='w'),WORD_MS);}
+  };
+  step();timer=setInterval(step,WORD_MS);
+}
+
+function show(n){
+  cur=Math.max(0,Math.min(slides.length-1,n));
+  slides.forEach((s,i)=>s.classList.toggle('active',i===cur));
+  navPage.textContent=(cur+1)+' / '+slides.length;
+  runCap(slides[cur]);
+}
+addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key===' ')show(cur+1);
+  else if(e.key==='ArrowLeft')show(cur-1);
+  else if(e.key==='Home')show(0);
+  else if(e.key==='End')show(slides.length-1);
+});
+addEventListener('click',e=>{if(e.clientX<innerWidth/2)show(cur-1);else show(cur+1)});
+let tx=null;
+addEventListener('touchstart',e=>tx=e.touches[0].clientX);
+addEventListener('touchend',e=>{if(tx===null)return;
+  const dx=e.changedTouches[0].clientX-tx;
+  if(dx<-40)show(cur+1);else if(dx>40)show(cur-1);tx=null});
+function fit(){
+  const s=Math.min(innerWidth/1920,innerHeight/1080);
+  document.getElementById('stage').style.setProperty('--scale',s);
+}
+addEventListener('resize',fit);addEventListener('load',fit);fit();
+const _h=parseInt(location.hash.slice(1));show(isNaN(_h)?0:_h-1);
+addEventListener('hashchange',()=>{const n=parseInt(location.hash.slice(1));if(!isNaN(n))show(n-1)});
+if(SHOT)document.getElementById('nav').style.display='none';
+</script>
+</body>
+</html>

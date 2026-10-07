@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><title>물방울의 여행 · Watercolor Journey</title>
+<link rel="stylesheet" href="../../lib/stage.css">
+<style>
+  .frame{background:#0d0f12 !important;background-image:none !important}
+  .scene{position:absolute;inset:0;overflow:hidden;background:#efe9de}
+  .shot{position:absolute;inset:0;opacity:0}
+  .shot svg{position:absolute;inset:0;width:100%;height:100%}
+  .cam{position:absolute;inset:0;transform-origin:50% 50%}
+  .mul{mix-blend-mode:multiply}
+  /* 종이 결: 전면 노이즈 + 가장자리 번짐 */
+  .paper{position:absolute;inset:0;pointer-events:none;mix-blend-mode:multiply;opacity:.55;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='320' height='320'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .45 0 0 0 0 .4 0 0 0 0 .32 0 0 0 .22 0'/></filter><rect width='320' height='320' filter='url(%23n)'/></svg>")}
+  .vig{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 50%,rgba(0,0,0,0) 55%,rgba(120,100,80,.18) 100%);mix-blend-mode:multiply}
+</style></head>
+<body data-no="S02" data-cat="스타일 · STYLE" data-ko="물방울의 여행" data-en="Watercolor Journey" data-meta="수채 번짐 · 잎→연못→강→바다→구름→눈→잎" data-dur="16" data-size="1280x720" data-poster="1.4">
+<main class="scene">
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <!-- 수채 번짐: 가장자리 흔들림 + 안쪽 얼룩 -->
+    <filter id="wash" x="-20%" y="-20%" width="140%" height="140%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="3" seed="4" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="16" xChannelSelector="R" yChannelSelector="G" result="d"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.008" numOctaves="2" seed="11" result="g"/>
+      <feColorMatrix in="g" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -0.4 1.12" result="ga"/>
+      <feComposite in="d" in2="ga" operator="in" result="m"/>
+      <feGaussianBlur in="m" stdDeviation="0.6" result="m2"/>
+      <!-- 안료가 가장자리에 고이는 번짐선 -->
+      <feMorphology in="d" operator="erode" radius="3" result="er"/>
+      <feComposite in="d" in2="er" operator="out" result="rim"/>
+      <feGaussianBlur in="rim" stdDeviation="1.2" result="rimb"/>
+      <feColorMatrix in="rimb" type="matrix" values=".55 0 0 0 0  0 .55 0 0 0  0 0 .55 0 0  0 0 0 .5 0" result="rimd"/>
+      <feMerge><feMergeNode in="m2"/><feMergeNode in="rimd"/></feMerge>
+    </filter>
+    <filter id="soft" x="-30%" y="-30%" width="160%" height="160%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.01" numOctaves="2" seed="2" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="40" result="d"/>
+      <feGaussianBlur in="d" stdDeviation="14"/>
+    </filter>
+    <!-- 매끈한 원 + 가장자리만 살짝 번짐 (wash는 큰 변위로 원이 다각형처럼 보임) -->
+    <filter id="bleed" x="-30%" y="-30%" width="160%" height="160%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.06" numOctaves="2" seed="9" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="5" result="d"/>
+      <feGaussianBlur in="d" stdDeviation="1.1"/>
+    </filter>
+    <filter id="pencil" x="-5%" y="-5%" width="110%" height="110%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="1" seed="5" result="n"/>
+      <feDisplacementMap in="SourceGraphic" in2="n" scale="2.2"/>
+    </filter>
+    <linearGradient id="sky1" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#c7d5d6"/><stop offset=".5" stop-color="#ead5cf"/><stop offset=".78" stop-color="#e6dcc6"/><stop offset="1" stop-color="#d9dcbf"/>
+    </linearGradient>
+    <linearGradient id="sky3" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#dfd2d2"/><stop offset=".5" stop-color="#ecd3c1"/><stop offset="1" stop-color="#e3dcc0"/>
+    </linearGradient>
+    <linearGradient id="sky4" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#d4dde0"/><stop offset=".3" stop-color="#ecd5cc"/><stop offset=".44" stop-color="#f1c9a6"/><stop offset=".5" stop-color="#eed9b5"/>
+    </linearGradient>
+  </defs>
+</svg>
+
+<!-- S1 · 잎 끝 물방울 (처음과 끝) -->
+<div class="shot" id="s1"><div class="cam" id="c1"><svg viewBox="0 0 1280 720">
+  <rect width="1280" height="720" fill="url(#sky1)"/>
+  <g class="mul" filter="url(#soft)" opacity=".85">
+    <ellipse cx="160" cy="640" rx="260" ry="90" fill="#a9bd86"/><ellipse cx="520" cy="660" rx="300" ry="80" fill="#b6c58f"/>
+    <ellipse cx="900" cy="640" rx="280" ry="95" fill="#a3b97f"/><ellipse cx="1200" cy="660" rx="220" ry="80" fill="#b2c48c"/>
+    <ellipse cx="1180" cy="40" rx="160" ry="90" fill="#b9c79c" opacity=".7"/><ellipse cx="300" cy="230" rx="380" ry="40" fill="#efc9c2" opacity=".6"/>
+  </g>
+  <path d="M-30,30 C120,90 330,170 560,232" stroke="#8a6b52" stroke-width="7" fill="none" stroke-linecap="round" filter="url(#pencil)"/>
+  <g id="leaf">
+    <path class="mul" d="M548,236 C620,160 760,170 830,282 C740,318 610,316 548,236Z" fill="#8bae66" filter="url(#wash)"/>
+    <path class="mul" d="M560,236 C640,195 740,200 812,276 C730,296 620,290 560,236Z" fill="#7a9f58" opacity=".45" filter="url(#wash)"/>
+    <g stroke="#4e6a3a" stroke-width="1.3" fill="none" opacity=".75" filter="url(#pencil)">
+      <path d="M548,236 C640,232 740,250 830,282"/>
+      <path d="M610,236 l26,-30 M660,240 l30,-36 M712,248 l30,-34 M760,258 l26,-28 M630,238 l22,26 M685,244 l24,28 M738,254 l22,24"/>
+      <path d="M548,236 C620,160 760,170 830,282 C740,318 610,316 548,236Z" opacity=".6"/>
+    </g>
+  </g>
+  <g id="d1" transform="translate(822,300)"><g id="d1in"></g></g>
+</svg></div></div>
+
+<!-- S2 · 연못 (위에서 본 시점) -->
+<div class="shot" id="s2"><div class="cam" id="c2"><svg viewBox="0 0 1280 720">
+  <rect width="1280" height="720" fill="#e2dcb2"/>
+  <g class="mul" filter="url(#soft)" opacity=".6"><ellipse cx="200" cy="120" rx="300" ry="160" fill="#d9cf98"/><ellipse cx="1100" cy="600" rx="300" ry="200" fill="#cfd09a"/></g>
+  <path class="mul" d="M1000,520 L1300,700 L1300,780 L960,600Z" fill="#5f9d86" filter="url(#wash)"/>
+  <ellipse class="mul" cx="640" cy="370" rx="400" ry="300" fill="#5f9e84" filter="url(#wash)"/>
+  <ellipse class="mul" cx="600" cy="400" rx="260" ry="200" fill="#4b8a74" opacity=".45" filter="url(#wash)"/>
+  <g id="pads" class="mul" fill="#4f8a55" filter="url(#wash)"></g>
+  <g stroke="#f4f1e6" stroke-width="5" opacity=".55" stroke-linecap="round" filter="url(#pencil)"><path d="M380,190 l170,-14 M700,150 l130,-6 M760,600 l120,-8"/></g>
+  <g id="rings" fill="none" stroke="#2f5d55" stroke-width="3.4" filter="url(#pencil)">
+    <circle cx="640" cy="380" r="10"/><circle cx="640" cy="380" r="10" stroke="#eef3ec"/><circle cx="640" cy="380" r="10"/><circle cx="640" cy="380" r="10" stroke="#eef3ec" stroke-dasharray="2 16" stroke-width="5" stroke-linecap="round"/>
+  </g>
+  <g id="d2" transform="translate(640,380)"><g id="d2in"></g></g>
+</svg></div></div>
+
+<!-- S3 · 강 (멀리서 본 들판) -->
+<div class="shot" id="s3"><div class="cam" id="c3"><svg viewBox="0 0 1280 720">
+  <rect width="1280" height="720" fill="url(#sky3)"/>
+  <path class="mul" d="M160,420 L300,300 L380,350 L470,270 L580,340 L690,280 L800,350 L900,300 L1000,380 L1000,430 L160,430Z" fill="#b7a2a6" opacity=".8" filter="url(#wash)"/>
+  <rect class="mul" x="-40" y="400" width="1360" height="360" fill="#a6bd7c" filter="url(#wash)"/>
+  <g class="mul" fill="#8fab68" opacity=".55" filter="url(#wash)"><ellipse cx="560" cy="440" rx="200" ry="22"/><ellipse cx="900" cy="470" rx="160" ry="20"/><ellipse cx="400" cy="620" rx="260" ry="40"/><ellipse cx="1000" cy="660" rx="260" ry="40"/></g>
+  <rect class="mul" x="-40" y="380" width="300" height="380" fill="#7c9cab" filter="url(#wash)"/>
+  <g stroke="#e9eef0" stroke-width="2" opacity=".7" filter="url(#pencil)"><path d="M20,460 h60 M110,500 h50 M30,560 h70 M140,620 h50"/></g>
+  <path class="mul" d="M250,380 L290,382 L300,470 L274,560 L246,560Z" fill="#9a7a5e" filter="url(#wash)"/>
+  <ellipse class="mul" cx="1060" cy="640" rx="130" ry="42" fill="#5f9e84" filter="url(#wash)"/>
+  <path id="river" d="M1060,640 C960,650 900,600 960,560 S900,500 780,520 S620,600 560,520 S460,440 380,470 S300,470 290,440" fill="none" stroke="#5f9e8f" stroke-width="26" stroke-linecap="round" opacity=".85" filter="url(#wash)"/>
+  <path id="riverline" d="M1060,640 C960,650 900,600 960,560 S900,500 780,520 S620,600 560,520 S460,440 380,470 S300,470 290,440" fill="none" stroke="#2f5e58" stroke-width="1.4" opacity=".7" filter="url(#pencil)"/>
+  <g>
+    <path d="M1130,690 L1140,470 L1150,690Z" fill="#7a5e44" class="mul" filter="url(#wash)"/>
+    <g class="mul" filter="url(#wash)" opacity=".85"><circle cx="1100" cy="420" r="90" fill="#7f9f5c"/><circle cx="1180" cy="400" r="80" fill="#6f9152"/><circle cx="1140" cy="340" r="80" fill="#8aa966"/></g>
+    <ellipse cx="1140" cy="395" rx="150" ry="125" fill="none" stroke="#4a5a3a" stroke-width="1.2" opacity=".6" filter="url(#pencil)"/>
+  </g>
+  <g id="d3"><g id="d3in"></g></g>
+</svg></div></div>
+
+<!-- S4 · 바다와 노을 -->
+<div class="shot" id="s4"><div class="cam" id="c4"><svg viewBox="0 0 1280 720">
+  <rect width="1280" height="720" fill="url(#sky4)"/>
+  <g class="mul" filter="url(#soft)" opacity=".7"><rect x="-100" y="250" width="1500" height="50" fill="#f0bfa0"/><rect x="-100" y="180" width="1500" height="40" fill="#ecc9c6"/></g>
+  <circle class="mul" cx="930" cy="230" r="92" fill="#f0c49a" opacity=".55" filter="url(#soft)"/>
+  <circle class="mul" cx="930" cy="230" r="70" fill="#e8ac74" filter="url(#bleed)"/>
+  <circle class="mul" cx="926" cy="236" r="52" fill="#e39a62" opacity=".35" filter="url(#bleed)"/>
+  <g stroke="#ecd6c8" stroke-width="5"><path d="M820,215 h230 M840,240 h220 M860,262 h200"/></g>
+  <rect class="mul" x="-40" y="360" width="1360" height="420" fill="#4a8a9c" filter="url(#wash)"/>
+  <rect class="mul" x="-40" y="520" width="1360" height="260" fill="#2c6578" opacity=".7" filter="url(#wash)"/>
+  <g id="whale" class="mul" opacity=".75">
+    <path d="M0,0 C40,-50 180,-60 260,-20 C290,-6 300,10 280,24 C200,50 60,50 0,0Z M4,2 C-20,-6 -40,-30 -70,-42 C-58,-14 -60,4 -74,30 C-46,22 -24,12 4,2Z M120,30 C130,52 150,62 176,64 C162,48 156,38 158,30Z" fill="#163f4e" filter="url(#wash)"/>
+    <circle cx="238" cy="-6" r="3.2" fill="#e9eef0" opacity=".8"/>
+    <path d="M150,30 C190,38 240,34 278,22" stroke="#7fa7b2" stroke-width="1.4" fill="none" opacity=".6" filter="url(#pencil)"/>
+  </g>
+  <g stroke="#eef3f1" stroke-width="1.8" opacity=".8" filter="url(#pencil)"><path d="M120,400 h50 M300,430 h70 M520,395 h40 M820,420 h60 M1040,450 h50 M200,500 h40 M960,520 h50"/></g>
+  <g id="steam" fill="none" stroke="#8b7e78" stroke-width="1.5" opacity="0" filter="url(#pencil)">
+    <path d="M560,350 c-10,-20 10,-30 0,-50 s10,-30 0,-50"/><path d="M640,330 c-10,-20 10,-30 0,-50 s10,-30 0,-50 s10,-30 0,-50"/><path d="M720,350 c-10,-20 10,-30 0,-50 s10,-30 0,-50"/>
+    <path d="M600,320 c-8,-16 8,-24 0,-40 s8,-24 0,-40"/><path d="M690,320 c-8,-16 8,-24 0,-40 s8,-24 0,-40"/>
+  </g>
+  <g id="d4" transform="translate(640,368)"><g id="d4in"></g></g>
+</svg></div></div>
+
+<!-- S5 · 구름과 눈송이 -->
+<div class="shot" id="s5"><div class="cam" id="c5"><svg viewBox="0 0 1280 720">
+  <rect width="1280" height="720" fill="#dfe4e7"/>
+  <g id="clouds" class="mul" filter="url(#wash)" opacity=".85"></g>
+  <g id="flake" transform="translate(640,360)" fill="none" stroke="#365a91" stroke-width="3" stroke-linecap="round" filter="url(#pencil)"></g>
+  <g id="rain" stroke="#4d6d96" stroke-width="3.2" stroke-linecap="round" opacity="0"></g>
+  <g id="d5" transform="translate(640,360)"><g id="d5in"></g></g>
+</svg></div></div>
+
+<div class="paper"></div><div class="vig"></div>
+</main>
+<script src="../../lib/gsap.min.js"></script><script src="../../lib/stage.js"></script>
+<script>
+const r = Motion.rand(7);
+const NS = 'http://www.w3.org/2000/svg';
+// 물방울 캐릭터: 눈물형(drop) 또는 구슬형(bead)
+function droplet(sel, shape, s){
+  const body = shape === 'drop'
+    ? '<path d="M0,0 C8,18 30,40 30,62 A30,30 0 1 1 -30,62 C-30,40 -8,18 0,0Z" fill="#7e9fb8" opacity=".92" filter="url(#wash)"/><path d="M0,0 C8,18 30,40 30,62 A30,30 0 1 1 -30,62 C-30,40 -8,18 0,0Z" fill="none" stroke="#3f5a72" stroke-width="1.2" opacity=".5" filter="url(#pencil)"/>'
+    : '<circle r="30" cy="62" fill="#7e9fb8" opacity=".92" filter="url(#wash)"/><circle r="30" cy="62" fill="none" stroke="#3f5a72" stroke-width="1.2" opacity=".5"/>';
+  document.querySelector(sel).innerHTML = `<g transform="scale(${s})">${body}
+    <ellipse cx="-12" cy="52" rx="6" ry="9" fill="#fff" opacity=".7"/>
+    <g class="eyes"><ellipse cx="-9" cy="68" rx="3.4" ry="4.6" fill="#24313f"/><ellipse cx="9" cy="68" rx="3.4" ry="4.6" fill="#24313f"/></g>
+    <g class="happy" opacity="0" fill="none" stroke="#24313f" stroke-width="2" stroke-linecap="round"><path d="M-13,69 q4,-6 8,0 M5,69 q4,-6 8,0"/><path d="M-4,78 q4,4 8,0"/></g>
+    <g fill="#e8a6a0" opacity=".55"><ellipse cx="-19" cy="76" rx="5" ry="3"/><ellipse cx="19" cy="76" rx="5" ry="3"/></g></g>`;
+}
+droplet('#d1in','drop',1.15); droplet('#d2in','bead',1); droplet('#d3in','bead',.45);
+droplet('#d4in','bead',.6); droplet('#d5in','bead',1.1);
+// 구슬형은 중심을 원점으로
+['#d2in','#d3in','#d4in','#d5in'].forEach(s=>document.querySelector(s).setAttribute('transform','translate(0,'+(-62*(s==='#d3in'?.45:s==='#d4in'?.6:s==='#d5in'?1.1:1))+')'));
+
+// 연잎
+const pads = document.getElementById('pads');
+[[420,240,40],[860,250,46],[900,470,38],[380,500,44],[520,620,30],[760,170,28],[300,370,26],[980,360,30],[650,640,24]].forEach(([x,y,R])=>{
+  const a = r()*6.28, p = document.createElementNS(NS,'path');
+  const x1 = x+R*Math.cos(a-.35), y1 = y+R*Math.sin(a-.35), x2 = x+R*Math.cos(a+.35), y2 = y+R*Math.sin(a+.35);
+  p.setAttribute('d',`M${x},${y} L${x1},${y1} A${R},${R} 0 1 0 ${x2},${y2}Z`); pads.appendChild(p);
+});
+// 구름 얼룩
+const clouds = document.getElementById('clouds'), cols = ['#8ea6c2','#a49dbd','#6f88a9','#9fb4c9','#7d8fb4'];
+const cl = [];
+for (let i=0;i<16;i++){
+  const a = i/16*6.28 + r()*.3, d = 330 + r()*160;
+  const c = document.createElementNS(NS,'circle');
+  c.setAttribute('cx', 640 + Math.cos(a)*d*1.25); c.setAttribute('cy', 360 + Math.sin(a)*d*.8);
+  c.setAttribute('r', 120 + r()*90); c.setAttribute('fill', cols[i%5]); c.setAttribute('opacity', .55 + r()*.3);
+  clouds.appendChild(c); cl.push(c);
+}
+// 눈송이: 6갈래 + 잔가지
+const flake = document.getElementById('flake'); const fl = [];
+for (let k=0;k<6;k++){
+  const g = document.createElementNS(NS,'g'); g.setAttribute('transform',`rotate(${k*60})`);
+  ['M0,-14 L0,-110','M0,-50 L-22,-72 M0,-50 L22,-72','M0,-78 L-16,-96 M0,-78 L16,-96','M0,-30 L-12,-40 M0,-30 L12,-40','M-8,-110 L0,-122 L8,-110']
+    .forEach(d=>{const p=document.createElementNS(NS,'path');p.setAttribute('d',d);g.appendChild(p);fl.push(p);});
+  flake.appendChild(g);
+}
+const hex = document.createElementNS(NS,'polygon'); hex.setAttribute('points','0,-16 14,-8 14,8 0,16 -14,8 -14,-8'); hex.setAttribute('fill','#365a91'); hex.setAttribute('opacity','.75'); flake.appendChild(hex);
+function prepDraw(el){ const L = el.getTotalLength(); el.style.strokeDasharray = L; el.style.strokeDashoffset = L; return L; }
+fl.forEach(prepDraw);
+const river = document.getElementById('river'), rline = document.getElementById('riverline');
+const RL = prepDraw(river); prepDraw(rline);
+
+const tl = Motion.timeline();
+const X = (sel, a, b, t0, t1) => tl.to(sel, {opacity:b, duration:t1-t0, ease:'sine.inOut'}, t0);
+
+// ── S1 0–3.2 잎 끝 물방울
+tl.fromTo('#s1', {opacity:0}, {opacity:1, duration:.6, ease:'sine.out'}, 0);
+tl.fromTo('#c1', {scale:1.06}, {scale:1.0, duration:3.2, ease:'sine.out'}, 0);
+tl.fromTo('#d1in', {rotation:-6, transformOrigin:'50% 0%'}, {rotation:6, transformOrigin:'50% 0%', duration:.9, ease:'sine.inOut', yoyo:true, repeat:1}, .2);
+tl.to('#d1in .eyes', {scaleY:.1, transformOrigin:'50% 50%', duration:.08, yoyo:true, repeat:1}, 1.15);
+tl.to('#d1in .eyes', {scaleY:.1, transformOrigin:'50% 50%', duration:.08, yoyo:true, repeat:1}, 1.45);
+tl.to('#d1in', {scaleY:1.18, scaleX:.9, transformOrigin:'50% 0%', duration:.35, ease:'sine.in'}, 2.0);
+tl.to('#d1', {y:860, duration:.75, ease:'power2.in'}, 2.4);
+tl.to('#d1in', {scaleY:1.05, scaleX:.95, rotation:0, duration:.2}, 2.4);
+X('#s1',1,0,2.95,3.35);
+tl.to('#c1', {y:-260, duration:.7, ease:'power2.in'}, 2.65);
+// ── S2 3.0–6.0 연못 + 물결
+X('#s2',0,1,2.9,3.3);
+tl.fromTo('#s2', {y:200}, {y:0, duration:.7, ease:'power3.out'}, 2.9);
+tl.fromTo('#c2', {scale:1.1}, {scale:1.0, duration:3.2, ease:'sine.out'}, 2.9);
+tl.fromTo('#d2', {scale:2.4, opacity:0}, {scale:1, opacity:1, duration:.5, ease:'power2.in'}, 3.0);
+document.querySelectorAll('#rings circle').forEach((c,i)=>{
+  tl.fromTo(c, {attr:{r:12}, opacity:.9}, {attr:{r:170+i*45}, opacity:0, duration:1.8, ease:'power1.out'}, 3.45+i*.3);
+});
+tl.to('#d2', {x:1080, y:680, scale:.6, duration:1.0, ease:'power2.in'}, 5.0);
+X('#s2',1,0,5.6,6.1);
+// ── S3 5.6–8.9 강 따라
+X('#s3',0,1,5.6,6.1);
+tl.fromTo('#c3', {scale:1.1, x:-50}, {scale:1.02, x:40, duration:3.4, ease:'sine.inOut'}, 5.6);
+tl.to([river, rline], {strokeDashoffset:0, duration:1.6, ease:'sine.inOut'}, 5.9);
+const bead = {p:0};
+const placeBead = () => { const pt = river.getPointAtLength(bead.p*RL); document.getElementById('d3').setAttribute('transform',`translate(${pt.x},${pt.y})`); };
+placeBead();
+tl.to(bead, {p:1, duration:2.0, ease:'sine.inOut', onUpdate:placeBead}, 6.2);
+X('#s3',1,0,8.2,8.7);
+// ── S4 8.2–11.3 바다 · 고래 · 증발
+X('#s4',0,1,8.2,8.7);
+tl.fromTo('#c4', {scale:1.08, y:-20}, {scale:1.0, y:40, duration:3.1, ease:'sine.inOut'}, 8.2);
+tl.fromTo('#whale', {x:-300, y:575}, {x:1350, y:555, duration:3.0, ease:'none'}, 8.2);
+tl.fromTo('#d4', {y:368}, {y:376, duration:.5, yoyo:true, repeat:3, ease:'sine.inOut'}, 8.3);
+tl.to('#steam', {opacity:.75, duration:.5}, 9.7);
+tl.fromTo('#steam path', {y:20}, {y:-60, duration:1.6, ease:'sine.out', stagger:.08}, 9.7);
+tl.to('#d4', {y:120, scale:.7, opacity:.4, duration:1.5, ease:'sine.in'}, 9.8);
+X('#s4',1,0,10.8,11.3);
+tl.to('#s4', {y:300, duration:.6, ease:'power2.in'}, 10.7);
+// ── S5 10.8–14.6 구름 → 눈송이 → 비
+X('#s5',0,1,10.8,11.3);
+tl.fromTo('#s5', {y:-220}, {y:0, duration:.7, ease:'power3.out'}, 10.8);
+tl.fromTo('#c5', {scale:1.12}, {scale:1.0, duration:3.0, ease:'sine.out'}, 10.8);
+cl.forEach((c,i)=> tl.fromTo(c, {x:0,y:0}, {x:(i%2?18:-18), y:(i%3?-10:12), duration:3.6, ease:'sine.inOut'}, 10.8));
+tl.fromTo('#d5', {y:560, scale:.6}, {y:360, scale:1, duration:.6, ease:'sine.out'}, 10.9);
+tl.to('#d5', {scale:0, opacity:0, duration:.3, ease:'back.in(2)'}, 11.5);
+tl.to(fl, {strokeDashoffset:0, duration:.3, stagger:.012, ease:'sine.out'}, 11.55);
+tl.fromTo(hex, {scale:0, transformOrigin:'50% 50%'}, {scale:1, duration:.35, ease:'back.out(2)'}, 11.55);
+tl.fromTo('#flake', {rotation:-20, svgOrigin:'640 360'}, {rotation:12, duration:2.6, ease:'sine.out'}, 11.5);
+// 13.0 눈송이가 녹아 다시 물방울 → 빗줄기와 함께 떨어짐 (S1 낙하와 매치컷)
+const rain = document.getElementById('rain'), drops=[];
+for (let i=0;i<34;i++){ const x = 60 + r()*1160, y = r()*720; const p = document.createElementNS(NS,'path'); p.setAttribute("d",`M${x},${y} l-9,34`); rain.appendChild(p); drops.push(p); }
+tl.to('#flake', {scale:.2, opacity:0, svgOrigin:'640 360', duration:.35, ease:'power2.in'}, 13.0);
+tl.fromTo('#d5', {scale:0, opacity:1, y:360}, {scale:.8, duration:.3, ease:'back.out(2.5)', immediateRender:false}, 13.25);
+tl.to("#rain", {opacity:.9, duration:.25}, 13.3);
+tl.fromTo(drops, {y:-120}, {y:260, duration:1.0, ease:'none', stagger:.012}, 13.3);
+tl.to('#d5', {y:900, duration:.6, ease:'power2.in'}, 13.7);
+X('#s5',1,0,14.1,14.6);
+// ── S6 14.1–16 다시 잎으로 (착지 14.85, 홀드 15.15~)
+tl.set('#d1', {x:740, y:-160}, 14.0);
+tl.set('#c1', {y:0}, 14.0);
+tl.set('#d1in', {scaleX:1, scaleY:1, rotation:0}, 14.0);
+tl.set('#d1in .eyes', {opacity:0}, 14.0);
+tl.set('#d1in .happy', {opacity:1}, 14.0);
+X('#s1',0,1,14.1,14.6);
+tl.fromTo('#c1', {scale:1.06}, {scale:1.0, duration:1.0, ease:'sine.out', immediateRender:false}, 14.1);
+tl.to('#d1', {y:140, duration:.65, ease:'power2.in'}, 14.2);
+tl.to('#d1in', {scaleY:.8, scaleX:1.15, transformOrigin:'50% 100%', duration:.14, yoyo:true, repeat:1, ease:'sine.out'}, 14.85);
+Motion.ready();
+</script></body></html>

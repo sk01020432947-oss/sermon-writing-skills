@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><title>브랜드 스토리 · Brand Story</title>
+<link rel="stylesheet" href="../../lib/stage.css">
+<style>
+  .frame{background:#000 !important;background-image:none !important}
+  .scene{position:absolute;inset:0;overflow:hidden;background:#000;font-family:"Pretendard",sans-serif}
+  :root{--card:#F3F0EA;--ink:#111;--acc:#C8553D}
+  #card{position:absolute;left:140px;top:140px;width:800px;height:800px;border-radius:48px;background:var(--card);overflow:hidden}
+  .abs{position:absolute}
+  #pill{left:388px;top:388px;width:24px;height:24px;border-radius:42px;background:var(--ink);overflow:hidden;display:flex;align-items:center;justify-content:center}
+  .mask{overflow:hidden;display:block;white-space:nowrap}
+  .mask>span{display:inline-block}
+  .plab{color:#fff;font-weight:700;font-size:30px;letter-spacing:-.02em}
+  .tile{position:absolute;background:#111;border-radius:42px;overflow:hidden}
+  .tile svg{position:absolute;inset:0;width:100%;height:100%}
+  #term{position:absolute;background:#111;overflow:hidden;visibility:hidden}
+  .lyr{position:absolute;visibility:hidden}
+  .ttl{left:0;right:0;top:0;bottom:0;display:flex;align-items:center;justify-content:center}
+  .ttl .plab{font-size:58px;font-weight:800}
+  /* 터미널 */
+  .bar{left:0;right:0;top:0;height:40px;display:flex;align-items:center;gap:8px;padding-left:18px}
+  .bar i{width:12px;height:12px;border-radius:50%;display:block}
+  .bar span{position:absolute;left:0;right:0;text-align:center;font:500 13px "IBM Plex Mono","Pretendard";color:#8a8f99}
+  .tbody{left:28px;right:28px;top:62px;height:430px;overflow:hidden;font:400 19px/30px "IBM Plex Mono","Pretendard";color:#d7dbe2}
+  .tbody .p{color:#fff;font-weight:600}
+  .tbody .ok{color:#7ad28c}
+  .tbody .ref{color:#f0b35a}
+  .tbody .dim{color:#7d828c}
+  .tbody div{white-space:nowrap}
+  /* 앱 */
+  .app{left:0;top:40px;width:680px;height:480px;background:#FBFAF7;display:flex}
+  .side{width:150px;background:#EFECE5;padding:22px 16px;font-size:14px;color:#555}
+  .side b{display:block;font-size:16px;color:#111;margin-bottom:18px;letter-spacing:-.02em}
+  .side div{padding:7px 10px;border-radius:8px;margin-bottom:4px}
+  .side div.on{background:#111;color:#fff;font-weight:700}
+  .main{flex:1;padding:24px 26px}
+  .vc{background:#111;color:#fff;border-radius:18px;padding:20px 22px}
+  .vc small{font:600 13px "IBM Plex Mono";color:#f0b35a;letter-spacing:.04em}
+  .vc p{margin:10px 0 0;font:500 18px/1.6 "Noto Serif KR";letter-spacing:-.01em}
+  .row{display:flex;align-items:center;gap:12px;padding:13px 14px;border-radius:12px;background:#fff;border:1px solid #E5E1D8;margin-top:10px;font-size:15px;color:#222}
+  .row i{width:30px;height:30px;border-radius:8px;background:#EFECE5;display:flex;align-items:center;justify-content:center;font:700 13px "Pretendard";font-style:normal;color:#111}
+  .row em{margin-left:auto;font-style:normal;font-size:12px;color:#999}
+  .row.hot{background:#111;color:#fff;border-color:#111}
+  .row.hot i{background:var(--acc);color:#fff}
+  /* 폰 채널 */
+  .scr{left:10px;top:10px;width:260px;height:540px;background:#fff;border-radius:34px;overflow:hidden}
+  .isl{position:absolute;left:50%;top:10px;width:84px;height:24px;margin-left:-42px;background:#111;border-radius:14px;z-index:3}
+  .ban{position:absolute;left:10px;right:10px;top:44px;height:88px;border-radius:14px;background:#1d1d1f;overflow:hidden}
+  .ban b{position:absolute;left:16px;top:24px;color:#fff;font:700 22px "Noto Serif KR";letter-spacing:-.02em}
+  .ban small{position:absolute;left:16px;top:56px;color:#f0b35a;font:500 10px "IBM Plex Mono"}
+  .av{position:absolute;left:14px;top:146px;width:52px;height:52px;border-radius:50%;background:#111;color:#fff;font:800 20px/52px "Pretendard";text-align:center}
+  .nm{position:absolute;left:76px;top:148px;font-size:16px;font-weight:800;letter-spacing:-.02em}
+  .nm small{display:block;font-size:10px;color:#888;font-weight:500;margin-top:3px;letter-spacing:0}
+  .ds{position:absolute;left:14px;top:208px;font-size:11px;color:#444}
+  #sub{position:absolute;left:14px;top:230px;width:232px;height:38px;border-radius:19px;background:#111;color:#fff;font-size:15px;font-weight:800;display:flex;align-items:center;justify-content:center;gap:6px}
+  #sub.on{background:#ECEAE5;color:#111}
+  .tabs{position:absolute;left:14px;right:14px;top:284px;display:flex;gap:22px;font-size:12px;font-weight:700;color:#999;border-bottom:1px solid #eee;padding-bottom:8px}
+  .tabs b{color:#111}
+  .th{position:absolute;left:14px;width:232px;height:96px;border-radius:12px;overflow:hidden}
+  .th span{position:absolute;left:12px;bottom:10px;color:#fff;font-size:12px;font-weight:700}
+  #noti{position:absolute;left:8px;right:8px;top:8px;height:64px;border-radius:22px;background:#111;color:#fff;z-index:4;display:flex;align-items:center;gap:10px;padding:0 12px;visibility:hidden}
+  #noti i{width:36px;height:36px;border-radius:10px;background:var(--acc);font:800 15px/36px "Pretendard";text-align:center;font-style:normal;flex:none}
+  #noti b{font-size:11px;display:block}
+  #noti small{font-size:10px;color:#bbb}
+  #cur{position:absolute;width:30px;height:38px;z-index:20;left:0;top:0}
+  .wm{position:absolute;left:0;right:0;top:330px;text-align:center}
+  .wm .w1{font-size:76px;font-weight:800;letter-spacing:-.04em;color:#111;line-height:1.1}
+  .wm .w2{font-size:24px;font-weight:600;color:#555;letter-spacing:-.02em;margin-top:18px}
+</style></head>
+<body data-no="S11" data-cat="브랜드 · BRAND" data-ko="브랜드 스토리" data-en="Brand Story" data-meta="120BPM · 점→알약→타일→벤토→터미널→앱→폰→워드마크" data-dur="16" data-size="1080x1080" data-poster="15.5">
+<main class="scene">
+<div id="card">
+  <div id="pill" class="abs"><span class="mask"><span class="plab" id="lab1">KBG Bible Labs</span></span></div>
+
+  <!-- 사진 타일 4장 (SVG로 그린 장면) -->
+  <div class="tile" id="t1"><svg viewBox="0 0 400 440" preserveAspectRatio="xMidYMid slice">
+    <rect width="400" height="440" fill="#E7D8BF"/><rect y="300" width="400" height="140" fill="#7A4E33"/><rect y="300" width="400" height="8" fill="#5E3A25"/>
+    <path d="M60 300 L200 250 L340 300 L200 330Z" fill="#5E3A25" opacity=".35"/>
+    <path d="M70 296 Q135 262 200 284 L200 324 Q135 300 70 330Z" fill="#FBF6EA"/><path d="M330 296 Q265 262 200 284 L200 324 Q265 300 330 330Z" fill="#F4ECDB"/>
+    <g stroke="#B9A98C" stroke-width="2"><path d="M90 296 l90 -10 M92 306 l88 -10 M94 316 l86 -10"/><path d="M220 286 l90 10 M220 296 l88 10 M220 306 l86 10"/></g>
+    <path d="M196 284 v42" stroke="#C8553D" stroke-width="3"/>
+    <path d="M320 300 l0 -150 l-60 -40" stroke="#222" stroke-width="7" fill="none" stroke-linecap="round"/><circle cx="320" cy="300" r="22" fill="#222"/>
+    <path d="M232 92 l56 0 l20 46 l-96 0z" fill="#222"/><path d="M212 138 L308 138 L340 300 L180 300Z" fill="#FFF3C4" opacity=".45"/>
+  </svg></div>
+  <div class="tile" id="t2"><svg viewBox="0 0 400 440" preserveAspectRatio="xMidYMid slice">
+    <rect width="400" height="440" fill="#2B2F3A"/><rect y="320" width="400" height="120" fill="#3A3F4C"/>
+    <rect x="70" y="110" width="260" height="170" rx="10" fill="#C9CCD3"/><rect x="80" y="120" width="240" height="150" rx="4" fill="#15171C"/>
+    <path d="M40 290 L360 290 L340 316 L60 316Z" fill="#B3B7BF"/>
+    <g stroke-width="7" stroke-linecap="round"><path d="M98 142 h60" stroke="#C8553D"/><path d="M110 162 h120" stroke="#7ad28c"/><path d="M110 182 h90" stroke="#f0b35a"/><path d="M122 202 h140" stroke="#8fb3ff"/><path d="M122 222 h70" stroke="#d7dbe2"/><path d="M110 242 h100" stroke="#7ad28c"/></g>
+  </svg></div>
+  <div class="tile" id="t3"><svg viewBox="0 0 400 440" preserveAspectRatio="xMidYMid slice">
+    <rect width="400" height="440" fill="#D9CDB8"/><circle cx="200" cy="220" r="120" fill="#8A5A3B"/><circle cx="200" cy="220" r="108" fill="#9C6744"/>
+    <g fill="#2A2A2E"><circle cx="200" cy="66" r="30"/><circle cx="200" cy="374" r="30"/><circle cx="46" cy="220" r="30"/><circle cx="354" cy="220" r="30"/></g>
+    <g fill="#E07A5F"><circle cx="200" cy="66" r="12" opacity="0"/></g>
+    <rect x="160" y="130" width="54" height="40" rx="3" fill="#FBF6EA" transform="rotate(-8 187 150)"/><rect x="104" y="196" width="50" height="38" rx="3" fill="#F4ECDB" transform="rotate(12 129 215)"/>
+    <rect x="236" y="250" width="54" height="40" rx="3" fill="#FBF6EA" transform="rotate(6 263 270)"/><rect x="180" y="270" width="44" height="32" rx="3" fill="#C8553D" transform="rotate(-14 202 286)"/>
+    <circle cx="262" cy="176" r="13" fill="#fff"/><circle cx="262" cy="176" r="8" fill="#6B4026"/><circle cx="148" cy="282" r="13" fill="#fff"/><circle cx="148" cy="282" r="8" fill="#6B4026"/>
+  </svg></div>
+  <div class="tile" id="t4"><svg viewBox="0 0 400 440" preserveAspectRatio="xMidYMid slice">
+    <rect width="400" height="440" fill="#CFC4B2"/><rect x="70" y="60" width="270" height="330" rx="8" fill="#FBF8F1" transform="rotate(-4 205 225)"/>
+    <g stroke="#E3DACB" stroke-width="2" transform="rotate(-4 205 225)"><path d="M90 120 h230 M90 150 h230 M90 180 h230 M90 210 h230 M90 240 h230 M90 270 h230 M90 300 h230 M90 330 h230"/></g>
+    <g stroke="#2A2A2E" stroke-width="3.5" fill="none" stroke-linecap="round" transform="rotate(-4 205 225)"><path d="M96 112 q20 -10 40 0 t40 0 t30 -2"/><path d="M96 142 q16 -8 32 0 t32 0 t40 0 t44 -2"/><path d="M96 202 q18 -8 36 0 t36 0"/><path d="M96 232 q20 -10 40 0 t40 0 t40 0"/><path d="M96 262 q14 -8 28 0 t36 0 t24 0"/></g>
+    <path d="M150 166 h120" stroke="#C8553D" stroke-width="10" opacity=".45" transform="rotate(-4 205 225)"/>
+    <path d="M300 380 L360 180" stroke="#111" stroke-width="12" stroke-linecap="round"/><path d="M300 380 l-4 18 l12 -12z" fill="#111"/>
+  </svg></div>
+
+  <!-- 주인공 도형: 제목칸 → 터미널 → 앱 → 맥 창 → 폰 → 알약 -->
+  <div id="term">
+    <div class="lyr ttl" id="L-ttl"><span class="mask"><span class="plab">KBG Bible Labs</span></span></div>
+    <div class="lyr bar" id="L-bar"><i style="background:#FF5F57"></i><i style="background:#FEBC2E"></i><i style="background:#28C840"></i><span id="barT">kbg-bible-labs — zsh</span><span id="barT2" style="visibility:hidden;color:#777">말씀노트</span></div>
+    <div class="lyr tbody" id="L-term"><div id="tl-in">
+      <div class="p" id="typ">&nbsp;</div>
+      <div class="dim tl-x">◇ 본문 불러오는 중…</div>
+      <div class="tl-x"><span class="ref">고전 15:3-4</span>  부활 복음의 핵심</div>
+      <div class="ok tl-x">✓ 원어 분석   ἐγήγερται · 완료</div>
+      <div class="tl-x"><span class="ref">롬 8:28</span>  교차 참조 연결</div>
+      <div class="tl-x"><span class="ref">사 53:5</span>   예언 성취 링크</div>
+      <div class="ok tl-x">✓ 주석 12권 요약 완료</div>
+      <div class="ok tl-x">✓ 소그룹 질문 3개 생성</div>
+      <div class="tl-x"><span class="ref">시 16:10</span>  사흘째 부활 근거</div>
+      <div class="dim tl-x">▸ build bible-study-app …</div>
+      <div class="ok tl-x">✓ done in 2.8s</div>
+    </div></div>
+    <div class="lyr app" id="L-app">
+      <div class="side"><b>말씀노트</b><div class="on">오늘의 본문</div><div>원어 사전</div><div>주석 서재</div><div>소그룹</div></div>
+      <div class="main">
+        <div class="vc"><small>고린도전서 15:3-4 · 개역한글</small><p>성경대로 그리스도께서 우리 죄를 위하여 죽으시고 … 성경대로 사흘 만에 다시 살아나사</p></div>
+        <div class="row" id="r1"><i>칼</i>칼빈 주석 · 부활의 순서<em>p.312</em></div>
+        <div class="row" id="r2"><i>원</i>원어 · ἐγήγερται 완료 수동태<em>문법</em></div>
+        <div class="row" id="r3"><i>Q</i>소그룹 질문 · “부활은 오늘 무엇을?”<em>3개</em></div>
+      </div>
+    </div>
+    <div class="lyr ttl" id="L-rec" style="gap:14px;color:#fff"><i id="recDot" style="width:14px;height:14px;border-radius:50%;background:#FF453A;display:block"></i><span class="mask"><span style="font:700 27px Pretendard;letter-spacing:-.02em">Recording</span></span><span class="mask"><span id="recP" style="font:500 25px 'IBM Plex Mono';color:#bbb;display:inline-block;width:76px;text-align:right">0%</span></span></div>
+    <div class="lyr scr" id="L-ph"><span class="isl"></span>
+      <div id="noti"><i>K</i><div><b>KBG Bible Labs · 새 영상</b><small>로마서 8장, AI로 읽는 묵상 노트</small></div></div>
+      <div class="ban"><b>KBG Bible Labs</b><small>WORD × CODE</small></div>
+      <div class="av">K</div><div class="nm">KBG Bible Labs<small>@kbgbiblelabs · 구독자 1.2만명</small></div>
+      <div class="ds">말씀 연구 도구를 만드는 목회자 개발자</div>
+      <div id="sub"><svg id="bell" width="16" height="16" viewBox="0 0 16 16" style="display:none"><path d="M8 1.5c-2.6 0-4 2-4 4.5v3L2.5 11h11L12 9V6c0-2.5-1.4-4.5-4-4.5zM6.5 12.5a1.5 1.5 0 0 0 3 0" fill="#111"/></svg><span id="subT">구독</span><span id="subT2" style="display:none">구독중 ✓</span></div>
+      <div class="tabs"><b>홈</b><span>동영상</span><span>게시물</span></div>
+      <div class="th" style="top:316px;background:#2B2F3A"><span>Claude로 만든 성경 연구 앱</span></div>
+      <div class="th" style="top:422px;background:#7A4E33"><span>고린도전서 15장 원어 노트</span></div>
+    </div>
+  </div>
+
+  <div class="wm"><span class="mask"><span class="w1" id="wm1">KBG Bible Labs</span></span><span class="mask"><span class="w2" id="wm2" style="display:inline-block">말씀 연구를 더 깊게, 도구는 더 가볍게</span></span></div>
+
+  <svg id="cur" viewBox="0 0 30 38"><path d="M3 2 L3 30 L10 23 L15 35 L20 33 L15 21 L25 21Z" fill="#111" stroke="#fff" stroke-width="2.2" stroke-linejoin="round"/></svg>
+</div>
+</main>
+<script src="../../lib/gsap.min.js"></script><script src="../../lib/stage.js"></script>
+<script>
+const tl = Motion.timeline();
+const B = .5; // 120 BPM 한 박
+const T = ['#t1','#t2','#t3','#t4'];
+gsap.set(T,{autoAlpha:0});
+gsap.set('#pill',{scale:0});
+gsap.set('#cur',{x:760,y:820});
+gsap.set(['#wm1','#wm2'],{yPercent:120});
+gsap.set('#lab1',{yPercent:120});
+const S = (sel,v,t)=>tl.set(sel,v,t);
+const vis=(sel,t,on=true)=>S(sel,{visibility:on?'visible':'hidden'},t);
+const click=t=>{ tl.to('#cur',{scale:.82,duration:.08,yoyo:true,repeat:1,transformOrigin:'10% 10%'},t); };
+
+// 0.0 점 → 0.5 알약 → 1.0 라벨 상승
+tl.to('#pill',{scale:1,duration:.32,ease:'back.out(3)'},0);
+tl.to('#pill',{left:220,top:358,width:360,height:84,duration:.42,ease:'expo.out'},B);
+tl.to('#lab1',{yPercent:0,duration:.4,ease:'power3.out'},2*B);
+// 1.5 커서 진입 → 2.0 클릭
+tl.to('#cur',{x:430,y:410,duration:.45,ease:'power3.out'},3*B);
+click(4*B); tl.to('#pill',{scale:.94,duration:.08,yoyo:true,repeat:1},4*B);
+// 2.5 알약이 아코디언처럼 4장으로 펼쳐짐
+S('#pill',{autoAlpha:0},5*B);
+T.forEach((s,i)=>S(s,{autoAlpha:1,left:220+i*90,top:358,width:90,height:84,borderRadius:i==0?'42px 0 0 42px':i==3?'0 42px 42px 0':0},5*B));
+const row=(ws)=>{ let x=42; return ws.map(w=>{const o={left:x,width:w}; x+=w+12; return o;}); };
+const lay=(ws,t,d=.42)=>row(ws).forEach((o,i)=>tl.to(T[i],{...o,top:180,height:440,borderRadius:18,duration:d,ease:'expo.out'},t));
+lay([170,170,170,170],5*B);
+tl.to('#cur',{x:820,y:860,duration:.4,ease:'power2.in'},5*B);
+// 3.0~4.5 박마다 초점 타일 교대
+[0,1,2,3].forEach(k=>lay([0,1,2,3].map(i=>i===k?380:100),(6+k)*B,.38));
+// 5.0 벤토 그리드로 접힘 + 제목칸
+const bento=[{left:40,top:40,width:340,height:460},{left:400,top:40,width:360,height:220},{left:400,top:280,width:170,height:220},{left:590,top:280,width:170,height:220}];
+bento.forEach((o,i)=>tl.to(T[i],{...o,borderRadius:22,duration:.42,ease:'expo.inOut'},10*B+i*.03));
+S('#term',{visibility:'visible',left:400,top:760,width:0,height:0,borderRadius:22},10*B);
+tl.to('#term',{left:40,top:520,width:720,height:240,duration:.42,ease:'expo.inOut'},10*B);
+// 5.5 제목 상승
+vis('#L-ttl',11*B);
+tl.fromTo('#L-ttl .plab',{yPercent:120},{yPercent:0,duration:.38},11*B);
+// 6.0 제목칸이 터미널로: 타일은 밀려 나가고 칸이 커진다
+tl.to('#t1',{left:-420,duration:.4,ease:'power3.in'},12*B);
+tl.to(['#t2','#t4'],{left:820,duration:.4,ease:'power3.in'},12*B);
+tl.to('#t3',{top:-260,duration:.4,ease:'power3.in'},12*B);
+tl.to('#term',{left:60,top:140,width:680,height:520,borderRadius:16,duration:.45,ease:'expo.inOut'},12*B);
+vis('#L-ttl',12*B+.1,false); vis(['#L-bar','#L-term'],12*B+.1);
+S('.tl-x',{visibility:'hidden'},0);
+// 6.5 프롬프트 타자
+const txt='> 본문 연구 시작', ty={v:0};
+tl.to(ty,{v:txt.length,duration:.45,ease:'none',onUpdate(){document.getElementById('typ').textContent=txt.slice(0,Math.round(ty.v))+'▍'}},12*B+.3);
+// 7.0~8.0 박마다 출력 줄이 쏟아지고 위로 스크롤
+const xs=[...document.querySelectorAll('.tl-x')];
+xs.forEach((e,i)=>vis(e,13*B+.3+i*.16));
+tl.to('#tl-in',{y:-60,duration:.3,ease:'power2.out'},15*B+.2);
+tl.to('#tl-in',{y:-120,duration:.3,ease:'power2.out'},16*B+.2);
+// 8.5 줄들이 한 줄로 접힘
+tl.to('#tl-in',{scaleY:0,transformOrigin:'50% 70%',duration:.2,ease:'power3.in'},17*B);
+const AP=17*B+.2;
+// 9.0 완성 앱 화면
+S('#term',{backgroundColor:'#EFECE5'},AP); vis('#barT',AP,false); vis('#barT2',AP);
+vis('#L-term',AP,false); vis('#L-app',AP);
+tl.fromTo('#L-app .vc',{y:40,scaleY:.6},{y:0,scaleY:1,duration:.35,ease:'back.out(1.6)'},AP);
+tl.fromTo(['#r1','#r2','#r3'],{x:60,autoAlpha:0},{x:0,autoAlpha:1,duration:.3,stagger:.1,ease:'power3.out'},19*B);
+// 10.0 강조 줄 → 맥 창으로 뒤로 빠짐
+S('#r2',{className:'row hot'},20*B);
+tl.to('#term',{scale:.7,duration:.45,ease:'expo.out'},20*B);
+// 10.5 맥 창이 폰으로 줄어듦
+S('#term',{backgroundColor:'#111'},21*B);
+tl.to('#term',{scale:1,left:260,top:120,width:280,height:560,borderRadius:44,duration:.45,ease:'expo.inOut'},21*B);
+// 앱 화면이 꺼지는 그 프레임에 폰 화면을 켜고 내용도 바로 올린다(빈 화면 구간 없음)
+vis(['#L-app','#L-bar','#barT2'],21*B+.2,false); vis('#L-ph',21*B+.2);
+// 10.7 채널 페이지 요소가 연달아 올라옴(첫 요소는 켜지는 즉시 반쯤 보임)
+tl.fromTo(['#L-ph .ban','#L-ph .av','#L-ph .nm','#L-ph .ds','#sub','#L-ph .tabs','#L-ph .th'],{y:30,autoAlpha:0},{y:0,autoAlpha:1,duration:.3,stagger:.05,ease:'power3.out'},21*B+.08);
+// 11.5 커서 → 12.0 구독 클릭
+tl.to('#cur',{x:405,y:384,duration:.45,ease:'power3.out'},23*B);
+click(24*B); tl.to('#sub',{scale:.94,duration:.08,yoyo:true,repeat:1},24*B);
+S('#sub',{className:'on'},24*B+.08); S('#subT',{display:'none'},24*B+.08); S('#subT2',{display:'inline'},24*B+.08); S('#bell',{display:'block'},24*B+.08);
+// 12.5 종 흔들림
+tl.to('#bell',{rotation:22,duration:.06,yoyo:true,repeat:5,transformOrigin:'50% 10%',ease:'none'},24*B+.2);
+tl.to('#cur',{x:760,y:840,duration:.4,ease:'power2.in'},24*B+.3);
+// 13.0 알림이 위에서 떨어짐
+vis('#noti',24*B+.4); tl.fromTo('#noti',{y:-90},{y:0,duration:.4,ease:'back.out(1.6)'},24*B+.4);
+// 13.5 폰이 알약으로 수축
+const PL=13.25;
+tl.to('#term',{left:220,top:358,width:360,height:84,borderRadius:42,duration:.42,ease:'expo.inOut'},PL);
+vis(['#L-ph','#noti'],PL+.15,false);
+// 13.45 알약 = 녹화 표시: Recording 0→100% (원본의 'Recording 18%' 비트)
+vis('#L-rec',PL+.2); tl.fromTo('#L-rec .mask>span',{yPercent:120},{yPercent:0,duration:.35,stagger:.06,ease:'power3.out'},PL+.2);
+tl.fromTo('#recDot',{scale:0},{scale:1,duration:.3,ease:'back.out(3)'},PL+.2);
+const rp={v:0}; tl.to(rp,{v:100,duration:.7,ease:'power1.inOut',onUpdate(){document.getElementById('recP').textContent=Math.round(rp.v)+'%'}},PL+.3);
+// 14.2 알약이 점으로 → 워드마크 상승
+const DT=14.2;
+tl.to('#L-rec .mask>span',{yPercent:-120,duration:.2,ease:'power3.in'},DT-.05); vis('#L-rec',DT+.15,false);
+tl.to('#term',{left:388,top:388,width:24,height:24,borderRadius:12,duration:.25,ease:'expo.in'},DT);
+tl.to('#term',{top:840,duration:.22,ease:'power2.in'},DT+.25);
+tl.to('#wm1',{yPercent:0,duration:.45,ease:'power3.out'},DT+.25);
+tl.to('#wm2',{yPercent:0,duration:.4,ease:'power3.out'},DT+.55);
+Motion.ready();
+</script></body></html>

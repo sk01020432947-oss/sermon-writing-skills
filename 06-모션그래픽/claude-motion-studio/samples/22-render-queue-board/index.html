@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><title>생성 대기열 보드 · Render Queue Board</title>
+<link rel="stylesheet" href="../../lib/stage.css">
+<style>
+  .frame{background:#0c0d0e !important;background-image:none !important}
+  .scene{position:absolute;inset:0;overflow:hidden}
+  :root{--ink:#ECEBE4;--amber:#F6B60B;--mono:'IBM Plex Mono',monospace}
+  .bg{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%,#18191b 0%,#0a0b0c 100%)}
+  .pnl{position:absolute;left:40px;top:60px;width:1200px;height:600px;border-radius:10px;opacity:0;
+    background:repeating-linear-gradient(0deg,rgba(255,255,255,.013) 0 1px,transparent 1px 3px),linear-gradient(#1e1f21,#18191b);
+    box-shadow:0 30px 60px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.05)}
+  .hd{position:absolute;left:36px;top:34px;font:500 15px/1 var(--mono);color:#b9b8b2;letter-spacing:.16em;display:flex;align-items:center}
+  .hd b{display:inline-block;width:11px;height:11px;background:var(--amber);margin-right:12px}
+  .hd em{font:600 15px/1 Pretendard;font-style:normal;letter-spacing:.02em;color:#8c8c88;margin-left:18px}
+  .hr{position:absolute;right:36px;top:36px;font:500 13px/1 var(--mono);color:#3f4043;letter-spacing:.18em}
+  .lb{position:absolute;font:600 14px/1 Pretendard;color:#77777a;letter-spacing:.02em;white-space:nowrap}
+  .lb i{font:500 11px/1 var(--mono);font-style:normal;letter-spacing:.12em;margin-left:6px}
+  .lb.a{color:var(--amber)}
+  .ml{position:absolute;font:500 12px/1 var(--mono);color:#555659;letter-spacing:.14em}
+  .tl{position:absolute}
+  .h{position:absolute;left:0;right:0;overflow:hidden}
+  .h span{position:absolute;left:0;right:0;text-align:center;font-family:Pretendard;font-weight:800}
+  .ftp{transform-origin:50% 100%}.fbt{transform-origin:50% 0}
+  .seam{position:absolute;left:0;right:0;height:2px;background:#0d0e0f;z-index:3;box-shadow:0 1px 0 rgba(255,255,255,.05)}
+  .ftp,.fbt{z-index:2}
+  .shd{position:absolute;left:0;right:0;background:linear-gradient(rgba(0,0,0,.85),rgba(0,0,0,.15));opacity:0;z-index:1}
+  .pin{position:absolute;width:3px;background:#0b0b0c;border-radius:1px;z-index:4}
+  .colon{position:absolute;width:12px;height:12px;border-radius:50%;background:#bdbcb6}
+  .brk{position:absolute;height:9px;border:2px solid var(--amber);border-top:none;transform-origin:50% 0}
+  .led{position:absolute;display:grid;grid-template-columns:repeat(4,10px);gap:6px}
+  .led i{width:10px;height:10px;border-radius:50%;background:#2c2d30}
+  #lapse{position:absolute;left:1000px;top:374px;font:500 11px/1 var(--mono);color:var(--amber);letter-spacing:.14em;opacity:0}
+</style></head>
+<body data-no="S22" data-cat="스타일 · STYLE" data-ko="생성 대기열 보드" data-en="Render Queue Board" data-meta="스플릿 플랩 · 생성 시간 · 하루 계획 · 대기열" data-dur="16" data-poster="15.5" data-size="1280x720">
+<main class="scene">
+  <div class="bg"></div>
+  <!-- (a) RENDER -->
+  <div class="pnl" id="pA">
+    <div class="hd"><b></b>RENDER<span id="hA" style="position:relative;display:inline-block;width:250px;height:30px;margin-left:16px"></span></div>
+    <div class="hr">OPUS 5.5 · MOTION</div>
+    <div class="lb" style="left:150px;top:112px">짧게 MIN</div>
+    <div class="lb a" style="left:690px;top:112px">길게 MAX</div>
+    <div class="ml" style="left:100px;top:392px">RANGE</div>
+    <div class="ml" style="left:100px;top:470px">MIN</div>
+    <div class="ml" id="mxl" style="left:1068px;top:470px;opacity:0">MAX</div>
+  </div>
+  <!-- (b) PLAN -->
+  <div class="pnl" id="pB">
+    <div class="hd"><b></b>PLAN<em>내 하루 · 쓸 수 있는 시간</em></div>
+    <div class="hr">TODAY</div>
+    <div id="hours"></div>
+    <div class="brk" id="br1" style="left:500px;top:214px;width:192px"></div>
+    <div class="brk" id="br2" style="left:800px;top:214px;width:192px"></div>
+  </div>
+  <!-- (c) QUEUE -->
+  <div class="pnl" id="pC">
+    <div class="hd"><b></b>QUEUE<em>생성 대기열</em></div>
+    <div class="lb" style="left:50px;top:96px">영상<i>VIDEO</i></div>
+    <div class="lb" style="left:280px;top:96px">소요<i>TIME</i></div>
+    <div class="lb" style="left:540px;top:96px">상태<i>STATUS</i></div>
+    <div class="lb" style="left:860px;top:124px">합계<i>TOTAL</i></div>
+    <div class="lb" style="left:860px;top:372px">현재 시각<i>NOW</i></div>
+    <div class="lb" style="left:50px;top:444px">나<i>ME</i></div>
+    <div id="lapse">» TIME-LAPSE</div>
+  </div>
+</main>
+<script src="../../lib/gsap.min.js"></script><script src="../../lib/stage.js"></script>
+<script>
+const r = Motion.rand(22);
+const $ = s => document.querySelector(s);
+const HAN = [...'가나다라마바사아자차카타파하거너더러머버서어저처영상생성'];
+const DIG = [...'0123456789'];
+const D = 0.075, AMB = '#F6B60B', INK = '#ECEBE4', DIM = '#7d7e80', DARK = '#1a1406';
+const BGD = ['linear-gradient(#323336,#2B2C2F)', 'linear-gradient(#27282b,#222326)'];
+const BGA = ['linear-gradient(#FBC52A,#F4B00C)', 'linear-gradient(#E9A507,#DB9905)'];
+const T = [];
+// ---- flap tile engine (from sample 06, generalised: size, tile colour) ----
+function tile(host, x, y, w, h, fs) {
+  const el = document.createElement('div'); el.className = 'tl';
+  Object.assign(el.style, {left: x + 'px', top: y + 'px', width: w + 'px', height: h + 'px'});
+  const hh = h / 2, rad = Math.max(3, Math.round(w / 14));
+  const half = (cls, top) => `<div class="h ${cls}" style="top:${top ? 0 : hh}px;height:${hh}px;border-radius:${top ? `${rad}px ${rad}px 0 0` : `0 0 ${rad}px ${rad}px`}"><span style="top:${top ? 0 : -hh}px;height:${h}px;line-height:${h}px;font-size:${fs}px"></span></div>`;
+  el.innerHTML = half('top', 1) + half('bot', 0) + half('ftp', 1) + half('fbt', 0) + `<i class="seam" style="top:${hh - 1}px"></i>` +
+    `<i class="shd" style="top:${hh}px;height:${hh}px;border-radius:0 0 ${rad}px ${rad}px"></i>` +
+    [-1, w - 2].map(x => `<i class="pin" style="left:${x}px;top:${hh - 4}px;height:8px"></i>`).join('');
+  host.appendChild(el);
+  const hs = [...el.querySelectorAll('.h')];
+  const o = {el, hs, sh: el.querySelector('.shd'), d: D * (0.9 + r() * 0.25), s: hs.map(x => x.querySelector('span')), ev: [{t: -1, ch: ' ', col: INK, bg: 0, n: 0, g: []}]};
+  T.push(o); return o;
+}
+function row(host, x, y, n, w, h, fs, gap = 4) { return [...Array(n)].map((_, i) => tile(host, x + i * (w + gap), y, w, h, fs)); }
+function put(tt, ch, t, col = INK, bg = 0, n) {
+  const prev = tt.ev[tt.ev.length - 1];
+  if (prev.ch === ch && prev.col === col && prev.bg === bg) return;
+  if (n === undefined) n = 3 + Math.floor(r() * 7);
+  // 숫자 칸은 숫자만, 한글 칸은 한글만. 빈칸으로 갈 때는 직전 글자 종류를 따른다
+  const isD = c => /[0-9:]/.test(c), pool = (ch === ' ' ? isD(prev.ch) : isD(ch)) ? DIG : HAN;
+  const g = [...Array(Math.max(0, n - 1))].map(() => pool[Math.floor(r() * pool.length)]);
+  tt.ev.push({t: n > 1 ? t + r() * 0.03 : t, ch, col, bg, n: Math.max(1, n), g});
+}
+function text(ts, str, t0, col, bg, st = 0.045, n) { [...str.padEnd(ts.length)].forEach((ch, i) => put(ts[i], ch, t0 + i * st, col, bg, n)); }
+function paint(hEl, sp, ch, col, bg, top) { sp.textContent = ch; sp.style.color = col; hEl.style.background = (bg ? BGA : BGD)[top ? 0 : 1]; }
+function render(t) {
+  for (const tt of T) {
+    let e = 0; while (e + 1 < tt.ev.length && tt.ev[e + 1].t <= t) e++;
+    const ev = tt.ev[e], before = e > 0 ? tt.ev[e - 1] : ev, d = tt.d;
+    let oC = ev.ch, nC = ev.ch, p = 1, oCol = ev.col, oBg = ev.bg, settle = -1;
+    const run = t - ev.t;
+    if (e > 0 && run < ev.n * d) {
+      const k = Math.floor(run / d); p = (run - k * d) / d;
+      oC = k === 0 ? before.ch : ev.g[k - 1]; nC = k === ev.n - 1 ? ev.ch : ev.g[k];
+      if (k === 0) { oCol = before.col; oBg = before.bg; }
+    } else if (e > 0 && run < ev.n * d + 0.1) settle = (run - ev.n * d) / 0.1;
+    const [top, bot, ftp, fbt] = tt.hs, [s0, s1, s2, s3] = tt.s;
+    paint(top, s0, nC, ev.col, ev.bg, 1);
+    paint(bot, s1, p < 1 ? oC : nC, p < 1 ? oCol : ev.col, p < 1 ? oBg : ev.bg, 0);
+    paint(ftp, s2, oC, oCol, oBg, 1);
+    paint(fbt, s3, nC, ev.col, ev.bg, 0);
+    tt.sh.style.opacity = 0;
+    if (p >= 1) {
+      ftp.style.visibility = 'hidden';
+      if (settle >= 0) {   // 마지막 장이 닿고 살짝 튀었다 가라앉음
+        fbt.style.visibility = 'visible'; fbt.style.filter = 'none';
+        fbt.style.transform = `perspective(300px) rotateX(${9 * Math.sin(Math.PI * settle) * (1 - settle)}deg)`;
+      } else fbt.style.visibility = 'hidden';
+      continue;
+    }
+    if (p < 0.5) {         // 위 반쪽: 중력 가속(ease-in)으로 떨어지며 어두워지고 아래 반쪽에 그림자
+      const q = (p / 0.5) ** 2;
+      ftp.style.visibility = 'visible'; fbt.style.visibility = 'hidden';
+      ftp.style.transform = `perspective(300px) rotateX(${-q * 90}deg)`; ftp.style.filter = `brightness(${1 - q * 0.55})`;
+      tt.sh.style.opacity = q * 0.7;
+    } else {               // 새 아래 반쪽이 펼쳐져 덮음, 그림자는 한 프레임만
+      const q = ((p - 0.5) / 0.5) ** 2;
+      ftp.style.visibility = 'hidden'; fbt.style.visibility = 'visible';
+      fbt.style.transform = `perspective(300px) rotateX(${(1 - q) * 90}deg)`; fbt.style.filter = `brightness(${0.45 + q * 0.55})`;
+      tt.sh.style.opacity = q < 0.5 ? 0.7 * (1 - q) : 0;
+    }
+  }
+  leds(t);
+}
+const colon = (host, x, y, h) => { [0.36, 0.64].forEach(f => host.insertAdjacentHTML('beforeend', `<i class="colon" style="left:${x}px;top:${y + h * f - 6}px"></i>`)); };
+
+// ================= (a) RENDER  0.0 – 5.0 =================
+const A = $('#pA');
+const hA = row($('#hA'), 0, 0, 8, 26, 30, 17, 3);
+const minT = [tile(A, 150, 140, 100, 140, 96)]; colon(A, 268, 140, 140);
+minT.push(tile(A, 298, 140, 100, 140, 96), tile(A, 402, 140, 100, 140, 96));
+const maxT = [tile(A, 690, 140, 100, 140, 96)]; colon(A, 808, 140, 140);
+maxT.push(tile(A, 838, 140, 100, 140, 96), tile(A, 942, 140, 100, 140, 96));
+const minS = row(A, 249, 298, 3, 48, 62, 32);
+const maxS = row(A, 690, 298, 7, 48, 62, 32);
+const bar = row(A, 100, 416, 20, 46, 40, 0, 4);
+text(hA, '1회 생성 시간', 0.25, '#c9c8c2', 0, 0.04, 4);
+text(minT, '010', 0.7, INK, 0, 0.08);
+text(minS, '10분', 1.15, INK, 0, 0.06);
+bar.slice(0, 6).forEach((b, i) => put(b, ' ', 1.45 + i * 0.07, INK, 1, 1));
+text(maxT, '130', 2.1, AMB, 0, 0.08, 9);
+text(maxS, '1시간 30분', 2.6, AMB, 0, 0.05);
+bar.slice(6).forEach((b, i) => put(b, ' ', 2.5 + i * 0.075, INK, 1, 1));
+
+// ================= (b) PLAN  5.2 – 10.2 =================
+const B = $('#pB');
+const HRS = ['09', '10', '11', '12', '13', '14', '15', '16', '17', '18'];
+const day = [];
+HRS.forEach((hh, i) => {
+  const x = 100 + i * 100;
+  B.insertAdjacentHTML('beforeend', `<div class="ml" style="left:${x}px;top:122px">${hh}:00</div>`);
+  day.push(...row(B, x, 146, 2, 45, 60, 32, 2));
+});
+const sched = '매일회의  점심    촬영    편집';  // 2 tiles per hour
+[...sched].forEach((ch, i) => { if (ch !== ' ') put(day[i], ch, 5.6 + i * 0.03, DIM, 0); });
+const gen1 = day.slice(8, 12), gen2 = day.slice(14, 18);
+const sub1 = row(B, 506, 232, 7, 24, 32, 17, 3), sub2 = row(B, 806, 232, 7, 24, 32, 17, 3);
+text(gen1, '영상생성', 6.7, DARK, 1, 0.07, 5);
+text(sub1, '1:30 확보', 7.05, AMB, 0, 0.04);
+text(gen2, '영상생성', 7.5, DARK, 1, 0.07, 5);
+text(sub2, '1:30 확보', 7.85, AMB, 0, 0.04);
+const msg = row(B, 304, 344, 8, 70, 92, 50, 4);
+text(msg, '여유 시간 활용', 8.45, INK, 0, 0.06, 8);
+
+// ================= (c) QUEUE  10.3 – 16 =================
+const C = $('#pC');
+const Q = [0, 1, 2, 3].map(i => {
+  const y = 122 + i * 78;
+  const vid = row(C, 50, y, 4, 52, 66, 34), tm = row(C, 280, y, 4, 52, 66, 34), st = row(C, 540, y, 3, 52, 66, 32);
+  const led = document.createElement('div'); led.className = 'led'; led.style.left = '730px'; led.style.top = (y + 9) + 'px';
+  led.innerHTML = '<i></i>'.repeat(12); C.appendChild(led);
+  return {vid, tm, st, led: [...led.children]};
+});
+const tot = [tile(C, 860, 152, 84, 112, 80)]; colon(C, 952, 152, 112);
+tot.push(tile(C, 978, 152, 84, 112, 80), tile(C, 1066, 152, 84, 112, 80));
+const maxQ = row(C, 860, 284, 6, 44, 54, 28);
+const clk = row(C, 860, 398, 5, 50, 62, 34);
+const me = row(C, 50, 470, 6, 52, 58, 30);
+Q.forEach((q, i) => {
+  const t0 = 10.55 + i * 0.28;
+  text(q.vid, '영상0' + (i + 1), t0, INK, 0, 0.04);
+  text(q.tm, '1:30', t0 + 0.1, INK, 0, 0.04);
+  text(q.st, '대기', t0 + 0.18, INK, 0, 0.04);
+  text(tot, ['130', '300', '430', '600'][i], t0 + 0.3, AMB, 0, 0.05, 4);
+});
+text(maxQ, '최대 6시간', 11.9, AMB, 0, 0.04);
+text(clk, '14:00', 10.7, INK, 0, 0.04);
+const GEN = 12.3, DONE = [13.0, 13.5, 13.95, 14.35];
+Q.forEach((q, i) => { text(q.st, '생성중', GEN + i * 0.12, AMB, 0, 0.05, 4); text(q.st, '완료', DONE[i], INK, 0, 0.05, 4); });
+text(me, '다른 일 중', 12.5, AMB, 0, 0.05, 4);
+// clock 14:00 -> 20:00 in 10-minute steps (passes 17:50)
+const CK0 = 12.75, CKS = 0.055;
+for (let s = 1; s <= 36; s++) {
+  const m = 14 * 60 + s * 10, txt = String(Math.floor(m / 60)).padStart(2, '0') + ':' + String(m % 60).padStart(2, '0');
+  [...txt].forEach((ch, k) => put(clk[k], ch, CK0 + s * CKS, INK, 0, 1));
+}
+text(me, '기다릴 만함', 14.5, AMB, 0, 0.05, 4);
+function leds(t) {
+  const blink = Math.floor(t * 8);
+  Q.forEach((q, i) => {
+    const gen = t >= GEN + i * 0.12 + 0.2, done = t >= DONE[i] + 0.2;
+    q.led.forEach((d, k) => {
+      let c = '#2c2d30', sh = 'none';
+      if (done) { c = AMB; sh = '0 0 6px rgba(246,182,11,.7)'; }
+      else if (gen) { const on = (k + blink + i) % 3 === 0; c = on ? AMB : '#5a4510'; sh = on ? '0 0 6px rgba(246,182,11,.6)' : 'none'; }
+      d.style.background = c; d.style.boxShadow = sh;
+    });
+  });
+}
+
+const tl = Motion.timeline();
+const clock = {t: 0};
+tl.to(clock, {t: Motion.dur, duration: Motion.dur, ease: 'none', onUpdate() { render(clock.t); }}, 0);
+// panel switches
+tl.fromTo('#pA', {y: 24, scale: 0.985, opacity: 0}, {y: 0, scale: 1, opacity: 1, duration: 0.7, ease: 'expo.out'}, 0);
+tl.to('#mxl', {opacity: 1, duration: 0.3}, 3.9);
+tl.to('#pA', {y: -70, opacity: 0, duration: 0.35, ease: 'power2.in'}, 4.9);
+tl.fromTo('#pB', {y: 90, opacity: 0}, {y: 0, opacity: 1, duration: 0.6, ease: 'expo.out'}, 5.15);
+tl.fromTo('#br1', {scaleY: 0, opacity: 0}, {scaleY: 1, opacity: 1, duration: 0.25}, 6.95);
+tl.fromTo('#br2', {scaleY: 0, opacity: 0}, {scaleY: 1, opacity: 1, duration: 0.25}, 7.75);
+tl.to('#pB', {y: -70, opacity: 0, duration: 0.35, ease: 'power2.in'}, 9.95);
+tl.fromTo('#pC', {y: 90, opacity: 0}, {y: 0, opacity: 1, duration: 0.6, ease: 'expo.out'}, 10.2);
+tl.to('#lapse', {opacity: 1, duration: 0.2}, CK0);
+tl.to('#lapse', {opacity: 0, duration: 0.2}, CK0 + 36 * CKS + 0.1);
+Motion.ready();
+</script></body></html>

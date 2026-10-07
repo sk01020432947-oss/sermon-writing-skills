@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>공익법인 서식 작성 스킬(gongik-seosik) 사용법</title>
+<style>
+  :root{
+    --ink:#16211c; --sub:#5a6660; --line:#dde3df; --bg:#f6f8f6;
+    --accent:#0f6b46; --accent-soft:#e9f4ee;
+    --blue:#1d4ed8; --blue-soft:#eef4ff;
+    --warn:#b45309; --warn-soft:#fdf3e4;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{font-family:"Pretendard","Pretendard Variable","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+    color:var(--ink); background:var(--bg); line-height:1.75; font-size:16px;}
+  .wrap{max-width:880px; margin:0 auto; padding:48px 28px 80px;}
+  header{border-bottom:3px solid var(--ink); padding-bottom:26px; margin-bottom:34px;}
+  .kicker{display:inline-block; background:var(--accent); color:#fff; font-size:13px; font-weight:700; padding:4px 12px; border-radius:4px; letter-spacing:.06em; margin-bottom:14px;}
+  h1{font-size:30px; line-height:1.35; font-weight:800; letter-spacing:-0.02em;}
+  .meta{margin-top:14px; color:var(--sub); font-size:14px;}
+  .meta b{color:var(--ink);}
+  h2{font-size:21px; font-weight:800; margin:52px 0 16px; padding-bottom:8px; border-bottom:2px solid var(--ink); letter-spacing:-0.01em;}
+  h3{font-size:16.5px; font-weight:700; margin:26px 0 10px;}
+  p{margin-bottom:12px;}
+  ul,ol{margin:0 0 14px 22px;}
+  li{margin-bottom:6px;}
+  code{background:#e9ede9; border-radius:4px; padding:1px 6px; font-size:.92em; font-family:Consolas,"D2Coding",monospace;}
+  .card{background:#fff; border:1px solid var(--line); border-radius:12px; padding:20px 22px; margin:16px 0; box-shadow:0 1px 3px rgba(0,0,0,.04);}
+  .prompt{background:#1c2420; color:#eef3ee; border-radius:10px; padding:16px 20px; margin:12px 0;
+    font-size:14.5px; line-height:1.8; white-space:pre-wrap; word-break:keep-all; font-family:inherit;}
+  .prompt::before{content:attr(data-label); display:block; font-size:11.5px; font-weight:700; letter-spacing:.08em; color:#8fd6ae; margin-bottom:8px;}
+  .note{background:var(--warn-soft); border:1px solid #ecd3ac; border-radius:8px; padding:12px 16px; margin:14px 0; font-size:14.5px;}
+  .note b{color:var(--warn);}
+  .tip{background:var(--accent-soft); border:1px solid #c4ddcf; border-radius:8px; padding:12px 16px; margin:14px 0; font-size:14.5px;}
+  .tip b{color:var(--accent);}
+  table{width:100%; border-collapse:collapse; margin:14px 0; background:#fff; font-size:14px;}
+  th{background:var(--ink); color:#fff; font-weight:700; padding:8px 12px; text-align:left;}
+  td{border:1px solid var(--line); padding:8px 12px; vertical-align:top;}
+  tr:nth-child(even) td{background:#fafcfa;}
+  .num{text-align:center; white-space:nowrap;}
+  .flow{display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin:14px 0; font-size:14px; font-weight:700;}
+  .flow span{background:#fff; border:1.5px solid var(--ink); border-radius:8px; padding:7px 13px;}
+  .flow i{font-style:normal; color:var(--accent); font-weight:800;}
+  .tree{background:#fff; border:1px solid var(--line); border-radius:10px; padding:16px 20px; font-family:Consolas,"D2Coding",monospace; font-size:13.5px; line-height:1.9; white-space:pre; overflow-x:auto;}
+  footer{margin-top:60px; padding-top:20px; border-top:1px solid var(--line); font-size:13px; color:var(--sub);}
+  @media print{
+    body{background:#fff; font-size:13px;}
+    .wrap{padding:0; max-width:none;}
+    h2{page-break-after:avoid;}
+    .card,.prompt,table{page-break-inside:avoid; box-shadow:none;}
+    .prompt{background:#eff3ef; color:#111; border:1px solid #ccc;}
+    .prompt::before{color:#0f6b46;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <span class="kicker">CLAUDE 스킬 사용 설명서</span>
+  <h1>공익법인 서식 작성 스킬<br><code style="font-size:.75em">gongik-seosik</code> 사용법</h1>
+  <div class="meta">
+    근거 문서: <b>서울특별시교육청 「2026 공익법인 실무지침서」</b> (403쪽, 2025. 12. 1. 기준)<br>
+    수록 범위: <b>13개 업무 패키지 · 서식 129종</b> (지침서 수록 서식 전체) · 설치 위치: <code>~/.claude/skills/gongik-seosik/</code>
+  </div>
+</header>
+
+<!-- ═══════ 1 ═══════ -->
+<section>
+<h2>1. 이 스킬이 하는 일</h2>
+<p>공익법인(재단·사단) 운영에 필요한 교육청 제출 서류를, 여러분이 가진 <b>날것의 자료</b>(법인 정보, 업무 메모, 회의 내용, 재산 내역, 임원 명단 등)만 주면 실무지침서의 <b>공식 서식 형식 그대로</b> 완성해 줍니다.</p>
+<div class="flow">
+  <span>요청 + 원자료 입력</span><i>→</i>
+  <span>업무 자동 판별</span><i>→</i>
+  <span>필요 정보 일괄 질문</span><i>→</i>
+  <span>서식 세트 완성<br><small>공문→사유서→내역서→회의록 순</small></span><i>→</i>
+  <span>구비서류 체크리스트<br>+ 기한·주의사항</span>
+</div>
+<ul>
+  <li>서식 하나만이 아니라 해당 업무에 필요한 <b>서류 일체(세트)</b>를 순서대로 만들어 줍니다.</li>
+  <li>완성본 뒤에 <b>구비서류 체크리스트</b>(빠진 첨부물 표시), <b>제출 기한·처리 흐름</b>, 지침서의 <b>주의사항(☞)</b>을 함께 제시합니다.</li>
+  <li>모르는 값(등기부 내용, 감정평가액 등)은 추정하지 않고 <code>{미기재 — 확인 필요}</code>로 비워 두고 질문 목록으로 알려 줍니다.</li>
+</ul>
+</section>
+
+<!-- ═══════ 2 ═══════ -->
+<section>
+<h2>2. 지원 서식 전체 카탈로그 (13개 패키지 · 129종)</h2>
+<table>
+  <tr><th style="width:24%">업무 패키지</th><th class="num">서식 수</th><th>포함 서식</th></tr>
+  <tr><td><b>① 법인설립허가</b></td><td class="num">21</td><td>법인설립허가신청서, 설립취지서, 발기인 인적사항, 임원취임예정자 인적사항, 취임승낙서, 겸직허가서, 특수관계 부존재각서/내용설명서, 창립총회 회의록, 3년 사업계획서, 사업수지예산서(재단/사단), 출연자확인서, 재산출연증서, 재산목록표, 회비징수 예정명세서, 회원명부, 부동산 사용승낙서, 조직·기구현황표(사단/재단), 설립 후 이행사항 결과보고</td></tr>
+  <tr><td><b>② 해산·청산</b></td><td class="num">7</td><td>해산허가 신청서, 해산사유서, 재산목록, 재산청산조서, 해산 이사회 회의록, 법인 해산 신고서, 청산종결신고서</td></tr>
+  <tr><td><b>③ 기본재산 처분</b></td><td class="num">5</td><td>처분 허가신청 공문, 처분 사유서, 처분허가 신청내역서, 이사회(총회) 회의록, 사전 고지 확인서 + 매입·매각 기준/Q&amp;A</td></tr>
+  <tr><td><b>④ 기본재산 담보·장기차입</b></td><td class="num">11</td><td>담보(장기차입) 허가신청 공문·사유서·신청내역서, 상환계획서, 사업계획서, 이사회 회의록 / 담보(전세권·근저당권) 설정 공문·사유서·신청내역서, 해지계획서, 이사회 회의록</td></tr>
+  <tr><td><b>⑤ 기부금사용 승인</b></td><td class="num">5</td><td>기본재산 편입예외 기부금사용승인 신청 공문, 사유서, 기부증서, 기부금 사용계획서, 이사회 회의록</td></tr>
+  <tr><td><b>⑥ 보통재산 편입</b></td><td class="num">8</td><td>편입 허가신청서(공문 포함), 사업계획서, 세부사업계획서, 수지예산서, 편입 사유서, 이사회 회의록, 편입 기간 경과 소명서</td></tr>
+  <tr><td><b>⑦ 수익사업 승인</b></td><td class="num">15</td><td>수익사업 승인 신청 공문·사유서, 수익사업 명세서, 수지예산서, 상근임직원 명부, 이사회 회의록(신규·변경 각 세트), 수익사업 계획서</td></tr>
+  <tr><td><b>⑧ 정관변경 허가</b></td><td class="num">10</td><td>유형별 허가신청 공문 5종(기본재산 증자/목적사업 변경·추가/임원정수/명칭 등), 정관변경 사유서, 정관 신·구 대비표, 증자재산목록, 기본재산 목록 신·구 대비표, 부동산 사용승낙서</td></tr>
+  <tr><td><b>⑨ 임원관리</b></td><td class="num">19</td><td>임원취임 승인신청 공문(재단/사단·신임/중임), 겸직허가서, 임원 신·구대비표, 취임승낙서, 특수관계 부존재각서/내용설명서, 사임서, 이사회 소집 승인신청 3종, 총회 소집 승인신청 3종, 상근임직원 정수 승인신청 공문, 인건비 산출 내역서, 직위·직무내용 상세기술서</td></tr>
+  <tr><td><b>⑩ 예산·결산 보고</b></td><td class="num">15</td><td>사업계획 및 예산서 제출 공문·총괄표·추정재무상태표·추정운영성과표, 사업실적 및 결산서 제출 공문·사업실적 총괄표, 월별 의무사항, 결산 자체 체크리스트(12항목+사유서), 별표 첨부서식</td></tr>
+  <tr><td><b>⑪ 장학·학술 규정</b></td><td class="num">8</td><td>장학금 지급 규정 예시(전문 12조), 학술지원사업 운영 규정 예시(전문 37조+부칙), 학술연구비 사용기준 별표, 별지서식(연구비 지원 신청서 등 5종)</td></tr>
+  <tr><td><b>⑫ 이사회·총회 회의록</b></td><td class="num">4</td><td>이사회 회의록, 총회 회의록, 참석자 서명부, 위임장 + 작성방법·민원사무처리 기준(처리기한표)</td></tr>
+  <tr><td><b>⑬ 허가증 갱신(재교부)</b></td><td class="num">1</td><td>법인 설립허가증 재교부 신청 공문</td></tr>
+</table>
+</section>
+
+<!-- ═══════ 3 ═══════ -->
+<section>
+<h2>3. 기본 사용법</h2>
+
+<h3>방법 A — 자연어로 그냥 요청 (자동 발동)</h3>
+<p>Claude Code(또는 데스크톱 앱) 대화창에 업무 관련 표현이 들어가면 스킬이 자동으로 발동합니다. 트리거 예: <b>"공익법인 서식", "설립허가 신청서", "기본재산 처분 허가", "정관변경 신청", "임원취임 승인", "공익법인 예산서/결산서", "이사회 회의록 만들어줘", "교육청 제출 서류"</b></p>
+
+<h3>방법 B — 스킬 직접 지정</h3>
+<div class="prompt" data-label="명시적 호출">/gongik-seosik 이사장 중임 승인 신청 서류 일체 만들어줘</div>
+
+<h3>무엇을 함께 주면 되나</h3>
+<table>
+  <tr><th style="width:30%">항목</th><th>예</th></tr>
+  <tr><td>법인 기본 정보</td><td>법인명, 사단/재단 구분, 소재지, 대표자(이사장), 설립허가일</td></tr>
+  <tr><td>업무별 원자료</td><td>재산 내역(등기부·잔고증명 내용), 임원 명단·이력, 회의 메모나 녹취, 사업 계획 메모, 예산 숫자 등 — <b>형식 없이 날것 그대로</b> 붙여넣어도 됩니다</td></tr>
+  <tr><td>(선택) 출력 형식</td><td>기본 마크다운. "워드로", "한글(hwpx)로"라고 하면 해당 파일로 변환</td></tr>
+</table>
+<div class="tip"><b>정보가 부족해도 시작하세요.</b> 스킬이 템플릿의 빈칸을 파악해 <b>부족한 항목만 한 번에 모아</b> 질문합니다. 낱개로 여러 번 묻지 않습니다.</div>
+</section>
+
+<!-- ═══════ 4 ═══════ -->
+<section>
+<h2>4. 업무별 예시 프롬프트 (복사해서 사용)</h2>
+
+<div class="prompt" data-label="① 법인설립허가 — 서류 일체">재단법인 설립허가 신청 서류 일체를 만들어줘.
+- 법인명: 재단법인 ○○장학회 / 소재지: 서울 ○○구
+- 목적: 저소득층 대학생 장학금 지급
+- 출연재산: 현금 12억(기본재산 10억, 보통재산 2억), 출연자 ○○○
+- 임원 예정: 이사장 ○○○ 외 이사 6명, 감사 2명 (명단 첨부)</div>
+
+<div class="prompt" data-label="③ 기본재산 처분 — 세트 작성">기본재산 처분 허가 신청 서류 만들어줘.
+보유 중인 ○○구 ○○동 건물(장부가 8억)을 매각해서 정기예금으로 전환하려고 해.
+이사회는 다음 주 화요일 개최 예정이고 이사 7명 중 6명 참석 예상.</div>
+
+<div class="prompt" data-label="⑧ 정관변경 — 유형 자동 판별">정관변경 허가 신청서 만들어줘. 목적사업에 '교육 콘텐츠 연구 지원'을 추가하려고 해.
+현행 정관 제4조는 다음과 같아: (현행 조문 붙여넣기)</div>
+
+<div class="prompt" data-label="⑨ 임원취임 승인">이사 2명이 임기만료로 중임되고 감사 1명이 새로 취임해. 임원취임 승인 신청 서류 일체 만들어줘. (임원 인적사항 붙여넣기)</div>
+
+<div class="prompt" data-label="⑩ 결산 보고 — 연례 의무">2026 회계연도 사업실적 및 결산서 제출 서류를 만들어줘.
+(결산 숫자·사업 실적 메모 붙여넣기)
+자체 체크리스트도 같이 점검해줘.</div>
+
+<div class="prompt" data-label="⑫ 회의록 — 메모/녹취 → 정식 회의록">아래 이사회 녹취 메모를 정식 이사회 회의록으로 만들어줘.
+안건은 '2027년도 사업계획 및 예산 승인의 건'이야.
+(메모 붙여넣기)</div>
+
+<div class="tip"><b>연계 업무도 한 번에.</b> "기본재산을 처분하고 정관도 바꿔야 해"처럼 요청하면 처분 허가 → 정관변경 허가의 <b>연계 절차 순서</b>대로 서류를 묶어 안내합니다.</div>
+</section>
+
+<!-- ═══════ 5 ═══════ -->
+<section>
+<h2>5. 산출물 형태와 공통 규칙</h2>
+<ul>
+  <li><b>문체</b>: 지침서와 동일한 개조식 계층(□ 대분류 → ○ 세부 → － 상세)을 유지합니다.</li>
+  <li><b>날짜</b>: <code>2026. 7. 30.</code> 형식. "다음 주 화요일" 같은 상대 날짜는 절대 날짜로 환산합니다.</li>
+  <li><b>날인·간인</b>: 서명 위치는 <code>(인)</code>으로 표시되고, 인감증명서 첨부·간인 필요 여부는 체크리스트에 표시됩니다.</li>
+  <li><b>금액 검산</b>: 수지예산서 등 표의 합계를 자동 검산합니다(단위: 지침서 표기 기준, 대부분 천원).</li>
+  <li><b>파일 변환</b>: 요청 시 .docx(워드)·.hwpx(한글) 파일로 저장해 드립니다.</li>
+</ul>
+<div class="note"><b>법적 한계 고지.</b> 모든 산출물은 「2026 공익법인 실무지침서」(2025. 12. 1. 기준)를 근거로 하며, 이후 법령 개정으로 달라질 수 있습니다. 제출 전 관할 교육청 담당자 확인과 국가법령정보센터(law.go.kr) 최신 법령 확인이 필요합니다. 서식 자동 작성은 행정 편의를 위한 것으로 법률 자문이 아닙니다.</div>
+</section>
+
+<!-- ═══════ 6 ═══════ -->
+<section>
+<h2>6. 스킬 구조 (관리·수정용)</h2>
+<div class="tree">~/.claude/skills/gongik-seosik/
+├─ SKILL.md                      ← 업무 라우팅 표 + 작업 절차 + 공통 규칙
+├─ 사용법.html                   ← 이 문서
+└─ references/                   ← 업무별 서식 패키지 (총 129종, 344KB)
+   ├─ 01-법인설립허가.md          (21종)
+   ├─ 02-해산청산.md              (7종)
+   ├─ 03-기본재산처분.md          (5종)
+   ├─ 04-기본재산담보차입.md      (11종)
+   ├─ 05-기부금사용승인.md        (5종)
+   ├─ 06-보통재산편입.md          (8종)
+   ├─ 07-수익사업승인.md          (15종)
+   ├─ 08-정관변경.md              (10종)
+   ├─ 09-임원관리.md              (19종)
+   ├─ 10-예산결산보고.md          (15종)
+   ├─ 11-규정예시-장학학술.md     (8종)
+   ├─ 12-이사회총회회의록.md      (4종 + 민원처리기준)
+   └─ 13-허가증갱신재교부.md      (1종)</div>
+<ul>
+  <li>각 레퍼런스는 <b>절차 개요 → 제출서류 체크리스트 → 서식별 템플릿·작성방법</b> 3부 구성입니다. 템플릿의 <code>{플레이스홀더}</code>가 질문 항목이 됩니다.</li>
+  <li>서식을 법인 실정에 맞게 고치고 싶으면 해당 <code>references/*.md</code> 파일을 직접 수정하면 됩니다(예: 법인명·부서명 기본값 박아두기).</li>
+  <li>레퍼런스에 없는 세부 기준(허가 심사기준, 세법 연계 등)을 물으면 스킬이 원본 PDF의 해당 쪽을 직접 읽어 답합니다.</li>
+</ul>
+</section>
+
+<footer>
+  본 스킬은 서울특별시교육청 「2026 공익법인 실무지침서」(403쪽, 2025. 12. 1. 기준)의 수록 서식 전체를 구조화한 것입니다.
+  텍스트 추출이 불가한 정부 별지서식 등은 PDF 원본 페이지 대조로 복원했습니다. · 작성일 2026. 7. 30.
+</footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><title>대량의 파티클 은하 · Galaxy Particles</title>
+<link rel="stylesheet" href="../../lib/stage.css">
+<style>
+.frame{background:#0b1012 !important;background-image:none !important}
+.scene{position:absolute;inset:0;overflow:hidden;font-family:Pretendard,'Noto Sans KR',sans-serif;color:#e9f1ef;letter-spacing:-.01em}
+.bg{position:absolute;inset:0;background:radial-gradient(55% 75% at 12% -5%,#15493e 0%,rgba(21,73,62,0) 70%),radial-gradient(55% 75% at 105% 105%,#2c2257 0%,rgba(44,34,87,0) 70%),#0b1012}
+.tag{position:absolute;display:flex;gap:8px;align-items:center;font:600 12px/1 'IBM Plex Mono',monospace;letter-spacing:.12em;color:#9fb3ae;text-transform:uppercase;white-space:nowrap}
+.tag b{background:#3ee6a8;color:#06231a;padding:3px 6px;border-radius:4px;font-weight:700}
+.panel{position:absolute;background:rgba(18,26,28,.82);border:1px solid rgba(255,255,255,.09);border-radius:12px}
+.code{font:13px/1.75 'IBM Plex Mono',monospace;color:#b9c9c4;white-space:pre}
+.chip{position:absolute;padding:7px 14px;border-radius:999px;border:1px solid rgba(62,230,168,.45);color:#bff5df;font:600 14px/1 Pretendard;background:rgba(62,230,168,.08);white-space:nowrap}
+.mint{color:#3ee6a8}.red{color:#ff5d4f}
+
+#gl{position:absolute;inset:0;width:1280px;height:720px}
+.big{position:absolute;left:0;right:0;bottom:70px;text-align:center;font:800 40px/1.2 Pretendard;text-shadow:0 2px 24px #000}
+.cnt{position:absolute;right:64px;top:52px;font:600 16px 'IBM Plex Mono';color:#cfdcd8}
+</style></head>
+<body data-no="W08" data-cat="기술 · WEBGL" data-ko="대량의 파티클 은하" data-en="Galaxy Particles" data-meta="9초 · 점 6만 개를 GPU로" data-dur="9" data-poster="7" data-size="1280x720">
+<main class="scene">
+  <canvas id="gl"></canvas>
+  <div class="tag" style="left:64px;top:52px"><b>05</b>WEBGL · THREE.JS POINTS</div>
+  <div class="cnt">particles <span id="n" class="mint">0</span></div>
+  <div class="big">대량의 <span class="mint">파티클</span>까지</div>
+</main>
+<script src="three.min.js"></script>
+<script src="../../lib/gsap.min.js"></script><script src="../../lib/stage.js"></script>
+<script>
+const r = Motion.rand(8), DPR = window.devicePixelRatio || 1, N = 60000, ARMS = 3;
+const renderer = new THREE.WebGLRenderer({canvas: document.getElementById('gl'), antialias: true, preserveDrawingBuffer: true});
+renderer.setPixelRatio(DPR); renderer.setSize(1280, 720, false);
+const scene = new THREE.Scene(); scene.background = new THREE.Color('#06090b');
+const cam = new THREE.PerspectiveCamera(50, 1280 / 720, .1, 200);
+const pos = new Float32Array(N * 3), col = new Float32Array(N * 3), cIn = new THREE.Color('#e9fff6'), cOut = new THREE.Color('#8b7bff'), cMid = new THREE.Color('#3ee6a8');
+for (let i = 0; i < N; i++) {
+  const rad = Math.pow(r(), 1.6) * 9, br = (i % ARMS) / ARMS * Math.PI * 2, spin = rad * .9;
+  const rp = () => Math.pow(r(), 3) * (r() < .5 ? 1 : -1) * .55 * (1 + rad * .15);
+  pos[i * 3] = Math.cos(br + spin) * rad + rp(); pos[i * 3 + 1] = rp() * .5; pos[i * 3 + 2] = Math.sin(br + spin) * rad + rp();
+  const c = rad < 4 ? cIn.clone().lerp(cMid, rad / 4) : cMid.clone().lerp(cOut, (rad - 4) / 5);
+  col[i * 3] = c.r; col[i * 3 + 1] = c.g; col[i * 3 + 2] = c.b;
+}
+const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.BufferAttribute(pos, 3)); geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
+// 둥근 점 텍스처(코드로 그림). size는 월드 단위라 해상도(DPR)를 곱하지 않는다 — 곱하면 4K에서 점이 3배로 뭉친다.
+const dc = document.createElement('canvas'); dc.width = dc.height = 64; const dg = dc.getContext('2d'), rg = dg.createRadialGradient(32, 32, 0, 32, 32, 32);
+rg.addColorStop(0, 'rgba(255,255,255,1)'); rg.addColorStop(.4, 'rgba(255,255,255,.6)'); rg.addColorStop(1, 'rgba(255,255,255,0)'); dg.fillStyle = rg; dg.fillRect(0, 0, 64, 64);
+const pts = new THREE.Points(geo, new THREE.PointsMaterial({size: .05, map: new THREE.CanvasTexture(dc), vertexColors: true, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending}));
+scene.add(pts);
+const st = {t: 0, shown: 0};
+function draw() {
+  geo.setDrawRange(0, Math.floor(st.shown));
+  pts.rotation.y = st.t * .25;
+  const k = Math.min(1, st.t / 6), e = 1 - Math.pow(1 - k, 3);
+  cam.position.set(0, 14 - 8 * e, 16 - 4 * e); cam.lookAt(0, 0, 0);
+  renderer.render(scene, cam);
+  document.getElementById('n').textContent = Math.floor(st.shown).toLocaleString();
+}
+const tl = Motion.timeline();
+tl.to(st, {t: 9, duration: 9, ease: 'none', onUpdate: draw}, 0);
+tl.to(st, {shown: N, duration: 3.2, ease: 'power2.in'}, .2);
+tl.from('.big', {y: 24, autoAlpha: 0, duration: .7}, 3.6);
+draw();
+Motion.ready();
+</script></body></html>

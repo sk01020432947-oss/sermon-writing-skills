@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WIRED Deck</title>
+<!-- WiredDisplay(고대비 좁은 세리프)·BreveText·Apercu는 사유 폰트.
+     대체: 디스플레이=Playfair Display, 본문 세리프=Source Serif 4, 산세=Inter.
+     한글은 본문 Noto Serif KR / UI Pretendard. -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&family=Inter:wght@400;700&family=Noto+Serif+KR:wght@400;700&display=swap">
+<style>
+:root{
+  --ink:#000; --ink-soft:#1a1a1a; --body:#757575;
+  --hairline:#e0e0e0; --canvas:#fff; --canvas-soft:#f5f5f5;
+  --link:#057dbc;          /* 본문 링크에만. 유일한 유채색 */
+  /* ── 타입 (원본 × 2) ── */
+  --hero:128px; --d-lg:96px; --d-md:64px; --d-sm:52px; --d-xs:40px;
+  --serif-lg:38px; --serif-md:32px;
+  --sans-md:34px; --sans-sm:28px; --byline:25px; --cap:24px; --btn:32px;
+  /* ── 여백 (× 2) ── */
+  --xxs:4px; --xs:8px; --sm:16px; --md:24px; --lg:32px; --xl:40px; --xxl:48px;
+  --x3:64px; --x4:96px;
+  --pad:80px;
+  --f-disp:"WiredDisplay","Playfair Display","Noto Serif KR",Georgia,serif;
+  --f-serif:"BreveText","Source Serif 4","Noto Serif KR",Georgia,serif;
+  --f-sans:"Apercu","Inter","Pretendard Variable",Helvetica,Arial,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;border-radius:0}   /* 각진 모서리는 협상 대상이 아니다 */
+html,body{height:100%;background:#000;overflow:hidden}
+body{font-family:var(--f-serif);color:var(--ink);-webkit-font-smoothing:antialiased}
+
+#stage{position:absolute;top:50%;left:50%;width:1920px;height:1080px;
+  transform:translate(-50%,-50%) scale(var(--scale,1));transform-origin:center;background:var(--canvas)}
+.slide{position:absolute;inset:0;display:none;background:var(--canvas);
+  padding:var(--xxl) var(--pad);overflow:hidden}
+.slide.active{display:flex;flex-direction:column}
+.slide.soft{background:var(--canvas-soft)}
+.slide.black{background:var(--ink);color:var(--canvas)}
+.slide.black .body,.slide.black p{color:#c9c9c9}
+
+/* ═════ 마스트헤드 밴드 ═════ */
+.masthead{display:flex;align-items:center;justify-content:space-between;
+  padding-bottom:var(--md);border-bottom:2px solid var(--ink)}
+.wordmark{font-family:var(--f-disp);font-size:var(--d-xs);font-weight:700;letter-spacing:6px;
+  text-transform:uppercase}
+.mast-nav{display:flex;gap:var(--lg);font-family:var(--f-sans);font-size:var(--sans-sm);
+  font-weight:700;letter-spacing:.8px}
+
+/* ═════ 타이포 — 디스플레이는 세리프 400. 굵게 만들지 않는다 ═════ */
+h1{font-family:var(--f-disp);font-size:var(--hero);font-weight:400;line-height:.93;
+  letter-spacing:-1px}
+h2{font-family:var(--f-disp);font-size:var(--d-lg);font-weight:400;line-height:1.05;
+  letter-spacing:-.8px}
+h3{font-family:var(--f-disp);font-size:var(--d-md);font-weight:400;line-height:1.1;
+  letter-spacing:-.6px}
+h4{font-family:var(--f-disp);font-size:var(--d-sm);font-weight:400;line-height:1.08}
+/* 원본 행간(0.93~1.05)은 라틴 기준이다. 한글은 받침이 윗줄에 물리므로 .ko를 붙인다 */
+h1.ko{line-height:1.06}
+h2.ko{line-height:1.14}
+h3.ko,.q.ko{line-height:1.18}
+.eyebrow{font-family:var(--f-sans);font-size:var(--sans-sm);font-weight:700;letter-spacing:.8px;
+  text-transform:uppercase;margin-bottom:var(--md)}
+.lead{font-family:var(--f-serif);font-size:var(--serif-lg);line-height:1.47;letter-spacing:.216px;
+  max-width:30em}
+p{font-family:var(--f-serif);font-size:var(--serif-md);line-height:1.5;letter-spacing:.18px;
+  max-width:34em}
+.sans{font-family:var(--f-sans);font-size:var(--sans-md);line-height:1.18}
+.sans-b{font-family:var(--f-sans);font-size:var(--sans-md);font-weight:700;line-height:1.29;
+  letter-spacing:-.288px}
+.byline{font-family:var(--f-serif);font-size:var(--byline);font-weight:700;letter-spacing:.216px;
+  color:var(--body)}
+.cap{font-family:var(--f-sans);font-size:var(--cap);line-height:1.33;color:var(--body)}
+a.link{color:var(--link);text-decoration:underline}
+b,strong{font-weight:700}
+
+/* ═════ 버튼 — 0px. 둥글게 만들지 않는다 ═════ */
+.btns{display:flex;gap:var(--sm);margin-top:var(--xl);flex-wrap:wrap;align-items:center}
+.btn{display:inline-flex;align-items:center;justify-content:center;background:var(--ink);
+  color:var(--canvas);font-family:var(--f-sans);font-size:var(--btn);font-weight:700;
+  letter-spacing:.6px;padding:24px 40px;text-decoration:none}
+.btn.outline{background:var(--canvas);color:var(--ink);border:1px solid var(--ink)}
+.black .btn{background:var(--canvas);color:var(--ink)}
+.black .btn.outline{background:transparent;color:var(--canvas);border-color:var(--canvas)}
+.icon{width:72px;height:72px;border-radius:9999px;background:var(--canvas);
+  border:1px solid var(--ink);display:inline-flex;align-items:center;justify-content:center;
+  font-size:28px}   /* 원형은 아이콘 컨테이너에만 */
+
+/* ═════ 스토리 행 — 1px 헤어라인 구분 ═════ */
+.rows{margin-top:var(--lg);flex:1;display:flex;flex-direction:column;justify-content:center}
+.row{display:flex;gap:var(--x3);align-items:baseline;padding:var(--lg) 0;
+  border-bottom:1px solid var(--hairline)}
+.row:first-child{border-top:1px solid var(--hairline)}
+.row .no{flex:0 0 100px;font-family:var(--f-sans);font-size:var(--sans-md);font-weight:700;
+  color:var(--body)}
+.row .k{flex:1}
+.row .k .t{font-family:var(--f-disp);font-size:var(--d-sm);font-weight:400;line-height:1.08}
+.row .k .d{font-family:var(--f-serif);font-size:var(--serif-md);color:var(--body);margin-top:var(--xs)}
+.row .n{flex:0 0 auto;font-family:var(--f-disp);font-size:var(--d-md);font-weight:400}
+
+/* ═════ 스토리 카드 — 그림자 없음 ═════ */
+.cards{display:grid;grid-template-columns:repeat(var(--cols,3),1fr);gap:var(--x3);margin-top:var(--lg)}
+.card{display:flex;flex-direction:column;gap:var(--sm)}
+.card .shot{aspect-ratio:3/2;background:var(--img,var(--canvas-soft)) center/cover no-repeat}
+.card .t{font-family:var(--f-disp);font-size:var(--d-sm);font-weight:400;line-height:1.08}
+.card p{font-size:var(--serif-md);color:var(--body);max-width:none}
+
+/* ═════ 2단 ═════ */
+.two{display:flex;gap:var(--x4);align-items:center;flex:1}
+.two>.tx{flex:0 0 46%}
+.two>.vis{flex:1;min-width:0}
+.photo{aspect-ratio:4/5;background:var(--img,var(--canvas-soft)) center/cover no-repeat}
+
+/* ═════ 인용 ═════ */
+.pull{border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);padding:var(--xxl) 0;
+  margin:var(--lg) 0}
+.pull .q{font-family:var(--f-disp);font-size:var(--d-lg);font-weight:400;line-height:1.05;
+  letter-spacing:-.8px}
+
+/* ═════ 표 ═════ */
+table.w{width:100%;border-collapse:collapse;font-family:var(--f-sans);font-size:var(--sans-sm)}
+table.w th{text-align:left;font-weight:700;letter-spacing:.8px;text-transform:uppercase;
+  padding:var(--sm) var(--md);border-bottom:2px solid var(--ink)}
+table.w td{padding:var(--md);border-bottom:1px solid var(--hairline)}
+table.w td.n{font-family:var(--f-disp);font-size:var(--d-xs);font-weight:400;text-align:right}
+
+/* ═════ 푸터 ═════ */
+.foot{margin-top:auto;background:var(--ink);color:var(--canvas);
+  margin-left:calc(var(--pad) * -1);margin-right:calc(var(--pad) * -1);
+  margin-bottom:calc(var(--xxl) * -1);padding:var(--xxl) var(--pad)}
+.foot .cols{display:flex;gap:var(--x4)}
+.foot .h{font-family:var(--f-sans);font-size:var(--sans-sm);font-weight:700;letter-spacing:.8px;
+  text-transform:uppercase;margin-bottom:var(--sm)}
+.foot a{display:block;font-family:var(--f-sans);font-size:var(--cap);color:#c9c9c9;
+  text-decoration:none;line-height:2}
+
+/* ═════ 모션 — 지면이 넘어가듯 짧게 ═════ */
+.in{opacity:0}
+.active .in{animation:rise .5s cubic-bezier(.2,.7,.2,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.active .d1{animation-delay:.04s}.active .d2{animation-delay:.13s}.active .d3{animation-delay:.22s}
+.active .d4{animation-delay:.31s}.active .d5{animation-delay:.40s}.active .d6{animation-delay:.49s}
+
+#nav{position:fixed;right:24px;bottom:18px;font-family:var(--f-sans);font-size:15px;
+  font-weight:700;color:#9a9a9a;z-index:99}
+#nav .hint{margin-right:16px;color:#c9c9c9}
+body.notes #nav{bottom:auto;top:18px}
+
+/* ═════ 발표자 노트 — S 토글. 좌우 여백 = 본문 끝선(--pad 80px) ═════ */
+body.notes #stage{top:0;transform:translateX(-50%) scale(var(--scale,1));transform-origin:top center}
+#notes{position:fixed;left:0;right:0;bottom:0;max-height:40vh;overflow:auto;display:none;
+  background:var(--canvas-soft);border-top:2px solid var(--ink);z-index:100;
+  padding:20px var(--npad,30px) 26px}
+body.notes #notes{display:block}
+#notes .nlab{font-family:var(--f-sans);font-size:13px;font-weight:700;letter-spacing:.8px;
+  text-transform:uppercase;color:var(--ink);margin-bottom:10px}
+#notes .ntext{font-family:var(--f-serif);font-size:18px;line-height:1.65;color:var(--ink-soft)}
+#notes .ntext b{font-weight:700}
+#notes .ntext span{color:var(--body)}
+
+@media print{
+  html,body,#stage{overflow:visible;position:static;transform:none;width:auto;height:auto}
+  .slide{display:flex!important;position:relative;width:1920px;height:1080px;page-break-after:always}
+  .in{animation:none!important;opacity:1!important;transform:none!important}
+  #nav,#notes{display:none!important}
+}
+</style>
+</head>
+<body>
+<div id="stage">
+
+<!-- ═════ W1. 커버 — 마스트헤드 + 거대 세리프 헤드라인 ═════ -->
+<section class="slide" data-note="여는 장. <b>디스플레이 세리프는 언제나 weight 400</b>이다 — 굵게 만들면 잡지의 격이 사라진다(스펙 금지 항목).<br>마스트헤드 아래 2px 검정 규칙선이 지면의 시작을 알린다.">
+  <div class="masthead in d1">
+    <div class="wordmark">Deck</div>
+    <div class="mast-nav"><span>주제</span><span>자료</span><span>연락</span></div>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center">
+    <div class="eyebrow in d2">커버 스토리</div>
+    <h1 class="ko in d3">한 문장으로<br>쓴다</h1>
+    <div class="lead in d4" style="margin-top:var(--lg)">
+      리드 문단은 세리프 19px(덱 38px)에 행간 1.47이다. 잡지 리드처럼 두세 줄로 문을 연다.</div>
+    <div class="byline in d5" style="margin-top:var(--md)">글 · 발표자 　|　 2026-07-27</div>
+  </div>
+</section>
+
+<!-- ═════ W2. 스토리 행 목록 ═════ -->
+<section class="slide" data-note="목차·항목 나열. <b>1px 헤어라인(#e0e0e0)</b>으로만 행을 나눈다. 카드로 감싸거나 그림자를 넣지 않는다.">
+  <div class="masthead in d1">
+    <div class="wordmark">Deck</div><div class="mast-nav"><span>목차</span></div>
+  </div>
+  <div class="rows">
+    <div class="row in d2"><div class="no">01</div>
+      <div class="k"><div class="t">첫 번째 주제</div><div class="d">부제를 한 줄로 적는다</div></div>
+      <div class="n">04</div></div>
+    <div class="row in d3"><div class="no">02</div>
+      <div class="k"><div class="t">두 번째 주제</div><div class="d">부제를 한 줄로 적는다</div></div>
+      <div class="n">11</div></div>
+    <div class="row in d4"><div class="no">03</div>
+      <div class="k"><div class="t">세 번째 주제</div><div class="d">부제를 한 줄로 적는다</div></div>
+      <div class="n">19</div></div>
+  </div>
+</section>
+
+<!-- ═════ W3. 2단 — 사진 + 리드 ═════ -->
+<section class="slide" data-note="기사 본문형. 세로 4:5 사진과 세리프 본문을 나란히 둔다. 사진에 그림자·라운딩을 넣지 않는다.">
+  <div class="two">
+    <div class="tx">
+      <div class="eyebrow in d1">리포트</div>
+      <h2 class="ko in d2">본문은<br>세리프로 읽힌다</h2>
+      <p class="in d3" style="margin-top:var(--lg)">
+        본문 세리프는 16px(덱 32px)에 행간 1.5다. 이 시스템에서 산세리프는 내비·버튼·메타데이터에만
+        쓰고, 읽는 글은 전부 세리프다. 인라인 <a class="link">링크는 파랑</a>으로 표시한다.</p>
+      <div class="byline in d4" style="margin-top:var(--md)">사진 · 출처 표기</div>
+    </div>
+    <div class="vis"><div class="photo in d2"></div></div>
+  </div>
+</section>
+
+<!-- ═════ W4. 인용 — 위아래 2px 규칙선 ═════ -->
+<section class="slide" data-note="풀쿼트. 위아래 <b>2px 검정 규칙선</b>으로 가둔다. 이 시스템에서 인용은 색이나 배경이 아니라 선으로 표시한다.">
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center">
+    <div class="pull in d1">
+      <div class="q ko">인용문은 디스플레이 세리프로<br>두세 줄까지 놓는다.</div>
+    </div>
+    <div class="byline in d2">— 인용 출처, 직함</div>
+  </div>
+</section>
+
+<!-- ═════ W5. 스토리 카드 3-up ═════ -->
+<section class="slide" data-note="카드 3-up. 카드는 배경도 테두리도 없다 — 사진 + 제목 + 부제만 놓는다. <b>그림자를 넣지 말라</b>는 것이 스펙의 명시 금지 항목이다.">
+  <div class="masthead in d1">
+    <div class="wordmark">Deck</div><div class="mast-nav"><span>모음</span></div>
+  </div>
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center">
+    <h3 class="in d2">세 가지 이야기</h3>
+    <div class="cards" style="--cols:3">
+      <div class="card in d3"><div class="shot"></div>
+        <div class="eyebrow" style="margin:0">분류</div>
+        <div class="t">첫 번째 제목</div><p>부제를 두 줄까지.</p></div>
+      <div class="card in d4"><div class="shot"></div>
+        <div class="eyebrow" style="margin:0">분류</div>
+        <div class="t">두 번째 제목</div><p>부제를 두 줄까지.</p></div>
+      <div class="card in d5"><div class="shot"></div>
+        <div class="eyebrow" style="margin:0">분류</div>
+        <div class="t">세 번째 제목</div><p>부제를 두 줄까지.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════ W6. 데이터 표 ═════ -->
+<section class="slide soft" data-note="표. 헤더는 산세리프 대문자, 수치는 디스플레이 세리프다. 이 대비가 잡지 인포그래픽의 문법이다.">
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center">
+    <div class="eyebrow in d1">데이터</div>
+    <h3 class="in d2" style="margin-bottom:var(--lg)">숫자로 본다</h3>
+    <table class="w in d3">
+      <tr><th style="width:26%">항목</th><th>설명</th><th style="text-align:right">값</th></tr>
+      <tr><td class="sans-b">항목 A</td><td>설명을 한 줄로 적는다</td><td class="n">480</td></tr>
+      <tr><td class="sans-b">항목 B</td><td>설명을 한 줄로 적는다</td><td class="n">550</td></tr>
+      <tr><td class="sans-b">항목 C</td><td>설명을 한 줄로 적는다</td><td class="n">727</td></tr>
+    </table>
+    <div class="cap in d4" style="margin-top:var(--md)">출처 · 조사 기간 · 표본</div>
+  </div>
+</section>
+
+<!-- ═════ W7. 검정 밴드 — 전면 반전 ═════ -->
+<section class="slide black" data-note="검정 전면. 이 시스템에서 검정은 <b>워드마크·CTA·푸터</b>의 색이다. 전면 검정 장은 전체에서 1~2회, 챕터 전환에 쓴다.">
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center">
+    <div class="eyebrow in d1">전환</div>
+    <h2 class="ko in d2">여기서 한 번<br>끊는다</h2>
+    <p class="in d3" style="margin-top:var(--lg);color:#c9c9c9">문장 하나만 남긴다.</p>
+    <div class="btns in d4"><a class="btn">계속 읽기</a><a class="btn outline">건너뛰기</a></div>
+  </div>
+</section>
+
+<!-- ═════ W8. 클로징 — 검정 푸터 ═════ -->
+<section class="slide" data-note="닫는 장. 푸터는 <b>검정 채움</b>이다. 본문은 흰 지면, 푸터는 검정 — 이 대비로 지면을 닫는다.">
+  <div style="flex:1;display:flex;flex-direction:column;justify-content:center">
+    <div class="eyebrow in d1">다음 단계</div>
+    <h2 class="in d2">무엇을 할 것인가</h2>
+    <p class="in d3" style="margin-top:var(--lg)">청중이 취할 행동 하나만 남긴다.</p>
+    <div class="btns in d4"><a class="btn">시작하기</a><a class="btn outline">문의하기</a></div>
+  </div>
+  <div class="foot in d5">
+    <div class="cols">
+      <div><div class="h">자료</div><a>발표 슬라이드</a><a>참고 문서</a></div>
+      <div><div class="h">연락</div><a>이메일</a><a>일정</a></div>
+      <div><div class="h">출처</div><a>원자료</a><a>라이선스</a></div>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<div id="nav"><span class="hint">S NOTES</span><span id="navPage"></span></div>
+<div id="notes"><div class="nlab">Speaker notes</div><div class="ntext" id="noteText"></div></div>
+
+<script>
+const slides=[...document.querySelectorAll('.slide')];
+let cur=-1;
+const navPage=document.getElementById('navPage');
+const noteText=document.getElementById('noteText');
+function show(n){
+  cur=Math.max(0,Math.min(slides.length-1,n));
+  slides.forEach((s,i)=>s.classList.toggle('active',i===cur));
+  navPage.textContent=(cur+1)+' / '+slides.length;
+  noteText.innerHTML=slides[cur].dataset.note||'<span>이 장에는 노트가 없습니다.</span>';
+}
+addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key===' ')show(cur+1);
+  else if(e.key==='ArrowLeft')show(cur-1);
+  else if(e.key==='Home')show(0);
+  else if(e.key==='End')show(slides.length-1);
+  else if(e.key==='s'||e.key==='S'){document.body.classList.toggle('notes');fit();}
+});
+addEventListener('click',e=>{
+  if(e.target.closest('#notes'))return;
+  if(e.clientX<innerWidth/2)show(cur-1);else show(cur+1);
+});
+let tx=null;
+addEventListener('touchstart',e=>tx=e.touches[0].clientX);
+addEventListener('touchend',e=>{if(tx===null)return;
+  const dx=e.changedTouches[0].clientX-tx;
+  if(dx<-40)show(cur+1);else if(dx>40)show(cur-1);tx=null});
+function fit(){
+  const avail=document.body.classList.contains('notes')?innerHeight*.58:innerHeight;
+  const s=Math.min(innerWidth/1920,avail/1080);
+  document.getElementById('stage').style.setProperty('--scale',s);
+  document.documentElement.style.setProperty('--npad',
+    Math.round((innerWidth-1920*s)/2+80*s)+'px');
+}
+addEventListener('resize',fit);addEventListener('load',fit);fit();
+const _h=parseInt(location.hash.slice(1));show(isNaN(_h)?0:_h-1);
+addEventListener('hashchange',()=>{const n=parseInt(location.hash.slice(1));if(!isNaN(n))show(n-1)});
+if(location.search.indexOf('shot')>-1)document.getElementById('nav').style.display='none';
+</script>
+</body>
+</html>

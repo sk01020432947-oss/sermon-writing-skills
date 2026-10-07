@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nintendo 2001 Deck</title>
+<!-- 원본은 웹폰트가 없다(Arial/Helvetica). 한글 글리프가 없으므로 Pretendard만 폴백으로 싣는다.
+     10~11px 미세 라벨에 시대감을 더하려면 Silkscreen을 쓴다. -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Silkscreen&display=swap">
+<style>
+:root{
+  --red:#e60012; --signal:#f68d1f; --amber:#ecab37; --gold:#e48600;   /* 따뜻한 색 = 길찾기 전용 */
+  --canvas:#7a8aba; --sky:#9fbee7; --lavender:#acace7; --ice:#c0d5e6; --peri:#8ba1d4;
+  --indigo:#3d4f97; --muted-indigo:#60619c; --platinum:#dedede; --surface:#fff;
+  --carbon:#21242e; --hairline:#5a5f8c;
+  --ink:#21242e; --ink-soft:#3d4f97; --on-primary:#fff;
+  --teal:#206479; --games-red:#a7282b;
+  /* ── 타입 (원본 × 2. 이 시대의 밀도가 정체성이므로 크게 부풀리지 않는다) ── */
+  --display:88px; --tagline:30px; --nav:26px; --label:22px; --link:24px; --body:24px; --micro:20px;
+  /* ── 여백 (× 2) ── */
+  --xxs:4px; --xs:8px; --sm:16px; --md:24px; --lg:32px; --xl:48px; --xxl:64px; --sec:96px;
+  --pad:56px;
+  /* ── 라운딩 (× 2) ── */
+  --r-xs:4px; --r-sm:8px; --r-md:12px; --r-lg:20px; --full:9999px;
+  --f:Arial,Helvetica,"Pretendard Variable",sans-serif;
+  --f-pixel:"Silkscreen",monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;background:#000;overflow:hidden}
+body{font-family:var(--f);color:var(--ink);-webkit-font-smoothing:antialiased}
+
+#stage{position:absolute;top:50%;left:50%;width:1920px;height:1080px;
+  transform:translate(-50%,-50%) scale(var(--scale,1));transform-origin:center;
+  background:var(--canvas)}
+.slide{position:absolute;inset:0;display:none;overflow:hidden;
+  background:linear-gradient(180deg,#93a3cc 0%,#7a8aba 42%,#6e7ead 100%)}
+.slide.active{display:flex;flex-direction:column}
+.slide.dark{background:var(--carbon)}
+
+/* ═════ 베벨 플레이트 — 모든 영역은 사출 성형된 판이다 ═════ */
+/* 위쪽 밝은 모서리 + 아래 크롬인디고 그림자선. 흐린 드롭섀도는 쓰지 않는다 */
+.plate{background:linear-gradient(180deg,#9aa9d0 0%,#8494c2 40%,#7989b6 100%);
+  border-top:3px solid rgba(255,255,255,.6);border-left:3px solid rgba(255,255,255,.32);
+  border-right:3px solid var(--indigo);border-bottom:4px solid var(--indigo);
+  border-radius:var(--r-md);padding:var(--md)}
+.plate.flat{border-radius:0}
+.plate.light{background:linear-gradient(180deg,#cfe0f2 0%,#c0d5e6 100%)}
+.plate.lav{background:linear-gradient(180deg,#bebee9 0%,#acace7 100%)}
+.plate.white{background:var(--surface);border-top-color:#fff}
+.plate.platinum{background:linear-gradient(180deg,#efefef,#dedede)}
+.plate.teal{background:linear-gradient(180deg,#2a7d95 0%,#206479 100%);color:#fff}
+.plate.red{background:linear-gradient(180deg,#c33033 0%,#a7282b 100%);color:#fff}
+.plate.carbon{background:linear-gradient(180deg,#2c3040,#21242e);color:#fff;
+  border-top-color:rgba(255,255,255,.18)}
+
+/* ═════ 듀얼 내비 — 두 줄 구조가 서명이다. 한 줄로 합치지 않는다 ═════ */
+.nav1{height:56px;background:var(--carbon);display:flex;align-items:center;
+  justify-content:center;gap:var(--lg);position:relative}
+.nav1 a{font-size:var(--nav);font-weight:700;letter-spacing:1px;text-transform:uppercase;
+  color:var(--gold);text-decoration:none}
+.logo-pill{background:var(--surface);color:var(--red);border-radius:var(--full);
+  padding:8px 32px;font-size:var(--nav);font-weight:700;letter-spacing:1px}
+.nav2{height:44px;background:linear-gradient(180deg,#8ba1d4,#7788b8);
+  border-bottom:3px solid var(--indigo);border-top:2px solid rgba(255,255,255,.45);
+  display:flex;align-items:center;gap:var(--md);padding:0 var(--pad)}
+.nav2 span{font-size:var(--label);font-weight:700;letter-spacing:1px;text-transform:uppercase;
+  color:var(--ink-soft)}
+.nav2 span.on{color:var(--ink)}
+
+/* ═════ 타이포 — 대문자 Arial Bold + 0.5px 트래킹이 실크스크린 표기 목소리 ═════ */
+.stage-body{flex:1;padding:var(--lg) var(--pad) var(--md);display:flex;flex-direction:column;
+  gap:var(--md);min-height:0}
+h1{font-size:var(--display);font-weight:900;line-height:1.02;text-transform:uppercase;
+  color:#fff;text-shadow:3px 3px 0 var(--indigo)}   /* 아웃라인 워드마크 */
+h1.ko{line-height:1.14}
+h2{font-size:calc(var(--display) * .58);font-weight:900;line-height:1.1;text-transform:uppercase}
+.tagline{font-size:var(--tagline);font-weight:700;line-height:1.3}
+.label{font-size:var(--label);font-weight:700;letter-spacing:1px;text-transform:uppercase}
+p{font-size:var(--body);font-weight:400;line-height:1.4;max-width:40em}
+a.link,.link{font-size:var(--link);font-weight:700;line-height:1.4;color:var(--ink-soft);
+  text-decoration:none}
+.micro{font-size:var(--micro);line-height:1.3}
+.pixel{font-family:var(--f-pixel);font-size:var(--micro)}
+b,strong{font-weight:700}
+
+/* ═════ 섹션 라벨 바 ═════ */
+.labelbar{background:linear-gradient(180deg,#8ba1d4,#7382b4);border-top:2px solid rgba(255,255,255,.5);
+  border-bottom:3px solid var(--indigo);padding:8px var(--md);display:flex;
+  justify-content:space-between;align-items:center;border-radius:var(--r-sm) var(--r-sm) 0 0}
+
+/* ═════ 버튼 — 따뜻한 색은 '여기를 눌러라'라는 뜻일 때만 ═════ */
+.btns{display:flex;gap:var(--sm);flex-wrap:wrap;align-items:center}
+.btn{display:inline-flex;align-items:center;gap:10px;background:linear-gradient(180deg,#f2bc55,#ecab37);
+  color:var(--carbon);font-size:var(--label);font-weight:700;letter-spacing:1px;
+  text-transform:uppercase;padding:14px 28px;border-radius:var(--r-xs);
+  border-top:2px solid rgba(255,255,255,.7);border-bottom:3px solid #b07d17;text-decoration:none}
+.btn.submit{background:linear-gradient(180deg,#ff9f3a,#f68d1f);color:#fff;border-bottom-color:#b2600f}
+.btn.sec{background:linear-gradient(180deg,#2c3040,#21242e);color:#fff;
+  border-top-color:rgba(255,255,255,.2);border-bottom-color:#000}
+.arrow{width:44px;height:44px;border-radius:var(--full);background:var(--amber);color:var(--carbon);
+  display:inline-flex;align-items:center;justify-content:center;font-weight:900;font-size:22px}
+
+/* ═════ 뉴스 행 — platinum 판 + 우측 셰브런 칩 ═════ */
+/* 2001 레이아웃은 화면을 가득 채운다. 판과 행이 남은 높이를 나눠 갖게 한다 */
+.rows{display:flex;flex-direction:column;gap:8px;flex:1;min-height:0}
+.rows .newsrow{flex:1}
+.col>.infobox,.col>.plate{flex:1}
+.col>.plate.labelbar{flex:0 0 auto}      /* 라벨바는 제 높이만 */
+.col>.infobox{display:flex;flex-direction:column}
+.col>.infobox .bd{flex:1}
+.newsrow{display:flex;align-items:center;gap:var(--md);
+  background:linear-gradient(180deg,#efefef,#dedede);border-radius:var(--r-sm);
+  border-top:2px solid #fff;border-bottom:3px solid #a9a9a9;padding:var(--sm) var(--md)}
+.newsrow .d{font-size:var(--micro);font-weight:700;color:var(--ink-soft);width:120px}
+.newsrow .t{flex:1;font-size:var(--link);font-weight:700}
+.newsrow .chip{background:var(--indigo);color:#fff;border-radius:var(--r-xs);
+  padding:6px 14px;font-size:var(--micro);font-weight:700}
+
+/* ═════ 정보 박스 — amber 헤더 탭 ═════ */
+.infobox{background:var(--surface);border-radius:var(--r-sm);overflow:hidden;
+  border-bottom:3px solid var(--indigo);border-right:2px solid var(--indigo)}
+.infobox .tab{background:linear-gradient(180deg,#f2bc55,#ecab37);padding:8px var(--md)}
+.infobox .bd{padding:var(--md)}
+
+/* ═════ 그리드 ═════ */
+.grid{display:grid;grid-template-columns:repeat(var(--cols,3),1fr);gap:var(--md);flex:1;min-height:0}
+.cols{display:flex;gap:var(--md);flex:1;min-height:0}
+.col{display:flex;flex-direction:column;gap:var(--md);min-width:0}
+
+/* ═════ 수치 ═════ */
+.fig{text-align:center}
+.fig .v{font-size:calc(var(--display) * .72);font-weight:900;line-height:1;color:#fff;
+  text-shadow:3px 3px 0 var(--indigo)}
+.fig .k{margin-top:var(--xs);font-size:var(--label);font-weight:700;letter-spacing:1px;
+  text-transform:uppercase;color:var(--ink)}
+
+/* ═════ 푸터 ═════ */
+.foot{background:var(--carbon);color:#fff;padding:var(--sm) var(--pad);display:flex;
+  align-items:center;justify-content:space-between;gap:var(--md)}
+.esrb{width:40px;height:40px;background:#fff;color:var(--carbon);display:flex;align-items:center;
+  justify-content:center;font-weight:900;font-size:22px}
+
+/* ═════ 모션 — 하드 등장. 부드러운 이징을 쓰지 않는다 ═════ */
+.in{opacity:0}
+.active .in{animation:pop .01s steps(1) both}
+@keyframes pop{to{opacity:1}}
+.active .d1{animation-delay:.03s}.active .d2{animation-delay:.14s}.active .d3{animation-delay:.25s}
+.active .d4{animation-delay:.36s}.active .d5{animation-delay:.47s}.active .d6{animation-delay:.58s}
+
+#nav{position:fixed;right:24px;bottom:18px;font-family:var(--f-pixel);font-size:13px;
+  color:#3d4f97;z-index:99}
+#nav .hint{margin-right:16px;color:#5a6ba3}
+body.notes #nav{bottom:auto;top:18px}
+
+/* ═════ 발표자 노트 — S 토글. 좌우 여백 = 본문 끝선(--pad 56px) ═════ */
+body.notes #stage{top:0;transform:translateX(-50%) scale(var(--scale,1));transform-origin:top center}
+#notes{position:fixed;left:0;right:0;bottom:0;max-height:40vh;overflow:auto;display:none;
+  background:#dedede;border-top:4px solid var(--indigo);z-index:100;
+  padding:20px var(--npad,30px) 26px}
+body.notes #notes{display:block}
+#notes .nlab{font-family:var(--f-pixel);font-size:12px;letter-spacing:1px;color:var(--red);
+  margin-bottom:10px}
+#notes .ntext{font-size:18px;line-height:1.6;color:var(--carbon)}
+#notes .ntext b{font-weight:700}
+#notes .ntext span{color:#5a5f8c}
+
+@media print{
+  html,body,#stage{overflow:visible;position:static;transform:none;width:auto;height:auto}
+  .slide{display:flex!important;position:relative;width:1920px;height:1080px;page-break-after:always}
+  .in{animation:none!important;opacity:1!important}
+  #nav,#notes{display:none!important}
+}
+</style>
+</head>
+<body>
+<div id="stage">
+
+<!-- ═════ Z1. 표지 — 히어로 패널 + 듀얼 내비 ═════ -->
+<section class="slide" data-note="여는 장. <b>듀얼 내비(카본 상단 + 페리윙클 하단)</b>가 이 시스템의 서명이다 — 한 줄로 합치면 계층 지휘 구조가 사라진다.<br>워드마크는 <b>아웃라인 처리한 900 대문자</b>다. 그림자는 흐린 드롭섀도가 아니라 3px 하드 오프셋이다.">
+  <div class="nav1 in d1">
+    <a>주제</a><a>자료</a><div class="logo-pill">DECK</div><a>일정</a><a>연락</a>
+  </div>
+  <div class="nav2 in d1">
+    <span class="on">HOME</span><span>SECTION 01</span><span>SECTION 02</span><span>SECTION 03</span>
+  </div>
+  <div class="stage-body">
+    <div class="plate lav in d2" style="flex:1;display:flex;flex-direction:column;justify-content:center;
+      padding:var(--xl)">
+      <div class="label in d2" style="color:var(--ink-soft)">PRESENTATION · 2026</div>
+      <h1 class="ko in d3" style="margin-top:var(--sm)">한 문장으로<br>말한다</h1>
+      <div class="tagline in d4" style="margin-top:var(--md)">부제는 한 줄. 이 시대의 타이포는 작고 조밀하다.</div>
+      <div class="btns in d5" style="margin-top:var(--lg)">
+        <a class="btn">시작하기 <span class="arrow" style="width:28px;height:28px;font-size:16px">›</span></a>
+        <a class="btn sec">자료 보기</a>
+      </div>
+    </div>
+  </div>
+  <div class="foot in d6">
+    <div class="micro">© 2026 발표자. All rights reserved.</div>
+    <div style="display:flex;gap:var(--sm);align-items:center"><div class="esrb">A</div>
+      <span class="pixel">DECK 2001</span></div>
+  </div>
+</section>
+
+<!-- ═════ Z2. 패널 그리드 ═════ -->
+<section class="slide" data-note="패널 3분할. <b>모든 영역을 베벨 판으로</b> 만든다 — 위쪽 밝은 모서리 + 아래 크롬인디고 그림자선. 판 안에 판을 넣어도 좋다.">
+  <div class="nav2 in d1"><span>HOME</span><span class="on">SECTION 01</span><span>SECTION 02</span></div>
+  <div class="stage-body">
+    <div class="plate labelbar in d1" style="border-radius:var(--r-sm)">
+      <span class="label">세 가지 항목</span><span class="label">GRID</span></div>
+    <div class="grid" style="--cols:3">
+      <div class="plate light in d2" style="display:flex;flex-direction:column;gap:var(--sm)">
+        <div class="label" style="color:var(--ink-soft)">ITEM 01</div>
+        <h2 style="font-size:36px">첫 번째</h2>
+        <p>본문은 12px(덱 24px)이다. 작고 조밀한 것이 이 시대의 밀도다.</p>
+        <div class="btns" style="margin-top:auto"><a class="btn">자세히</a></div></div>
+      <div class="plate light in d3" style="display:flex;flex-direction:column;gap:var(--sm)">
+        <div class="label" style="color:var(--ink-soft)">ITEM 02</div>
+        <h2 style="font-size:36px">두 번째</h2>
+        <p>따뜻한 색은 버튼에만 쓴다. 장식으로 번지면 안 된다.</p>
+        <div class="btns" style="margin-top:auto"><a class="btn">자세히</a></div></div>
+      <div class="plate light in d4" style="display:flex;flex-direction:column;gap:var(--sm)">
+        <div class="label" style="color:var(--ink-soft)">ITEM 03</div>
+        <h2 style="font-size:36px">세 번째</h2>
+        <p>모서리는 기본이 각짐이다. 둥근 것은 로고 pill과 원형 배지뿐.</p>
+        <div class="btns" style="margin-top:auto"><a class="btn">자세히</a></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════ Z3. 뉴스 행 + 우측 레일 ═════ -->
+<section class="slide" data-note="목록 + 우측 레일. 2001년 포털 레이아웃 그대로다. 뉴스 행은 <b>플래티넘 판</b>에 셰브런 칩을 붙인다.">
+  <div class="nav2 in d1"><span>HOME</span><span class="on">NEWS</span><span>SECTION 02</span></div>
+  <div class="stage-body">
+    <div class="cols">
+      <div class="col" style="flex:1.8">
+        <div class="plate labelbar in d1" style="border-radius:var(--r-sm)">
+          <span class="label">최신 항목</span><span class="label">LIST</span></div>
+        <div class="rows">
+          <div class="newsrow in d2"><div class="d">07 / 27</div>
+            <div class="t">첫 번째 항목 제목을 여기에 적는다</div><div class="chip">MORE ›</div></div>
+          <div class="newsrow in d3"><div class="d">07 / 20</div>
+            <div class="t">두 번째 항목 제목을 여기에 적는다</div><div class="chip">MORE ›</div></div>
+          <div class="newsrow in d4"><div class="d">07 / 12</div>
+            <div class="t">세 번째 항목 제목을 여기에 적는다</div><div class="chip">MORE ›</div></div>
+          <div class="newsrow in d5"><div class="d">07 / 05</div>
+            <div class="t">네 번째 항목 제목을 여기에 적는다</div><div class="chip">MORE ›</div></div>
+        </div>
+      </div>
+      <div class="col" style="flex:1">
+        <div class="infobox in d3"><div class="tab"><span class="label">알림</span></div>
+          <div class="bd"><p>정보 박스는 흰 판에 앰버 헤더 탭을 얹는다.</p></div></div>
+        <div class="plate peri in d4" style="display:flex;flex-direction:column;gap:var(--sm)">
+          <div class="label">간단 설문</div>
+          <div class="micro">○ 첫 번째 선택지</div>
+          <div class="micro">○ 두 번째 선택지</div>
+          <div class="micro">● 세 번째 선택지</div>
+          <div class="btns" style="margin-top:var(--xs)"><a class="btn submit">SUBMIT ›</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════ Z4. 수치 ═════ -->
+<section class="slide" data-note="지표. 숫자도 <b>아웃라인 900</b>으로 찍는다. 판 위에 숫자를 얹어 계기판처럼 보이게 한다.">
+  <div class="nav2 in d1"><span>HOME</span><span class="on">DATA</span></div>
+  <div class="stage-body">
+    <div class="plate labelbar in d1" style="border-radius:var(--r-sm)">
+      <span class="label">숫자로 보기</span><span class="label">STATS</span></div>
+    <div class="grid" style="--cols:4">
+      <div class="plate in d2 fig" style="display:flex;flex-direction:column;justify-content:center">
+        <div class="v">2.4</div><div class="k">첫 번째</div></div>
+      <div class="plate in d3 fig" style="display:flex;flex-direction:column;justify-content:center">
+        <div class="v">180</div><div class="k">두 번째</div></div>
+      <div class="plate in d4 fig" style="display:flex;flex-direction:column;justify-content:center">
+        <div class="v">99</div><div class="k">세 번째</div></div>
+      <div class="plate in d5 fig" style="display:flex;flex-direction:column;justify-content:center">
+        <div class="v">40</div><div class="k">네 번째</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════ Z5. 컬러 히어로 필드 — 페이지별 색 ═════ -->
+<section class="slide" data-note="컬러 히어로. 원본은 섹션마다 히어로 색이 다르다(시스템=틸, 게임=레드). <b>챕터마다 하나씩 배정</b>하고 그 안에서는 바꾸지 않는다.">
+  <div class="nav2 in d1"><span>HOME</span><span class="on">CHAPTER</span></div>
+  <div class="stage-body">
+    <div class="cols">
+      <div class="plate teal in d2" style="flex:1;display:flex;flex-direction:column;
+        justify-content:center;padding:var(--xl)">
+        <div class="label in d2">CHAPTER 01</div>
+        <h2 class="in d3" style="margin-top:var(--sm)">첫 번째<br>주제</h2>
+        <p class="in d4" style="margin-top:var(--md);color:#d6eaf0">틸 필드는 시스템·기술 챕터.</p>
+      </div>
+      <div class="plate red in d3" style="flex:1;display:flex;flex-direction:column;
+        justify-content:center;padding:var(--xl)">
+        <div class="label in d3">CHAPTER 02</div>
+        <h2 class="in d4" style="margin-top:var(--sm)">두 번째<br>주제</h2>
+        <p class="in d5" style="margin-top:var(--md);color:#f5d6d7">레드 필드는 사례·경쟁 챕터.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════ Z6. 폼 패널 ═════ -->
+<section class="slide" data-note="입력 패널. 폼은 <b>플래티넘 판</b>에 라벨 + 필드로 구성한다. 제출 버튼만 시그널 오렌지(전진 동작)를 쓴다.">
+  <div class="nav2 in d1"><span>HOME</span><span class="on">FORM</span></div>
+  <div class="stage-body">
+    <div class="cols">
+      <div class="col" style="flex:1">
+        <div class="plate platinum in d2" style="padding:var(--xl);display:flex;
+          flex-direction:column;gap:var(--md)">
+          <div class="label">참여 안내</div>
+          <div><div class="micro" style="font-weight:700">이름</div>
+            <div class="plate white flat" style="padding:10px var(--sm);border-radius:var(--r-xs);
+              margin-top:6px"><span class="micro">입력값</span></div></div>
+          <div><div class="micro" style="font-weight:700">소속</div>
+            <div class="plate white flat" style="padding:10px var(--sm);border-radius:var(--r-xs);
+              margin-top:6px"><span class="micro">입력값</span></div></div>
+          <div class="btns"><a class="btn submit">SUBMIT ›</a><a class="btn sec">RESET</a></div>
+        </div>
+      </div>
+      <div class="col" style="flex:1.2">
+        <div class="plate in d3" style="flex:1;display:flex;flex-direction:column;
+          justify-content:center;padding:var(--xl)">
+          <h2 style="font-size:44px">이렇게<br>진행합니다</h2>
+          <p style="margin-top:var(--md)">왼쪽에 입력, 오른쪽에 설명. 두 판의 밝기를 다르게 해
+            역할을 구분한다.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════ Z7. 선언 — 카본 전면 ═════ -->
+<section class="slide dark" data-note="선언 장. 카본(#21242e) 전면에 아웃라인 워드마크만 놓는다. 전체에서 1~2회.">
+  <div class="stage-body" style="justify-content:center;align-items:center;text-align:center">
+    <h1 class="ko in d1">여기서 한 번<br>멈춘다</h1>
+    <p class="in d2" style="color:#aab0c8;margin-top:var(--md)">문장 하나만 남긴다.</p>
+    <div class="btns in d3" style="margin-top:var(--lg);justify-content:center">
+      <a class="btn">계속하기 ›</a></div>
+  </div>
+</section>
+
+<!-- ═════ Z8. 클로징 ═════ -->
+<section class="slide" data-note="닫는 장. 카본 푸터 + ESRB 사각 배지로 지면을 닫는다. 미세 문구는 픽셀 서체로 시대감을 준다.">
+  <div class="nav2 in d1"><span>HOME</span><span class="on">NEXT</span></div>
+  <div class="stage-body">
+    <div class="plate lav in d2" style="flex:1;display:flex;flex-direction:column;
+      justify-content:center;padding:var(--xl)">
+      <div class="label" style="color:var(--ink-soft)">NEXT STEP</div>
+      <h2 class="in d3" style="margin-top:var(--sm)">다음 단계</h2>
+      <p class="in d4" style="margin-top:var(--md)">청중이 취할 행동 하나만 남긴다.</p>
+      <div class="btns in d5" style="margin-top:var(--lg)">
+        <a class="btn submit">시작하기 ›</a><a class="btn sec">문의하기</a></div>
+    </div>
+  </div>
+  <div class="foot in d6">
+    <div class="micro">© 2026 발표자 · 이 자료의 수치는 원자료를 따른다.</div>
+    <div style="display:flex;gap:var(--sm);align-items:center"><div class="esrb">A</div>
+      <span class="pixel">THANK YOU</span></div>
+  </div>
+</section>
+
+</div>
+
+<div id="nav"><span class="hint">S NOTES</span><span id="navPage"></span></div>
+<div id="notes"><div class="nlab">SPEAKER NOTES</div><div class="ntext" id="noteText"></div></div>
+
+<script>
+const slides=[...document.querySelectorAll('.slide')];
+let cur=-1;
+const navPage=document.getElementById('navPage');
+const noteText=document.getElementById('noteText');
+function show(n){
+  cur=Math.max(0,Math.min(slides.length-1,n));
+  slides.forEach((s,i)=>s.classList.toggle('active',i===cur));
+  navPage.textContent=(cur+1)+' / '+slides.length;
+  noteText.innerHTML=slides[cur].dataset.note||'<span>이 장에는 노트가 없습니다.</span>';
+}
+addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key===' ')show(cur+1);
+  else if(e.key==='ArrowLeft')show(cur-1);
+  else if(e.key==='Home')show(0);
+  else if(e.key==='End')show(slides.length-1);
+  else if(e.key==='s'||e.key==='S'){document.body.classList.toggle('notes');fit();}
+});
+addEventListener('click',e=>{
+  if(e.target.closest('#notes'))return;
+  if(e.clientX<innerWidth/2)show(cur-1);else show(cur+1);
+});
+let tx=null;
+addEventListener('touchstart',e=>tx=e.touches[0].clientX);
+addEventListener('touchend',e=>{if(tx===null)return;
+  const dx=e.changedTouches[0].clientX-tx;
+  if(dx<-40)show(cur+1);else if(dx>40)show(cur-1);tx=null});
+function fit(){
+  const avail=document.body.classList.contains('notes')?innerHeight*.58:innerHeight;
+  const s=Math.min(innerWidth/1920,avail/1080);
+  document.getElementById('stage').style.setProperty('--scale',s);
+  document.documentElement.style.setProperty('--npad',
+    Math.round((innerWidth-1920*s)/2+56*s)+'px');
+}
+addEventListener('resize',fit);addEventListener('load',fit);fit();
+const _h=parseInt(location.hash.slice(1));show(isNaN(_h)?0:_h-1);
+addEventListener('hashchange',()=>{const n=parseInt(location.hash.slice(1));if(!isNaN(n))show(n-1)});
+if(location.search.indexOf('shot')>-1)document.getElementById('nav').style.display='none';
+</script>
+</body>
+</html>

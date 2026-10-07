@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IBM Carbon Deck</title>
+<!-- Plex Sans는 SIL 오픈폰트라 실물을 그대로 쓴다. 한글도 Plex Sans KR이 있다 — 이 계열 유일 -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;600&family=IBM+Plex+Sans+KR:wght@300;400;600&display=swap">
+<style>
+:root{
+  --primary:#0f62fe;      /* IBM Blue. 유일한 브랜드색 */
+  --blue-60:#0043ce; --blue-80:#002d9c; --blue-hover:#0050e6;
+  --ink:#161616; --ink-muted:#525252; --ink-subtle:#8c8c8c;
+  --canvas:#fff; --s1:#f4f4f4; --s2:#e0e0e0;
+  --inv-canvas:#161616; --inv-s1:#262626; --inv-ink:#fff; --inv-ink-muted:#c6c6c6;
+  --hairline:#e0e0e0; --hairline-strong:#161616;
+  --success:#24a148; --warning:#f1c21b; --error:#da1e28;
+  /* ── 타입 (원본 × 2. 자간도 2배) ── */
+  --d-xl:152px; --d-lg:120px; --d-md:84px; --headline:64px; --card-t:48px;
+  --subhead:40px; --body-lg:36px; --body:32px; --body-sm:28px; --cap:24px; --btn:28px;
+  --track:.32px;         /* Carbon의 정밀 디테일. 본문에서 빼지 않는다 */
+  /* ── 여백 (× 2) ── */
+  --xxs:8px; --xs:16px; --sm:24px; --md:32px; --lg:48px; --xl:64px; --xxl:96px; --sec:192px;
+  --pad:96px;            /* 좌우 기준선 */
+  --f:"IBM Plex Sans","IBM Plex Sans KR","Helvetica Neue",Arial,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;border-radius:0}   /* 0px가 기본값. 브랜드 그 자체 */
+html,body{height:100%;background:#000;overflow:hidden}
+body{font-family:var(--f);color:var(--ink);-webkit-font-smoothing:antialiased}
+
+#stage{position:absolute;top:50%;left:50%;width:1920px;height:1080px;
+  transform:translate(-50%,-50%) scale(var(--scale,1));transform-origin:center;background:var(--canvas)}
+.slide{position:absolute;inset:0;display:none;background:var(--canvas);
+  padding:var(--xxl) var(--pad);overflow:hidden}
+.slide.active{display:flex;flex-direction:column;justify-content:center}
+.slide.s1{background:var(--s1)}
+.slide.blue{background:var(--primary);color:#fff}
+.slide.inverse{background:var(--inv-canvas);color:var(--inv-ink)}
+.slide.inverse p,.slide.inverse .sub{color:var(--inv-ink-muted)}
+/* 히어로에만 허용되는 유일한 분위기 요소 — 옅은 블루 그라디언트 */
+.slide.hero{background:linear-gradient(135deg,#edf5ff 0%,#ffffff 58%)}
+
+/* ═════ 16컬럼 그리드 — Carbon의 뼈대. 필요할 때 켜서 정렬을 확인한다 ═════ */
+.grid-guide{position:absolute;inset:0 var(--pad);display:grid;
+  grid-template-columns:repeat(16,1fr);gap:var(--md);pointer-events:none;opacity:0}
+.grid-guide.on{opacity:1}
+.grid-guide i{background:rgba(15,98,254,.06);display:block}
+
+/* ═════ 타이포 — 디스플레이 300 / 본문 400 ═════ */
+h1{font-size:var(--d-xl);font-weight:300;line-height:1.17;letter-spacing:-1px}
+h2{font-size:var(--d-lg);font-weight:300;line-height:1.17;letter-spacing:-.8px}
+h3{font-size:var(--d-md);font-weight:300;line-height:1.20}
+h4{font-size:var(--headline);font-weight:400;line-height:1.25}
+.eyebrow{font-size:var(--body-sm);font-weight:400;letter-spacing:var(--track);
+  color:var(--ink-muted);margin-bottom:var(--md)}   /* 문장형. 대문자 트래킹 금지 */
+.sub{font-size:var(--body-lg);font-weight:400;line-height:1.5;color:var(--ink-muted);
+  max-width:30em;margin-top:var(--md)}
+p{font-size:var(--body);font-weight:400;line-height:1.5;letter-spacing:var(--track);
+  color:var(--ink);max-width:36em}
+.cap{font-size:var(--cap);letter-spacing:.64px;color:var(--ink-muted)}
+.em{font-size:var(--body-sm);font-weight:600;letter-spacing:var(--track)}
+b,strong{font-weight:600}
+
+/* ═════ 버튼 — 사각. pill 금지 ═════ */
+.btns{display:flex;gap:1px;margin-top:var(--lg);flex-wrap:wrap}   /* Carbon은 버튼을 붙여 놓는다 */
+.btn{display:inline-flex;align-items:center;gap:var(--sm);background:var(--primary);color:#fff;
+  font-size:var(--btn);font-weight:400;letter-spacing:var(--track);
+  padding:24px 32px 24px 32px;min-width:280px;text-decoration:none;
+  justify-content:space-between}
+.btn::after{content:"→";font-size:1.1em}
+.btn:active{background:var(--blue-80)}
+.btn.dark{background:var(--ink)}
+.btn.ghost{background:transparent;color:var(--primary);border:1px solid var(--primary)}
+.btn.on-dark{background:var(--primary)}
+a.link{color:var(--primary);font-size:var(--body);letter-spacing:var(--track);text-decoration:none}
+a.link::after{content:" →"}
+
+/* ═════ 카드 — 1px 헤어라인. 그림자 없음 ═════ */
+.cards{display:grid;grid-template-columns:repeat(var(--cols,4),1fr);gap:var(--md);margin-top:var(--xl)}
+.card{background:var(--canvas);border:1px solid var(--hairline);padding:var(--lg);
+  display:flex;flex-direction:column;gap:var(--sm);min-height:340px}
+.card.filled{background:var(--s1);border-color:transparent}
+.card.blue{background:var(--primary);color:#fff;border-color:transparent}
+.card.blue p,.card.blue .cap{color:#d0e2ff}
+.card .t{font-size:var(--card-t);font-weight:400;line-height:1.33}
+.card p{font-size:var(--body-sm);line-height:1.29;letter-spacing:var(--track);color:var(--ink-muted);
+  max-width:none}
+.card .arrow{margin-top:auto;font-size:var(--card-t);color:var(--primary)}
+.card.blue .arrow{color:#fff}
+.card .n{font-size:var(--d-md);font-weight:300;line-height:1.1}
+.card .n em{font-style:normal;font-size:.4em;font-weight:400;color:var(--ink-muted)}
+
+/* ═════ 탭 — 선택 시 2px 블루 밑줄 ═════ */
+.tabs{display:flex;border-bottom:1px solid var(--hairline)}
+.tab{padding:var(--md) var(--lg);font-size:var(--body-sm);letter-spacing:var(--track);
+  color:var(--ink-muted)}
+.tab.on{color:var(--ink);font-weight:600;box-shadow:inset 0 -4px 0 var(--primary)}
+
+/* ═════ 표 — 헤어라인만 ═════ */
+.rows{margin-top:var(--xl);border-top:1px solid var(--hairline)}
+.row{display:flex;gap:var(--xl);align-items:baseline;padding:var(--md) 0;
+  border-bottom:1px solid var(--hairline)}
+.row .k{flex:0 0 26%;font-size:var(--body-sm);font-weight:600;letter-spacing:var(--track)}
+.row .v{flex:1;font-size:var(--body-sm);letter-spacing:var(--track);color:var(--ink-muted)}
+.row .n{font-size:var(--headline);font-weight:300;white-space:nowrap}
+
+/* ═════ 2단 ═════ */
+.two{display:flex;gap:var(--xxl);align-items:center}
+.two>.tx{flex:0 0 44%}
+.two>.vis{flex:1;min-width:0}
+.panel{background:var(--s1);padding:var(--xl);min-height:520px;display:flex;
+  flex-direction:column;justify-content:center;gap:var(--md)}
+
+/* ═════ 모션 — 짧고 기계적. Carbon의 모션은 장식이 아니다 ═════ */
+.in{opacity:0}
+.active .in{animation:rise .4s cubic-bezier(0,0,.3,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.active .d1{animation-delay:.03s}.active .d2{animation-delay:.11s}.active .d3{animation-delay:.19s}
+.active .d4{animation-delay:.27s}.active .d5{animation-delay:.35s}.active .d6{animation-delay:.43s}
+
+#nav{position:fixed;right:24px;bottom:18px;font-size:15px;color:var(--ink-subtle);z-index:99;
+  letter-spacing:.32px}
+#nav .hint{margin-right:16px;color:#b0b0b0}
+body.notes #nav{bottom:auto;top:18px}
+
+/* ═════ 발표자 노트 — S 토글. 좌우 여백 = 본문 끝선(--pad 96px) ═════ */
+body.notes #stage{top:0;transform:translateX(-50%) scale(var(--scale,1));transform-origin:top center}
+#notes{position:fixed;left:0;right:0;bottom:0;max-height:40vh;overflow:auto;display:none;
+  background:var(--s1);border-top:1px solid var(--hairline);z-index:100;
+  padding:20px var(--npad,30px) 26px}
+body.notes #notes{display:block}
+#notes .nlab{font-size:13px;font-weight:600;letter-spacing:.32px;color:var(--primary);
+  margin-bottom:10px}
+#notes .ntext{font-size:18px;line-height:1.6;letter-spacing:.16px;color:var(--ink)}
+#notes .ntext b{font-weight:600}
+#notes .ntext span{color:var(--ink-muted)}
+
+@media print{
+  html,body,#stage{overflow:visible;position:static;transform:none;width:auto;height:auto}
+  .slide{display:flex!important;position:relative;width:1920px;height:1080px;page-break-after:always}
+  .in{animation:none!important;opacity:1!important;transform:none!important}
+  #nav,#notes{display:none!important}
+}
+</style>
+</head>
+<body>
+<div id="stage">
+
+<!-- ═════ I1. 히어로 — 옅은 블루 그라디언트는 여기서만 허용 ═════ -->
+<section class="slide hero" data-note="여는 장. <b>옅은 블루 그라디언트는 히어로에서만 허용</b>되는 유일한 분위기 요소다. 다른 장에 깔면 Carbon이 아니다.<br>디스플레이는 <b>weight 300</b>(76px, 덱 152px). 굵게 만들면 브랜드 보이스가 바뀐다.">
+  <div class="grid-guide"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <div>
+    <div class="eyebrow in d1">발표 주제 · 2026</div>
+    <h1 class="in d2">한 문장으로<br>제안합니다</h1>
+    <div class="sub in d3">부제는 두 줄까지. 본문은 weight 400에 자간 +0.16px(덱 +0.32px)를 유지한다.</div>
+    <div class="btns in d4"><a class="btn">시작하기</a><a class="btn dark">문서 보기</a></div>
+  </div>
+</section>
+
+<!-- ═════ I2. 섹션 오프너 ═════ -->
+<section class="slide" data-note="섹션 전환. <b>eyebrow는 문장형</b>이다 — 대문자에 자간을 벌린 eyebrow는 이 시스템에서 금지다. 이 한 줄이 다른 기업 덱과 Carbon을 가른다.">
+  <div>
+    <div class="eyebrow in d1">첫 번째 장</div>
+    <h2 class="in d2">섹션 제목을<br>여기 놓습니다</h2>
+    <p class="in d3" style="margin-top:var(--md)">이 섹션이 답하는 질문을 한 문장으로 적는다.</p>
+  </div>
+</section>
+
+<!-- ═════ I3. 카드 4-up — Carbon 데스크톱 기본 ═════ -->
+<section class="slide s1" data-note="카드 그리드. Carbon의 데스크톱 기본은 <b>4-up</b>이다. 카드는 1px 헤어라인과 면색 변화로만 위계를 만든다 — 그림자를 넣지 않는다. 카드 하단의 → 화살표가 Carbon 타일의 표식이다.">
+  <div>
+    <div class="eyebrow in d1">기능</div>
+    <h3 class="in d2">네 가지</h3>
+    <div class="cards" style="--cols:4">
+      <div class="card in d3"><div class="t">첫 번째</div><p>본문은 두세 줄. 자간 +0.32px.</p><div class="arrow">→</div></div>
+      <div class="card in d4"><div class="t">두 번째</div><p>카드에 그림자를 넣지 않는다.</p><div class="arrow">→</div></div>
+      <div class="card filled in d5"><div class="t">세 번째</div><p>면색만 바꿔 위계를 만든다.</p><div class="arrow">→</div></div>
+      <div class="card blue in d6"><div class="t">네 번째</div><p>파랑 타일은 한 그리드에 하나만.</p><div class="arrow">→</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════ I4. 2단 — 좌 텍스트 / 우 패널 ═════ -->
+<section class="slide" data-note="설명 + 패널. 오른쪽 패널은 surface-1(#f4f4f4) 면이다. 제품 스크린샷이 있으면 그대로 넣고, 없으면 수치·요약을 놓는다.">
+  <div class="two">
+    <div class="tx">
+      <div class="eyebrow in d1">제품</div>
+      <h3 class="in d2">구조를<br>보여줍니다</h3>
+      <p class="in d3" style="margin-top:var(--md)">설명은 왼쪽, 근거는 오른쪽. 16컬럼 그리드에 맞춰 정렬한다.</p>
+      <a class="link in d4" style="display:inline-block;margin-top:var(--lg)">자세히 보기</a>
+    </div>
+    <div class="vis">
+      <div class="panel in d3">
+        <div class="tabs" style="margin-bottom:var(--md)">
+          <div class="tab on">개요</div><div class="tab">상세</div><div class="tab">비교</div>
+        </div>
+        <div class="rows" style="margin-top:0;border-top:0">
+          <div class="row"><div class="k">항목 A</div><div class="v">설명 한 줄</div><div class="n">480</div></div>
+          <div class="row"><div class="k">항목 B</div><div class="v">설명 한 줄</div><div class="n">550</div></div>
+          <div class="row"><div class="k">항목 C</div><div class="v">설명 한 줄</div><div class="n">727</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════ I5. 수치 ═════ -->
+<section class="slide" data-note="지표. 숫자도 <b>weight 300</b>이다. 굵은 숫자는 이 시스템의 목소리가 아니다.">
+  <div>
+    <div class="eyebrow in d1">지표</div>
+    <h3 class="in d2">숫자로 봅니다</h3>
+    <div class="cards" style="--cols:4">
+      <div class="card filled in d3"><div class="n">2.4<em>×</em></div><p>첫 번째 지표</p></div>
+      <div class="card filled in d4"><div class="n">180<em>ms</em></div><p>두 번째 지표</p></div>
+      <div class="card filled in d5"><div class="n">99.9<em>%</em></div><p>세 번째 지표</p></div>
+      <div class="card filled in d6"><div class="n">40<em>%</em></div><p>네 번째 지표</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════ I6. 파란 CTA 배너 — 전면 블루 ═════ -->
+<section class="slide blue" data-note="전면 블루 패널. 이 시스템에서 <b>파랑을 면으로 쓰는 유일한 자리</b>다. 전체에서 1~2회만 쓴다 — 남발하면 파랑이 CTA 색이라는 신호가 사라진다.">
+  <div>
+    <h3 class="in d1">여기서 한 번<br>선언합니다</h3>
+    <p class="in d2" style="margin-top:var(--md);color:#d0e2ff;max-width:30em">
+      파란 면 위에는 문장 하나와 버튼 하나만 놓는다.</p>
+    <div class="btns in d3"><a class="btn dark">자세히 보기</a></div>
+  </div>
+</section>
+
+<!-- ═════ I7. 비교표 ═════ -->
+<section class="slide" data-note="비교. Carbon의 표는 <b>가로 헤어라인만</b> 쓴다. 세로 괘선·얼룩무늬·라운딩을 넣지 않는다.">
+  <div>
+    <div class="eyebrow in d1">비교</div>
+    <h3 class="in d2">무엇이 다른가</h3>
+    <div class="rows">
+      <div class="row in d3"><div class="k">항목 A</div><div class="v">설명을 한 줄로 적는다</div><div class="n">480</div></div>
+      <div class="row in d4"><div class="k">항목 B</div><div class="v">설명을 한 줄로 적는다</div><div class="n">550</div></div>
+      <div class="row in d5"><div class="k">항목 C</div><div class="v">설명을 한 줄로 적는다</div><div class="n">727</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════ I8. 클로징 — 차콜 반전은 여기서만 ═════ -->
+<section class="slide inverse" data-note="닫는 장. <b>#161616 반전은 푸터에서만</b> 쓰라는 것이 스펙의 지시다. 덱에서는 마지막 장 하나를 푸터로 간주해 반전한다 — 중간 장을 반전시키지 않는다.">
+  <div>
+    <div class="eyebrow in d1" style="color:var(--inv-ink-muted)">마무리</div>
+    <h3 class="in d2">다음 단계</h3>
+    <p class="in d3" style="margin-top:var(--md);color:var(--inv-ink-muted);max-width:30em">
+      청중이 취할 행동 하나만 남긴다.</p>
+    <div class="btns in d4"><a class="btn on-dark">시작하기</a></div>
+    <p class="cap in d5" style="margin-top:var(--xl);color:var(--inv-ink-muted)">
+      출처 · 발표자 · 연락처</p>
+  </div>
+</section>
+
+</div>
+
+<div id="nav"><span class="hint">S 발표자 노트 · G 그리드</span><span id="navPage"></span></div>
+<div id="notes"><div class="nlab">발표자 노트</div><div class="ntext" id="noteText"></div></div>
+
+<script>
+const slides=[...document.querySelectorAll('.slide')];
+let cur=-1;
+const navPage=document.getElementById('navPage');
+const noteText=document.getElementById('noteText');
+function show(n){
+  cur=Math.max(0,Math.min(slides.length-1,n));
+  slides.forEach((s,i)=>s.classList.toggle('active',i===cur));
+  navPage.textContent=(cur+1)+' / '+slides.length;
+  noteText.innerHTML=slides[cur].dataset.note||'<span>이 장에는 노트가 없습니다.</span>';
+}
+addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key===' ')show(cur+1);
+  else if(e.key==='ArrowLeft')show(cur-1);
+  else if(e.key==='Home')show(0);
+  else if(e.key==='End')show(slides.length-1);
+  else if(e.key==='s'||e.key==='S'){document.body.classList.toggle('notes');fit();}
+  // G — 16컬럼 그리드 가이드 토글(정렬 확인용)
+  else if(e.key==='g'||e.key==='G')
+    document.querySelectorAll('.grid-guide').forEach(g=>g.classList.toggle('on'));
+});
+addEventListener('click',e=>{
+  if(e.target.closest('#notes'))return;
+  if(e.clientX<innerWidth/2)show(cur-1);else show(cur+1);
+});
+let tx=null;
+addEventListener('touchstart',e=>tx=e.touches[0].clientX);
+addEventListener('touchend',e=>{if(tx===null)return;
+  const dx=e.changedTouches[0].clientX-tx;
+  if(dx<-40)show(cur+1);else if(dx>40)show(cur-1);tx=null});
+function fit(){
+  const avail=document.body.classList.contains('notes')?innerHeight*.58:innerHeight;
+  const s=Math.min(innerWidth/1920,avail/1080);
+  document.getElementById('stage').style.setProperty('--scale',s);
+  document.documentElement.style.setProperty('--npad',
+    Math.round((innerWidth-1920*s)/2+96*s)+'px');
+}
+addEventListener('resize',fit);addEventListener('load',fit);fit();
+const _h=parseInt(location.hash.slice(1));show(isNaN(_h)?0:_h-1);
+addEventListener('hashchange',()=>{const n=parseInt(location.hash.slice(1));if(!isNaN(n))show(n-1)});
+if(location.search.indexOf('shot')>-1)document.getElementById('nav').style.display='none';
+</script>
+</body>
+</html>

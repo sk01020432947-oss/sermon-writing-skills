@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Starbucks Deck</title>
+<!-- SoDoSans는 사유 폰트. 스펙이 지정한 오픈소스 대체는 Inter / Manrope / Nunito Sans.
+     리워드 세리프(Lander Tall) 대체는 Lora. 한글은 Pretendard. -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Lora:wght@400;600&display=swap">
+<style>
+:root{
+  /* ── 네 가지 초록. 역할이 다르다 — 하나로 통일하면 브랜드가 납작해진다 ── */
+  --green:#006241;       /* 제목 */
+  --accent:#00754A;      /* CTA */
+  --house:#1E3932;       /* 피처 밴드 */
+  --uplift:#2b5148;      /* 장식 */
+  --green-light:#d4e9e2;
+  /* ── 골드는 리워드 전용 ── */
+  --gold:#cba258; --gold-light:#dfc49d; --gold-lightest:#faf6ee;
+  /* ── 표면: 순백을 페이지 바닥으로 쓰지 않는다 ── */
+  --white:#fff; --cool:#f9f9f9; --warm:#f2f0eb; --ceramic:#edebe9;
+  --ink:rgba(0,0,0,.87); --ink-soft:rgba(0,0,0,.58);
+  --on-dark:#fff; --on-dark-soft:rgba(255,255,255,.70);
+  --hairline:#e7e7e7; --field:#d6dbde;
+  --red:#c82014; --yellow:#fbbc05;
+  /* ── 타입 (원본 × 2) ── */
+  --display:160px; --jumbo:116px; --hero:90px; --h:48px;
+  --body-lg:38px; --body:32px; --small:28px; --micro:26px; --btn:30px;
+  --track:-.32px;   /* -0.16px × 2 */
+  /* ── 여백 (× 2) ── */
+  --s1:8px; --s2:16px; --s3:32px; --s4:48px; --s5:64px; --s6:80px; --s7:96px;
+  --s8:112px; --s9:128px;
+  --pad:80px;
+  /* ── 라운딩 ── */
+  --card:24px; --pill:100px;
+  --f:"SoDoSans","Inter","Pretendard Variable","Helvetica Neue",Helvetica,Arial,sans-serif;
+  --f-serif:"Lander Tall","Lora","Iowan Old Style",Georgia,serif;
+  /* 얕은 그림자 2~3겹. 한 겹 진한 그림자를 쓰지 않는다 */
+  --sh-card:0 0 1px rgba(0,0,0,.14), 0 2px 2px rgba(0,0,0,.24);
+  --sh-float:0 0 12px rgba(0,0,0,.24), 0 16px 24px rgba(0,0,0,.14);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;background:#000;overflow:hidden}
+body{font-family:var(--f);color:var(--ink);letter-spacing:var(--track);
+  -webkit-font-smoothing:antialiased}
+
+#stage{position:absolute;top:50%;left:50%;width:1920px;height:1080px;
+  transform:translate(-50%,-50%) scale(var(--scale,1));transform-origin:center;background:var(--warm)}
+.slide{position:absolute;inset:0;display:none;background:var(--warm);
+  padding:var(--s7) var(--pad);overflow:hidden}
+.slide.active{display:flex;flex-direction:column;justify-content:center}
+.slide.ceramic{background:var(--ceramic)}
+.slide.white{background:var(--white)}
+.slide.house{background:var(--house);color:var(--on-dark)}
+.slide.house p{color:var(--on-dark-soft)}
+.slide.bleed{padding:0}
+
+/* ═════ 타이포 — 위계는 크기가 아니라 웨이트 + 색 ═════ */
+h1{font-size:var(--display);font-weight:600;line-height:1.2;letter-spacing:var(--track)}
+h2{font-size:var(--jumbo);font-weight:600;line-height:1.2}
+h3{font-size:var(--hero);font-weight:600;line-height:1.2}
+/* h4와 h5는 같은 크기다 — 600 초록 vs 400 먹색으로 구분한다 */
+h4{font-size:var(--h);font-weight:600;line-height:1.5;color:var(--green)}
+h5{font-size:var(--h);font-weight:400;line-height:1.5;color:var(--ink)}
+.house h1,.house h2,.house h3,.house h4{color:var(--on-dark)}
+.lead{font-size:var(--body-lg);font-weight:400;line-height:1.75;max-width:26em}
+p{font-size:var(--body);font-weight:400;line-height:1.5;max-width:32em}
+.small{font-size:var(--small);line-height:1.5}
+.micro{font-size:var(--micro);line-height:1.5;color:var(--ink-soft)}
+.serif{font-family:var(--f-serif)}   /* 리워드 에디토리얼에만 */
+b,strong{font-weight:600}
+
+/* ═════ 버튼 — 예외 없이 50px 풀 pill ═════ */
+.btns{display:flex;gap:var(--s2);margin-top:var(--s4);flex-wrap:wrap;align-items:center}
+.btn{display:inline-flex;align-items:center;justify-content:center;background:var(--accent);
+  color:var(--white);border:2px solid var(--accent);border-radius:var(--pill);
+  font-size:var(--btn);font-weight:600;letter-spacing:var(--track);padding:18px 40px;
+  text-decoration:none;transition:transform .2s ease}
+.btn:active{transform:scale(.95)}       /* 서명 마이크로 인터랙션 */
+.btn.out{background:transparent;color:var(--accent)}
+.btn.black{background:#000;border-color:#000}
+.btn.dark-out{background:transparent;color:var(--ink);border-color:rgba(0,0,0,.87)}
+.house .btn{background:var(--white);color:var(--accent);border-color:var(--white)}
+.house .btn.out{background:transparent;color:var(--white);border-color:var(--white)}
+/* Frap — 떠 있는 원형 주문 버튼 */
+.frap{position:absolute;right:var(--pad);bottom:var(--s6);width:112px;height:112px;
+  border-radius:50%;background:var(--accent);color:var(--white);display:flex;
+  align-items:center;justify-content:center;font-size:44px;box-shadow:var(--sh-float);z-index:5}
+.rewards-pill{display:inline-flex;align-items:center;gap:8px;border:2px solid var(--gold);
+  color:var(--gold);border-radius:var(--pill);padding:8px 24px;font-size:var(--micro);
+  font-weight:600;letter-spacing:1px}
+
+/* ═════ 카드 — 12px + 얕은 2겹 그림자 ═════ */
+.cards{display:grid;grid-template-columns:repeat(var(--cols,3),1fr);gap:var(--s3);margin-top:var(--s4)}
+.card{background:var(--white);border-radius:var(--card);padding:var(--s3);
+  box-shadow:var(--sh-card);display:flex;flex-direction:column;gap:var(--s2)}
+.card.tint{background:var(--green-light);box-shadow:none}
+.card.gold{background:var(--gold-lightest)}
+.card.house{background:var(--house);color:var(--on-dark)}
+.card.house p,.card.house .micro{color:var(--on-dark-soft)}
+.card .shot{aspect-ratio:4/3;border-radius:var(--card);margin:calc(var(--s3) * -1)
+  calc(var(--s3) * -1) 0;background:var(--img,var(--ceramic)) center/cover no-repeat}
+.card .n{font-size:var(--jumbo);font-weight:600;line-height:1;color:var(--green)}
+.card .n em{font-style:normal;font-size:.35em;font-weight:400;color:var(--ink-soft)}
+
+/* ═════ 피처 밴드 — 하우스그린 40/60 분할 ═════ */
+.band{position:absolute;inset:0;display:flex;align-items:center;background:var(--house);
+  color:var(--on-dark)}
+.band .tx{flex:0 0 46%;padding:var(--s7) var(--pad)}
+.band .vis{flex:1;align-self:stretch;background:var(--img,linear-gradient(160deg,#2b5148,#1E3932))
+  center/cover no-repeat}
+
+/* ═════ 행 — 헤어라인 ═════ */
+.rows{margin-top:var(--s4)}
+.row{display:flex;gap:var(--s5);align-items:baseline;padding:var(--s3) 0;
+  border-bottom:1px solid var(--hairline)}
+.row:first-child{border-top:1px solid var(--hairline)}
+.row .k{flex:0 0 30%;font-size:var(--body);font-weight:600;color:var(--green)}
+.row .v{flex:1;font-size:var(--body);color:var(--ink)}
+.row .n{font-size:var(--h);font-weight:600;white-space:nowrap}
+
+/* ═════ 2단 ═════ */
+.two{display:flex;gap:var(--s7);align-items:center}
+.two>.tx{flex:0 0 52%}
+.two>.vis{flex:1;min-width:0}
+.photo{aspect-ratio:1/1;border-radius:var(--card);box-shadow:var(--sh-card);
+  background:var(--img,linear-gradient(160deg,#e7e2d8,#d8d2c6)) center/cover no-repeat}
+
+/* ═════ 모션 — 온화하게 ═════ */
+.in{opacity:0}
+.active .in{animation:rise .6s cubic-bezier(.25,.46,.45,.94) both}
+@keyframes rise{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+.active .d1{animation-delay:.05s}.active .d2{animation-delay:.15s}.active .d3{animation-delay:.25s}
+.active .d4{animation-delay:.35s}.active .d5{animation-delay:.45s}.active .d6{animation-delay:.55s}
+
+#nav{position:fixed;right:24px;bottom:18px;font-size:15px;font-weight:600;color:#9a968f;z-index:99}
+#nav .hint{margin-right:16px;color:#c4c0b8}
+body.notes #nav{bottom:auto;top:18px}
+
+/* ═════ 발표자 노트 — S 토글. 좌우 여백 = 본문 끝선(--pad 80px) ═════ */
+body.notes #stage{top:0;transform:translateX(-50%) scale(var(--scale,1));transform-origin:top center}
+#notes{position:fixed;left:0;right:0;bottom:0;max-height:40vh;overflow:auto;display:none;
+  background:var(--ceramic);border-top:2px solid var(--green);z-index:100;
+  padding:20px var(--npad,30px) 26px}
+body.notes #notes{display:block}
+#notes .nlab{font-size:13px;font-weight:600;letter-spacing:1px;text-transform:uppercase;
+  color:var(--green);margin-bottom:10px}
+#notes .ntext{font-size:18px;line-height:1.6;color:var(--ink)}
+#notes .ntext b{font-weight:600}
+#notes .ntext span{color:var(--ink-soft)}
+
+@media print{
+  html,body,#stage{overflow:visible;position:static;transform:none;width:auto;height:auto}
+  .slide{display:flex!important;position:relative;width:1920px;height:1080px;page-break-after:always}
+  .in{animation:none!important;opacity:1!important;transform:none!important}
+  #nav,#notes{display:none!important}
+}
+</style>
+</head>
+<body>
+<div id="stage">
+
+<!-- ═════ K1. 표지 — 크림 캔버스 ═════ -->
+<section class="slide" data-note="여는 장. <b>순백을 페이지 바닥으로 쓰지 않는다</b> — 따뜻한 크림(#f2f0eb)의 색온도가 이 브랜드를 지탱한다(스펙: warm cream temperature is load-bearing).<br>Frap(떠 있는 원형 초록 버튼)은 쇼핑 표면마다 상주하는 요소다. 표지와 클로징에 둔다.">
+  <div>
+    <div class="micro in d1">PRESENTATION · 2026</div>
+    <h1 class="in d2" style="margin-top:var(--s2)">따뜻하게<br>제안합니다</h1>
+    <div class="lead in d3" style="margin-top:var(--s3)">
+      부제는 두 줄까지. 자간은 −0.01em으로 전 서체에 일관되게 조인다.</div>
+    <div class="btns in d4"><a class="btn">시작하기</a><a class="btn out">자료 보기</a></div>
+  </div>
+  <div class="frap in d5">☕</div>
+</section>
+
+<!-- ═════ K2. 하우스그린 피처 밴드 ═════ -->
+<section class="slide bleed" data-note="피처 밴드. <b>하우스그린(#1E3932)</b>은 밴드 전용 초록이다. 좌 46% 텍스트 / 우 이미지의 비대칭 분할이 규약이며, 보조 텍스트는 흰색 70% 투명도로 낮춘다.">
+  <div class="band">
+    <div class="tx">
+      <div class="micro in d1" style="color:var(--on-dark-soft)">CHAPTER 01</div>
+      <h3 class="in d2" style="margin-top:var(--s2)">여기서<br>이야기가 시작된다</h3>
+      <p class="in d3" style="margin-top:var(--s3)">밴드 위 문장은 두세 줄. 이 면에서는 흰 pill과
+        아웃라인 pill을 짝지어 쓴다.</p>
+      <div class="btns in d4"><a class="btn">자세히 보기</a><a class="btn out">더 알아보기</a></div>
+    </div>
+    <div class="vis in d2"></div>
+  </div>
+</section>
+
+<!-- ═════ K3. 카드 3-up ═════ -->
+<section class="slide" data-note="카드. 라운딩 12px(덱 24px)에 <b>얕은 그림자 2겹</b>을 겹친다 — 진한 한 겹을 쓰지 않는다. 크림 바닥이 카드 사이에서 숨 쉬게 두고 구분선을 넣지 않는다.">
+  <div>
+    <h4 class="in d1">세 가지</h4>
+    <h5 class="in d1">같은 크기, 다른 웨이트와 색으로 위계를 만든다</h5>
+    <div class="cards" style="--cols:3">
+      <div class="card in d2"><div class="shot"></div>
+        <h4 style="font-size:var(--h)">첫 번째</h4>
+        <p style="font-size:var(--small)">본문은 두세 줄. 순검정 대신 rgba(0,0,0,.87)을 쓴다.</p>
+        <div class="btns" style="margin-top:auto"><a class="btn out" style="font-size:var(--micro);
+          padding:12px 28px">자세히</a></div></div>
+      <div class="card in d3"><div class="shot"></div>
+        <h4 style="font-size:var(--h)">두 번째</h4>
+        <p style="font-size:var(--small)">카드 라운딩과 그림자는 전 카드가 동일하다.</p>
+        <div class="btns" style="margin-top:auto"><a class="btn out" style="font-size:var(--micro);
+          padding:12px 28px">자세히</a></div></div>
+      <div class="card tint in d4"><div class="shot" style="--img:none;background:var(--uplift)"></div>
+        <h4 style="font-size:var(--h)">세 번째</h4>
+        <p style="font-size:var(--small)">강조 카드는 연초록 틴트(#d4e9e2)로 바꾼다.</p>
+        <div class="btns" style="margin-top:auto"><a class="btn" style="font-size:var(--micro);
+          padding:12px 28px">시작</a></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════ K4. 수치 ═════ -->
+<section class="slide ceramic" data-note="지표. 숫자는 <b>스타벅스 그린(#006241)</b>으로 — 제목용 초록이다. CTA 초록(#00754A)과 역할이 다르니 버튼에 쓰는 초록과 섞어 생각하지 않는다.">
+  <div>
+    <h4 class="in d1">숫자로 보기</h4>
+    <h5 class="in d1">지표 넷</h5>
+    <div class="cards" style="--cols:4">
+      <div class="card in d2"><div class="n">2.4<em>×</em></div><div class="micro">첫 번째 지표</div></div>
+      <div class="card in d3"><div class="n">180<em>ms</em></div><div class="micro">두 번째 지표</div></div>
+      <div class="card in d4"><div class="n">99<em>%</em></div><div class="micro">세 번째 지표</div></div>
+      <div class="card in d5"><div class="n">40<em>%</em></div><div class="micro">네 번째 지표</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════ K5. 리워드 밴드 — 골드는 여기서만 ═════ -->
+<section class="slide" data-note="리워드 장. <b>골드(#cba258)는 리워드 의식(ceremony) 전용</b>이다 — 일반 악센트로 쓰면 안 된다. 이 스타일에서 세리프(Lander Tall 대체 Lora)를 쓰는 유일한 자리이기도 하다.">
+  <div class="two">
+    <div class="tx">
+      <div class="rewards-pill in d1">★ REWARDS</div>
+      <h3 class="serif in d2" style="margin-top:var(--s3)">특별한 순간에만<br>금색을 씁니다</h3>
+      <p class="in d3" style="margin-top:var(--s3)">리워드 편집 헤드라인에만 세리프를 허용한다.
+        일반 쇼핑 흐름에는 세리프도 스크립트도 넣지 않는다.</p>
+      <div class="btns in d4"><a class="btn">가입하기</a><a class="btn dark-out">혜택 보기</a></div>
+    </div>
+    <div class="vis">
+      <div class="cards" style="--cols:1;margin:0">
+        <div class="card gold in d3"><div class="rewards-pill">200★ item</div>
+          <h4 style="font-size:var(--h);margin-top:var(--s2)">골드 라이트스트</h4>
+          <p style="font-size:var(--small)">파트너십 카드 배경(#faf6ee)은 골드 계열의 가장 옅은 면이다.</p></div>
+        <div class="card house in d4"><h4 style="font-size:var(--h)">하우스그린 상태 카드</h4>
+          <p style="font-size:var(--small)">리워드 등급 패널은 하우스그린 면에 흰 글자로 놓는다.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════ K6. 표 ═════ -->
+<section class="slide" data-note="비교·명세. 행 구분은 1px 헤어라인(#e7e7e7)뿐이다. 항목 이름은 <b>초록 600</b>, 값은 먹색 400 — 색과 웨이트로 열을 구분한다.">
+  <div>
+    <h4 class="in d1">무엇이 다른가</h4>
+    <h5 class="in d1">항목 비교</h5>
+    <div class="rows">
+      <div class="row in d2"><div class="k">항목 A</div><div class="v">설명을 한 줄로 적는다</div><div class="n">480</div></div>
+      <div class="row in d3"><div class="k">항목 B</div><div class="v">설명을 한 줄로 적는다</div><div class="n">550</div></div>
+      <div class="row in d4"><div class="k">항목 C</div><div class="v">설명을 한 줄로 적는다</div><div class="n">727</div></div>
+    </div>
+    <div class="micro in d5" style="margin-top:var(--s3)">* 출처 · 조사 기간 · 표본</div>
+  </div>
+</section>
+
+<!-- ═════ K7. 하우스그린 선언 ═════ -->
+<section class="slide house" data-note="선언 장. 하우스그린 전면에 문장 하나. <b>그라디언트를 쓰지 않는다</b> — 이 시스템은 처음부터 끝까지 색블록이다.">
+  <div style="text-align:center;align-self:center;max-width:26em;margin:0 auto">
+    <h3 class="in d1">여기서 한 번<br>머무릅니다</h3>
+    <p class="in d2" style="margin:var(--s3) auto 0">문장 하나만 남긴다.</p>
+    <div class="btns in d3" style="justify-content:center"><a class="btn">계속하기</a></div>
+  </div>
+</section>
+
+<!-- ═════ K8. 클로징 ═════ -->
+<section class="slide ceramic" data-note="닫는 장. Frap을 다시 띄워 수미상관을 만든다. 버튼 누름 상태는 전부 <b>scale(0.95)</b>로 통일한다 — 스펙이 '서명 마이크로 인터랙션'이라 부르는 요소다.">
+  <div>
+    <h4 class="in d1">다음 단계</h4>
+    <h2 class="in d2" style="margin-top:var(--s2)">함께<br>시작하시죠</h2>
+    <p class="in d3" style="margin-top:var(--s3)">청중이 취할 행동 하나만 남긴다.</p>
+    <div class="btns in d4"><a class="btn">시작하기</a><a class="btn dark-out">문의하기</a></div>
+    <div class="micro in d5" style="margin-top:var(--s6)">© 2026 · 발표자 · 연락처</div>
+  </div>
+  <div class="frap in d5">☕</div>
+</section>
+
+</div>
+
+<div id="nav"><span class="hint">S 발표자 노트</span><span id="navPage"></span></div>
+<div id="notes"><div class="nlab">발표자 노트</div><div class="ntext" id="noteText"></div></div>
+
+<script>
+const slides=[...document.querySelectorAll('.slide')];
+let cur=-1;
+const navPage=document.getElementById('navPage');
+const noteText=document.getElementById('noteText');
+function show(n){
+  cur=Math.max(0,Math.min(slides.length-1,n));
+  slides.forEach((s,i)=>s.classList.toggle('active',i===cur));
+  navPage.textContent=(cur+1)+' / '+slides.length;
+  noteText.innerHTML=slides[cur].dataset.note||'<span>이 장에는 노트가 없습니다.</span>';
+}
+addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key===' ')show(cur+1);
+  else if(e.key==='ArrowLeft')show(cur-1);
+  else if(e.key==='Home')show(0);
+  else if(e.key==='End')show(slides.length-1);
+  else if(e.key==='s'||e.key==='S'){document.body.classList.toggle('notes');fit();}
+});
+addEventListener('click',e=>{
+  if(e.target.closest('#notes'))return;
+  if(e.clientX<innerWidth/2)show(cur-1);else show(cur+1);
+});
+let tx=null;
+addEventListener('touchstart',e=>tx=e.touches[0].clientX);
+addEventListener('touchend',e=>{if(tx===null)return;
+  const dx=e.changedTouches[0].clientX-tx;
+  if(dx<-40)show(cur+1);else if(dx>40)show(cur-1);tx=null});
+function fit(){
+  const avail=document.body.classList.contains('notes')?innerHeight*.58:innerHeight;
+  const s=Math.min(innerWidth/1920,avail/1080);
+  document.getElementById('stage').style.setProperty('--scale',s);
+  document.documentElement.style.setProperty('--npad',
+    Math.round((innerWidth-1920*s)/2+80*s)+'px');
+}
+addEventListener('resize',fit);addEventListener('load',fit);fit();
+const _h=parseInt(location.hash.slice(1));show(isNaN(_h)?0:_h-1);
+addEventListener('hashchange',()=>{const n=parseInt(location.hash.slice(1));if(!isNaN(n))show(n-1)});
+if(location.search.indexOf('shot')>-1)document.getElementById('nav').style.display='none';
+</script>
+</body>
+</html>

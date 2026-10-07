@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><title>애플식 런칭 필름 · Apple-style Launch</title>
+<link rel="stylesheet" href="../../lib/stage.css">
+<style>
+  .frame{background:#000 !important;background-image:none !important}
+  .scene{position:absolute;inset:0;overflow:hidden;font-family:Pretendard,sans-serif}
+  .card{position:absolute;left:70px;top:70px;width:940px;height:940px;border-radius:56px;background:#F1EFEA;overflow:hidden;color:#111}
+  .win{position:absolute;left:470px;top:470px;width:0;height:0;overflow:hidden}
+  .in{position:absolute;left:50%;top:50%;width:940px;height:940px;margin:-470px 0 0 -470px}
+  .in svg{display:block;width:940px;height:940px}
+  .wm{position:absolute;left:0;right:0;top:400px;height:150px;text-align:center;font-weight:800;font-size:132px;line-height:150px;letter-spacing:-.05em;white-space:nowrap}
+  .wm .m{display:inline-block;overflow:hidden;vertical-align:top;height:150px}
+  .wm .m span{display:inline-block}
+  .caret{position:absolute;top:418px;width:7px;height:112px;border-radius:4px;background:#111}
+  .mono{font-family:"IBM Plex Mono",monospace}
+  #cur{position:absolute;left:0;top:0;width:30px;height:30px;z-index:20;transform-origin:2px 2px}
+  /* browser */
+  #br{position:absolute;left:40px;top:150px;width:860px;height:640px;border-radius:18px;background:#FBFAF7;overflow:hidden;box-shadow:0 30px 70px rgba(0,0,0,.14),0 0 0 1px rgba(0,0,0,.06)}
+  .chip{display:inline-block;padding:9px 16px;border-radius:20px;border:1.5px solid #d9d4cb;font-size:15px;font-weight:600;margin-right:8px}
+  .chip.on{background:#111;color:#fff;border-color:#111}
+  .sw{display:inline-block;width:30px;height:30px;border-radius:50%;margin-right:10px;box-shadow:0 0 0 1px rgba(0,0,0,.12)}
+</style></head>
+<body data-no="S10" data-cat="런칭 필름 · LAUNCH" data-ko="애플식 런칭 필름" data-en="Apple-style Launch Film" data-meta="마스크·모프·푸시만 · 크로스페이드 금지" data-dur="16" data-size="1080x1080" data-poster="12.9">
+<main class="scene">
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7FA6C6"/><stop offset=".55" stop-color="#C9D6DD"/><stop offset=".62" stop-color="#E4E2DA"/></linearGradient>
+    <linearGradient id="sea" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8195A0"/><stop offset="1" stop-color="#2C3B45"/></linearGradient>
+    <radialGradient id="cl" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff" stop-opacity=".95"/><stop offset=".6" stop-color="#F4F2EE" stop-opacity=".7"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+    <radialGradient id="clS" cx=".5" cy=".6" r=".5"><stop offset="0" stop-color="#8E98A3" stop-opacity=".55"/><stop offset="1" stop-color="#8E98A3" stop-opacity="0"/></radialGradient>
+    <radialGradient id="crema" cx=".45" cy=".45" r=".6"><stop offset="0" stop-color="#C99566"/><stop offset=".7" stop-color="#9A5E36"/><stop offset="1" stop-color="#6B3A1E"/></radialGradient>
+    <radialGradient id="sauc" cx=".45" cy=".4" r=".6"><stop offset="0" stop-color="#F7F4EE"/><stop offset=".85" stop-color="#E2DCD2"/><stop offset="1" stop-color="#C9C1B4"/></radialGradient>
+    <filter id="soft"><feGaussianBlur stdDeviation="7"/></filter>
+    <filter id="refl"><feGaussianBlur stdDeviation="3 9"/></filter>
+    <filter id="grainF" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="2" seed="7" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter>
+    <linearGradient id="haze" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#E9ECEC" stop-opacity="0"/><stop offset=".7" stop-color="#E9ECEC" stop-opacity=".55"/><stop offset="1" stop-color="#EDEBE4" stop-opacity=".8"/></linearGradient>
+    <linearGradient id="litF" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#93A2AC"/><stop offset="1" stop-color="#6E7E8A"/></linearGradient>
+    <radialGradient id="sun" cx=".78" cy=".22" r=".5"><stop offset="0" stop-color="#FFF4DE" stop-opacity=".75"/><stop offset="1" stop-color="#FFF4DE" stop-opacity="0"/></radialGradient>
+    <linearGradient id="seaGl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#DDE3E6" stop-opacity=".45"/><stop offset="1" stop-color="#DDE3E6" stop-opacity="0"/></linearGradient>
+    <filter id="leafb"><feGaussianBlur stdDeviation="14"/></filter>
+    <symbol id="land" viewBox="0 0 940 940">
+      <rect width="940" height="940" fill="url(#sky)"/>
+      <rect width="940" height="620" fill="url(#sun)"/>
+      <g filter="url(#soft)" id="pxCl">
+        <ellipse cx="200" cy="150" rx="260" ry="70" fill="url(#cl)"/><ellipse cx="240" cy="185" rx="200" ry="40" fill="url(#clS)"/>
+        <ellipse cx="640" cy="110" rx="300" ry="80" fill="url(#cl)"/><ellipse cx="700" cy="150" rx="220" ry="45" fill="url(#clS)"/>
+        <ellipse cx="460" cy="260" rx="240" ry="55" fill="url(#cl)"/><ellipse cx="820" cy="300" rx="180" ry="50" fill="url(#cl)"/>
+        <ellipse cx="90" cy="330" rx="160" ry="40" fill="url(#cl)"/>
+      </g>
+      <!-- 대기 원근: 먼 능선일수록 밝고 푸르고 대비가 낮다 -->
+      <g id="pxFar">
+        <path d="M0 470 L90 440 L180 452 L280 418 L360 430 L470 398 L560 410 L660 380 L760 405 L860 392 L940 410 L940 600 L0 600 Z" fill="#B4C2CB"/>
+        <path d="M0 495 L140 462 L250 476 L350 450 L450 462 L560 440 L700 456 L820 438 L940 452 L940 600 L0 600 Z" fill="#9FAFBA"/>
+      </g>
+      <rect x="0" y="400" width="940" height="110" fill="url(#haze)"/>
+      <g id="pxMid">
+        <path d="M0 520 L120 470 L230 440 L330 455 L430 420 L520 330 L560 345 L610 300 L690 380 L790 430 L940 470 L940 600 L0 600 Z" fill="#7A8994"/>
+        <path d="M610 300 L690 380 L790 430 L940 470 L940 520 L760 470 L660 410 L620 330 Z" fill="url(#litF)" opacity=".85"/>
+        <path d="M520 330 L560 345 L610 300 L585 360 L548 372 Z" fill="#A6B3BB"/>
+      </g>
+      <rect x="0" y="470" width="940" height="100" fill="url(#haze)" opacity=".8"/>
+      <g id="pxNear">
+        <path d="M0 560 L160 505 L300 520 L420 470 L520 390 L600 360 L660 420 L760 470 L940 500 L940 600 L0 600 Z" fill="#4C5963"/>
+        <path d="M520 390 L560 400 L600 360 L615 380 L585 420 L540 430 Z" fill="#62707A"/>
+        <path d="M0 575 L60 548 L150 540 L240 556 L260 570 L0 600 Z" fill="#323D45"/>
+      </g>
+      <rect x="0" y="566" width="940" height="44" fill="#BFB9AE"/>
+      <g id="town"></g>
+      <rect x="0" y="608" width="940" height="332" fill="url(#sea)"/>
+      <!-- 물에 비친 산(흐린 반사) + 수면 반짝임 -->
+      <g filter="url(#refl)" opacity=".32" transform="translate(0 1216) scale(1 -1)">
+        <path d="M0 560 L160 505 L300 520 L420 470 L520 390 L600 360 L660 420 L760 470 L940 500 L940 610 L0 610 Z" fill="#3C4850"/></g>
+      <rect x="0" y="608" width="940" height="120" fill="url(#seaGl)"/>
+      <g id="boats"></g>
+      <g stroke="#ffffff" stroke-opacity=".18" stroke-width="2"><line x1="80" y1="690" x2="300" y2="690"/><line x1="420" y1="720" x2="700" y2="720"/><line x1="160" y1="780" x2="380" y2="780"/><line x1="560" y1="820" x2="860" y2="820"/></g>
+      <rect width="940" height="940" filter="url(#grainF)" opacity=".09" style="mix-blend-mode:overlay"/>
+    </symbol>
+    <symbol id="cup" viewBox="0 0 940 940">
+      <rect width="940" height="940" fill="#7A4A2C"/>
+      <g id="grain" fill="none" stroke="#5A3219" stroke-opacity=".5" stroke-width="2"></g>
+      <ellipse cx="478" cy="488" rx="168" ry="165" fill="#000" opacity=".28" filter="url(#soft)"/>
+      <circle cx="470" cy="470" r="160" fill="url(#sauc)"/>
+      <circle cx="470" cy="470" r="128" fill="none" stroke="#D6CFC3" stroke-width="2"/>
+      <rect x="560" y="455" width="90" height="30" rx="15" fill="#EFEBE4" stroke="#D3CBBE" stroke-width="2"/>
+      <circle cx="470" cy="470" r="112" fill="#FBF9F5" stroke="#E2DCD2" stroke-width="3"/>
+      <circle cx="470" cy="470" r="92" fill="url(#crema)"/>
+      <g fill="#F4E6CF" opacity=".95">
+        <path d="M470 528 C420 500 412 455 445 445 C460 441 468 452 470 462 C472 452 480 441 495 445 C528 455 520 500 470 528 Z"/>
+        <path d="M470 446 C440 432 438 408 455 404 C463 402 468 408 470 414 C472 408 477 402 485 404 C502 408 500 432 470 446 Z"/>
+        <path d="M470 404 C455 396 455 384 463 382 C467 381 469 384 470 387 C471 384 473 381 477 382 C485 384 485 396 470 404 Z"/>
+        <rect x="468.5" y="372" width="3" height="160" rx="1.5"/>
+      </g>
+      <path d="M380 590 L330 640" stroke="#C9C4BB" stroke-width="10" stroke-linecap="round"/><ellipse cx="392" cy="578" rx="20" ry="13" transform="rotate(-45 392 578)" fill="#D5D0C7"/>
+    </symbol>
+  </defs>
+</svg>
+<div class="card" id="card">
+  <!-- 1. cursor + wordmark -->
+  <div class="wm" id="wm1"></div>
+  <div class="caret" id="caret" style="left:466px"></div>
+  <!-- 2. coffee circle → tile -->
+  <div class="win" id="wCup"><div class="in" id="iCup"><svg><use href="#cup"/></svg></div></div>
+  <!-- 3. landscape → phone -->
+  <div class="win" id="wLand"><div class="in" id="iLand"><svg><use href="#land"/></svg>
+      <div class="in" id="grade" style="margin:0;left:0;top:0;filter:sepia(.35) saturate(1.5) hue-rotate(-8deg) contrast(1.05);clip-path:inset(0 100% 0 0)"><svg><use href="#land"/></svg></div>
+      <div id="lock" style="position:absolute;left:0;right:0;top:250px;text-align:center;color:#fff">
+        <div style="overflow:hidden;height:30px"><div id="ld" style="font-size:20px;font-weight:600;opacity:.9">Sunday 27 September</div></div>
+        <div style="overflow:hidden;height:124px"><div id="lt" style="font-size:118px;font-weight:700;letter-spacing:-.03em;line-height:124px">6:47</div></div>
+      </div>
+    </div>
+    <div id="island" style="position:absolute;left:50%;top:18px;width:110px;height:32px;margin-left:-55px;border-radius:16px;background:#0b0b0b;transform:scale(0)"></div>
+  </div>
+  <div id="scrub" style="position:absolute;left:80px;right:80px;top:860px;height:40px">
+    <div style="position:absolute;left:0;right:0;top:18px;height:3px;background:#ffffff66;border-radius:2px"></div>
+    <div id="sf" style="position:absolute;left:0;right:0;top:18px;height:3px;background:#fff;border-radius:2px;transform-origin:0 50%;transform:scaleX(0)"></div>
+    <div id="sk" style="position:absolute;left:0;top:9px;width:22px;height:22px;margin-left:-11px;border-radius:50%;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.3)"></div>
+  </div>
+  <div id="split" style="position:absolute;top:0;bottom:0;left:0;width:2px;background:#fff"></div>
+  <!-- 4. browser product page -->
+  <div id="br">
+    <div style="height:44px;background:#ECE9E3;display:flex;align-items:center;padding-left:18px;gap:8px">
+      <i style="width:12px;height:12px;border-radius:50%;background:#E86A5A"></i><i style="width:12px;height:12px;border-radius:50%;background:#E8B84A"></i><i style="width:12px;height:12px;border-radius:50%;background:#6CC060"></i>
+      <div style="margin-left:24px;background:#FBFAF7;border-radius:8px 8px 0 0;height:34px;margin-top:10px;padding:0 18px;line-height:34px;font-size:13px;font-weight:600">Slowlife — Framed prints</div></div>
+    <div style="height:60px;display:flex;align-items:center;padding:0 30px;border-bottom:1px solid #EEEAE3">
+      <b style="font-size:24px;letter-spacing:-.04em">Slowlife.</b>
+      <div style="margin-left:auto;display:flex;gap:28px;font-size:14px;color:#77726a"><span>Prints</span><span>Frames</span><span>Gifts</span><span>Journal</span></div></div>
+    <div style="position:absolute;left:30px;top:130px;width:390px;height:480px;background:#ECE8E1;border-radius:12px">
+      <div id="pframe" style="position:absolute;left:85px;top:70px;width:220px;height:300px;border:14px solid #B58D5E;background:#fff;padding:22px;box-shadow:0 14px 26px rgba(0,0,0,.18)">
+        <svg viewBox="300 250 420 600" preserveAspectRatio="xMidYMid slice" style="width:100%;height:100%;display:block"><use href="#land" width="940" height="940"/></svg></div></div>
+    <div style="position:absolute;left:460px;top:150px;right:30px">
+      <div class="mono" style="font-size:12px;letter-spacing:.16em;color:#8d877d">FRAMED PRINT</div>
+      <div style="font-size:42px;font-weight:800;letter-spacing:-.04em;margin-top:6px">Morning mist</div>
+      <div style="font-size:22px;font-weight:600;margin-top:2px">€129</div>
+      <div style="font-size:13px;color:#8d877d;margin-top:26px">Frame</div>
+      <div style="margin-top:8px"><span class="sw" id="sw1" style="background:#B58D5E;box-shadow:0 0 0 2px #F1EFEA,0 0 0 4px #111"></span><span class="sw" id="sw2" style="background:#111"></span><span class="sw" style="background:#F4F1EA"></span></div>
+      <div style="font-size:13px;color:#8d877d;margin-top:22px">Size</div>
+      <div style="margin-top:8px"><span class="chip on" id="ch1">30×40</span><span class="chip" id="ch2">50×70</span><span class="chip">70×100</span></div>
+      <div id="btn" style="margin-top:30px;height:56px;border-radius:28px;background:#111;color:#fff;font-size:17px;font-weight:700;text-align:center;overflow:hidden;position:relative">
+        <div id="bt1" style="line-height:56px">Add to cart</div><div id="bt2" style="line-height:56px;position:absolute;left:0;right:0;top:56px">✓ Added — on its way</div></div>
+      <div style="font-size:12px;color:#9a948a;margin-top:14px">Ships in 3 days · Free returns · Hand-framed in oak or black</div>
+    </div>
+  </div>
+  <!-- 5. wall -->
+  <div id="wall" style="position:absolute;inset:0;background:#E6E1D8;overflow:hidden">
+    <div id="wf" style="position:absolute;left:220px;top:150px;width:500px;height:620px;background:#141414;padding:26px;box-shadow:0 26px 50px rgba(0,0,0,.25)">
+      <div style="width:100%;height:100%;background:#F7F5F0;padding:34px"><div id="hex" style="width:100%;height:100%;background:#111;overflow:hidden">
+        <svg viewBox="270 230 400 560" preserveAspectRatio="xMidYMid slice" style="width:100%;height:100%;display:block"><use href="#land" width="940" height="940"/></svg></div></div></div>
+    <svg id="leaves" viewBox="0 0 940 940" style="position:absolute;inset:-60px;width:1060px;height:1060px;mix-blend-mode:multiply;opacity:.3">
+      <g filter="url(#leafb)" fill="#3a3a30" id="lg"></g></svg>
+  </div>
+  <!-- 6. end wordmark -->
+  <div class="wm" id="wm2"></div>
+  <svg id="cur" viewBox="0 0 30 30"><path d="M3 2 L3 24 L8.5 18.8 L12.3 27.5 L16 26 L12.3 17.4 L20 17.4 Z" fill="#111" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/></svg>
+</div>
+</main>
+<script src="../../lib/gsap.min.js"></script><script src="../../lib/stage.js"></script>
+<script>
+const tl = Motion.timeline();
+const $ = s => document.querySelector(s);
+const E='expo.inOut', EO='expo.out', P4='power4.out';
+gsap.set('.win',{xPercent:-50,yPercent:-50});
+/* procedural detail (seeded) */
+const r=Motion.rand(10), NS='http://www.w3.org/2000/svg';
+const mk=(tag,a,parent)=>{const e=document.createElementNS(NS,tag);for(const k in a)e.setAttribute(k,a[k]);parent.appendChild(e);return e;};
+const town=$('#town'); for(let x=0;x<940;x+=14){const h=8+r()*22;mk('rect',{x,y:600-h,width:12,height:h,fill:['#E9E4DA','#D8CFC0','#C4B9A6','#F2EEE6','#B7A48C'][Math.floor(r()*5)]},town);}
+const boats=$('#boats'); for(let i=0;i<34;i++){const x=r()*900,y=612+r()*26,w=20+r()*26;mk('rect',{x,y,width:w,height:6,rx:2,fill:i%11===3?'#C8352A':'#F4F2EC'},boats);mk('line',{x1:x+w/2,y1:y,x2:x+w/2,y2:y-26-r()*30,stroke:'#E8E6E0','stroke-width':1.2},boats);}
+mk('rect',{x:760,y:618,width:90,height:14,rx:3,fill:'#C8352A'},boats);
+const grain=$('#grain'); for(let i=0;i<46;i++){const y=i*21+r()*8;let d=`M0 ${y}`;for(let x=0;x<=940;x+=94)d+=` Q${x+47} ${y+(r()-.5)*18} ${x+94} ${y+(r()-.5)*6}`;mk('path',{d},grain);}
+const lg=$('#lg'); for(let i=0;i<16;i++){const cx=60+r()*820,cy=40+r()*500,rot=r()*180;mk('ellipse',{cx,cy,rx:70+r()*40,ry:22+r()*10,transform:`rotate(${rot} ${cx} ${cy})`},lg);} mk('path',{d:'M0 0 C200 200 300 400 380 600',stroke:'#3a3a30','stroke-width':10,fill:'none'},lg);
+/* wordmark helper: letters typeset under a mask */
+function word(id){const w=$(id);w.innerHTML=[...'Slowlife.'].map(c=>`<span class="m"><span>${c}</span></span>`).join('');return [...w.querySelectorAll('.m')];}
+const L1=word('#wm1'), L2=word('#wm2');
+const cardBox=()=>$('#card').getBoundingClientRect();
+
+/* 0–1.0 blinking caret, 1.0–1.8 typeset */
+gsap.set(L1,{visibility:'hidden'});
+[0.25,0.75,2.0].forEach(t=>tl.set('#caret',{opacity:0},t)); [0.5,1.0].forEach(t=>tl.set('#caret',{opacity:1},t));
+const ty={n:0};
+tl.to(ty,{n:9,duration:0.81,ease:'none',onUpdate(){
+  const k=Math.floor(ty.n+1e-6); L1.forEach((m,i)=>m.style.visibility=i<k?'visible':'hidden');
+  const cb=cardBox(); if(k>0){const b=L1[k-1].getBoundingClientRect(); $('#caret').style.left=(b.right-cb.left+6)+'px';}
+  else {$('#caret').style.left=(L1[0].getBoundingClientRect().left-cb.left)+'px';}
+}},1.0);
+L1.forEach((m,i)=>tl.fromTo(m.firstChild,{yPercent:60},{yPercent:0,duration:0.3,ease:EO},1.0+i*0.09));
+tl.to('#caret',{scaleY:0,duration:0.2,ease:'power3.in'},2.2);
+/* 2.4 push wordmark up, coffee circle opens */
+tl.to(L1.map(m=>m.firstChild),{yPercent:-110,duration:0.4,ease:'power4.in',stagger:0.02},2.35);
+tl.fromTo('#wCup',{width:0,height:0,borderRadius:'50%'},{width:340,height:340,duration:0.7,ease:EO},2.72);
+tl.fromTo('#iCup',{scale:1.25},{scale:1,duration:1.2,ease:EO},2.72);
+tl.to('#wCup',{width:360,height:360,borderRadius:28,duration:0.55,ease:E},3.35);
+/* 4.0 push: coffee out left, landscape tile in from right, then expands to full card */
+tl.to('#wCup',{x:-680,duration:0.6,ease:E},4.0);
+tl.fromTo('#wLand',{x:680,width:360,height:360,borderRadius:28},{x:0,duration:0.6,ease:E},4.0);
+tl.to('#wLand',{width:940,height:940,borderRadius:0,duration:0.7,ease:E},4.55);
+tl.fromTo('#iLand',{scale:1.15},{scale:1,duration:3.2,ease:'power2.out'},4.0);
+[['#pxCl',-34],['#pxFar',-14],['#pxMid',-7],['#pxNear',-3]].forEach(([id,dx])=>tl.fromTo(id,{x:0},{x:dx,duration:3.0,ease:'sine.inOut'},4.0));
+/* 5.2 scrub overlay */
+gsap.set('#scrub',{y:120}); tl.set('#split',{visibility:'hidden'},0); tl.set('#split',{visibility:'visible'},5.25);
+tl.to('#scrub',{y:0,duration:0.45,ease:P4},5.2);
+const sc={v:0.04};
+const setSc=()=>{const x=780*sc.v;$('#sf').style.transform=`scaleX(${sc.v})`;$('#sk').style.left=x+'px';
+  const px=80+x;$('#split').style.transform=`translateX(${px}px)`;$('#grade').style.clipPath=`inset(0 ${940-px}px 0 0)`;};
+tl.to(sc,{v:0.04,duration:0.01,onUpdate:setSc},5.2);
+tl.set('#cur',{x:980,y:980},0);
+tl.to('#cur',{x:80+780*0.04,y:880,duration:0.5,ease:'power3.inOut'},5.0);
+tl.to('#cur',{scale:0.82,duration:0.08},5.55);
+tl.to(sc,{v:0.86,duration:1.0,ease:'power3.inOut',onUpdate:setSc},5.6);
+tl.to('#cur',{x:80+780*0.86,duration:1.0,ease:'power3.inOut'},5.6);
+tl.to('#cur',{scale:1,duration:0.15},6.6);
+/* 6.7 overlay drops, landscape morphs into phone screen */
+tl.to('#scrub',{y:140,duration:0.4,ease:'power4.in'},6.7);
+tl.set('#split',{visibility:'hidden'},6.7);
+tl.to('#cur',{x:860,y:960,duration:0.5,ease:'power3.in'},6.7);
+tl.to('#wLand',{width:330,height:700,borderRadius:52,duration:0.8,ease:E},6.9);
+tl.to('#wLand',{boxShadow:'0 0 0 11px #111, 0 30px 60px rgba(0,0,0,.25)',duration:0.3,ease:EO},7.55);
+tl.to('#island',{scale:1,duration:0.35,ease:'back.out(2)'},7.6);
+gsap.set(['#ld','#lt'],{yPercent:110});
+tl.to('#ld',{yPercent:0,duration:0.5,ease:P4},7.75); tl.to('#lt',{yPercent:0,duration:0.6,ease:P4},7.85);
+/* 8.6 push: phone left, browser in from right; 9.2 phone out, browser centres */
+gsap.set('#br',{x:900});
+tl.to('#wLand',{x:-250,scale:0.82,duration:0.7,ease:E},8.6);
+tl.to('#br',{x:330,duration:0.7,ease:E},8.6);
+tl.to('#wLand',{x:-760,duration:0.6,ease:E},9.25);
+tl.to('#br',{x:0,duration:0.6,ease:E},9.25);
+/* cursor shops: black frame, 50×70, add to cart */
+const B={x:40,y:150};
+tl.to('#cur',{x:B.x+460+55,y:B.y+150+252+16,duration:0.45,ease:'power3.inOut'},9.6); // swatch 2
+tl.to('#cur',{scale:0.82,duration:0.07,yoyo:true,repeat:1},10.05);
+tl.set('#pframe',{borderColor:'#111'},10.1);
+tl.set('#sw1',{boxShadow:'0 0 0 1px rgba(0,0,0,.12)'},10.1); tl.set('#sw2',{boxShadow:'0 0 0 2px #F1EFEA,0 0 0 4px #111'},10.1);
+tl.to('#cur',{x:B.x+460+130,y:B.y+150+330+18,duration:0.4,ease:'power3.inOut'},10.15); // chip 2
+tl.to('#cur',{scale:0.82,duration:0.07,yoyo:true,repeat:1},10.55);
+tl.set('#ch1',{className:'chip'},10.6); tl.set('#ch2',{className:'chip on'},10.6);
+tl.to('#pframe',{width:250,height:330,left:70,top:55,duration:0.45,ease:'back.out(1.6)'},10.6);
+tl.to('#cur',{x:B.x+460+180,y:B.y+150+410+20,duration:0.4,ease:'power3.inOut'},10.65); // button
+tl.to('#cur',{scale:0.82,duration:0.07,yoyo:true,repeat:1},11.05);
+tl.to('#btn',{scale:0.96,duration:0.08,yoyo:true,repeat:1},11.05);
+tl.to(['#bt1','#bt2'],{y:-56,duration:0.45,ease:P4},11.1);
+/* 11.6 push up: wall scene with print, hexagon reveal, leaf shadow */
+gsap.set('#wall',{y:940});
+tl.to('#br',{y:-940,duration:0.7,ease:E},11.6);
+tl.to('#cur',{y:-200,duration:0.7,ease:E},11.6);
+tl.to('#wall',{y:0,duration:0.7,ease:E},11.6);
+const hx={s:0};
+const setHex=()=>{const s=hx.s,pts=[];for(let k=0;k<6;k++){const a=Math.PI/6+k*Math.PI/3;pts.push(`${50+Math.cos(a)*s*0.95}% ${50+Math.sin(a)*s*0.72}%`);}$('#hex').style.clipPath=`polygon(${pts.join(',')})`;};
+tl.to(hx,{s:0,duration:0.01,onUpdate:setHex},11.6);
+// s≤60이면 꼭짓점이 매트 안에 들어옴(가로 50+0.866·s·0.95, 세로 50+s·0.72 ≤ 100%) — 95였을 땐 모서리가 잘림
+tl.to(hx,{s:58,duration:0.9,ease:'expo.inOut',onUpdate:setHex},12.2);
+tl.fromTo('#lg',{x:-30,rotation:-4,svgOrigin:'470 300'},{x:30,rotation:3,svgOrigin:'470 300',duration:2.6,ease:'sine.inOut'},11.6);
+tl.fromTo('#wf',{scale:1.04},{scale:1,duration:2.4,ease:'power2.out'},11.6);
+/* 14.2 push: wall up, end wordmark rises letter by letter */
+tl.to('#wall',{y:-940,duration:0.7,ease:E},14.1);
+L2.forEach((m,i)=>tl.fromTo(m.firstChild,{yPercent:110},{yPercent:0,duration:0.55,ease:P4},14.35+i*0.04));
+gsap.set(L2.map(m=>m.firstChild),{yPercent:110});
+Motion.ready();
+</script></body></html>

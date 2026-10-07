@@ -1,0 +1,259 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>용서받음과 사랑함</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* kbg-infographic 템플릿 — 학회 포스터형 1장 인포그래픽.
+   토큰만 바꾸면 팔레트가 바뀐다. 컴포넌트 목록은 SKILL.md 참고. */
+:root{
+  --ink:#14161c; --sub:#4b5263; --mute:#5f6779; --line:#d9dde5; --soft:#f3f5f9;
+  --band:#141a2e; --band-ink:#eef1f8; --band-sub:#9aa3b8;
+  --accent:#2f6bff; --accent-soft:#e8efff; --hot:#e8480c; --ok:#1f9d55;
+  --num:"Space Grotesk","Pretendard",sans-serif; --mono:"JetBrains Mono",ui-monospace,monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#e9ecf1;font-family:"Pretendard",system-ui,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased}
+.poster{width:1400px;margin:0 auto;background:#fff;padding:44px 44px 36px}
+b,strong{font-weight:700}
+.hot{color:var(--hot)} .acc{color:var(--accent)} .mono{font-family:var(--mono)}
+
+/* 헤더 */
+.head{display:grid;grid-template-columns:1fr 330px;gap:32px;align-items:start}
+.head h1{font-size:62px;line-height:1.08;font-weight:900;letter-spacing:-.03em}
+.tagrow{display:flex;align-items:center;gap:14px;margin:14px 0 12px;font-size:25px;font-weight:600}
+.badge{background:var(--accent);color:#fff;font-weight:800;padding:4px 14px;border-radius:8px;font-size:23px}
+.authors{font-size:21px;font-weight:700}
+.affil{font-size:14px;color:var(--sub);margin-top:4px}
+.venue{border-top:6px solid var(--hot);padding-top:12px;text-align:right}
+.venue .v1{font-family:var(--num);font-size:34px;font-weight:700;letter-spacing:-.01em}
+.venue .v2{font-size:14px;letter-spacing:.35em;font-weight:700;margin:6px 0 14px;border-top:1px solid var(--ink);border-bottom:1px solid var(--ink);padding:5px 0;text-align:center}
+.venue .v3{font-size:15px;color:var(--sub)} .venue .v3 b{color:var(--ink);font-size:20px;display:block}
+.venue .v3 span{font-family:var(--mono);color:var(--accent);font-size:14px}
+
+/* 다크 히어로 밴드 */
+.hero{background:var(--band);color:var(--band-ink);border-radius:20px;padding:26px 30px 24px;margin:26px 0 30px;display:grid;grid-template-columns:300px 270px 1fr 1fr;gap:28px}
+.cap{font-size:13px;letter-spacing:.12em;font-weight:700;color:var(--band-sub);text-transform:uppercase;margin-bottom:10px}
+.big{font-family:var(--num);font-size:104px;font-weight:700;line-height:.95;letter-spacing:-.04em}
+.big small{font-size:46px}
+.big-note{font-size:15px;color:var(--band-sub);margin-top:6px}
+.hbars .r{display:grid;grid-template-columns:24px 1fr 70px;gap:8px;align-items:center;margin:7px 0;font-size:14px}
+.hbars .k{background:var(--accent);color:#fff;font-weight:800;border-radius:4px;text-align:center;font-size:13px}
+.hbars .t{height:12px;background:rgba(255,255,255,.1)} .hbars .t i{display:block;height:100%;background:#cfd8f2}
+.hbars .v{font-family:var(--mono);font-size:13px;text-align:right}
+.metric{border-left:3px solid var(--band-ink);padding:2px 0 2px 12px;margin-bottom:12px}
+.metric b{font-family:var(--num);font-size:24px} .metric span{font-weight:700;font-size:17px}
+.metric p{font-size:13px;color:var(--band-sub)}
+.hlist .grp{display:grid;grid-template-columns:72px 1fr;border-top:1px solid rgba(255,255,255,.12);padding:7px 0}
+.hlist .grp>b{font-size:14px;letter-spacing:.06em}
+.hlist .row{display:flex;justify-content:space-between;font-size:14px;line-height:1.55}
+.hlist .row .x{color:var(--hot);font-weight:700} .hlist .row .o{color:#8fb0ff;font-weight:700}
+.tldr{grid-column:1/-1;font-size:20px;font-weight:600;border-top:1px solid rgba(255,255,255,.12);padding-top:14px}
+.tldr .pill{font-family:var(--mono);font-size:14px;background:var(--band-ink);color:var(--band);padding:2px 8px;border-radius:4px;margin-right:8px;font-weight:700}
+.tldr .hot{font-weight:800}
+
+/* 본문 2단 */
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:34px}
+.sec{margin-bottom:26px}
+.sec h2{display:flex;align-items:baseline;gap:12px;font-size:34px;font-weight:800;letter-spacing:-.02em;margin-bottom:12px}
+.sec h2 .n{color:var(--accent);font-family:var(--num)}
+.sec h2::after{content:"";flex:1;height:1.5px;background:var(--ink);order:2;align-self:center}
+.sec h2 em{order:3;font-style:normal;font-size:16px;font-weight:500;color:var(--sub)}
+.card{border:1.5px solid var(--line);border-radius:10px;padding:16px 18px;background:#fff}
+.card.soft{background:var(--soft)}
+.card.alert{border:1.5px dashed var(--hot)}
+.card h3{font-size:19px;font-weight:800;margin-bottom:8px}
+.lbl{font-size:13px;letter-spacing:.12em;color:var(--mute);font-weight:700;margin-bottom:8px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+p.body{font-size:16px;line-height:1.6;color:var(--sub)}
+.cap-line{font-size:15px;margin-top:8px;color:var(--sub)} .cap-line b{color:var(--ink)}
+
+/* 번호 리스트 */
+.steps li{list-style:none;display:grid;grid-template-columns:30px 1fr;gap:8px;font-size:17px;line-height:1.45;margin:8px 0}
+.steps li::before{counter-increment:s;content:counter(s);background:var(--ink);color:#fff;border-radius:50%;width:26px;height:26px;display:grid;place-items:center;font-weight:800;font-size:14px}
+.steps{counter-reset:s}
+
+/* 표 */
+table{width:100%;border-collapse:collapse;font-size:15px}
+th{font-size:13px;letter-spacing:.1em;color:var(--mute);text-align:left;padding:6px 8px;border-bottom:1.5px solid var(--ink)}
+td{padding:7px 8px;border-bottom:1px solid var(--line)}
+tr.me td{background:var(--accent-soft);font-weight:700} tr.me td:nth-child(2){color:var(--accent)}
+
+/* 정의/공식 박스 */
+.def{display:grid;grid-template-columns:44px 1fr;gap:6px;margin:8px 0;font-size:15px;line-height:1.5}
+.def .s{font-family:var(--num);font-size:24px;color:var(--accent);font-weight:700}
+.formula{font-family:var(--mono);font-size:16px;line-height:1.8;border-bottom:1px solid var(--line);padding-bottom:8px;margin-bottom:8px}
+
+/* 가로 막대 */
+.bars .r{display:grid;grid-template-columns:200px 1fr 60px 64px;gap:10px;align-items:center;font-size:15px;margin:6px 0}
+.bars .t{height:14px;background:var(--soft)} .bars .t i{display:block;height:100%;background:var(--hot)}
+.bars .t.acc i{background:var(--accent)}
+.bars .v{font-family:var(--mono);font-weight:700;text-align:right} .bars .p{font-family:var(--mono);color:var(--mute);text-align:right}
+
+/* 큰 숫자 콜아웃 */
+.callout{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:center;margin:14px 0}
+.callout .num{font-family:var(--num);font-size:54px;font-weight:700;color:var(--hot);letter-spacing:-.03em;line-height:1}
+.callout .num.acc{color:var(--accent)}
+.callout p{font-size:17px;line-height:1.45} .callout p span{color:var(--sub)}
+
+/* 대비(기대 vs 실제) */
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:6px}
+.vs .lbl.a{color:var(--accent)} .vs .lbl.h{color:var(--hot)}
+.vs .w{font-size:32px;font-weight:800;line-height:1.25}
+.vs .w.a{color:var(--accent)} .vs .w.h{color:var(--hot)}
+
+/* 칩 */
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1.5px solid var(--ink);border-radius:999px;padding:3px 12px;font-size:14px;font-weight:700}
+.chip.on{background:var(--ink);color:#fff}
+
+/* 테이크어웨이 밴드 */
+.take{background:var(--band);color:var(--band-ink);border-radius:20px;padding:26px 30px 22px;margin-top:8px}
+.take h2{font-size:38px;font-weight:800;display:flex;align-items:baseline;gap:12px;margin-bottom:16px}
+.take h2 .n{color:#8fb0ff;font-family:var(--num)}
+.take h2 em{margin-left:auto;font-style:normal;font-size:15px;color:var(--band-sub);font-weight:500}
+.take .three{display:grid;grid-template-columns:repeat(3,1fr);gap:30px}
+.take .pt{display:grid;grid-template-columns:34px 1fr;font-size:20px;line-height:1.45}
+.take .pt>b:first-child{font-family:var(--num);font-size:34px;color:#8fb0ff;line-height:1}
+.take .foot{border-top:1px solid rgba(255,255,255,.14);margin-top:20px;padding-top:12px;font-size:14px;color:var(--band-sub);line-height:1.7}
+.take .foot b{color:var(--band-ink)}
+</style>
+</head>
+<body>
+<div class="poster">
+
+  <!-- ① 헤더: 질문형 제목 + 배지 + 부제 + 저자/출처 + 오른쪽 발표처 -->
+  <header class="head">
+    <div>
+      <h1>많이 탕감받은 자가<br>많이 사랑하는가?</h1>
+      <div class="tagrow"><span class="badge">누가복음 7:36–50</span> 바리새인의 집에서 드러난 용서와 사랑의 순서</div>
+      <div class="authors">KBG Bible Labs · 설교 연구</div>
+      <div class="affil">본문 개역개정 · 비유(41–43) → 적용(44–47) → 선언(48–50)의 3단 구조로 읽음</div>
+    </div>
+    <div class="venue">
+      <div class="v1">주일 설교</div>
+      <div class="v2">SERMON NOTES</div>
+      <div class="v3"><b>본문 · 자료</b><span>눅 7:36–50 / 마 26:6–13 대조</span></div>
+    </div>
+  </header>
+
+  <!-- ② 히어로 밴드: 핵심 숫자 1개 + 비교 막대 + 지표 3개 + 오른쪽 대조 목록 + TL;DR -->
+  <section class="hero">
+    <div>
+      <div class="cap">두 빚진 자 · 41절</div>
+      <div class="big">500<small>:50</small></div>
+      <div class="big-note">데나리온. 둘 다 갚을 것이 없어 둘 다 탕감받았다.</div>
+    </div>
+    <div class="hbars">
+      <div class="cap">탕감의 크기</div>
+      <div class="r"><span class="k">A</span><span class="t"><i style="width:100%"></i></span><span class="v">500</span></div>
+      <div class="r"><span class="k">B</span><span class="t"><i style="width:10%"></i></span><span class="v">50</span></div>
+      <div class="big-note" style="font-size:13px;margin-top:10px"><b style="color:#fff">“누가 더 사랑하겠느냐”</b> (42절)</div>
+    </div>
+    <div>
+      <div class="cap">세 개의 축</div>
+      <div class="metric"><b>3</b> <span>인물</span><p>시몬 · 죄를 지은 여인 · 예수</p></div>
+      <div class="metric"><b>4</b> <span>행위</span><p>눈물 · 머리털 · 입맞춤 · 향유 (38절)</p></div>
+      <div class="metric"><b>1</b> <span>선언</span><p>“네 죄 사함을 받았느니라” (48절)</p></div>
+    </div>
+    <div class="hlist">
+      <div class="cap">시몬 ✗ / 여인 ○ · 44–46절</div>
+      <div class="grp"><b>물</b><div><div class="row"><span>발 씻을 물</span><span class="x">✗</span></div><div class="row"><span>눈물로 적시고 머리털로 닦음</span><span class="o">○</span></div></div></div>
+      <div class="grp"><b>입맞춤</b><div><div class="row"><span>맞이하는 입맞춤</span><span class="x">✗</span></div><div class="row"><span>발에 입맞추기를 그치지 않음</span><span class="o">○</span></div></div></div>
+      <div class="grp"><b>기름</b><div><div class="row"><span>머리에 감람유</span><span class="x">✗</span></div><div class="row"><span>발에 향유</span><span class="o">○</span></div></div></div>
+    </div>
+    <div class="tldr"><span class="pill">TL;DR</span>사랑은 용서를 사는 값이 아니라 <span class="hot">이미 받은 용서의 증거</span>다. 비유가 순서를 정한다: 탕감 → 사랑.</div>
+  </section>
+
+  <div class="cols">
+    <div>
+      <!-- ③ 섹션: 번호 · 제목 · 오른쪽 한 줄 태그라인 -->
+      <section class="sec">
+        <h2><span class="n">1</span>·문제<em>겉으로 의로움 ≠ 받은 은혜</em></h2>
+        <div class="grid2">
+          <div class="card soft">
+            <div class="lbl">시몬의 속생각 · 39절</div>
+            <p class="body">“이 사람이 만일 선지자라면 … 저 여자가 <b>죄인</b>인 줄을 알았으리라”</p>
+          </div>
+          <ol class="steps">
+            <li><span>초대는 했으나 <b>대접</b>은 하지 않았다</span></li>
+            <li><span>여인을 <b>범주</b>(죄인)로만 보았다</span></li>
+            <li><span>자기 빚은 <b>50</b>인 줄도 몰랐다</span></li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="sec">
+        <h2><span class="n">2</span>·구조<em>비유, 적용, 선언</em></h2>
+        <table>
+          <tr><th>단락</th><th>절</th><th>기능</th></tr>
+          <tr><td>장면</td><td>36–39</td><td>여인의 행위와 시몬의 판단</td></tr>
+          <tr><td>비유</td><td>40–43</td><td>두 빚진 자 — 질문으로 시몬이 스스로 답하게 함</td></tr>
+          <tr><td>적용</td><td>44–47</td><td>시몬 ✗ 대 여인 ○ 세 쌍의 대조</td></tr>
+          <tr class="me"><td>선언</td><td>48–50</td><td>죄 사함 · 믿음 · 평안히 가라</td></tr>
+        </table>
+      </section>
+
+      <section class="sec">
+        <h2><span class="n">3</span>·핵심 해석<em>47절의 “이는”</em></h2>
+        <div class="card">
+          <div class="formula">탕감(41–42) ⟶ 사랑(42 “더 사랑하겠느냐”)<br>사랑(44–46) ⟹ 탕감의 증거(47)</div>
+          <div class="def"><span class="s">원인</span><span>사랑이 용서를 <b>만든다</b>는 읽기 — 비유의 순서와 충돌</span></div>
+          <div class="def"><span class="s">증거</span><span>사랑이 용서를 <b>드러낸다</b>는 읽기 — 47절 하반절 “사함을 받은 일이 적은 자는 적게 사랑하느니라”와 맞물림</span></div>
+        </div>
+      </section>
+    </div>
+
+    <div>
+      <section class="sec">
+        <h2><span class="n">4</span>·장면의 무게<em>누가 무엇을 했나</em></h2>
+        <div class="bars">
+          <div class="r"><span>여인의 행위</span><span class="t"><i style="width:100%"></i></span><span class="v">4</span><span class="p">38절</span></div>
+          <div class="r"><span>시몬의 생략</span><span class="t acc"><i style="width:75%"></i></span><span class="v">3</span><span class="p">44–46</span></div>
+          <div class="r"><span>예수의 선언</span><span class="t acc"><i style="width:50%"></i></span><span class="v">2</span><span class="p">48, 50</span></div>
+        </div>
+        <div class="callout"><span class="num">0</span><p>여인의 말은 한 마디도 기록되지 않았다. <span>그녀의 신앙고백은 행위로만 남는다.</span></p></div>
+      </section>
+
+      <section class="sec">
+        <h2><span class="n">5</span>·기대와 실제<em>잔치의 반전</em></h2>
+        <div class="card">
+          <div class="vs">
+            <div><div class="lbl a">기대된 주인공</div><div class="w a">바리새인 시몬</div></div>
+            <div><div class="lbl h">실제 주인공</div><div class="w h">이름 없는 여인</div></div>
+          </div>
+          <p class="cap-line"><b>같은 식탁, 다른 빚의 자각.</b> 예수는 여인을 보며 시몬에게 말한다 (44절).</p>
+        </div>
+      </section>
+
+      <section class="sec">
+        <h2><span class="n">6</span>·오늘의 적용<em>나는 500인가 50인가</em></h2>
+        <div class="grid3">
+          <div class="card soft"><h3>자각</h3><p class="body">내 빚을 50으로 계산하는 순간 사랑도 50이 된다.</p></div>
+          <div class="card soft"><h3>시선</h3><p class="body">사람을 범주가 아니라 “이 여자를 보느냐”로 본다.</p></div>
+          <div class="card soft"><h3>평안</h3><p class="body">구원의 근거는 행위가 아니라 믿음 (50절).</p></div>
+        </div>
+        <div class="chips" style="margin-top:12px"><span class="chip on">눅 7:47</span><span class="chip">요일 4:19</span><span class="chip">엡 2:8</span></div>
+      </section>
+    </div>
+  </div>
+
+  <!-- ④ 테이크어웨이 밴드: 기억할 3가지 + 한계/출처 -->
+  <section class="take">
+    <h2><span class="n">7</span>·기억할 것<em>what to remember</em></h2>
+    <div class="three">
+      <div class="pt"><b>1</b><span><b>순서가 복음이다.</b> 탕감이 먼저, 사랑은 그 뒤에 온다.</span></div>
+      <div class="pt"><b>2</b><span><b>빚의 자각이 사랑의 크기다.</b> 50이라 여기면 50만큼 사랑한다.</span></div>
+      <div class="pt"><b>3</b><span><b>믿음이 구원한다.</b> 행위는 그 믿음이 남긴 흔적이다.</span></div>
+    </div>
+    <div class="foot"><b>범위.</b> 누가복음 7:36–50 단락에 한정. 마태 26장·마가 14장·요한 12장의 베다니 기름부음과는 별개 사건으로 읽음.<br><b>출처.</b> 성경 본문 개역개정. KBG Bible Labs 설교 노트.</div>
+  </section>
+
+</div>
+<script>/* export.sh가 높이를 읽는다 */document.fonts.ready.then(()=>document.documentElement.dataset.h=document.querySelector(".poster").offsetHeight)</script>
+</body>
+</html>

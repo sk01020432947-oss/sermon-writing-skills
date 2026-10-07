@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><title>다른 모델 비교본 · Model Compare Baseline</title>
+<link rel="stylesheet" href="../../lib/stage.css">
+<style>
+  .frame{background:#0f1211 !important;background-image:none !important}
+  .scene{position:absolute;inset:0;overflow:hidden;background:#0f1211}
+  :root{--or:#E67945;--cr:#F3F4ED;--sb:#E1E5D8;--lime:#D4EC2E;--g1:#CBDF9F;--g2:#93B15F;--g3:#4B6E34;--ink:#283020;--cell:#E2E3DA}
+  .star{position:absolute;width:2px;height:2px;border-radius:50%;background:#6b7268}
+  .grp{position:absolute;inset:0}
+  .win{position:absolute;border-radius:10px;background:var(--cr);overflow:hidden;box-shadow:0 6px 0 rgba(0,0,0,.35)}
+  .win .tb{position:absolute;left:0;top:0;right:0;height:30px;background:var(--or)}
+  .win .tb i{position:absolute;top:13px;width:5px;height:5px;border-radius:50%;background:#f7d9c8}
+  .back{position:absolute;border-radius:12px;background:#161c15;border:1.5px solid #283227}
+  .side{position:absolute;left:16px;top:47px;width:99px;height:283px;border-radius:6px;background:var(--sb)}
+  .side i{position:absolute;left:6px;width:87px;height:17px;border-radius:3px;background:#f9faf3}
+  .tline{position:absolute;left:156px;top:99px;width:220px;height:7px;border-radius:4px;background:var(--ink);transform-origin:0 50%}
+  .gbar{position:absolute;bottom:74px;width:69px;border-radius:5px;transform-origin:50% 100%}
+  .pg{position:absolute;top:572px;width:8px;height:8px;border-radius:50%;background:#383c2f}
+  .clk{position:absolute;left:870px;top:196px;width:88px;height:88px;border-radius:50%;border:2px solid #7d8a2c;opacity:0}
+  .cellg{position:absolute;height:30px;border-radius:3px}
+  .wrow{position:absolute;inset:0}
+  .rowdot{position:absolute;top:524px;width:7px;height:7px;border-radius:50%;background:var(--lime)}
+  .rline{position:absolute;left:293px;top:558px;width:694px;height:1.5px;background:#2e3a22;transform-origin:0 50%}
+  .ret{position:absolute;left:640px;top:360px;width:0;height:0}
+  .br{position:absolute;width:41px;height:41px;border:0 solid var(--lime)}
+  .ring{position:absolute;left:-108px;top:-108px;width:216px;height:216px;border-radius:50%;border:3px solid var(--lime)}
+  .dot{position:absolute;left:-23px;top:-23px;width:46px;height:46px;border-radius:50%;background:var(--lime)}
+  .ray{position:absolute;left:0;top:0;width:0;height:0}
+  .ray i{position:absolute;left:180px;top:-1px;width:64px;height:2px;background:#8a9a3a}
+</style></head>
+<body data-no="S18" data-cat="비교 · COMPARE" data-ko="다른 모델 비교본" data-en="Model Compare Baseline" data-meta="10초 · 같은 대본, 다른 모델의 결과" data-dur="10" data-poster="4.8" data-size="1280x720">
+<main class="scene">
+  <div id="stars"></div>
+
+  <div class="grp" id="A">
+    <div class="back" style="left:384px;top:140px;width:580px;height:348px"></div>
+    <div class="back" style="left:368px;top:157px;width:580px;height:348px"></div>
+    <div class="win w1" style="left:351px;top:173px;width:580px;height:348px">
+      <div class="tb"><i style="left:14px"></i><i style="left:24px"></i><i style="left:34px"></i></div>
+      <div class="side"><i style="top:17px"></i><i style="top:105px"></i><i style="top:195px"></i></div>
+      <div class="tline"></div>
+      <div class="gbar b1" style="left:156px;height:77px;background:var(--g1)"></div>
+      <div class="gbar b2" style="left:266px;height:108px;background:var(--g2)"></div>
+      <div class="gbar b3" style="left:376px;height:140px;background:var(--g3)"></div>
+    </div>
+    <div class="clk"></div>
+    <div class="pg p1" style="left:593px"></div><div class="pg p2" style="left:636px"></div><div class="pg p3" style="left:680px"></div>
+  </div>
+
+  <div class="grp" id="B">
+    <div class="wrow">
+      <div class="win wa" style="left:147px;top:244px;width:293px;height:237px">
+        <div class="tb"><i style="left:12px"></i><i style="left:22px"></i><i style="left:32px"></i></div>
+        <svg style="position:absolute;left:52px;top:72px" width="190" height="117" viewBox="0 0 190 117"><rect width="190" height="117" rx="6" fill="#DDE3CF"/><circle cx="144" cy="30" r="15" fill="#D4EC2E"/><path d="M10 105 L72 50 L108 85 L140 60 L180 105Z" fill="#679436"/></svg>
+      </div>
+      <div class="win wc" style="left:840px;top:244px;width:293px;height:237px">
+        <div class="tb"><i style="left:12px"></i><i style="left:22px"></i><i style="left:32px"></i></div>
+        <div class="gbar" style="left:60px;bottom:58px;width:42px;height:42px;background:var(--g1)"></div>
+        <div class="gbar" style="left:124px;bottom:58px;width:42px;height:72px;background:var(--g2)"></div>
+        <div class="gbar" style="left:188px;bottom:58px;width:42px;height:102px;background:var(--g3)"></div>
+      </div>
+      <div class="win wb" style="left:493px;top:244px;width:293px;height:237px"><div class="tb"><i style="left:12px"></i><i style="left:22px"></i><i style="left:32px"></i></div><div id="cells"></div></div>
+    </div>
+    <div class="rowdot" style="left:290px"></div><div class="rowdot" style="left:637px"></div><div class="rowdot" style="left:984px"></div>
+    <div class="rline"></div>
+  </div>
+
+  <div class="grp" id="C">
+    <div class="ret">
+      <div id="rays"></div>
+      <div class="ring"></div><div class="dot"></div>
+      <div class="br c1" style="left:-169px;top:-148px;border-left-width:3px;border-top-width:3px"></div>
+      <div class="br c2" style="left:128px;top:-148px;border-right-width:3px;border-top-width:3px"></div>
+      <div class="br c3" style="left:-169px;top:107px;border-left-width:3px;border-bottom-width:3px"></div>
+      <div class="br c4" style="left:128px;top:107px;border-right-width:3px;border-bottom-width:3px"></div>
+    </div>
+  </div>
+</main>
+<script src="../../lib/gsap.min.js"></script><script src="../../lib/stage.js"></script>
+<script>
+const r = Motion.rand(18);
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+for (let i = 0; i < 70; i++) {
+  const s = document.createElement('div'); s.className = 'star';
+  s.style.left = (r() * 1280).toFixed(0) + 'px'; s.style.top = (r() * 720).toFixed(0) + 'px';
+  s.style.opacity = (0.2 + r() * 0.45).toFixed(2);
+  $('#stars').appendChild(s);
+}
+for (let y = 0; y < 3; y++) for (let x = 0; x < 3; x++)
+  $('#cells').insertAdjacentHTML('beforeend', `<div class="cellg" style="left:${66 + x * 56}px;top:${66 + y * 40}px;width:48px;background:${y ? 'var(--cell)' : '#9BBF6E'}"></div>`);
+for (let i = 0; i < 8; i++)
+  $('#rays').insertAdjacentHTML('beforeend', `<div class="ray" style="transform:rotate(${i * 45 + (i % 2 ? 0 : 0)}deg)"><i></i></div>`);
+
+const tl = Motion.timeline();
+gsap.set('#B,#C', {autoAlpha: 0});
+[['.b1', 77], ['.b2', 108], ['.b3', 140]].forEach(([c, h]) => gsap.set('.gbar' + c, {scaleY: 12 / h}));
+
+// A 0–2.8 : cream window, bars grow (stiff linear-ish motion on purpose)
+tl.from('.w1,.back', {y: 40, autoAlpha: 0, duration: 0.35, ease: 'power1.out'}, 0);
+tl.from('.tline', {scaleX: 0, duration: 0.4, ease: 'none'}, 0.35);
+tl.to('.p1', {background: '#D4EC2E', duration: 0.01}, 0.4);
+tl.to('.gbar.b1,.gbar.b2,.gbar.b3', {scaleY: 1, duration: 0.8, ease: 'power1.inOut'}, 1.3);
+tl.to('.p2', {background: '#D4EC2E', duration: 0.01}, 1.5);
+tl.to('.p3', {background: '#D4EC2E', duration: 0.01}, 1.9);
+tl.fromTo('.clk', {autoAlpha: 0, scale: 0.6}, {autoAlpha: 1, scale: 1, duration: 0.25, immediateRender: false}, 2.1);
+tl.to('.clk', {autoAlpha: 0, duration: 0.2}, 2.45);
+tl.set('#A', {autoAlpha: 0}, 2.8);
+
+// B 2.8–5.6 : table window, siblings slide out into a row
+tl.set('#B', {autoAlpha: 1}, 2.8);
+gsap.set('.rowdot', {autoAlpha: 0}); gsap.set('.rline', {scaleX: 0});
+tl.fromTo('.wb', {scale: 1.25}, {scale: 1.6, duration: 0.3, ease: 'power1.out'}, 2.8);
+tl.to('.wb', {scale: 1, duration: 0.35, ease: 'power1.inOut'}, 3.4);
+tl.fromTo('.wa', {x: 346, autoAlpha: 0}, {x: 0, autoAlpha: 1, duration: 0.45, ease: 'power1.out'}, 3.5);
+tl.fromTo('.wc', {x: -347, autoAlpha: 0}, {x: 0, autoAlpha: 1, duration: 0.45, ease: 'power1.out'}, 3.5);
+tl.to('.rowdot', {autoAlpha: 1, duration: 0.15, stagger: 0.1}, 4.0);
+tl.to('.rline', {scaleX: 1, duration: 0.5, ease: 'none'}, 4.1);
+
+// C 5.6–8.2 : row collapses into a small icon inside lime brackets → reticle
+tl.set('#C', {autoAlpha: 1}, 5.6);
+gsap.set('.ring,.dot,#rays', {autoAlpha: 0});
+[['.c1', -1, -1], ['.c2', 1, -1], ['.c3', -1, 1], ['.c4', 1, 1]].forEach(([c, x, y]) =>
+  tl.fromTo(c, {x: x * 340, y: y * 30, autoAlpha: 0}, {x: x * 260, y: y * 10, autoAlpha: 1, duration: 0.3, ease: 'power1.out'}, 5.6));
+tl.to('.rowdot,.rline', {autoAlpha: 0, duration: 0.2}, 5.6);
+tl.to('.wa', {x: 300, duration: 0.5, ease: 'power1.inOut'}, 5.9);
+tl.to('.wc', {x: -300, duration: 0.5, ease: 'power1.inOut'}, 5.9);
+tl.to('.wrow', {scale: 0.22, transformOrigin: '640px 362px', duration: 0.9, ease: 'power1.inOut'}, 6.0);
+tl.to(['.c1', '.c2', '.c3', '.c4'], {x: 0, y: 0, duration: 0.9, ease: 'power1.inOut'}, 6.0);
+tl.to('.wrow', {autoAlpha: 0, duration: 0.15}, 6.9);
+tl.fromTo('.ring', {autoAlpha: 0, scale: 0.4}, {autoAlpha: 1, scale: 1, duration: 0.3, ease: 'power1.out'}, 7.0);
+tl.fromTo('.dot', {autoAlpha: 0, scale: 0}, {autoAlpha: 1, scale: 1, duration: 0.25}, 7.05);
+tl.fromTo('#rays', {autoAlpha: 0, scale: 0.7}, {autoAlpha: 1, scale: 1.25, duration: 0.45, ease: 'power1.out'}, 7.1);
+tl.to('#rays', {autoAlpha: 0, duration: 0.3}, 7.7);
+
+// D 8.2–10 : back to the three-window summary (end of the second take)
+tl.to('#C', {autoAlpha: 0, duration: 0.2}, 8.2);
+tl.set('.wrow', {autoAlpha: 1, scale: 1}, 8.3);
+tl.fromTo('.wb', {y: 24}, {y: 0, duration: 0.3, ease: 'power1.out', immediateRender: false}, 8.3);
+// 원본 두 번째 테이크처럼 가운데 창 뒤에서 양옆 창이 미끄러져 나온다
+tl.fromTo('.wa', {x: 346, autoAlpha: 0}, {x: 0, autoAlpha: 1, duration: 0.4, ease: 'power1.out', immediateRender: false}, 8.3);
+tl.fromTo('.wc', {x: -347, autoAlpha: 0}, {x: 0, autoAlpha: 1, duration: 0.4, ease: 'power1.out', immediateRender: false}, 8.3);
+tl.to('.rowdot', {autoAlpha: 1, duration: 0.15, stagger: 0.08}, 8.55);
+tl.fromTo('.rline', {scaleX: 0, autoAlpha: 1}, {scaleX: 1, duration: 0.4, ease: 'none', immediateRender: false}, 8.6);
+Motion.ready();
+</script></body></html>

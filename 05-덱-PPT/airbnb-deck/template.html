@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Airbnb Deck</title>
+<!-- Airbnb Cereal은 사유 폰트. 지오메트릭 산세 계열 대체로 Inter + 한글 Pretendard -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --rausch:#ff385c;      /* 유일한 브랜드 전압 */
+  --rausch-active:#e00b41; --rausch-disabled:#ffd1da;
+  --luxe:#460479; --plus:#92174d;   /* 서브브랜드. 일반 덱에서는 쓰지 않는다 */
+  --ink:#222; --body:#3f3f3f; --muted:#6a6a6a; --muted-soft:#929292;
+  --hairline:#ddd; --hairline-soft:#ebebeb; --border-strong:#c1c1c1;
+  --canvas:#fff; --soft:#f7f7f7; --strong:#f2f2f2;
+  /* ── 타입 (원본 × 2. rating-display를 덱 히어로로 승격 — 아래 스킬 문서 참조) ── */
+  --hero:128px; --d-xl:56px; --d-lg:44px; --d-md:42px; --d-sm:40px;
+  --title:32px; --body-md:32px; --body-sm:28px; --cap:28px; --cap-sm:26px;
+  --badge:22px; --micro:24px; --btn:32px; --btn-sm:28px;
+  /* ── 여백 (× 2) ── */
+  --xxs:4px; --xs:8px; --sm:16px; --md:24px; --base:32px; --lg:48px; --xl:64px;
+  --xxl:96px; --sec:128px;
+  --pad:96px;
+  /* ── 라운딩 (× 2, full 제외) ── */
+  --r-xs:8px; --r-sm:16px; --r-md:28px; --r-lg:40px; --r-xl:64px; --full:9999px;
+  --f:"Airbnb Cereal VF","Inter","Pretendard Variable",-apple-system,system-ui,Roboto,sans-serif;
+  --shadow:rgba(0,0,0,.02) 0 0 0 1px,rgba(0,0,0,.04) 0 4px 12px,rgba(0,0,0,.1) 0 8px 16px;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;background:#000;overflow:hidden}
+body{font-family:var(--f);color:var(--ink);-webkit-font-smoothing:antialiased}
+
+#stage{position:absolute;top:50%;left:50%;width:1920px;height:1080px;
+  transform:translate(-50%,-50%) scale(var(--scale,1));transform-origin:center;background:var(--canvas)}
+.slide{position:absolute;inset:0;display:none;background:var(--canvas);
+  padding:var(--xxl) var(--pad);overflow:hidden}
+.slide.active{display:flex;flex-direction:column;justify-content:center}
+.slide.soft{background:var(--soft)}
+
+/* ═════ 타이포 ═════ */
+h1{font-size:var(--hero);font-weight:700;line-height:1.1;letter-spacing:-2px}
+h2{font-size:var(--d-xl);font-weight:700;line-height:1.25}
+h3{font-size:var(--d-lg);font-weight:500;line-height:1.18;letter-spacing:-.88px}
+h4{font-size:var(--d-sm);font-weight:600;line-height:1.2;letter-spacing:-.36px}
+p{font-size:var(--body-md);font-weight:400;line-height:1.5;color:var(--body);max-width:32em}
+.sm{font-size:var(--body-sm);font-weight:400;line-height:1.43;color:var(--muted)}
+.cap{font-size:var(--cap-sm);color:var(--muted)}
+.micro{font-size:var(--micro);font-weight:700;line-height:1.33}
+b,strong{font-weight:600;color:var(--ink)}
+a.link{color:var(--ink);font-size:var(--body-sm);text-decoration:underline}
+
+/* ═════ 버튼 — Rausch는 주 CTA에만 ═════ */
+.btns{display:flex;gap:var(--sm);margin-top:var(--lg);flex-wrap:wrap;align-items:center}
+.btn{display:inline-flex;align-items:center;justify-content:center;background:var(--rausch);
+  color:#fff;font-size:var(--btn);font-weight:500;border-radius:var(--r-xs);
+  padding:28px 48px;min-height:96px;text-decoration:none}
+.btn:active{background:var(--rausch-active)}
+.btn.sec{background:var(--canvas);color:var(--ink);border:1px solid var(--ink)}
+.btn.pill{border-radius:var(--full);padding:20px 40px;min-height:0}
+.orb{width:96px;height:96px;border-radius:var(--full);background:var(--rausch);color:#fff;
+  display:inline-flex;align-items:center;justify-content:center;font-size:36px;flex:none}
+.icon-circle{width:80px;height:80px;border-radius:var(--full);background:var(--strong);
+  display:inline-flex;align-items:center;justify-content:center;font-size:30px}
+
+/* ═════ 검색 pill — 이 브랜드의 상징 컴포넌트 ═════ */
+.searchbar{display:inline-flex;align-items:center;background:var(--canvas);
+  border:1px solid var(--hairline);border-radius:var(--full);padding:12px 12px 12px 48px;
+  box-shadow:var(--shadow);gap:0}
+.searchbar .seg{padding:16px 48px;border-right:1px solid var(--hairline)}
+.searchbar .seg:last-of-type{border-right:0}
+.searchbar .seg .k{font-size:var(--cap);font-weight:500;line-height:1.29}
+.searchbar .seg .v{font-size:var(--body-sm);color:var(--muted-soft);margin-top:4px}
+
+/* ═════ 카테고리 스트립 ═════ */
+.cats{display:flex;gap:var(--xl);align-items:flex-end;border-bottom:1px solid var(--hairline-soft);
+  padding-bottom:var(--sm)}
+.cat{font-size:var(--btn-sm);font-weight:500;color:var(--muted);padding-bottom:var(--sm)}
+.cat.on{color:var(--ink);box-shadow:inset 0 -3px 0 var(--ink)}
+
+/* ═════ 사진 카드 — 14px(덱 28px) 라운딩이 서명 ═════ */
+.cards{display:grid;grid-template-columns:repeat(var(--cols,4),1fr);gap:var(--md);margin-top:var(--lg)}
+.pcard{display:flex;flex-direction:column;gap:var(--sm)}
+.pcard .photo{aspect-ratio:20/19;border-radius:var(--r-md);
+  background:var(--img,linear-gradient(160deg,#e9e3dd,#d8d2cb)) center/cover no-repeat;
+  position:relative}
+.pcard .badge{position:absolute;left:16px;top:16px;background:#fff;border-radius:var(--full);
+  padding:8px 20px;font-size:var(--badge);font-weight:600}
+.pcard .t{font-size:var(--body-sm);font-weight:600;line-height:1.43;display:flex;
+  justify-content:space-between;gap:var(--sm)}
+.pcard .t .star::before{content:"★ "}
+.pcard .m{font-size:var(--body-sm);color:var(--muted)}
+.pcard .p{font-size:var(--body-sm);color:var(--ink);font-weight:600}
+
+/* ═════ 정보 카드 — 24px(덱 48px) 여백 ═════ */
+.card{background:var(--canvas);border:1px solid var(--hairline);border-radius:var(--r-md);
+  padding:var(--lg);display:flex;flex-direction:column;gap:var(--sm)}
+.card.soft{background:var(--soft);border-color:transparent}
+.card.lift{box-shadow:var(--shadow);border-color:transparent}
+
+/* ═════ 행 나열 ═════ */
+.rows{margin-top:var(--lg)}
+.row{display:flex;gap:var(--xl);align-items:baseline;padding:var(--md) 0;
+  border-bottom:1px solid var(--hairline-soft)}
+.row .k{flex:0 0 26%;font-size:var(--body-md);font-weight:600}
+.row .v{flex:1;font-size:var(--body-md);color:var(--body)}
+.row .n{font-size:var(--d-lg);font-weight:700;white-space:nowrap}
+
+/* ═════ 큰 평점 숫자 ═════ */
+.figs{display:flex;gap:var(--xxl);margin-top:var(--lg)}
+.fig .v{font-size:var(--hero);font-weight:700;letter-spacing:-2px;line-height:1.1}
+.fig .k{font-size:var(--body-sm);color:var(--muted);margin-top:var(--xs)}
+
+/* ═════ 2단 ═════ */
+.two{display:flex;gap:var(--xxl);align-items:center}
+.two>.tx{flex:0 0 42%}
+.two>.vis{flex:1;min-width:0}
+.hero-photo{aspect-ratio:16/10;border-radius:var(--r-lg);
+  background:var(--img,linear-gradient(160deg,#efe7df,#ded4c8)) center/cover no-repeat}
+
+/* ═════ 모션 — 부드럽고 따뜻하게 ═════ */
+.in{opacity:0}
+.active .in{animation:rise .6s cubic-bezier(.2,.7,.2,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+.active .d1{animation-delay:.05s}.active .d2{animation-delay:.15s}.active .d3{animation-delay:.25s}
+.active .d4{animation-delay:.35s}.active .d5{animation-delay:.45s}.active .d6{animation-delay:.55s}
+
+#nav{position:fixed;right:24px;bottom:18px;font-size:15px;color:var(--muted-soft);z-index:99}
+#nav .hint{margin-right:16px;color:var(--hairline)}
+body.notes #nav{bottom:auto;top:18px}
+
+/* ═════ 발표자 노트 — S 토글. 좌우 여백 = 본문 끝선(--pad 96px) ═════ */
+body.notes #stage{top:0;transform:translateX(-50%) scale(var(--scale,1));transform-origin:top center}
+#notes{position:fixed;left:0;right:0;bottom:0;max-height:40vh;overflow:auto;display:none;
+  background:var(--soft);border-top:1px solid var(--hairline);z-index:100;
+  padding:20px var(--npad,30px) 26px}
+body.notes #notes{display:block}
+#notes .nlab{font-size:13px;font-weight:600;color:var(--rausch);margin-bottom:10px}
+#notes .ntext{font-size:18px;line-height:1.65;color:var(--body)}
+#notes .ntext b{font-weight:600;color:var(--ink)}
+#notes .ntext span{color:var(--muted)}
+
+@media print{
+  html,body,#stage{overflow:visible;position:static;transform:none;width:auto;height:auto}
+  .slide{display:flex!important;position:relative;width:1920px;height:1080px;page-break-after:always}
+  .in{animation:none!important;opacity:1!important;transform:none!important}
+  #nav,#notes{display:none!important}
+}
+</style>
+</head>
+<body>
+<div id="stage">
+
+<!-- ═════ A1. 표지 — 검색 pill이 이 브랜드의 상징 ═════ -->
+<section class="slide" data-note="여는 장. <b>검색 pill(64px 높이, 9999px 라운딩, 얕은 그림자 1단)</b>이 이 브랜드의 상징 컴포넌트다. 표지에 넣으면 한 눈에 이 시스템임을 알린다.<br><span>주의: 원본은 마케팅 디스플레이 스케일이 없다(홈 h1이 28px). 덱에서는 rating-display(64/700/-1px)를 히어로 목소리로 승격해 썼다.</span>">
+  <div>
+    <h1 class="in d1">따뜻하게<br>제안합니다</h1>
+    <p class="in d2" style="margin-top:var(--md)">부제는 두 줄까지. 본문은 회색(#3f3f3f)으로 낮춘다.</p>
+    <div class="searchbar in d3" style="margin-top:var(--lg)">
+      <div class="seg"><div class="k">주제</div><div class="v">무엇을 다루나</div></div>
+      <div class="seg"><div class="k">일시</div><div class="v">2026-07-27</div></div>
+      <div class="seg"><div class="k">대상</div><div class="v">청중 추가</div></div>
+      <div class="orb" style="margin-left:var(--md)">→</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════ A2. 카테고리 + 사진 카드 4-up ═════ -->
+<section class="slide" data-note="사진 카드 그리드. 카드 라운딩 <b>14px(덱 28px)</b>가 이 시스템의 서명이다 — 8px도 20px도 아니다. 카드에는 기본 그림자가 없고, 얕은 1단 그림자는 강조할 때만 쓴다.">
+  <div>
+    <div class="cats in d1">
+      <div class="cat on">전체</div><div class="cat">항목 A</div><div class="cat">항목 B</div>
+      <div class="cat">항목 C</div><div class="cat">항목 D</div>
+    </div>
+    <div class="cards" style="--cols:4">
+      <div class="pcard in d2"><div class="photo"><div class="badge">추천</div></div>
+        <div class="t"><span>첫 번째 항목</span><span class="star">4.98</span></div>
+        <div class="m">부가 설명 한 줄</div><div class="p">핵심 수치</div></div>
+      <div class="pcard in d3"><div class="photo"></div>
+        <div class="t"><span>두 번째 항목</span><span class="star">4.92</span></div>
+        <div class="m">부가 설명 한 줄</div><div class="p">핵심 수치</div></div>
+      <div class="pcard in d4"><div class="photo"></div>
+        <div class="t"><span>세 번째 항목</span><span class="star">4.89</span></div>
+        <div class="m">부가 설명 한 줄</div><div class="p">핵심 수치</div></div>
+      <div class="pcard in d5"><div class="photo"></div>
+        <div class="t"><span>네 번째 항목</span><span class="star">4.95</span></div>
+        <div class="m">부가 설명 한 줄</div><div class="p">핵심 수치</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════ A3. 2단 — 사진 + 설명 ═════ -->
+<section class="slide" data-note="사진 + 설명. 사진 라운딩은 큰 면일수록 한 단계 키운다(20px, 덱 40px). <b>사진에 그림자를 넣지 않는다</b> — 이 시스템의 그림자는 사실상 한 단계뿐이다.">
+  <div class="two">
+    <div class="tx">
+      <h3 class="in d1">사람 이야기로<br>설명합니다</h3>
+      <p class="in d2" style="margin-top:var(--md)">이 시스템의 온기는 사진과 여백에서 나온다. 문장은 짧고 다정하게.</p>
+      <div class="btns in d3"><a class="btn">자세히 보기</a><a class="btn sec">문의하기</a></div>
+    </div>
+    <div class="vis"><div class="hero-photo in d2"></div></div>
+  </div>
+</section>
+
+<!-- ═════ A4. 큰 숫자 — rating-display 승격 ═════ -->
+<section class="slide soft" data-note="지표. 원본에서 <b>64px/700/-1px rating-display</b>가 유일한 대형 타입이다. 이 토큰을 숫자 표시에 그대로 쓴다.">
+  <div>
+    <h4 class="in d1">숫자로 보기</h4>
+    <div class="figs">
+      <div class="fig in d2"><div class="v">4.98</div><div class="k">첫 번째 지표</div></div>
+      <div class="fig in d3"><div class="v">1,240</div><div class="k">두 번째 지표</div></div>
+      <div class="fig in d4"><div class="v">92%</div><div class="k">세 번째 지표</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════ A5. 항목 행 ═════ -->
+<section class="slide" data-note="항목 나열. 어메니티 행 형식이다 — 얕은 헤어라인(#ebebeb)으로만 나누고 세로 괘선을 넣지 않는다.">
+  <div>
+    <h4 class="in d1">무엇이 포함되나</h4>
+    <div class="rows">
+      <div class="row in d2"><div class="k">항목 A</div><div class="v">설명을 한 줄로 적는다</div><div class="n">480</div></div>
+      <div class="row in d3"><div class="k">항목 B</div><div class="v">설명을 한 줄로 적는다</div><div class="n">550</div></div>
+      <div class="row in d4"><div class="k">항목 C</div><div class="v">설명을 한 줄로 적는다</div><div class="n">727</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════ A6. 예약 카드 — Rausch CTA ═════ -->
+<section class="slide" data-note="결정 카드. 예약 카드 형식(14px 라운딩, 24px 여백, 얕은 그림자 1단)에 <b>Rausch 버튼 하나</b>를 놓는다. Rausch는 한 화면에 하나다.">
+  <div class="two">
+    <div class="tx">
+      <h3 class="in d1">이렇게<br>진행합니다</h3>
+      <p class="in d2" style="margin-top:var(--md)">왼쪽에 맥락, 오른쪽에 결정. 결정 카드는 화면당 하나만 둔다.</p>
+    </div>
+    <div class="vis" style="display:flex;justify-content:flex-end">
+      <div class="card lift in d3" style="width:640px;padding:var(--lg)">
+        <div style="display:flex;justify-content:space-between;align-items:baseline">
+          <div><span style="font-size:var(--d-sm);font-weight:600">핵심 제안</span>
+            <span class="sm"> / 기준</span></div>
+          <div class="sm">★ 4.98</div>
+        </div>
+        <div class="rows" style="margin-top:var(--sm)">
+          <div class="row" style="padding:var(--sm) 0"><div class="k" style="flex:1">항목</div>
+            <div class="n" style="font-size:var(--body-md);font-weight:400">내용</div></div>
+          <div class="row" style="padding:var(--sm) 0"><div class="k" style="flex:1">항목</div>
+            <div class="n" style="font-size:var(--body-md);font-weight:400">내용</div></div>
+        </div>
+        <a class="btn in" style="margin-top:var(--md);width:100%">시작하기</a>
+        <div class="cap" style="text-align:center">아직 확정되지 않습니다</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════ A7. 카드 3-up (정보) ═════ -->
+<section class="slide soft" data-note="정보 카드. 사진 카드와 달리 테두리와 흰 면을 쓴다. 두 카드 유형을 한 장에 섞지 않는다.">
+  <div>
+    <h4 class="in d1">세 가지</h4>
+    <div class="cards" style="--cols:3">
+      <div class="card in d2"><div class="icon-circle">◎</div><h4 style="font-size:var(--title)">첫 번째</h4>
+        <p class="sm">본문은 두세 줄. 회색으로 낮춘다.</p></div>
+      <div class="card in d3"><div class="icon-circle">◇</div><h4 style="font-size:var(--title)">두 번째</h4>
+        <p class="sm">아이콘 버튼은 언제나 원형이다.</p></div>
+      <div class="card in d4"><div class="icon-circle">△</div><h4 style="font-size:var(--title)">세 번째</h4>
+        <p class="sm">카드 라운딩은 14px로 통일한다.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════ A8. 클로징 ═════ -->
+<section class="slide" data-note="닫는 장. 푸터는 흰 면에 회색 링크다. <b>Rausch 버튼 하나</b>로 닫는다.">
+  <div>
+    <h2 class="in d1">다음 단계</h2>
+    <p class="in d2" style="margin-top:var(--md)">청중이 취할 행동 하나만 남긴다.</p>
+    <div class="btns in d3"><a class="btn">시작하기</a><a class="btn sec">문의하기</a></div>
+    <div class="rows in d4" style="margin-top:var(--xxl)">
+      <div class="row" style="border-bottom:0"><div class="k">자료</div>
+        <div class="v"><a class="link">발표 슬라이드</a> · <a class="link">참고 문서</a></div></div>
+    </div>
+    <div class="cap in d5">© 2026 · 발표자 · 연락처</div>
+  </div>
+</section>
+
+</div>
+
+<div id="nav"><span class="hint">S 발표자 노트</span><span id="navPage"></span></div>
+<div id="notes"><div class="nlab">발표자 노트</div><div class="ntext" id="noteText"></div></div>
+
+<script>
+const slides=[...document.querySelectorAll('.slide')];
+let cur=-1;
+const navPage=document.getElementById('navPage');
+const noteText=document.getElementById('noteText');
+function show(n){
+  cur=Math.max(0,Math.min(slides.length-1,n));
+  slides.forEach((s,i)=>s.classList.toggle('active',i===cur));
+  navPage.textContent=(cur+1)+' / '+slides.length;
+  noteText.innerHTML=slides[cur].dataset.note||'<span>이 장에는 노트가 없습니다.</span>';
+}
+addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key===' ')show(cur+1);
+  else if(e.key==='ArrowLeft')show(cur-1);
+  else if(e.key==='Home')show(0);
+  else if(e.key==='End')show(slides.length-1);
+  else if(e.key==='s'||e.key==='S'){document.body.classList.toggle('notes');fit();}
+});
+addEventListener('click',e=>{
+  if(e.target.closest('#notes'))return;
+  if(e.clientX<innerWidth/2)show(cur-1);else show(cur+1);
+});
+let tx=null;
+addEventListener('touchstart',e=>tx=e.touches[0].clientX);
+addEventListener('touchend',e=>{if(tx===null)return;
+  const dx=e.changedTouches[0].clientX-tx;
+  if(dx<-40)show(cur+1);else if(dx>40)show(cur-1);tx=null});
+function fit(){
+  const avail=document.body.classList.contains('notes')?innerHeight*.58:innerHeight;
+  const s=Math.min(innerWidth/1920,avail/1080);
+  document.getElementById('stage').style.setProperty('--scale',s);
+  document.documentElement.style.setProperty('--npad',
+    Math.round((innerWidth-1920*s)/2+96*s)+'px');
+}
+addEventListener('resize',fit);addEventListener('load',fit);fit();
+const _h=parseInt(location.hash.slice(1));show(isNaN(_h)?0:_h-1);
+addEventListener('hashchange',()=>{const n=parseInt(location.hash.slice(1));if(!isNaN(n))show(n-1)});
+if(location.search.indexOf('shot')>-1)document.getElementById('nav').style.display='none';
+</script>
+</body>
+</html>

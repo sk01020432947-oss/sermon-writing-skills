@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blueprint Deck</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+:root{
+  --paper:#F6F6F3;     /* 아주 옅은 회백 종이. 순백 금지 */
+  --grid:#DFE4E9;      /* 모눈 실선 */
+  --grid-hi:#D2DAE2;   /* 5칸마다 굵은 모눈 */
+  --frame:#B9C6D6;     /* 슬라이드 외곽 프레임 */
+  --handle:#6C8FBF;    /* 선택 핸들 테두리 */
+  --ink:#1E272E;       /* 헤드라인 */
+  --body:#3A4046;      /* 본문 */
+  --mute:#767C83;      /* 캡션 */
+  --line:#D9DDE0;      /* 카드 테두리 */
+  /* 악센트 3색 — 슬라이드(섹션)마다 하나를 --accent로 지정 */
+  --terra:#C2703F; --slate:#475360; --sage:#54645A;
+  --terra-soft:#D27E52; --slate-soft:#4A6281; --sage-soft:#4B7E6E;
+  --accent:var(--terra);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;background:#2A2E33;overflow:hidden}
+body{font-family:"Pretendard Variable",Pretendard,-apple-system,sans-serif;color:var(--body)}
+
+#stage{position:absolute;top:50%;left:50%;width:1920px;height:1080px;
+  transform:translate(-50%,-50%) scale(var(--scale,1));transform-origin:center}
+.slide{position:absolute;inset:0;display:none;overflow:hidden;
+  background:
+    repeating-linear-gradient(0deg,transparent 0 149px,var(--grid-hi) 149px 150px),
+    repeating-linear-gradient(90deg,transparent 0 149px,var(--grid-hi) 149px 150px),
+    repeating-linear-gradient(0deg,transparent 0 29px,var(--grid) 29px 30px),
+    repeating-linear-gradient(90deg,transparent 0 29px,var(--grid) 29px 30px),
+    var(--paper)}
+.slide.active{display:block}
+/* 도면 프레임 */
+.slide::after{content:"";position:absolute;inset:28px;border:1px solid var(--frame);pointer-events:none}
+
+/* ───────── 헤드라인 ───────── */
+h1{position:absolute;left:6%;top:6.4%;right:6%;font-size:62px;font-weight:800;
+  color:var(--ink);letter-spacing:-.03em;line-height:1.28;z-index:4}
+h1 em{font-style:normal;color:var(--accent)}
+h1.sm{font-size:52px}
+.sub{position:absolute;left:6%;right:6%;font-size:30px;color:var(--mute);line-height:1.6}
+
+/* ───────── 콘텐츠 영역 ───────── */
+.body{position:absolute;left:6%;right:6%;top:21%;bottom:20%;z-index:3}
+.row{display:flex;gap:46px;height:100%;align-items:stretch}
+.col{flex:1;display:flex;flex-direction:column;gap:26px}
+
+/* 카드 */
+.card{background:#fff;border:1px solid var(--line);border-radius:10px;
+  padding:32px 36px;box-shadow:0 2px 7px rgba(30,39,46,.05)}
+.card h2{font-size:38px;font-weight:800;color:var(--ink);letter-spacing:-.02em;margin-bottom:20px}
+.card h3{font-size:31px;font-weight:700;color:var(--ink);margin-bottom:6px}
+.card p{font-size:28px;line-height:1.62;color:var(--body)}
+.card ul{list-style:none;display:flex;flex-direction:column;gap:14px;margin-top:6px}
+.card li{position:relative;padding-left:30px;font-size:28px;line-height:1.5}
+.card li::before{content:"";position:absolute;left:6px;top:16px;width:9px;height:9px;
+  border-radius:50%;background:var(--accent)}
+
+/* 경고/포인트 박스 — 악센트 테두리만, 배경 없음 */
+.note{border:1.6px solid var(--accent);border-radius:6px;padding:26px 30px;background:rgba(255,255,255,.55)}
+.note b{display:block;font-size:30px;font-weight:800;color:var(--accent);margin-bottom:12px}
+.note p{font-size:26px;line-height:1.66}
+
+/* 배지 pill */
+.pill{display:inline-block;background:#EAF2EC;color:#43704F;border-radius:999px;
+  padding:7px 20px;font-size:24px;font-weight:700;white-space:nowrap}
+.pill.gray{background:#EDEFF1;color:#525A62}
+.pill.terra{background:#F5E7DE;color:#A85B2F}
+
+/* 표 */
+table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line)}
+caption{background:#EDEFF1;border:1px solid var(--line);border-bottom:none;
+  font-size:30px;font-weight:700;color:var(--ink);padding:16px}
+th,td{border:1px solid var(--line);padding:16px 22px;font-size:27px;text-align:left;line-height:1.45}
+th{background:#F4F6F7;font-weight:700;color:var(--ink);width:26%}
+
+/* 하단 인사이트 바 */
+.insight{position:absolute;left:6%;right:6%;bottom:6%;z-index:5;
+  background:var(--bar,var(--accent));color:#fff;border-radius:5px;
+  padding:22px 34px;font-size:30px;font-weight:600;line-height:1.5;text-align:center}
+.insight b{font-weight:800}
+
+/* 선택 핸들 — class="sel"만 붙이면 JS가 네 모서리에 꽂는다 */
+.sel{position:relative;outline:1px solid var(--frame);outline-offset:7px}
+.sel>.hdl{position:absolute;width:11px;height:11px;background:#fff;
+  border:1.5px solid var(--handle);z-index:9}
+.sel>.hdl.tl{left:-13px;top:-13px}.sel>.hdl.tr{right:-13px;top:-13px}
+.sel>.hdl.bl{left:-13px;bottom:-13px}.sel>.hdl.br{right:-13px;bottom:-13px}
+
+/* 도면 부품: 치수선 · 아이소 레이어 · 순환도 */
+.dim{stroke:var(--frame);stroke-width:1.4;fill:none}
+.dim-t{font-size:22px;fill:var(--mute)}
+.iso path{stroke:rgba(30,39,46,.55);stroke-width:1.6}
+.cyc{stroke:var(--ink);stroke-width:2.4;fill:none;opacity:.65}
+
+.numlist{list-style:none;display:flex;flex-direction:column;gap:26px}
+.numlist li{font-size:30px;line-height:1.5;counter-increment:n}
+.numlist li::before{content:"0" counter(n) ": ";font-weight:800;color:var(--accent)}
+.numlist li b{font-weight:800;color:var(--ink)}
+.numlist{counter-reset:n}
+
+.wm{position:absolute;right:34px;bottom:14px;font-size:20px;color:#A8AEB4;z-index:6}
+
+/* 등장 모션 — 이 스타일은 정적 인포그래픽이다. 은은하게만. */
+.active .in{animation:up .45s ease both}
+@keyframes up{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.active .d1{animation-delay:.06s}.active .d2{animation-delay:.18s}.active .d3{animation-delay:.3s}
+.active .d4{animation-delay:.42s}.active .d5{animation-delay:.54s}
+.slide:not(.active) .in{opacity:0}
+
+@media print{
+  html,body{overflow:visible;background:#fff}
+  #stage{position:static;transform:none;width:auto;height:auto}
+  .slide{display:block!important;position:relative;width:1920px;height:1080px;page-break-after:always}
+  .in{animation:none!important;opacity:1!important;transform:none!important}
+  #nav{display:none}
+}
+@page{size:1920px 1080px;margin:0}
+#nav{position:fixed;right:22px;bottom:14px;z-index:99;color:#8A9098;font-size:15px}
+</style>
+</head>
+<body>
+<div id="stage">
+
+<!-- ═══ B1. 표지 : 중앙 일러스트 + 큰 제목 + 부제 + 도구 칩 ═══ -->
+<section class="slide" style="--accent:var(--terra)">
+  <!-- 중앙정렬은 transform이 아니라 left:0/right:0 + text-align — .in(up)의 transform과 충돌하지 않게 -->
+  <div style="position:absolute;left:0;right:0;top:9%;text-align:center;z-index:3" class="in d1">
+    <svg width="720" height="360" viewBox="0 0 720 360">
+      <g class="dim">
+        <path d="M120 30h480v300H120z"/>
+        <path d="M120 350h480M126 344l-8 6 8 6M594 344l8 6-8 6"/>
+        <path d="M96 30v300M90 36l6-8 6 8M90 324l6 8 6-8"/>
+      </g>
+      <g stroke="#8FA3BC" stroke-width="1.6" fill="none" opacity=".85">
+        <path d="M200 90L360 60l160 40-140 80-180-30zM200 90l40 130 140 50 140-90-140-50M240 220l140-70"/>
+        <path d="M300 150l180 30M260 120l120 100"/>
+      </g>
+      <g>
+        <circle cx="200" cy="90" r="16" fill="#D27E52"/><circle cx="360" cy="60" r="16" fill="#475360"/>
+        <circle cx="520" cy="100" r="16" fill="#D27E52"/><circle cx="380" cy="180" r="16" fill="#475360"/>
+        <circle cx="240" cy="220" r="16" fill="#D27E52"/><circle cx="520" cy="220" r="16" fill="#D27E52"/>
+        <circle cx="300" cy="150" r="14" fill="#475360"/><circle cx="440" cy="120" r="14" fill="#D27E52"/>
+        <circle cx="380" cy="270" r="16" fill="#D27E52"/><circle cx="480" cy="60" r="14" fill="#475360"/>
+      </g>
+    </svg>
+  </div>
+  <div style="position:absolute;left:0;right:0;top:56%;text-align:center;z-index:4" class="in d2">
+    <div style="font-size:86px;font-weight:800;color:var(--ink);letter-spacing:-.035em">Palantir 없이 온톨로지 구현하기</div>
+  </div>
+  <div class="sel in d3" style="position:absolute;left:22%;right:22%;top:72%;text-align:center;
+       padding:16px;background:rgba(255,255,255,.5);z-index:4">
+    <div style="font-size:28px;line-height:1.6;color:var(--body)">
+      수십억 원의 소프트웨어 대신, 오픈소스와 기존 도구로<br>
+      Object·Property·Link 철학을 실제 업무에 적용하는 실전 플레이북</div>
+  </div>
+  <div style="position:absolute;left:0;right:0;top:88%;text-align:center;z-index:4" class="in d4">
+    <span class="pill gray">Neo4j</span> <span class="pill gray">DataHub</span>
+    <span class="pill gray">dbt</span> <span class="pill gray">LLM 연동</span>
+  </div>
+  <div class="wm">Blueprint</div>
+</section>
+
+<!-- ═══ B2. 헤드라인 + 좌측 노트 + 우측 표 ═══ -->
+<section class="slide" style="--accent:var(--terra)">
+  <h1 class="in d1 sm">공통 1단계 —<br>도구 이전에 문서 먼저:<br>'고객'이란 무엇인가?</h1>
+  <div class="body" style="top:34%">
+    <div class="row">
+      <div class="col" style="flex:.72;justify-content:flex-start">
+        <div class="note in d2">
+          <b>왜 정의서가 먼저인가?</b>
+          <p>도구를 먼저 고르면 도구에 맞춰 현실이 왜곡됨.<br>
+             ERP의 '고객' ≠ CRM의 '고객'.<br>
+             1장의 문서가 수개월의 재작업을 막습니다.</p>
+        </div>
+      </div>
+      <div class="col sel in d3" style="flex:1.28">
+        <table>
+          <caption>Object 정의서 템플릿 (예시: '고객')</caption>
+          <tr><th>정의</th><td>제품/서비스를 구매한 또는 구매 가능성이 있는 법인·개인</td></tr>
+          <tr><th>Key Property</th><td>고객ID, 이름, 등급, 최근구매일, 담당자</td></tr>
+          <tr><th>연결 시스템</th><td>ERP(거래처) + CRM(계정) + 물류(배송처)</td></tr>
+          <tr><th>책임 부서</th><td>영업팀(정의 주도) + IT팀(구현 지원)</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="insight in d5" style="--bar:var(--slate)">
+    <b>Insight:</b> Object 하나당 정의서 1장. 5~10개 Object 정의 완료 시 온톨로지 설계의 절반이 끝납니다.
+  </div>
+  <div class="wm">Blueprint</div>
+</section>
+
+<!-- ═══ B3. 2열 비교 (가운데 기호) ═══ -->
+<section class="slide" style="--accent:var(--terra)">
+  <h1 class="in d1">온톨로지는 '제품'이 아니라 '설계 철학'입니다</h1>
+  <div class="body">
+    <div class="row" style="align-items:center">
+      <div class="card in d2" style="flex:1;background:#F2F4F6">
+        <h2 style="text-align:center">Palantir Foundry (제품)</h2>
+        <ul>
+          <li>상용 구현체</li><li>UI·운영·AI 통합 패키지 제공</li>
+          <li>높은 비용 (엔터프라이즈 계약)</li><li>벤더 락인(Lock-in) 위험</li>
+        </ul>
+      </div>
+      <div class="in d3" style="flex:0 0 130px;text-align:center;font-size:76px;
+           font-weight:800;color:var(--accent)">≠</div>
+      <div class="card in d4" style="flex:1">
+        <h2 style="text-align:center">DIY 온톨로지 (철학)</h2>
+        <ul>
+          <li>Object·Property·Link 개념</li><li>현실을 의미 있게 연결하는 설계 방식</li>
+          <li>오픈소스 도구로 충분히 구현 가능</li><li>도구가 아닌 '사람'이 주도</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="insight in d5" style="--bar:var(--terra)">
+    Palantir가 비싸게 파는 것은 '철학'이 아니라 <b>'구현의 편의성'</b>입니다.
+  </div>
+  <div class="wm">Blueprint</div>
+</section>
+
+<!-- ═══ B4. 단계(Phase) 2카드 + 화살표 + 배지 ═══ -->
+<section class="slide" style="--accent:var(--slate)">
+  <h1 class="in d1">경로 A (중소기업) 도구 스택: 빠른 시작과 점진적 고도화</h1>
+  <div class="body">
+    <div class="row" style="align-items:center">
+      <div class="card in d2" style="flex:1">
+        <h2 style="text-align:center">Phase 1 (즉시 시작, 0~3개월)</h2>
+        <div style="display:flex;flex-direction:column;gap:26px">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:20px">
+            <div><h3>Notion / Airtable</h3><p style="font-size:26px;color:var(--mute)">Object·관계 정의 + 데이터 입력</p></div>
+            <span class="pill">무료~월 $15</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:20px">
+            <div><h3>Obsidian</h3><p style="font-size:26px;color:var(--mute)">온톨로지 그래프 시각화 및 탐색</p></div>
+            <span class="pill">무료</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:20px">
+            <div><h3>Google Sheets</h3><p style="font-size:26px;color:var(--mute)">Object 정의서 협업 관리</p></div>
+            <span class="pill">무료</span></div>
+        </div>
+      </div>
+      <div class="in d3" style="flex:0 0 90px;text-align:center;font-size:60px;color:var(--frame)">❯</div>
+      <div class="card in d4" style="flex:1">
+        <h2 style="text-align:center">Phase 2 (고도화, 3~9개월)</h2>
+        <div style="display:flex;flex-direction:column;gap:26px">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:20px">
+            <div><h3>Neo4j Community</h3><p style="font-size:26px;color:var(--mute)">그래프 DB — 실제 저장 및 탐색</p></div>
+            <span class="pill">무료</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:20px">
+            <div><h3>Neo4j Bloom</h3><p style="font-size:26px;color:var(--mute)">비개발자용 그래프 시각화 UI</p></div>
+            <span class="pill">무료 포함</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:20px">
+            <div><h3>Python + LangChain</h3><p style="font-size:26px;color:var(--mute)">Neo4j 위에 LLM 질의 연동</p></div>
+            <span class="pill">무료</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="insight in d5" style="--bar:var(--slate-soft)">
+    <b>도구 비용 Metric:</b> Phase 1 거의 무료 / Phase 2 완료 시에도 월 $0~20 수준
+  </div>
+  <div class="wm">Blueprint</div>
+</section>
+
+<!-- ═══ B5. 아이소메트릭 레이어 스택 ═══ -->
+<section class="slide" style="--accent:var(--terra)">
+  <h1 class="in d1">경로 B (데이터팀 보유 기업): 3-Layer 아키텍처</h1>
+  <div class="sel in d2" style="position:absolute;right:6%;top:8%;width:430px;
+       background:#EFF3F8;padding:24px 28px;border-radius:6px;z-index:5">
+    <div style="font-size:28px;font-weight:800;color:var(--ink);margin-bottom:8px">Core Principle:</div>
+    <div style="font-size:26px;line-height:1.55">새로 만드는 것이 아니라, 기존 파이프라인(dbt) 위에 '의미'를 얹는 구조.</div>
+  </div>
+  <div class="body" style="top:24%">
+    <svg class="iso in d3" width="760" height="600" viewBox="0 0 760 600" style="position:absolute;left:0;top:0">
+      <!-- 층 간격 120px 고정. 겹치면 아래 층이 사라진다 -->
+      <path d="M60 470L360 400l300 70-300 70z" fill="#6C7076"/>
+      <path d="M60 350L360 280l300 70-300 70z" fill="#556D8A"/>
+      <path d="M60 230L360 160l300 70-300 70z" fill="#4B7E6E"/>
+      <path d="M60 110L360 40l300 70-300 70z" fill="#D17C50"/>
+      <g stroke="#3A4046" stroke-width="1.6" fill="none" opacity=".7">
+        <path d="M170 452v-52M162 412l8-12 8 12"/>
+        <path d="M170 332v-52M162 292l8-12 8 12"/>
+        <path d="M170 212v-52M162 172l8-12 8 12"/>
+      </g>
+    </svg>
+    <div style="position:absolute;left:56%;top:11%" class="in d3">
+      <h3 style="font-size:34px">L4: AI / 탐색 레이어 (Neo4j + LangChain)</h3>
+      <p style="font-size:27px;color:var(--mute)">자연어 질의 및 관계 탐색</p></div>
+    <div style="position:absolute;left:56%;top:31%" class="in d4">
+      <h3 style="font-size:34px">L3: 의미 연결 레이어 (DataHub)</h3>
+      <p style="font-size:27px;color:var(--mute)">데이터 자산 카탈로그 + 계보(Lineage) + 온톨로지 매핑</p></div>
+    <div style="position:absolute;left:56%;top:51%" class="in d4">
+      <h3 style="font-size:34px">L2: 데이터 변환 레이어 (dbt)</h3>
+      <p style="font-size:27px;color:var(--mute)">소스 데이터 변환·품질 검증·모델 의존성 그래프</p></div>
+    <div style="position:absolute;left:56%;top:71%" class="in d5">
+      <h3 style="font-size:34px">L1: 소스 데이터 레이어</h3>
+      <p style="font-size:27px;color:var(--mute)">ERP, CRM, MES, DB, API, 파일 (기존 소스 그대로 활용)</p></div>
+  </div>
+  <div class="wm">Blueprint</div>
+</section>
+
+<!-- ═══ B6. 순환 다이어그램 ═══ -->
+<section class="slide" style="--accent:var(--slate)">
+  <h1 class="in d1">온톨로지 위에 LLM 얹기: AI의 눈이 되는 지식 그래프</h1>
+  <div class="body">
+    <svg class="in d2" width="100%" height="100%" viewBox="0 0 1600 560" style="position:absolute;inset:0">
+      <g class="cyc">
+        <path d="M800 90a230 230 0 1 1-1 0"/>
+        <path d="M1030 250l-16-20 22-6M560 300l16 20-22 6"/>
+      </g>
+    </svg>
+    <div class="card in d2" style="position:absolute;left:36%;right:36%;top:0;text-align:center;padding:22px">
+      <h3>사용자 질문:</h3><p style="font-size:27px">"이번 달 재구매 없는 VIP 고객은?"</p></div>
+    <div class="card in d3" style="position:absolute;right:6%;top:36%;width:30%;padding:22px">
+      <h3>LLM (GPT-4/Claude):</h3><p style="font-size:27px">질문의 의도와 구조 해석</p></div>
+    <div class="card in d4" style="position:absolute;right:8%;bottom:2%;width:32%;padding:22px">
+      <h3>온톨로지 탐색 (Neo4j):</h3><p style="font-size:27px">사전에 정의된 정확한 구조(Map) 탐색</p></div>
+    <div class="card in d5" style="position:absolute;left:2%;top:34%;width:30%;padding:22px">
+      <h3>쿼리 실행 및 반환:</h3><p style="font-size:27px">Cypher Query 자동 생성·실행 → 결과 반환</p></div>
+    <div class="in d5" style="position:absolute;left:42%;bottom:4%;background:var(--terra-soft);
+         color:#fff;font-size:26px;font-weight:700;padding:8px 26px;border-radius:6px 6px 0 0">Step 3</div>
+  </div>
+  <div class="insight in d5" style="--bar:var(--slate)">
+    온톨로지가 잘 구축되어 있을수록 LLM이 더 정확한 답을 냅니다. <b>온톨로지는 환각을 막는 정확한 지도입니다.</b>
+  </div>
+  <div class="wm">Blueprint</div>
+</section>
+
+<!-- ═══ B7. 번호 리스트 + 배경 라인아트 ═══ -->
+<section class="slide" style="--accent:var(--terra)">
+  <svg width="620" height="620" viewBox="0 0 620 620" style="position:absolute;right:2%;top:12%;z-index:1;opacity:.5">
+    <g stroke="#7E93AE" stroke-width="1.6" fill="none">
+      <path d="M300 60L110 240l90 300 260 20 140-260z"/>
+      <path d="M300 60l160 500M110 240l350 320M300 60l200 240M200 540l300-240"/>
+      <circle cx="300" cy="60" r="34" fill="#F6F6F3"/><circle cx="110" cy="240" r="26" fill="#F6F6F3"/>
+      <circle cx="200" cy="540" r="30" fill="#F6F6F3"/><circle cx="460" cy="560" r="24" fill="#F6F6F3"/>
+      <circle cx="600" cy="300" r="28" fill="#F6F6F3"/>
+    </g>
+  </svg>
+  <h1 class="in d1">The Blueprint:<br>5가지 핵심 철학</h1>
+  <div class="body" style="top:28%;right:38%">
+    <ol class="numlist">
+      <li class="in d2"><b>철학이 먼저</b> — Object·Property·Link는 도구가 아닌 설계 언어입니다.</li>
+      <li class="in d2"><b>문서가 곧 온톨로지</b> — Object 정의서 1장이 수개월의 재작업을 막습니다.</li>
+      <li class="in d3"><b>규모에 맞는 스택</b> — 중소기업은 Notion에서, 대기업은 dbt 위에서 시작하십시오.</li>
+      <li class="in d3"><b>AI의 선행 조건</b> — 온톨로지가 잘 구축될수록 LLM 답변의 정확도는 극대화됩니다.</li>
+      <li class="in d4"><b>작게, 당장 시작</b> — 완벽을 기다리지 말고 이번 주 워크숍부터 잡으십시오.</li>
+    </ol>
+  </div>
+  <div class="in d5" style="position:absolute;left:6%;right:40%;bottom:8%;font-size:44px;
+       font-weight:800;color:var(--ink);line-height:1.4;letter-spacing:-.02em;z-index:4">
+    온톨로지는 특정 벤더의 전유물이 아닙니다.<br>철학을 이해한 팀이라면 누구나 직접 구축할 수 있습니다.</div>
+  <div class="wm">Blueprint</div>
+</section>
+
+</div>
+
+<div id="nav"><span id="navPage"></span></div>
+
+<script>
+// 선택 핸들 자동 주입 — 작성자는 class="sel"만 붙인다
+document.querySelectorAll('.sel').forEach(el=>{
+  ['tl','tr','bl','br'].forEach(p=>{
+    const h=document.createElement('span');h.className='hdl '+p;el.appendChild(h);
+  });
+});
+const slides=[...document.querySelectorAll('.slide')];
+const navPage=document.getElementById('navPage');
+let cur=-1;
+function show(n){
+  cur=Math.max(0,Math.min(slides.length-1,n));
+  slides.forEach((s,i)=>s.classList.toggle('active',i===cur));
+  navPage.textContent=(cur+1)+' / '+slides.length;
+}
+addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key===' ')show(cur+1);
+  else if(e.key==='ArrowLeft')show(cur-1);
+  else if(e.key==='Home')show(0);
+  else if(e.key==='End')show(slides.length-1);
+});
+addEventListener('click',e=>{if(e.clientX<innerWidth/2)show(cur-1);else show(cur+1)});
+let tx=null;
+addEventListener('touchstart',e=>tx=e.touches[0].clientX);
+addEventListener('touchend',e=>{if(tx===null)return;
+  const dx=e.changedTouches[0].clientX-tx;
+  if(dx<-40)show(cur+1);else if(dx>40)show(cur-1);tx=null});
+function fit(){
+  const s=Math.min(innerWidth/1920,innerHeight/1080);
+  document.getElementById('stage').style.setProperty('--scale',s);
+}
+addEventListener('resize',fit);addEventListener('load',fit);fit();
+const _h=parseInt(location.hash.slice(1));show(isNaN(_h)?0:_h-1);
+addEventListener('hashchange',()=>{const n=parseInt(location.hash.slice(1));if(!isNaN(n))show(n-1)});
+if(location.search.indexOf('shot')>-1)document.getElementById('nav').style.display='none';
+</script>
+</body>
+</html>

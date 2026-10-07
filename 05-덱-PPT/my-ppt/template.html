@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>my-ppt · 샘플 (개인 브랜딩 규칙)</title>
+<style>
+@font-face{font-family:Pretendard;src:local('Pretendard'),url('assets/fonts/Pretendard-Regular.otf');font-weight:400}
+@font-face{font-family:Pretendard;src:local('Pretendard Bold'),local('Pretendard-Bold'),url('assets/fonts/Pretendard-Bold.otf');font-weight:700}
+@font-face{font-family:Pretendard;src:local('Pretendard ExtraBold'),url('assets/fonts/Pretendard-ExtraBold.otf');font-weight:800}
+@font-face{font-family:Pretendard;src:local('Pretendard Light'),url('assets/fonts/Pretendard-Light.otf');font-weight:300}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#2a2a2e;font-family:Pretendard,'Malgun Gothic',sans-serif}
+.slide{width:1280px;height:720px;background:#fff;position:relative;margin:24px auto;
+  overflow:hidden;color:#1a1a1c}
+/* 고정 레이아웃: 챕터명 좌상단(강조색) → 제목 → 부제 → 하단 페이지번호 */
+.chapter{position:absolute;left:72px;top:52px;font-size:16px;font-weight:700;
+  letter-spacing:.14em;color:#1f6f5c}
+.title{position:absolute;left:72px;top:84px;font-size:52px;font-weight:800;
+  letter-spacing:-1px;line-height:1.18}
+.subtitle{position:absolute;left:72px;top:216px;font-size:21px;font-weight:300;color:#55565c}
+.pagenum{position:absolute;right:72px;bottom:40px;font-size:14px;color:#9a9aa0}
+.body{position:absolute;left:72px;right:72px;top:280px;bottom:90px}
+/* 표지 예외 레이아웃 */
+.cover .chapter{top:170px}
+.cover .title{top:206px;font-size:72px}
+.cover .subtitle{top:400px;font-size:24px}
+.cover .org{position:absolute;left:72px;bottom:64px;font-size:17px;color:#55565c}
+.cols{display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;height:100%}
+.box{border:1px solid #e2e2df;border-top:4px solid #1f6f5c;padding:26px 24px}
+.box h3{font-size:22px;font-weight:700;margin-bottom:12px}
+.box p{font-size:16px;line-height:1.62;color:#3c3d42}
+.box .n{font-size:13px;font-weight:700;color:#1f6f5c;letter-spacing:.1em;margin-bottom:10px}
+</style>
+</head>
+<body>
+
+<section class="slide cover" data-shot="1">
+  <div class="chapter">우리동네작은교회 · 2026 사역 계획</div>
+  <h1 class="title">작은 교회가<br>깊어지는 방법</h1>
+  <p class="subtitle">다음세대와 함께 가는 2026년 — 방향, 구조, 실행</p>
+  <div class="org">우리동네작은교회 · 김병곤 목사</div>
+  <div class="pagenum">1</div>
+</section>
+
+<section class="slide" data-shot="2">
+  <div class="chapter">01 방향</div>
+  <h1 class="title">세 개의 축으로 움직인다</h1>
+  <p class="subtitle">모든 사역은 아래 세 축 중 하나에 소속되고, 축마다 분기별 점검 지표를 가진다.</p>
+  <div class="body">
+    <div class="cols">
+      <div class="box"><div class="n">AXIS 01</div><h3>예배의 깊이</h3>
+        <p>주일 예배 중심 구조를 유지하되, 수요 묵상 모임을 소그룹 단위로 재편한다. 참여율이 아니라 지속률을 지표로 삼는다.</p></div>
+      <div class="box"><div class="n">AXIS 02</div><h3>다음세대 동행</h3>
+        <p>세대 분리형 교육이 아닌 세대 동행형 프로그램으로 전환한다. 분기당 1회 온 세대 프로젝트를 공동 수행한다.</p></div>
+      <div class="box"><div class="n">AXIS 03</div><h3>마을과의 접점</h3>
+        <p>교회 공간을 주중 마을 공유 공간으로 연다. 접점의 수보다 반복 방문자 수를 기록하고 점검한다.</p></div>
+    </div>
+  </div>
+  <div class="pagenum">2</div>
+</section>
+
+<script>
+/* ?shot#N — 해당 슬라이드만 표시(갤러리 캡처 규약) */
+const m = location.search.match(/shot/) && location.hash.match(/#(\d+)/);
+if (m) document.querySelectorAll('.slide').forEach(s => {
+  if (s.dataset.shot !== m[1]) s.style.display = 'none';
+  else { s.style.margin = '0'; document.body.style.background = '#fff'; }
+});
+</script>
+</body></html>

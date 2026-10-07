@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dell 1996 Deck</title>
+<!-- 라틴은 OS 기본 스택(Arial Black / Helvetica / Times)이 정체성이므로 웹폰트로 바꾸지 않는다.
+     한글 글리프가 없는 두 폰트를 위해서만 폴백을 싣는다: 헤드라인=Pretendard 900, 본문=Noto Serif KR 400. -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700&display=swap">
+<style>
+:root{
+  /* ── 브랜드 (팔레트는 닫혀 있다. 여기 없는 색을 추가하면 시대가 깨진다) ── */
+  --red:#e91d2a;          /* CTA 패널 + 전화번호 전용. 카드 채움 금지 */
+  --yellow:#fcc20f;       /* 스티커 */
+  --purple:#6a26a4;       /* 워드마크 스트라이프에만 */
+  --link:#0000ee;         /* 넷스케이프 3.x 링크 블루 */
+  --ink:#000;             /* 순검정. 따뜻한 근사흑 금지 */
+  --paper:#fff;
+  /* ── 리본카드 여덟 색 (제품군/챕터당 하나씩 고정) ── */
+  --olive:#8e8a25; --sage:#b3bd95; --salmon:#d77a7a; --peach:#e6915d;
+  --lime:#c0d4a7;  --sky:#9ab6c8;  --steel:#a5b8c0;  --periwinkle:#8c9ae0;
+  /* ── 타입 (원본 웹 토큰 × 2 = 1920 스테이지 값) ── */
+  --disp:72px; --h1:48px; --h2:32px; --h3:28px;
+  --body:28px; --body-sm:24px; --cap:22px; --btn:24px;
+  /* ── 여백 (× 2) ── */
+  --xs:8px; --sm:16px; --md:24px; --lg:32px; --xl:40px; --xxl:48px;
+  --sec-sm:64px; --sec:80px;
+  --frame:16px;           /* 페이지 프레임 두께 (원본 8px × 2) */
+  --pad:56px;             /* 종이 안쪽 기준선 */
+  --f-disp:"Arial Black","Arial Bold","Pretendard Variable",Arial,sans-serif;
+  --f-ui:Helvetica,Arial,"Pretendard Variable",sans-serif;
+  --f-body:"Times New Roman",Times,"Noto Serif KR",serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;border-radius:0}
+html,body{height:100%;background:#555;overflow:hidden}   /* 프레임 밖 = 브라우저 회색 */
+body{font-family:var(--f-body);color:var(--ink)}
+
+#stage{position:absolute;top:50%;left:50%;width:1920px;height:1080px;
+  transform:translate(-50%,-50%) scale(var(--scale,1));transform-origin:center;background:var(--ink)}
+.slide{position:absolute;inset:0;display:none;background:var(--ink);padding:var(--frame)}
+.slide.active{display:block}
+/* 페이지 프레임 — 검은 액자 안의 흰 종이. 이 액자가 브랜드의 최대 식별자다 */
+/* 세로 flex — 카탈로그 밀도 원칙: 액자 안에 빈 흰 바닥을 남기지 않는다 */
+.paper{position:relative;width:100%;height:100%;background:var(--paper);overflow:hidden;
+  display:flex;flex-direction:column}
+
+/* ═════ 상단 배너 — 검정 띠. 프레임과 이어져 보이는 것이 정상 ═════ */
+.banner{display:flex;align-items:center;gap:var(--lg);background:var(--ink);color:var(--paper);
+  padding:var(--md) var(--lg);font-family:var(--f-ui);font-weight:700;font-size:var(--h2);
+  text-transform:uppercase}
+.banner .tag{flex:1;line-height:1.2}
+.banner .tag small{display:block;font-size:var(--body-sm);font-weight:400;text-transform:none;
+  font-family:var(--f-body);color:var(--paper);margin-top:6px}
+.phone{color:var(--red);font-family:var(--f-ui);font-weight:700;font-size:var(--h2);white-space:nowrap}
+
+/* ═════ 스티커 — 하드 베벨. 부드러운 CSS 섀도 금지 ═════ */
+.sticker{display:inline-block;background:var(--yellow);border:2px solid var(--ink);color:var(--ink);
+  font-family:var(--f-ui);font-weight:700;font-size:var(--btn);padding:var(--xs) var(--sm);
+  filter:drop-shadow(3px 3px 0 var(--ink));white-space:nowrap}
+.sticker .a{background:var(--purple);color:var(--paper);padding:0 5px;margin:0 3px}
+.burst{transform:rotate(-15deg)}
+.seal{width:150px;height:150px;border-radius:50%;background:var(--red);color:var(--paper);
+  border:5px solid var(--ink);display:flex;flex-direction:column;align-items:center;
+  justify-content:center;text-align:center;font-family:var(--f-ui);font-weight:700;
+  font-size:16px;line-height:1.25;letter-spacing:.5px;padding:14px;
+  filter:drop-shadow(3px 3px 0 var(--ink))}
+.seal b{display:block;font-size:21px;margin:4px 0}
+
+/* ═════ 아이브로 색블록 — 챕터 제목. Arial Black 900 ═════ */
+.eyebrow{background:var(--tint,var(--olive));padding:var(--xxl) var(--pad);
+  font-family:var(--f-disp);font-weight:900;font-size:var(--disp);line-height:1.0;
+  text-transform:uppercase;color:var(--ink)}
+/* .tall — 챕터 표지용. 색블록이 남은 높이를 다 먹는다 */
+.eyebrow.tall{padding:var(--sec) var(--pad);flex:1;display:flex;flex-direction:column;
+  justify-content:center}
+.eyebrow small{display:block;font-family:var(--f-body);font-weight:400;font-size:var(--body);
+  text-transform:none;line-height:1.4;margin-top:var(--md)}
+
+/* ═════ 리본 카드 — 흰 제목바 + tint 본문 + 우측 사진 노치 ═════ */
+/* 리본 스택은 남은 높이를 균등 분배해 페이지를 채운다 (1996 표는 늘 페이지를 채웠다) */
+.stack{padding:var(--lg) var(--pad);flex:1;min-height:0;display:flex;flex-direction:column}
+.stack.top{flex:0 0 auto;padding-bottom:0}      /* 채우지 않고 위에만 붙일 때 */
+.ribbon{border:2px solid var(--ink);margin-bottom:var(--md);position:relative;
+  flex:1;display:flex;flex-direction:column}
+.stack.top .ribbon,.ribbon.fixed{flex:0 0 auto}
+.ribbon:last-child{margin-bottom:0}
+.ribbon .bar{background:var(--paper);border-bottom:2px solid var(--ink);padding:var(--md) var(--md);
+  font-family:var(--f-ui);font-weight:700;font-size:var(--h3);text-transform:uppercase}
+.ribbon .fill{background:var(--tint,var(--sage));padding:var(--md) var(--lg);
+  font-family:var(--f-body);font-size:var(--body);line-height:1.4;padding-right:300px;flex:1}
+.ribbon .fill.wide{padding-right:var(--lg)}
+.ribbon .fill b{font-weight:700}
+/* 사진 노치 — 코르크판에 핀으로 꽂은 듯 위아래로 삐져나온다. 라운딩·클립 금지 */
+.ribbon .shot{position:absolute;right:var(--md);top:-14px;width:250px;aspect-ratio:4/3;
+  background:var(--paper) var(--img,none) center/cover no-repeat;border:2px solid var(--ink);
+  filter:drop-shadow(4px 4px 0 var(--ink))}
+.ribbon .shot::after{content:attr(data-cap);position:absolute;left:0;right:0;bottom:0;
+  background:var(--paper);border-top:2px solid var(--ink);font-family:var(--f-ui);font-weight:700;
+  font-size:15px;text-align:center;padding:4px}
+.ribbon .badge{position:absolute;right:-18px;top:-26px;z-index:3}
+
+/* ═════ 빨간 CTA 패널 — 페이지당 하나. 두 개 놓지 않는다 ═════ */
+.cta{background:var(--red);color:var(--paper);border:2px solid var(--ink);padding:var(--lg);
+  font-family:var(--f-body);font-size:var(--body);line-height:1.45}
+.cta b{font-family:var(--f-ui);font-weight:700;text-transform:uppercase;display:block;
+  font-size:var(--h3);margin-bottom:var(--sm)}
+
+/* ═════ 2단 구조 — 좌측 레일 28% / 우측 본문 72% (1996 홈 구조) ═════ */
+.cols{display:flex;gap:var(--lg);padding:var(--lg) var(--pad);align-items:stretch;
+  flex:1;min-height:0}
+.rail{flex:0 0 27%;display:flex;flex-direction:column;gap:var(--md)}
+.rail .cta{margin-top:auto}                    /* 빨간 패널은 레일 맨 아래 */
+.main{flex:1;min-width:0;display:flex;flex-direction:column;gap:var(--md)}
+.main .ribbon{flex:1}
+.main table.t96{height:100%}
+.railgrid{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--ink);border:2px solid var(--ink)}
+.railgrid a{background:var(--paper);color:var(--link);font-family:var(--f-ui);font-weight:700;
+  font-size:19px;text-transform:uppercase;padding:var(--md) var(--xs);text-align:center;
+  text-decoration:underline;line-height:1.25;display:flex;align-items:center;justify-content:center}
+
+/* ═════ 표 — HTML 3.2 테이블 그대로. 헤어라인만 ═════ */
+table.t96{width:100%;border-collapse:collapse;font-family:var(--f-body);font-size:var(--body)}
+.stack table.t96{flex:1}
+table.t96 th{background:var(--tint,var(--steel));font-family:var(--f-ui);font-weight:700;
+  font-size:var(--h3);text-transform:uppercase;text-align:left}
+table.t96 th,table.t96 td{border:2px solid var(--ink);padding:var(--sm) var(--md);vertical-align:top}
+table.t96 td.n{font-family:var(--f-disp);font-weight:900;font-size:var(--h1);white-space:nowrap}
+
+/* ═════ 수치 블록 — tint 색블록 위 Arial Black 숫자 ═════ */
+.figs{display:grid;grid-template-columns:repeat(var(--cols,3),1fr);gap:var(--md);
+  padding:var(--lg) var(--pad) 0;flex:0 0 auto}
+.fig{border:2px solid var(--ink);background:var(--tint,var(--lime));padding:var(--lg)}
+.fig .v{font-family:var(--f-disp);font-weight:900;font-size:80px;line-height:1}
+.fig .v em{font-style:normal;font-size:.4em}
+.fig .k{font-family:var(--f-ui);font-weight:700;font-size:var(--h3);text-transform:uppercase;
+  margin-top:var(--sm);border-top:2px solid var(--ink);padding-top:var(--sm)}
+.fig p{font-family:var(--f-body);font-size:var(--body-sm);line-height:1.4;margin-top:var(--xs)}
+
+/* ═════ 중앙 진술 ═════ */
+.paper.tint{background:var(--tint,var(--peach))}   /* 선언 장을 색블록 전면으로 */
+.center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;text-align:center;padding:var(--pad);gap:var(--md)}
+.center h2{font-family:var(--f-disp);font-weight:900;font-size:var(--disp);line-height:1.05;
+  text-transform:uppercase}
+.center p{font-family:var(--f-body);font-size:var(--body);line-height:1.5;max-width:34em}
+
+/* ═════ 푸터 아이콘 내비 + 저작권 ═════ */
+.foot{margin-top:auto;border-top:2px solid var(--ink);
+  background:var(--paper);padding:var(--md) var(--pad);flex:0 0 auto}
+.iconnav{display:flex;justify-content:space-around;align-items:flex-end;position:relative;
+  padding-bottom:var(--sm)}
+.iconnav::before{content:"";position:absolute;left:6%;right:6%;bottom:34px;height:3px;
+  background:#2f8b2f}                     /* 아이콘을 잇는 초록 괘선 */
+.iconnav .it{text-align:center;position:relative;z-index:2}
+.iconnav .ic{width:56px;height:56px;border:2px solid var(--ink);background:var(--paper);
+  margin:0 auto var(--xs);display:flex;align-items:center;justify-content:center;font-size:28px}
+.iconnav .it span{font-family:var(--f-ui);font-weight:700;font-size:19px;text-transform:uppercase}
+.legal{margin-top:var(--sm);font-family:var(--f-body);font-size:var(--cap);line-height:1.35}
+.legal a{color:var(--link)}
+
+.lab{font-family:var(--f-ui);font-weight:700;font-size:var(--h3);text-transform:uppercase}
+.note-sm{font-family:var(--f-body);font-size:var(--body-sm);line-height:1.4}
+a{color:var(--link)}
+
+/* ═════ 모션 — 1996엔 트랜지션이 없었다. 하드컷 + 계단 등장만 ═════ */
+.in{opacity:0}
+.active .in{animation:pop .01s steps(1) both}   /* 페이드·이징 금지: 딱 켜진다 */
+@keyframes pop{to{opacity:1}}
+.active .d1{animation-delay:.02s}.active .d2{animation-delay:.16s}.active .d3{animation-delay:.30s}
+.active .d4{animation-delay:.44s}.active .d5{animation-delay:.58s}.active .d6{animation-delay:.72s}
+
+#nav{position:fixed;right:20px;bottom:14px;font-family:var(--f-ui);font-weight:700;font-size:15px;
+  color:#ddd;z-index:99}
+#nav .hint{color:#999;margin-right:16px}
+body.notes #nav{bottom:auto;top:14px}
+
+/* ═════ 발표자 노트 — 기본 숨김. S 로 토글 ═════ */
+body.notes #stage{top:0;transform:translateX(-50%) scale(var(--scale,1));transform-origin:top center}
+/* --npad는 fit()이 계산한다 = 슬라이드 본문 좌우 끝선과 같은 위치 */
+#notes{position:fixed;left:0;right:0;bottom:0;max-height:40vh;overflow:auto;display:none;
+  background:#f2f0e9;border-top:4px solid var(--ink);z-index:100;
+  padding:18px var(--npad,30px) 22px}
+body.notes #notes{display:block}
+#notes .nlab{font-family:var(--f-ui);font-weight:700;font-size:14px;text-transform:uppercase;
+  color:var(--red);margin-bottom:10px}
+#notes .ntext{font-family:var(--f-body);font-size:18px;line-height:1.65}  /* 좌우 끝까지 채운다 */
+#notes .ntext b{font-weight:700}
+#notes .ntext span{color:#666}
+
+@media print{
+  html,body,#stage{overflow:visible;position:static;transform:none;width:auto;height:auto}
+  .slide{display:block!important;position:relative;width:1920px;height:1080px;page-break-after:always}
+  .in{animation:none!important;opacity:1!important}
+  #nav,#notes{display:none!important}
+}
+</style>
+</head>
+<body>
+<div id="stage">
+
+<!-- ═════ D1. 표지 — 배너 + 아이브로 제목 + 빨간 CTA ═════ -->
+<section class="slide" data-note="여는 말. <b>표지에서 이미 시대가 결정된다</b> — 검은 액자, 노란 스티커, 빨간 전화번호. 세 요소를 빼면 이 스타일이 아니다.">
+  <div class="paper">
+    <div class="banner in d1">
+      <div class="tag">BUILD YOUR OWN DECK. ONLINE.<small>부제 한 줄 — Times Roman으로 놓는다</small></div>
+      <div class="sticker in d2">BUY <span class="a">a</span> DELL</div>
+      <div class="phone in d2">1-800-213-DELL</div>
+    </div>
+    <div class="eyebrow in d3" style="--tint:var(--olive)">발표 제목을<br>여기 놓는다
+      <small>2026 · 발표자 · 소속</small></div>
+    <div class="cols" style="padding-top:var(--lg)">
+      <div class="rail">
+        <div class="cta in d4"><b>한 줄 약속</b>이 덱이 청중에게 무엇을 해주는지 한 문장으로 적는다. 빨간 패널은 페이지당 하나뿐이다.</div>
+      </div>
+      <div class="main in d5">
+        <table class="t96" style="--tint:var(--sage)">
+          <tr><th style="width:26%">차례</th><th>내용</th></tr>
+          <tr><td class="lab">01</td><td>첫 장에서 다룰 것</td></tr>
+          <tr><td class="lab">02</td><td>두 번째 주제</td></tr>
+          <tr><td class="lab">03</td><td>세 번째 주제</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════ D2. 아이브로 챕터 표지 — 색블록 하나 ═════ -->
+<section class="slide" data-note="챕터 표지. <b>챕터마다 tint 하나를 배정</b>하고 그 챕터 안에서는 색을 바꾸지 않는다. 여덟 색을 한 장에 몰아 쓰면 카탈로그가 아니라 색견본이 된다.">
+  <div class="paper">
+    <div class="banner in d1"><div class="tag">CHAPTER 01</div><div class="phone">1-800-213-DELL</div></div>
+    <div class="eyebrow tall in d2" style="--tint:var(--salmon)">챕터 제목<br>대문자 900
+      <small>이 챕터에서 무엇을 다루는지 한 문장. Times Roman.</small></div>
+  </div>
+</section>
+
+<!-- ═════ D3. 리본 카드 스택 — 항목 3~4개 ═════ -->
+<section class="slide" data-note="리본 카드 스택. 이 스타일의 <b>주력 슬라이드</b>다. 제목바(Helvetica Bold 대문자) + tint 본문(Times) + 우측 사진 노치. 한 장에 3~4개가 한계 — 5개부터는 슬라이드를 쪼갠다.">
+  <div class="paper">
+    <div class="banner in d1"><div class="tag">제품군 · 항목 나열</div><div class="phone">1-800-213-DELL</div></div>
+    <div class="eyebrow in d1" style="--tint:var(--olive)">항목 세 가지</div>
+    <div class="stack">
+      <div class="ribbon in d2" style="--tint:var(--sage)">
+        <div class="bar">첫 번째 항목</div>
+        <div class="fill">본문은 Times Roman으로 두 줄 안에 끝낸다. 카탈로그 카피처럼 <b>짧고 단정하게</b> 쓴다.
+          긴 설명은 카드가 아니라 다음 슬라이드로 넘긴다.</div>
+        <div class="shot" data-cap="FIG. 1"></div>
+      </div>
+      <div class="ribbon in d3" style="--tint:var(--peach)">
+        <div class="bar">두 번째 항목</div>
+        <div class="fill">tint는 항목마다 바꿔도 되지만, 같은 계열 안에서는 고정한다.</div>
+        <div class="shot" data-cap="FIG. 2"></div>
+        <div class="sticker burst badge">NEW!</div>
+      </div>
+      <div class="ribbon in d4" style="--tint:var(--periwinkle)">
+        <div class="bar">세 번째 항목</div>
+        <div class="fill wide">사진이 없으면 <code>.fill.wide</code>로 우측 여백을 회수한다. 노치 자리를 빈 채로 두지 않는다.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════ D4. 2단 구조 — 좌측 레일 + 우측 본문 (1996 홈 구조) ═════ -->
+<section class="slide" data-note="1996 홈페이지 구조를 그대로 쓴 장. 좌측 레일 27%(링크 그리드 + 빨간 CTA), 우측 73%(리본 스택). <b>레일의 파란 밑줄 링크</b>가 시대 표식이다 — 넷스케이프 3.x 블루 #0000ee.">
+  <div class="paper">
+    <div class="banner in d1"><div class="tag">개요 · 한눈에 보기</div>
+      <div class="sticker">BUY <span class="a">a</span> DELL</div><div class="phone">1-800-213-DELL</div></div>
+    <div class="cols">
+      <div class="rail">
+        <div class="railgrid in d2">
+          <a>ONLINE STORE</a><a>SERVICE</a><a>WHY DELL?</a><a>GOVERNMENT</a>
+          <a>WORLDWIDE</a><a>ORDER STATUS</a><a>COMPANY INFO</a><a>CAREERS</a>
+        </div>
+        <div class="cta in d3"><b>핵심 제안</b>좌측 레일 맨 아래에 빨간 패널을 놓는다. 청중이 가장 먼저 보는 색이다.</div>
+      </div>
+      <div class="main">
+        <div class="ribbon in d4" style="--tint:var(--steel)">
+          <div class="bar">현재 상황</div>
+          <div class="fill">지금 무엇이 문제인지 두 줄로.</div>
+          <div class="shot" data-cap="AS-IS"></div>
+        </div>
+        <div class="ribbon in d5" style="--tint:var(--lime)">
+          <div class="bar">제안</div>
+          <div class="fill">무엇을 하자는 것인지 두 줄로.</div>
+          <div class="shot" data-cap="TO-BE"></div>
+        </div>
+        <div class="ribbon in d6" style="--tint:var(--sky)">
+          <div class="bar">기대 효과</div>
+          <div class="fill wide">숫자가 있으면 여기 쓰지 말고 다음 슬라이드(수치 블록)로 뺀다.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════ D5. 수치 블록 — Arial Black 숫자 ═════ -->
+<section class="slide" data-note="수치 블록. 숫자는 <b>Arial Black 900</b>으로만 놓는다. 이 시대엔 차트 라이브러리가 없었으니 그래프 대신 색블록 + 큰 숫자로 승부한다.">
+  <div class="paper">
+    <div class="banner in d1"><div class="tag">숫자로 보기</div><div class="phone">1-800-213-DELL</div></div>
+    <div class="eyebrow in d1" style="--tint:var(--salmon)">핵심 수치</div>
+    <div class="figs" style="--cols:3">
+      <div class="fig in d2" style="--tint:var(--lime)"><div class="v">13<em>회</em></div>
+        <div class="k">첫 번째 지표</div><p>출처와 단위를 캡션으로 남긴다.</p></div>
+      <div class="fig in d3" style="--tint:var(--sky)"><div class="v">4<em>회</em></div>
+        <div class="k">두 번째 지표</div><p>세 칸이 기본, 최대 네 칸.</p></div>
+      <div class="fig in d4" style="--tint:var(--peach)"><div class="v">0<em>회</em></div>
+        <div class="k">세 번째 지표</div><p>대비되는 값을 마지막에 놓는다.</p></div>
+    </div>
+    <div class="stack" style="padding-top:var(--lg)">
+      <div class="ribbon in d5" style="--tint:var(--sage)">
+        <div class="bar">이 숫자가 뜻하는 것</div>
+        <div class="fill wide">수치 블록 아래 리본 하나로 해석을 붙인다. 숫자만 두고 넘어가지 않는다.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════ D6. 표 — HTML 3.2 테이블 ═════ -->
+<section class="slide" data-note="표. 1996 레이아웃은 전부 &lt;table&gt;이었으니 표가 가장 시대에 맞는 정보 밀도 장치다. <b>2px 검정 괘선만</b> 쓰고 얼룩무늬(zebra)·회색 음영은 넣지 않는다.">
+  <div class="paper">
+    <div class="banner in d1"><div class="tag">비교표</div><div class="phone">1-800-213-DELL</div></div>
+    <div class="eyebrow in d1" style="--tint:var(--olive)">항목 비교</div>
+    <div class="stack">
+      <table class="t96 in d2" style="--tint:var(--steel)">
+        <tr><th style="width:22%">구분</th><th>내용</th><th style="width:18%">수치</th></tr>
+        <tr><td class="lab">항목 A</td><td>설명을 한 줄로</td><td class="n">480</td></tr>
+        <tr><td class="lab">항목 B</td><td>설명을 한 줄로</td><td class="n">550</td></tr>
+        <tr><td class="lab">항목 C</td><td>설명을 한 줄로</td><td class="n">727</td></tr>
+      </table>
+      <p class="note-sm in d3" style="margin-top:var(--md)">표 아래 각주는 Times Roman 24px.
+        <a href="#">출처 링크</a>는 파란 밑줄로 둔다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═════ D7. 중앙 진술 + 인증 씰 ═════ -->
+<section class="slide" data-note="선언 슬라이드. 씰(cert-seal)과 NEW! 버스트는 <b>전체에서 두세 번</b>만 쓴다. 스티커가 흔해지면 '핀으로 꽂은' 느낌이 사라진다.">
+  <div class="paper">
+    <div class="center">
+      <div class="sticker burst in d1">NEW!</div>
+      <h2 class="in d2">여기서 한 번<br>못을 박는다</h2>
+      <p class="in d3">선언 아래 한 문장으로 근거를 댄다. 이 장에는 표도 카드도 놓지 않는다.</p>
+      <div class="seal in d4">PC MAGAZINE<b>READERS'<br>CHOICE</b>SERVICE · RELIABILITY</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════ D8. 클로징 — 푸터 아이콘 내비 ═════ -->
+<section class="slide" data-note="닫는 장. 1996 사이트의 목적은 <b>전화 주문</b>이었다 — 그래서 마지막 화면에 전화번호와 다음 행동이 남는다. 여기에 청중이 취할 행동 하나를 적는다.">
+  <div class="paper">
+    <div class="banner in d1"><div class="tag">다음 단계</div>
+      <div class="sticker">BUY <span class="a">a</span> DELL</div><div class="phone">1-800-213-DELL</div></div>
+    <div class="eyebrow in d2" style="--tint:var(--sky)">이제 무엇을<br>할 것인가</div>
+    <div class="cols" style="padding-top:var(--lg)">
+      <div class="rail"><div class="cta in d3"><b>요청</b>청중에게 요구하는 행동 하나를 여기 적는다.</div></div>
+      <div class="main in d4">
+        <table class="t96" style="--tint:var(--lime)">
+          <tr><th style="width:26%">언제</th><th>무엇을</th></tr>
+          <tr><td class="lab">이번 주</td><td>첫 번째 실행 항목</td></tr>
+          <tr><td class="lab">이번 달</td><td>두 번째 실행 항목</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="foot in d5">
+      <div class="iconnav">
+        <div class="it"><div class="ic">◉</div><span>FIND</span></div>
+        <div class="it"><div class="ic">⌂</div><span>HOME</span></div>
+        <div class="it"><div class="ic">▣</div><span>ONLINE STORE</span></div>
+        <div class="it"><div class="ic">✚</div><span>SERVICE &amp; SUPPORT</span></div>
+      </div>
+      <div class="legal"><a href="#">Copyright</a> 1996 발표자. (Terms of Use) —
+        This deck is best viewed with browser versions 3.0 and higher.</div>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<div id="nav"><span class="hint">S 발표자 노트</span><span id="navPage"></span></div>
+<div id="notes"><div class="nlab">발표자 노트</div><div class="ntext" id="noteText"></div></div>
+
+<script>
+const slides=[...document.querySelectorAll('.slide')];
+let cur=-1;
+const navPage=document.getElementById('navPage');
+const noteText=document.getElementById('noteText');
+function show(n){
+  cur=Math.max(0,Math.min(slides.length-1,n));
+  slides.forEach((s,i)=>s.classList.toggle('active',i===cur));
+  navPage.textContent=(cur+1)+' / '+slides.length;
+  noteText.innerHTML=slides[cur].dataset.note||'<span>이 장에는 노트가 없습니다.</span>';
+}
+addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key===' ')show(cur+1);
+  else if(e.key==='ArrowLeft')show(cur-1);
+  else if(e.key==='Home')show(0);
+  else if(e.key==='End')show(slides.length-1);
+  else if(e.key==='s'||e.key==='S'){document.body.classList.toggle('notes');fit();}
+});
+addEventListener('click',e=>{
+  if(e.target.closest('#notes'))return;
+  if(e.clientX<innerWidth/2)show(cur-1);else show(cur+1);
+});
+let tx=null;
+addEventListener('touchstart',e=>tx=e.touches[0].clientX);
+addEventListener('touchend',e=>{if(tx===null)return;
+  const dx=e.changedTouches[0].clientX-tx;
+  if(dx<-40)show(cur+1);else if(dx>40)show(cur-1);tx=null});
+function fit(){
+  const avail=document.body.classList.contains('notes')?innerHeight*.58:innerHeight;
+  const s=Math.min(innerWidth/1920,avail/1080);
+  document.getElementById('stage').style.setProperty('--scale',s);
+  // 노트 패널 좌우 여백 = 슬라이드 본문 끝선(액자 16 + 기준선 56 = 72px)과 동일하게
+  document.documentElement.style.setProperty('--npad',
+    Math.round((innerWidth-1920*s)/2+72*s)+'px');
+}
+addEventListener('resize',fit);addEventListener('load',fit);fit();
+const _h=parseInt(location.hash.slice(1));show(isNaN(_h)?0:_h-1);
+addEventListener('hashchange',()=>{const n=parseInt(location.hash.slice(1));if(!isNaN(n))show(n-1)});
+if(location.search.indexOf('shot')>-1)document.getElementById('nav').style.display='none';
+</script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "name": "ask-exegesis-marketplace",
+  "owner": {
+    "name": "박한용 (Isaac Church)",
+    "email": "paul4you@isaacchurch.org"
+  },
+  "plugins": [
+    {
+      "name": "ask-exegesis-pipeline",
+      "source": "./",
+      "description": "김희석 「성경으로 설교하기」 8단계 본문주해 파이프라인 — 옵시디언 연동 설교 준비 코칭 스킬 모음"
+    }
+  ]
+}

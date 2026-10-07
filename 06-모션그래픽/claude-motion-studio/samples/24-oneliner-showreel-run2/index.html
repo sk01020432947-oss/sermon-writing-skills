@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><title>한 문장 쇼릴 2회차 · One-liner Showreel Run 2</title>
+<link rel="stylesheet" href="../../lib/stage.css">
+<style>
+  .frame{background:#0b0b0c !important;background-image:none !important}
+  .scene{position:absolute;inset:0;overflow:hidden;font-family:Pretendard,sans-serif}
+  .ch{position:absolute;inset:0;overflow:hidden;visibility:hidden}
+  .full{position:absolute;inset:0}
+  .mono{font-family:"IBM Plex Mono",monospace}
+  /* HUD (run 2 style: corner brackets) */
+  .hud{position:absolute;inset:0;z-index:50;font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.14em;color:#fff;pointer-events:none}
+  .hud div{position:absolute}
+  .hud .tl{left:34px;top:26px}.hud .tr{right:34px;top:26px}.hud .bl{left:34px;bottom:24px}.hud .br{right:34px;bottom:24px}
+  .hud .tl b,.hud .tr b{font-weight:700}
+  .hud .tl span{opacity:.55;margin-left:10px}
+  .hud .k{width:14px;height:14px;border:0 solid currentColor;opacity:.7}
+  .hud .k1{left:16px;top:14px;border-left-width:1.5px;border-top-width:1.5px}
+  .hud .k2{right:16px;top:14px;border-right-width:1.5px;border-top-width:1.5px}
+  .hud .k3{left:16px;bottom:14px;border-left-width:1.5px;border-bottom-width:1.5px}
+  .hud .k4{right:16px;bottom:14px;border-right-width:1.5px;border-bottom-width:1.5px}
+  .hud .bt i{display:inline-block;width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.25;margin-left:4px;vertical-align:1px}
+  .hud .bt i.on{opacity:1;background:#F2552C}
+  .hud .segs{left:50%;bottom:28px;transform:translateX(-50%);display:flex;gap:5px}
+  .hud .segs i{display:block;width:18px;height:2px;background:currentColor;opacity:.25}
+  .hud .segs i.on{opacity:1}
+  /* 01 PATTERN */
+  #c1{background:#E9502F}
+  .pc{position:absolute;width:46px;height:46px;background:#F6F1EA;border-radius:23px}
+  /* 02 MATERIAL */
+  #c2{background:#2a120c}
+  #flash{position:absolute;inset:0;background:radial-gradient(circle at 50% 46%,#fff 0%,#fff 22%,#ffe2cf 40%,#ffffff00 75%);opacity:0}
+  /* 03 TYPE */
+  #c3{background:#E9502F}
+  .tw{position:absolute;left:96px;font-weight:900;font-size:222px;line-height:190px;letter-spacing:-.05em;color:#0b0b0c;white-space:nowrap;transform-origin:0% 60%}
+  .oc{display:inline-block;width:162px;height:162px;border-radius:50%;background:#0b0b0c;position:relative;margin:0 4px 0 2px;vertical-align:-2px}
+  .oc i{position:absolute;width:12px;height:12px;border-radius:50%;background:#F6F1EA}
+  /* 04 SPACE */
+  #c4{background:radial-gradient(circle at 50% 50%,#2a110b 0%,#0a0708 62%)}
+  .ringwrap{position:absolute;left:240px;top:90px;width:800px;height:540px;perspective:900px}
+  .ring{position:absolute;inset:0;transform:rotateX(70deg) rotateZ(-14deg)}
+  .ring svg{width:800px;height:540px;overflow:visible}
+  .front{clip-path:inset(50% 0 0 0)}
+  /* 05 DATA */
+  #c5{background:#E8E7E3;color:#0b0b0c}
+  .sl{position:absolute;height:84px;overflow:hidden;display:flex;font-weight:800;font-variant-numeric:tabular-nums;font-size:84px;line-height:84px;letter-spacing:-.03em}
+  .sl .col{display:flex;flex-direction:column}
+  .sl .col span{height:84px}
+  .lab{position:absolute;font-family:"IBM Plex Mono",monospace;font-size:10px;letter-spacing:.16em;color:#5a564f}
+  .bars{position:absolute;left:110px;right:110px;bottom:120px;height:150px;display:flex;align-items:flex-end;gap:8px;border-bottom:2px solid #E9502F}
+  .bars i{flex:1;background:#0b0b0c;transform-origin:50% 100%}
+  .bars i.o{background:#E9502F}
+  /* 06 RHYTHM */
+  #c6{background:#09090a}
+  /* 07 SOUND */
+  #c7{background:#07080d}
+  /* 08 CODE */
+  #c8{background:#0a0a0b}
+  .cd{position:absolute;top:0;font-family:"IBM Plex Mono",monospace;font-size:13px;line-height:22px;color:#ffffff26;white-space:pre}
+  .bigcode{position:absolute;left:170px;top:270px;font-weight:900;font-size:170px;line-height:170px;letter-spacing:-.02em;color:#f4f1ea}
+  .bigcode span{display:inline-block}
+  /* FINAL */
+  #c9{background:#0b0b0c}
+  .word{position:absolute;left:0;top:0;font-weight:900;font-size:140px;letter-spacing:-.03em;color:#f4f1ea;line-height:140px}
+  .sub{position:absolute;font-family:"IBM Plex Mono",monospace;font-size:15px;letter-spacing:.42em;color:#d8d3ca}
+</style></head>
+<body data-no="S24" data-cat="쇼릴 · SHOWREEL" data-ko="한 문장 쇼릴 2회차" data-en="One-liner Showreel Run 2" data-meta="120BPM · 같은 한 문장, 다른 결과" data-dur="16" data-size="1280x720" data-poster="3.2">
+<main class="scene">
+  <!-- 01 PATTERN -->
+  <section class="ch" id="c1"><div id="pcs"></div></section>
+  <!-- 02 MATERIAL -->
+  <section class="ch" id="c2">
+    <canvas id="cv2" width="1280" height="720" class="full"></canvas>
+    <svg class="full" viewBox="0 0 1280 720" id="blobsvg">
+      <defs>
+        <linearGradient id="chrome" gradientUnits="userSpaceOnUse" x1="0" y1="180" x2="0" y2="480">
+          <stop offset="0" stop-color="#f6f6f6"/><stop offset=".2" stop-color="#a3a3a5"/><stop offset=".44" stop-color="#18181a"/>
+          <stop offset=".56" stop-color="#2a1511"/><stop offset=".8" stop-color="#c3412a"/><stop offset="1" stop-color="#f7c9b8"/>
+        </linearGradient>
+        <radialGradient id="sph" cx=".42" cy=".38" r=".62"><stop offset=".55" stop-color="#000" stop-opacity="0"/><stop offset=".9" stop-color="#000" stop-opacity=".45"/><stop offset="1" stop-color="#ff7a52" stop-opacity=".55"/></radialGradient>
+        <filter id="goo" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="16"/><feColorMatrix values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 30 -13"/></filter>
+        <mask id="bmask" maskUnits="userSpaceOnUse" x="0" y="0" width="1280" height="720"><g filter="url(#goo)" fill="#fff" id="gooG"></g></mask>
+        <filter id="soft"><feGaussianBlur stdDeviation="2.4"/></filter>
+        <filter id="shb"><feGaussianBlur stdDeviation="14"/></filter>
+      </defs>
+      <g id="blobg" opacity="0">
+        <ellipse id="bshadow" cx="640" cy="566" rx="170" ry="24" fill="#2a0500" opacity=".55" filter="url(#shb)"/>
+        <g mask="url(#bmask)">
+          <rect x="0" y="0" width="1280" height="720" fill="url(#chrome)"/>
+          <g id="shadeG"></g>
+          <clipPath id="cA"><rect id="cAr" x="0" y="0" width="640" height="720"/></clipPath><clipPath id="cB"><rect id="cBr" x="640" y="0" width="640" height="720"/></clipPath>
+          <g id="lattice" opacity=".72"><g id="latA" clip-path="url(#cA)"></g><g id="latB" clip-path="url(#cB)"></g></g>
+          <g id="spec" filter="url(#soft)"></g>
+        </g>
+      </g>
+    </svg>
+    <div id="flash"></div>
+  </section>
+  <!-- 03 TYPE -->
+  <section class="ch" id="c3">
+    <div class="tw" id="w1" style="top:40px">I</div>
+    <div class="tw" id="w2" style="top:40px;left:226px">MAKE</div>
+    <div class="tw" id="w3" style="top:230px">THINGS</div>
+    <div class="tw" id="w4" style="top:420px">M<span class="oc" id="oc"></span>VE.</div>
+  </section>
+  <!-- 04 SPACE -->
+  <section class="ch" id="c4">
+    <div class="ringwrap"><div class="ring" id="ringB"></div></div>
+    <svg class="full" viewBox="0 0 1280 720">
+      <defs>
+        <radialGradient id="redg" cx=".38" cy=".32" r=".75"><stop offset="0" stop-color="#ffc2a0"/><stop offset=".16" stop-color="#ff6a3a"/><stop offset=".5" stop-color="#e8401c"/><stop offset=".8" stop-color="#8e1606"/><stop offset="1" stop-color="#2c0402"/></radialGradient>
+        <linearGradient id="blueg" x1="1" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#5a6bff"/><stop offset=".45" stop-color="#3B5BFF" stop-opacity=".0"/><stop offset="1" stop-color="#3B5BFF" stop-opacity="0"/></linearGradient>
+        <filter id="glow4"><feGaussianBlur stdDeviation="6"/></filter>
+        <filter id="hl4"><feGaussianBlur stdDeviation="12"/></filter>
+      </defs>
+      <g id="form" transform="translate(640 360)">
+        <path id="fpath" d="" fill="url(#redg)" fill-rule="evenodd"/>
+        <path id="frim" d="" fill="none" stroke="url(#blueg)" stroke-width="14" filter="url(#glow4)" fill-rule="evenodd"/>
+        <ellipse id="fhl" cx="-60" cy="-70" rx="46" ry="26" fill="#fff" opacity=".75" filter="url(#hl4)"/>
+      </g>
+    </svg>
+    <div class="ringwrap front"><div class="ring" id="ringF"></div></div>
+  </section>
+  <!-- 05 DATA -->
+  <section class="ch" id="c5">
+    <div id="nums"></div>
+    <svg class="full" viewBox="0 0 1280 720">
+      <g transform="translate(940 200) rotate(-90)">
+        <circle r="70" fill="none" stroke="#d3d1cb" stroke-width="14"/>
+        <circle id="dA" r="70" fill="none" stroke="#E9502F" stroke-width="14" pathLength="100" stroke-dasharray="0 100"/>
+        <circle id="dB" r="70" fill="none" stroke="#3B5BFF" stroke-width="14" pathLength="100" stroke-dasharray="0 100"/>
+        <circle id="dC" r="70" fill="none" stroke="#0b0b0c" stroke-width="14" pathLength="100" stroke-dasharray="0 100"/>
+      </g>
+      <text id="dnum" x="940" y="214" text-anchor="middle" font-family="Pretendard" font-weight="800" font-size="40" fill="#0b0b0c">0</text>
+      <text x="940" y="236" text-anchor="middle" class="mono" font-size="8" letter-spacing="2" fill="#5a564f">LINES OF CODE</text>
+      <g class="mono" font-size="9" letter-spacing="1.5" fill="#5a564f" id="legend">
+        <rect x="1040" y="168" width="8" height="8" fill="#E9502F"/><text x="1054" y="176">VISUALS</text>
+        <rect x="1040" y="186" width="8" height="8" fill="#3B5BFF"/><text x="1054" y="194">EASING</text>
+        <rect x="1040" y="204" width="8" height="8" fill="#0b0b0c"/><text x="1054" y="212">SOUND</text>
+      </g>
+      <text x="112" y="584" class="mono" font-size="9" letter-spacing="2" fill="#5a564f">SOUNDTRACK — LOUDNESS PER BEAT</text>
+      <text x="1168" y="584" text-anchor="end" class="mono" font-size="9" letter-spacing="2" fill="#5a564f">32 BEATS</text>
+    </svg>
+    <div class="bars" id="bars"></div>
+  </section>
+  <!-- 06 RHYTHM -->
+  <section class="ch" id="c6">
+    <svg class="full" viewBox="0 0 1280 720">
+      <defs><filter id="rough" x="-20%" y="-20%" width="140%" height="140%"><feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="2" seed="4"/><feDisplacementMap in="SourceGraphic" scale="7"/></filter></defs>
+      <g id="ticks" transform="translate(640 360)"></g>
+      <circle id="ring6" cx="640" cy="360" r="150" fill="none" stroke="#f4f1ea" stroke-width="3.5" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" transform="rotate(-90 640 360)"/>
+      <path id="scrib" d="" fill="none" stroke="#F2552C" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1" filter="url(#rough)"/>
+    </svg>
+  </section>
+  <!-- 07 SOUND -->
+  <section class="ch" id="c7">
+    <svg class="full" viewBox="0 0 1280 720" style="filter:drop-shadow(0 0 5px #ff6a2a) drop-shadow(0 0 20px #F2552C) drop-shadow(0 0 44px #c7340f)">
+      <path id="wave" d="" stroke="#ffe2cc" stroke-width="5" fill="none" stroke-linecap="round"/>
+    </svg>
+  </section>
+  <!-- 08 CODE -->
+  <section class="ch" id="c8"><div id="codes"></div>
+    <div class="bigcode" id="bigcode"><span>C</span><span>O</span><span>D</span><span>E</span></div>
+  </section>
+  <!-- FINAL -->
+  <section class="ch" id="c9">
+    <svg id="logo" viewBox="-100 -100 200 200" style="position:absolute;left:560px;top:250px;width:160px;height:160px">
+      <g stroke="#F2913C" stroke-width="9" stroke-linecap="round" id="spokes"></g>
+      <circle r="13" fill="none" stroke="#F2913C" stroke-width="8"/>
+    </svg>
+    <div id="wm" style="position:absolute;left:520px;top:258px;width:620px;height:146px;overflow:hidden"><div class="word" id="word">CLAUDE</div></div>
+    <div id="uline" style="position:absolute;left:446px;top:408px;width:556px;height:3px;background:#E9502F;transform-origin:0 50%"></div>
+    <div class="sub" id="sub" style="left:446px;top:430px;overflow:hidden"><span style="display:block">MOTION DESIGNER</span></div>
+    <div id="foot" class="mono" style="position:absolute;left:0;right:0;top:600px;text-align:center;font-size:10px;letter-spacing:.24em;line-height:20px;color:#7d786f">EVERY PIXEL &amp; EVERY SAMPLE OF THIS REEL — WRITTEN IN CODE<br><span style="color:#E9502F">DESIGN · ANIMATION · TYPE · 3D · GENERATIVE · DATA · SOUND</span></div>
+  </section>
+
+  <div class="hud" id="hud">
+    <div class="k k1"></div><div class="k k2"></div><div class="k k3"></div><div class="k k4"></div>
+    <div class="tl"><b>CLAUDE</b><span>MOTION REEL 2026</span></div>
+    <div class="tr" id="hTR"><b>01/08</b>&nbsp;&nbsp;PATTERN</div>
+    <div class="bl" id="hBL">TC 00:00:00:00</div>
+    <div class="br bt" id="hBR">120 BPM</div>
+    <div class="segs" id="segs"></div>
+  </div>
+</main>
+<script src="../../lib/gsap.min.js"></script><script src="../../lib/stage.js"></script>
+<script>
+const tl = Motion.timeline();
+const B = 0.5; // 1 beat @120BPM
+const $ = s => document.querySelector(s);
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const ease=u=>u<.5?4*u*u*u:1-Math.pow(-2*u+2,3)/2;
+const hash=n=>{n=Math.sin(n*127.1)*43758.5453;return n-Math.floor(n);};
+const CH = [ // [start, id, label, hudColor]
+  [0,'c1','PATTERN','#fff'],[2,'c2','MATERIAL','#fff'],[4,'c3','TYPE','#0b0b0c'],[6,'c4','SPACE','#fff'],
+  [8,'c5','DATA','#0b0b0c'],[10,'c6','RHYTHM','#fff'],[11.5,'c7','SOUND','#fff'],[12.5,'c8','CODE','#fff'],[13.5,'c9','','#fff']];
+const segs = $('#segs'); for(let i=0;i<8;i++) segs.appendChild(document.createElement('i'));
+
+/* ---------- 01 PATTERN: diagonal wave of squares <-> circles ---------- */
+const PC=[], NCx=16, NRy=9, GX=80, GY=80, OX=(1280-(NCx-1)*GX)/2-23, OY=(720-(NRy-1)*GY)/2-23;
+for(let r=0;r<NRy;r++)for(let c=0;c<NCx;c++){const d=document.createElement('div');d.className='pc';d.style.left=(OX+c*GX)+'px';d.style.top=(OY+r*GY)+'px';$('#pcs').appendChild(d);PC.push({d,r,c});}
+function drawPattern(t){
+  const dark=t>=1.0;
+  $('#c1').style.background=dark?'#0b0b0c':'#E9502F';
+  for(const p of PC){
+    const k=t*1.5-(p.c+p.r)*0.075, n=Math.floor(k), e=ease(clamp(k-n,0,1)), u=n+e;
+    const s=0.5+0.5*Math.cos(Math.PI*u);           // 1 = circle, 0 = square
+    const intro=ease(clamp((t-(p.c+p.r)*0.018)/0.35,0,1));
+    const sc=(0.3+0.7*intro)*(1-0.22*Math.sin(Math.PI*e));   // never empty: first frame already shows the dot field
+    p.d.style.borderRadius=(7+16*s)+'px';
+    p.d.style.background=dark?'#E9502F':'#F6F1EA';
+    p.d.style.transform=`rotate(${(u*90).toFixed(2)}deg) scale(${sc.toFixed(3)})`;
+  }
+}
+
+/* ---------- 02 MATERIAL: endless cube field (canvas projection) + chrome blob ---------- */
+const cv2=$('#cv2'), g2=cv2.getContext('2d');
+const mix=(a,b,f)=>a.map((v,i)=>Math.round(v+(b[i]-v)*f));
+const rgb=a=>`rgb(${a[0]},${a[1]},${a[2]})`;
+const FOG=[214,106,70], TOP=[238,232,224], FRONT=[178,166,158], SIDE=[120,108,101];
+function drawField(t){
+  const lt=clamp(t-2,0,2), q=ease(clamp(lt/1.6,0,1));
+  const camZ=lt*3.4, camX=0.3+lt*0.25, camH=7.5-4.6*q, P=1.45-1.12*q, f=760;   // starts top-down on the red lattice, then tilts to the horizon
+  const cp=Math.cos(P), sp=Math.sin(P);
+  const proj=(x,y,z)=>{const dx=x-camX,dy=y-camH,dz=z-camZ;const yv=dy*cp+dz*sp, zv=dz*cp-dy*sp;return zv<0.6?null:[640+f*dx/zv,360-f*yv/zv,zv];};
+  const hy=360-f*Math.tan(P);
+  const sky=g2.createLinearGradient(0,hy-420,0,hy); sky.addColorStop(0,'#4a1a10'); sky.addColorStop(1,'#E9682F');
+  g2.fillStyle=sky; g2.fillRect(0,0,1280,720);
+  const fl=g2.createLinearGradient(0,Math.max(hy,0),0,720); fl.addColorStop(0,'rgb(214,106,70)'); fl.addColorStop(0.25,'#cf3a20'); fl.addColorStop(1,'#d8341b');
+  g2.fillStyle=fl; g2.fillRect(0,Math.max(hy,-10),1280,760);
+  const list=[], z0=Math.floor(camZ)-6;
+  for(let gz=z0+34; gz>=z0; gz--){
+    const dz=gz-camZ, span=Math.ceil(dz*1.15+7);
+    const xs=[]; for(let gx=Math.floor(camX)-span; gx<=Math.floor(camX)+span; gx++) xs.push(gx);
+    xs.sort((a,b)=>Math.abs(b-camX)-Math.abs(a-camX));
+    for(const gx of xs) list.push([gx,gz]);
+  }
+  const W=0.36;
+  // soft floor shadows first (light from back-right, shadows fall toward camera-left)
+  const SDX=-0.5, SDZ=-0.42;
+  for(const [pass,ext,alpha,grow] of [[0,1.4,0.3,0.08],[1,0.95,0.62,0]]){
+    for(const [gx,gz] of list){
+      const hh=hash(gx*31.7+gz*7.3), h=0.25+1.5*hh*hh, fog=clamp(Math.pow((gz-camZ)/30,1.3),0,0.92);
+      g2.beginPath(); let ok=true;
+      for(let k=0;k<=5;k++){const o=h*ext*k/5, ox=SDX*o, oz=SDZ*o, ww=W+grow*k;
+        const q=[proj(gx-ww+ox,0,gz-ww+oz),proj(gx+ww+ox,0,gz-ww+oz),proj(gx+ww+ox,0,gz+ww+oz),proj(gx-ww+ox,0,gz+ww+oz)];
+        if(q.some(v=>!v)){ok=false;break;} q.forEach((v,i)=>i?g2.lineTo(v[0],v[1]):g2.moveTo(v[0],v[1])); g2.closePath();}
+      if(!ok) continue; g2.fillStyle=`rgba(70,8,0,${(alpha*(1-fog)).toFixed(3)})`; g2.fill('nonzero');
+    }
+  }
+  for(const [gx,gz] of list){
+    const hh=hash(gx*31.7+gz*7.3), h=0.25+1.5*hh*hh;
+    const x0=gx-W,x1=gx+W,zA=gz-W,zB=gz+W;
+    const c=[proj(x0,0,zA),proj(x1,0,zA),proj(x1,h,zA),proj(x0,h,zA),proj(x0,0,zB),proj(x1,0,zB),proj(x1,h,zB),proj(x0,h,zB)];
+    if(c.some(v=>!v)) continue;
+    const fog=clamp(Math.pow((gz-camZ)/30,1.3),0,0.92);
+    const poly=(ids,col)=>{g2.beginPath();ids.forEach((i,k)=>k?g2.lineTo(c[i][0],c[i][1]):g2.moveTo(c[i][0],c[i][1]));g2.closePath();g2.fillStyle=rgb(mix(col,FOG,fog));g2.fill();};
+    if(gx>camX+W) poly([0,4,7,3],SIDE); else if(gx<camX-W) poly([1,5,6,2],SIDE);
+    poly([0,1,2,3],FRONT);
+    poly([3,2,6,7],TOP);
+  }
+}
+// chrome metaball: two glossy spheres + neck (goo mask), red lattice reflection, speculars
+const bl={m:0,s:0.2,y:0};
+function lattice(x,y,r){ let s='';
+  [0.08,0.26,0.44,0.6,0.74,0.86].forEach((f,i)=>{const yy=y+f*r, rx=r*Math.sqrt(1-f*f); s+=`<ellipse cx="${x.toFixed(1)}" cy="${yy.toFixed(1)}" rx="${rx.toFixed(1)}" ry="${(rx*0.2).toFixed(1)}" fill="none" stroke="${i%2?'#ffd2c2':'#ff3d1f'}" stroke-width="${(r*0.03).toFixed(1)}"/>`;});
+  for(let k=-4;k<=4;k++){const e=k/4.6; s+=`<path d="M${(x+e*r).toFixed(1)} ${y.toFixed(1)} Q${(x+e*r*0.95).toFixed(1)} ${(y+r*0.6).toFixed(1)} ${(x+e*r*0.25).toFixed(1)} ${(y+r*0.97).toFixed(1)}" fill="none" stroke="#ff3d1f" stroke-width="${(r*0.028).toFixed(1)}"/>`;}
+  return s; }
+function spec(x,y,r){ return `<ellipse cx="${(x-r*0.32).toFixed(1)}" cy="${(y-r*0.56).toFixed(1)}" rx="${(r*0.36).toFixed(1)}" ry="${(r*0.12).toFixed(1)}" fill="#fff" transform="rotate(-24 ${(x-r*0.32).toFixed(1)} ${(y-r*0.56).toFixed(1)})"/>`+
+  `<path d="M${(x-r*0.72).toFixed(1)} ${(y-r*0.12).toFixed(1)} Q${(x-r*0.6).toFixed(1)} ${(y+r*0.08).toFixed(1)} ${(x-r*0.35).toFixed(1)} ${(y+r*0.05).toFixed(1)}" stroke="#fff" stroke-width="${(r*0.05).toFixed(1)}" fill="none" stroke-linecap="round"/>`+
+  `<rect x="${(x+r*0.55).toFixed(1)}" y="${(y-r*0.1).toFixed(1)}" width="${(r*0.06).toFixed(1)}" height="${(r*0.3).toFixed(1)}" rx="${(r*0.03).toFixed(1)}" fill="#fff" opacity=".85"/>`; }
+function drawBlob(t){
+  const R=135*bl.s, cy=330+bl.y, sep=bl.m*92*bl.s, w=Math.sin(t*2.4)*6*bl.m;
+  const A=[640-sep, cy+w, R], Bb=[640+sep, cy-12*bl.m-w, R*(1-0.1*bl.m)];
+  $('#gooG').innerHTML=`<circle cx="${A[0]}" cy="${A[1]}" r="${A[2]}"/><circle cx="${Bb[0]}" cy="${Bb[1]}" r="${Bb[2]}"/>`+(bl.m>0.02?`<ellipse cx="640" cy="${cy-6*bl.m}" rx="${sep}" ry="${(R*0.62).toFixed(1)}"/>`:'');
+  $('#shadeG').innerHTML=[A,Bb].map(([x,y,r])=>`<circle cx="${x}" cy="${y}" r="${r*1.02}" fill="url(#sph)"/>`).join('');
+  // each sphere's reflection grid stops at the midline so the two grids never overlap in the neck
+  const mid=((A[0]+Bb[0])/2).toFixed(1);
+  $('#cAr').setAttribute('width',bl.m>0.02?mid:1280); $('#cBr').setAttribute('x',bl.m>0.02?mid:1280);
+  $('#latA').innerHTML=lattice(...A); $('#latB').innerHTML=bl.m>0.02?lattice(...Bb):'';
+  $('#spec').innerHTML=spec(...A)+spec(...Bb);
+  $('#chrome').setAttribute('y1',(cy-R).toFixed(1)); $('#chrome').setAttribute('y2',(cy+R).toFixed(1));
+  $('#bshadow').setAttribute('rx',(150*bl.s+sep).toFixed(1));
+}
+tl.set('#blobg',{opacity:1},2.5);
+tl.fromTo(bl,{s:0.05},{s:1,duration:0.6,ease:'back.out(1.6)'},2.5);
+tl.fromTo(bl,{y:-30},{y:20,duration:1.5,ease:'sine.inOut'},2.5);
+tl.to(bl,{m:1,duration:0.7,ease:'power2.inOut'},2.95);
+tl.to(bl,{m:0,s:1.3,duration:0.3,ease:'power2.in'},3.65);
+tl.fromTo('#flash',{opacity:0,scale:0.4},{opacity:1,scale:2.2,duration:0.3,ease:'power2.in'},3.7);
+
+/* ---------- 03 TYPE ---------- */
+[['#w1',4.0],['#w2',4.25],['#w3',4.5],['#w4',5.0]].forEach(([s,t])=>{
+  tl.fromTo(s,{scale:1.9,opacity:0,filter:'blur(14px)'},{scale:1,opacity:1,filter:'blur(0px)',duration:0.28,ease:'expo.out'},t);
+});
+tl.to('#c3 .tw',{y:(i)=>[-5,6,-4,3][i],duration:0.05,yoyo:true,repeat:3,ease:'none'},5.0);
+{ const oc=$('#oc'); for(let r=0;r<3;r++)for(let c=0;c<3;c++){const i=document.createElement('i');i.style.left=(46+c*29)+'px';i.style.top=(46+r*29)+'px';oc.appendChild(i);} }
+tl.fromTo('#oc',{rotation:-180,scale:0.2},{rotation:0,scale:1,duration:0.5,ease:'back.out(2)'},5.0);
+tl.to('#oc',{rotation:225,duration:0.9,ease:'expo.inOut'},5.5);
+tl.to('#c3 .tw',{scale:1.04,duration:0.7,ease:'power1.in'},5.3);
+
+/* ---------- 04 SPACE: twisted glossy form -> torus ---------- */
+const ringSVG=`<svg viewBox="-400 -270 800 540"><defs><path id="RP" d="M-330 0 A330 330 0 1 1 330 0 A330 330 0 1 1 -330 0"/></defs>
+<g class="spin"><text font-family="Pretendard" font-weight="700" font-size="32" letter-spacing="12" fill="#f4e9dc"><textPath href="#RP">LIGHT — SPACE — DEPTH — MOTION — LIGHT — SPACE — DEPTH — MOTION —</textPath></text></g></svg>`;
+$('#ringB').innerHTML=ringSVG; $('#ringF').innerHTML=ringSVG.replace('id="RP"','id="RP2"').replace('#RP','#RP2');
+const fm={q:1,h:0,rot:-30,s:0.2};
+function drawForm(t){
+  const R=170*fm.s; let d='';
+  for(let i=0;i<=96;i++){const a=i/96*Math.PI*2, tw=a+fm.q*0.5*Math.sin(a*2+t*1.5);
+    const r=R*(1+fm.q*0.16*Math.cos(4*tw)+0.02*Math.sin(5*a+t*3));
+    d+=(i?'L':'M')+(Math.cos(a)*r*1.08).toFixed(1)+' '+(Math.sin(a)*r*0.92).toFixed(1);} d+='Z';
+  if(fm.h>0.1){const hr=R*fm.h; /* hole opens already readable, no pin-prick frame */ d+=`M${(-hr*1.1).toFixed(1)} -8 A${(hr*1.1).toFixed(1)} ${(hr*0.85).toFixed(1)} 0 1 0 ${(hr*1.1).toFixed(1)} -8 A${(hr*1.1).toFixed(1)} ${(hr*0.85).toFixed(1)} 0 1 0 ${(-hr*1.1).toFixed(1)} -8Z`;}
+  $('#fpath').setAttribute('d',d); $('#frim').setAttribute('d',d);
+  $('#form').setAttribute('transform',`translate(640 360) rotate(${fm.rot.toFixed(1)})`);
+}
+tl.fromTo(fm,{s:0.2,rot:-60},{s:1,rot:-10,duration:0.6,ease:'expo.out'},6.0);
+tl.to(fm,{q:0,h:0.46,rot:15,duration:0.8,ease:'power3.inOut'},6.9);
+tl.to(fm,{rot:30,duration:0.4,ease:'none'},7.7);
+tl.fromTo('.ring .spin',{rotation:0,svgOrigin:'0 0'},{rotation:-140,svgOrigin:'0 0',duration:2,ease:'none'},6.0);
+tl.fromTo('.ringwrap',{scale:0.6,opacity:0},{scale:1,opacity:1,duration:0.6,ease:'expo.out'},6.1);
+
+/* ---------- 05 DATA: slot numbers with motion blur ---------- */
+const H=84, SLOTS=[], NUMS=[[15,'SECONDS',112,110,'#0b0b0c'],[900,'FRAMES',330,110,'#0b0b0c'],[120,'BPM',112,236,'#0b0b0c'],[0,'LIBRARIES USED',330,236,'#E9502F']];
+NUMS.forEach(([n,l,x,y,col],j)=>{
+  const box=document.createElement('div'); box.className='sl'; box.style.left=x+'px'; box.style.top=y+'px'; box.style.color=col;
+  [...String(n)].forEach((ch,i)=>{const c=document.createElement('div');c.className='col';
+    for(let k=0;k<40;k++){const sp=document.createElement('span');sp.textContent=k%10;c.appendChild(sp);} box.appendChild(c);
+    SLOTS.push({c,target:(30+ +ch)*H,t0:8.05+j*0.12+i*0.05,dur:1.0+i*0.15,col});});
+  $('#nums').appendChild(box);
+  const lb=document.createElement('div'); lb.className='lab'; lb.style.left=(x+3)+'px'; lb.style.top=(y+90)+'px'; lb.textContent=l; $('#nums').appendChild(lb);
+});
+function drawSlots(t){
+  for(const s of SLOTS){
+    const u=clamp((t-s.t0)/s.dur,0,1), e=u>=1?1:1-Math.pow(2,-10*u), v=u>=1?0:10*Math.LN2*Math.pow(2,-10*u)/s.dur;
+    s.c.style.transform=`translateY(${(-s.target*e).toFixed(1)}px)`;
+    const b=Math.min(26,v*s.target*0.012);
+    s.c.style.filter=b>0.4?`blur(${(b*0.25).toFixed(2)}px)`:'none';
+    s.c.style.textShadow=b>0.4?`0 ${b}px 0 ${s.col}55,0 ${-b}px 0 ${s.col}55,0 ${2*b}px 0 ${s.col}22,0 ${-2*b}px 0 ${s.col}22`:'none';
+  }
+}
+const r6=Motion.rand(24);
+for(let i=0;i<32;i++){const b=document.createElement('i'); if(i===13)b.className='o'; b.style.height=(30+60*Math.sin(i/31*Math.PI)*0.7+r6()*30)+'%'; $('#bars').appendChild(b);}
+tl.from('#bars i',{scaleY:0,duration:0.45,stagger:0.02,ease:'back.out(1.5)'},8.3);
+tl.from('#bars i',{filter:'blur(6px)',duration:0.45,stagger:0.02,ease:'power2.out'},8.3);
+tl.to('#dA',{attr:{'stroke-dasharray':'46 100'},duration:0.9,ease:'expo.out'},8.2);
+tl.fromTo('#dB',{attr:{'stroke-dasharray':'0 100','stroke-dashoffset':-46}},{attr:{'stroke-dasharray':'34 100','stroke-dashoffset':-47},duration:0.9,ease:'expo.out'},8.35);
+tl.fromTo('#dC',{attr:{'stroke-dasharray':'0 100','stroke-dashoffset':-81}},{attr:{'stroke-dasharray':'17 100','stroke-dashoffset':-82},duration:0.9,ease:'expo.out'},8.5);
+tl.from('#legend',{opacity:0,x:-10,duration:0.4},8.6);
+const dn={v:0}; tl.to(dn,{v:2428,duration:1.2,ease:'expo.out',onUpdate(){$('#dnum').textContent=Math.round(dn.v);}},8.2);
+
+/* ---------- 06 RHYTHM: hand-drawn glyph inside ring ---------- */
+{ let s=''; for(let i=0;i<14;i++){const a=i/14*360+hash(i)*12, r0=205+hash(i+3)*60; s+=`<line x1="0" y1="${-r0}" x2="0" y2="${-r0-14-hash(i+9)*10}" stroke="#E9502F" stroke-width="3.5" stroke-linecap="round" transform="rotate(${a.toFixed(1)})"/>`;} $('#ticks').innerHTML=s;
+  // scribble: looping cursive glyph built from a deterministic curve
+  let d=''; for(let i=0;i<=180;i++){const u=i/180, x=640-95+190*u+38*Math.sin(u*Math.PI*8), y=360+18*Math.cos(u*Math.PI*2)-46*Math.abs(Math.sin(u*Math.PI*4))+ (hash(i)-.5)*3;
+    d+=(i?'L':'M')+x.toFixed(1)+' '+y.toFixed(1);} d+=' M585 405 Q640 425 700 400'; $('#scrib').setAttribute('d',d); }
+tl.to('#ring6',{strokeDashoffset:0,duration:0.4,ease:'power2.inOut'},10.0);
+tl.from('#ticks line',{opacity:0,scale:0.6,transformOrigin:'50% 50%',duration:0.3,stagger:0.02},10.1);
+tl.to('#ticks',{rotation:40,svgOrigin:'0 0',duration:1.5,ease:'none'},10.0);
+tl.to('#scrib',{strokeDashoffset:0,duration:0.85,ease:'power1.inOut'},10.3);
+[10.5,11.0].forEach(t=>tl.fromTo('#ring6',{attr:{r:162}},{attr:{r:150},duration:0.3,ease:'expo.out'},t));
+
+/* ---------- 07 SOUND ---------- */
+function drawSound(t){
+  const lt=t-11.5, amp=10+38*Math.max(0,Math.sin(lt*Math.PI*2))*(lt<0.9?1:0.3);
+  let d=''; for(let x=150;x<=1130;x+=6){
+    const env=Math.sin((x-150)/980*Math.PI);
+    const y=470+env*amp*(Math.sin(x*0.027+lt*18)*0.55+Math.sin(x*0.083-lt*29)*0.3+Math.sin(x*0.15+lt*7)*0.15);
+    d+=(x===150?'M':'L')+x+' '+y.toFixed(1)+' ';
+  }
+  $('#wave').setAttribute('d',d);
+}
+tl.fromTo('#wave',{opacity:0},{opacity:1,duration:0.15},11.5);
+
+/* ---------- 08 CODE ---------- */
+{ const TOK=['const','let','tl.to(','ease:','"expo.out"','duration:','0.45','stagger','onUpdate','=>','return','Math.sin(','rotate(','scale','svgOrigin','beat','BPM','120','frame','seek(t)','{','}','(',');','path.d','Motion.rand(','fill','#E9502F'];
+  const rc=Motion.rand(88); let html='';
+  [60,470,880].forEach((x,ci)=>{let s=''; for(let l=0;l<80;l++){const ind=' '.repeat(Math.floor(rc()*4)*2); let ln=ind; const n=2+Math.floor(rc()*6); for(let k=0;k<n;k++) ln+=TOK[Math.floor(rc()*TOK.length)]+' '; s+=ln+'\n';}
+    html+=`<div class="cd" data-sp="${[46,62,38][ci]}" style="left:${x}px">${s}</div>`;});
+  $('#codes').innerHTML=html; }
+function drawCode(t){ const lt=t-12.5; document.querySelectorAll('#c8 .cd').forEach(e=>e.style.transform=`translateY(${(-lt*e.dataset.sp*6).toFixed(1)}px)`); }
+tl.fromTo('#bigcode span',{opacity:0,y:40,filter:'blur(8px)'},{opacity:1,y:0,filter:'blur(0px)',duration:0.22,stagger:0.08,ease:'expo.out'},12.5);
+
+/* ---------- FINAL ---------- */
+{ let s=''; const L=[88,60,80,56,92,62,78,58]; for(let i=0;i<8;i++){const a=i*45; s+=`<line x1="0" y1="-22" x2="0" y2="${-L[i]}" transform="rotate(${a})"/>`;}
+  for(let i=0;i<8;i++){const a=i*45+22.5; s+=`<line x1="0" y1="-26" x2="0" y2="-46" transform="rotate(${a})" stroke-width="6"/>`;} $('#spokes').innerHTML=s; }
+tl.fromTo('#logo',{scale:0,rotation:-200},{scale:1,rotation:0,duration:0.6,ease:'expo.out'},13.5);
+tl.to('#logo',{x:-330,scale:0.62,rotation:90,duration:0.55,ease:'expo.inOut'},14.1);
+tl.fromTo('#word',{yPercent:110},{yPercent:0,duration:0.55,ease:'expo.out'},14.35);
+tl.fromTo('#wm',{x:-20},{x:-74,duration:0.6,ease:'expo.out'},14.35);
+tl.fromTo('#uline',{scaleX:0},{scaleX:1,duration:0.5,ease:'expo.out'},14.48);
+tl.fromTo('#sub span',{yPercent:110},{yPercent:0,duration:0.4,ease:'expo.out'},14.55);
+tl.fromTo('#foot',{opacity:0,y:8},{opacity:1,y:0,duration:0.4,ease:'power2.out'},14.65);
+
+/* ---------- master clock ---------- */
+const clk={t:0};
+tl.to(clk,{t:16,duration:16,ease:'none',onUpdate(){
+  const t=clk.t; let ci=0; CH.forEach((c,i)=>{if(t>=c[0]-1e-6)ci=i;});
+  CH.forEach((c,i)=>{document.getElementById(c[1]).style.visibility=i===ci?'visible':'hidden';});
+  const hud=$('#hud'); hud.style.color=CH[ci][3]; hud.style.visibility=ci===8?'hidden':'visible';
+  $('#hTR').innerHTML=`<b>${String(Math.min(ci+1,8)).padStart(2,'0')}/08</b>&nbsp;&nbsp;${CH[ci][2]}`;
+  const fr=Math.floor(t*30), s=Math.floor(fr/30), ff=fr%30;
+  $('#hBL').textContent=`TC 00:00:${String(s).padStart(2,'0')}:${String(ff).padStart(2,'0')}`;
+  const bt=Math.floor(t/B)%4; $('#hBR').innerHTML='120 BPM'+[0,1,2,3].map(i=>`<i class="${i===bt?'on':''}"></i>`).join('');
+  [...segs.children].forEach((e,i)=>e.className=i<=ci?'on':'');
+  if(ci===0) drawPattern(t);
+  if(ci===1){ drawField(t); drawBlob(t); }
+  if(ci===3) drawForm(t);
+  if(ci===4) drawSlots(t);
+  if(ci===6) drawSound(t);
+  if(ci===7) drawCode(t);
+}},0);
+Motion.ready();
+</script></body></html>

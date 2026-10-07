@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><title>3D 여정 지도 · 3D Journey Map</title>
+<link rel="stylesheet" href="../../lib/stage.css">
+<style>
+.frame{background:#0b1012 !important;background-image:none !important}
+.scene{position:absolute;inset:0;overflow:hidden;font-family:Pretendard,'Noto Sans KR',sans-serif;color:#e9f1ef;letter-spacing:-.01em}
+.bg{position:absolute;inset:0;background:radial-gradient(55% 75% at 12% -5%,#15493e 0%,rgba(21,73,62,0) 70%),radial-gradient(55% 75% at 105% 105%,#2c2257 0%,rgba(44,34,87,0) 70%),#0b1012}
+.tag{position:absolute;display:flex;gap:8px;align-items:center;font:600 12px/1 'IBM Plex Mono',monospace;letter-spacing:.12em;color:#9fb3ae;text-transform:uppercase;white-space:nowrap}
+.tag b{background:#3ee6a8;color:#06231a;padding:3px 6px;border-radius:4px;font-weight:700}
+.panel{position:absolute;background:rgba(18,26,28,.82);border:1px solid rgba(255,255,255,.09);border-radius:12px}
+.code{font:13px/1.75 'IBM Plex Mono',monospace;color:#b9c9c4;white-space:pre}
+.chip{position:absolute;padding:7px 14px;border-radius:999px;border:1px solid rgba(62,230,168,.45);color:#bff5df;font:600 14px/1 Pretendard;background:rgba(62,230,168,.08);white-space:nowrap}
+.mint{color:#3ee6a8}.red{color:#ff5d4f}
+
+#gl{position:absolute;inset:0;width:1280px;height:720px}
+.pin{position:absolute;transform:translate(-50%,-120%);padding:6px 12px;border-radius:8px;background:rgba(10,16,18,.85);border:1px solid #3ee6a8;font:700 16px Pretendard;white-space:nowrap;opacity:0}
+.ttl{position:absolute;left:64px;top:84px;font:800 34px Pretendard;text-shadow:0 2px 20px #000}
+.note{position:absolute;right:64px;bottom:44px;font:600 13px Pretendard;color:#9fb3ae;background:rgba(0,0,0,.4);padding:6px 10px;border-radius:6px}
+</style></head>
+<body data-no="X02" data-cat="응용 · 성경 배경" data-ko="3D 여정 지도" data-en="3D Journey Map" data-meta="11초 · 지형 위로 경로가 그려지고 카메라가 따라감" data-dur="11" data-poster="10.4" data-size="1280x720">
+<main class="scene">
+  <canvas id="gl"></canvas>
+  <div class="tag" style="left:64px;top:50px"><b>응용</b>THREE.JS · 지형 + 경로 + 카메라</div>
+  <div class="ttl">길을 따라 <span class="mint">카메라가 걷는다</span></div>
+  <div id="pins"></div>
+  <div class="note">예시 지형 · 위치는 개략 (실제 지도 데이터로 교체 가능)</div>
+</main>
+<script src="three.min.js"></script>
+<script src="../../lib/gsap.min.js"></script><script src="../../lib/stage.js"></script>
+<script>
+const DPR = window.devicePixelRatio || 1;
+const renderer = new THREE.WebGLRenderer({canvas: document.getElementById('gl'), antialias: true, preserveDrawingBuffer: true});
+renderer.setPixelRatio(DPR); renderer.setSize(1280, 720, false);
+const scene = new THREE.Scene(); scene.background = new THREE.Color('#0b1012'); scene.fog = new THREE.Fog('#0b1012', 30, 70);
+const cam = new THREE.PerspectiveCamera(42, 1280 / 720, .1, 200);
+scene.add(new THREE.HemisphereLight('#d9fff2', '#20183a', .9));
+const sun = new THREE.DirectionalLight('#fff4dc', 1.4); sun.position.set(-10, 20, 8); scene.add(sun);
+// 결정론 지형: 사인 합성 높이
+const hgt = (x, z) => 1.6 * Math.sin(x * .18) * Math.cos(z * .21) + .9 * Math.sin(x * .41 + z * .3) + .5 * Math.cos(z * .63 - x * .2) - .02 * (x * x + z * z) * .05;
+const tg = new THREE.PlaneGeometry(80, 60, 90, 70); tg.rotateX(-Math.PI / 2);
+const pa = tg.attributes.position, cols = [];
+for (let i = 0; i < pa.count; i++) { const y = hgt(pa.getX(i), pa.getZ(i)); pa.setY(i, y); const c = new THREE.Color(y < -.6 ? '#1b3b5a' : y < .8 ? '#2f5d4c' : y < 1.8 ? '#5a6b4a' : '#8a8366'); cols.push(c.r, c.g, c.b); }
+tg.setAttribute('color', new THREE.Float32BufferAttribute(cols, 3)); tg.computeVertexNormals();
+scene.add(new THREE.Mesh(tg, new THREE.MeshStandardMaterial({vertexColors: true, flatShading: true, roughness: .9})));
+const water = new THREE.Mesh(new THREE.PlaneGeometry(80, 60), new THREE.MeshStandardMaterial({color: '#173a55', transparent: true, opacity: .75})); water.rotation.x = -Math.PI / 2; water.position.y = -.7; scene.add(water);
+// 경로(예시 지점)
+const P = [[-20, 10, '갈릴리'], [-8, 4, '사마리아'], [4, -2, '여리고'], [14, -8, '예루살렘']];
+const curve = new THREE.CatmullRomCurve3(P.map(p => new THREE.Vector3(p[0], hgt(p[0], p[1]) + .4, p[1])));
+const pts = curve.getPoints(400).map(v => new THREE.Vector3(v.x, hgt(v.x, v.z) + .35, v.z));
+const tube = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 400, .16, 8, false);
+const route = new THREE.Mesh(tube, new THREE.MeshBasicMaterial({color: '#3ee6a8'})); scene.add(route);
+const idxPer = tube.index.count / 400;
+const dots = P.map(p => { const m = new THREE.Mesh(new THREE.SphereGeometry(.45, 16, 12), new THREE.MeshBasicMaterial({color: '#ffb547'})); m.position.set(p[0], hgt(p[0], p[1]) + .5, p[1]); m.scale.setScalar(.001); scene.add(m); return m; });
+document.getElementById('pins').innerHTML = P.map((p, i) => `<div class="pin" id="p${i}">${p[2]}</div>`).join('');
+const st = {t: 0, k: 0};
+function draw() {
+  const k = st.k, seg = Math.max(1, Math.floor(k * 400));
+  tube.setDrawRange(0, Math.floor(seg * idxPer));
+  const head = curve.getPointAt(Math.min(.999, k)), look = curve.getPointAt(Math.min(1, k + .02));
+  cam.position.set(head.x - 10, 11 - 2 * k, head.z + 14); cam.lookAt(look.x, look.y, look.z);
+  renderer.render(scene, cam);
+  P.forEach((p, i) => { const reach = i / (P.length - 1); const on = k >= reach - .001; dots[i].scale.setScalar(on ? 1 : .001); const e = document.getElementById('p' + i);
+    if (on) { const v = dots[i].position.clone().project(cam); e.style.left = (v.x * .5 + .5) * 1280 + 'px'; e.style.top = (-v.y * .5 + .5) * 720 + 'px'; e.style.opacity = 1; } else e.style.opacity = 0; });
+}
+const tl = Motion.timeline();
+tl.to(st, {t: 11, duration: 11, ease: 'none', onUpdate: draw}, 0);
+tl.to(st, {k: 1, duration: 8.6, ease: 'power1.inOut'}, .8);
+tl.from('.ttl', {y: 20, autoAlpha: 0, duration: .6}, .2);
+draw();
+Motion.ready();
+</script></body></html>

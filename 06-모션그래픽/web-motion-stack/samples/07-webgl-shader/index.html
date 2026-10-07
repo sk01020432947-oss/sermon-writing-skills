@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><title>WebGL 셰이더 · Shader Effects</title>
+<link rel="stylesheet" href="../../lib/stage.css">
+<style>
+.frame{background:#0b1012 !important;background-image:none !important}
+.scene{position:absolute;inset:0;overflow:hidden;font-family:Pretendard,'Noto Sans KR',sans-serif;color:#e9f1ef;letter-spacing:-.01em}
+.bg{position:absolute;inset:0;background:radial-gradient(55% 75% at 12% -5%,#15493e 0%,rgba(21,73,62,0) 70%),radial-gradient(55% 75% at 105% 105%,#2c2257 0%,rgba(44,34,87,0) 70%),#0b1012}
+.tag{position:absolute;display:flex;gap:8px;align-items:center;font:600 12px/1 'IBM Plex Mono',monospace;letter-spacing:.12em;color:#9fb3ae;text-transform:uppercase;white-space:nowrap}
+.tag b{background:#3ee6a8;color:#06231a;padding:3px 6px;border-radius:4px;font-weight:700}
+.panel{position:absolute;background:rgba(18,26,28,.82);border:1px solid rgba(255,255,255,.09);border-radius:12px}
+.code{font:13px/1.75 'IBM Plex Mono',monospace;color:#b9c9c4;white-space:pre}
+.chip{position:absolute;padding:7px 14px;border-radius:999px;border:1px solid rgba(62,230,168,.45);color:#bff5df;font:600 14px/1 Pretendard;background:rgba(62,230,168,.08);white-space:nowrap}
+.mint{color:#3ee6a8}.red{color:#ff5d4f}
+
+#gl{position:absolute;inset:0;width:1280px;height:720px}
+.big{position:absolute;left:64px;top:92px;font:800 46px/1.2 Pretendard;text-shadow:0 2px 24px rgba(0,0,0,.8)}
+.sub{position:absolute;left:64px;top:214px;font:600 15px Pretendard;color:#cfdcd8;background:rgba(0,0,0,.45);padding:6px 12px;border-radius:6px}
+.mode{position:absolute;bottom:56px;padding:9px 18px;border-radius:999px;font:700 17px Pretendard;background:rgba(10,16,18,.75);border:1px solid rgba(255,255,255,.18);color:#9fb3ae}
+</style></head>
+<body data-no="W07" data-cat="기술 · WEBGL" data-ko="빛·왜곡·물결 셰이더" data-en="WebGL Shader" data-meta="10초 · 픽셀마다 GPU가 동시에 계산" data-dur="10" data-poster="7.8" data-size="1280x720">
+<main class="scene">
+  <canvas id="gl"></canvas>
+  <div class="tag" style="left:64px;top:52px"><b>05</b>WEBGL · WEBGPU</div>
+  <div class="big">더 복잡한<br><span class="mint">시각 효과</span></div>
+  <div class="sub">픽셀마다 동시에 계산하는 GPU</div>
+  <div class="mode" id="m0" style="left:420px">빛</div><div class="mode" id="m1" style="left:500px">왜곡</div><div class="mode" id="m2" style="left:596px">물결</div><div class="mode" id="m3" style="left:692px">점 행렬</div>
+</main>
+<script src="../../lib/gsap.min.js"></script><script src="../../lib/stage.js"></script>
+<script>
+// 외부 라이브러리 없이 원본 WebGL. 시간 t와 효과 비율을 uniform으로 넘기므로 seek 가능.
+const cv = document.getElementById('gl'), DPR = window.devicePixelRatio || 1;
+cv.width = 1280 * DPR; cv.height = 720 * DPR;
+const gl = cv.getContext('webgl', {preserveDrawingBuffer: true});
+const vs = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}';
+const fs = `precision highp float;uniform vec2 R;uniform float t,uL,uW,uR,uD;
+float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(h(i),h(i+vec2(1,0)),f.x),mix(h(i+vec2(0,1)),h(i+1.),f.x),f.y);}
+void main(){vec2 uv=(gl_FragCoord.xy-.5*R)/R.y;
+ vec2 q=uv; q+=uW*.18*vec2(n(uv*3.+t*.6)-.5,n(uv*3.-t*.5+7.)-.5);          // 왜곡
+ float d=length(q-vec2(.25,0.)); float rip=uR*.5*(.5+.5*sin(d*38.-t*5.))*exp(-d*2.2); // 물결
+ float glow=uL*.22/(d*d*9.+.05);                                               // 빛
+ vec3 col=mix(vec3(.04,.06,.07),vec3(.06,.18,.16),smoothstep(-.6,.8,q.y+n(q*2.+t*.2)*.4));
+ col+=vec3(.24,.9,.66)*(glow+rip);
+ vec2 g=fract(gl_FragCoord.xy/(R.y/90.))-.5;float dot_=smoothstep(.3,.18,length(g));     // 점 행렬
+ float lum=dot(col,vec3(.33));col=mix(col,vec3(.24,.9,.66)*dot_*(lum*2.4),uD);
+ gl_FragColor=vec4(col,1.);}`;
+function sh(type, src) { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) throw gl.getShaderInfoLog(s); return s; }
+const pr = gl.createProgram(); gl.attachShader(pr, sh(gl.VERTEX_SHADER, vs)); gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, fs)); gl.linkProgram(pr); gl.useProgram(pr);
+gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer()); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,1,1]), gl.STATIC_DRAW);
+const loc = gl.getAttribLocation(pr, 'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+const U = k => gl.getUniformLocation(pr, k);
+const st = {t: 0, L: 0, W: 0, R: 0, D: 0};
+function draw() {
+  gl.viewport(0, 0, cv.width, cv.height);
+  gl.uniform2f(U('R'), cv.width, cv.height); gl.uniform1f(U('t'), st.t);
+  gl.uniform1f(U('uL'), st.L); gl.uniform1f(U('uW'), st.W); gl.uniform1f(U('uR'), st.R); gl.uniform1f(U('uD'), st.D);
+  gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+}
+const tl = Motion.timeline();
+tl.to(st, {t: 10, duration: 10, ease: 'none', onUpdate: draw}, 0);
+const on = (k, i, t) => { tl.to(st, {[k]: 1, duration: 1.2, ease: 'power2.inOut'}, t); tl.to('#m' + i, {background: '#3ee6a8', color: '#06231a', borderColor: '#3ee6a8', duration: .3}, t); };
+on('L', 0, .6); on('W', 1, 2.6); on('R', 2, 4.6); on('D', 3, 6.6);
+tl.from('.big,.sub', {y: 20, autoAlpha: 0, stagger: .15, duration: .6}, .2);
+draw();
+Motion.ready();
+</script></body></html>

@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><title>한 도형 UI 모프 · One-shape UI Morph</title>
+<link rel="stylesheet" href="../../lib/stage.css">
+<style>
+  .frame{background:#000 !important;background-image:none !important}
+  .scene{position:absolute;inset:0;overflow:hidden;font-family:Pretendard,sans-serif;letter-spacing:-.01em}
+  .card{position:absolute;left:70px;top:70px;width:940px;height:940px;border-radius:48px;background:#EDEAE4}
+  #el{position:absolute;left:540px;top:540px;width:240px;height:76px;border-radius:38px;background:#fff;overflow:hidden;
+      box-shadow:0 14px 34px rgba(0,0,0,.13),0 2px 6px rgba(0,0,0,.06)}
+  .L{position:absolute;left:50%;top:50%;opacity:0}
+  .lbl{font-size:26px;font-weight:600;color:#111;white-space:nowrap}
+  .wt{color:#fff}
+  .gr{color:#8d8a85}
+  #cur{position:absolute;left:0;top:0;width:30px;height:30px;z-index:10;transform-origin:2px 2px}
+</style></head>
+<body data-no="S09" data-cat="UI 모션 · UI MOTION" data-ko="한 도형 UI 모프" data-en="One-shape UI Morph" data-meta="한 요소 · 11상태 · 박자마다 변화" data-dur="17" data-size="1080x1080" data-poster="4.4">
+<main class="scene">
+  <div class="card"></div>
+  <div id="zoom" style="position:absolute;inset:0;transform:scale(1.15);transform-origin:540px 540px">
+  <div id="el">
+    <!-- 0 button -->
+    <div class="L" id="L0" style="width:240px;height:76px;margin:-38px 0 0 -120px;display:flex;align-items:center;justify-content:center"><span class="lbl">Connect</span></div>
+    <!-- 1 spinner -->
+    <div class="L" id="L1" style="width:96px;height:96px;margin:-48px 0 0 -48px">
+      <svg viewBox="0 0 96 96" width="96" height="96"><circle cx="48" cy="48" r="22" fill="none" stroke="#ffffff33" stroke-width="6"/>
+      <g id="spin"><path d="M48 26 A22 22 0 0 1 70 48" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round"/></g></svg></div>
+    <!-- 2 check -->
+    <div class="L" id="L2" style="width:130px;height:130px;margin:-65px 0 0 -65px">
+      <svg viewBox="0 0 130 130" width="130" height="130"><path id="chk" d="M42 67 L58 82 L89 50" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/></svg></div>
+    <!-- 3 player -->
+    <div class="L" id="L3" style="width:560px;height:150px;margin:-75px 0 0 -280px">
+      <div style="position:absolute;left:24px;top:22px;width:76px;height:76px;border-radius:16px;overflow:hidden;background:#F6EEE2">
+        <div style="position:absolute;left:14px;top:30px;width:48px;height:48px;border-radius:50%;background:#F2552C"></div>
+        <div style="position:absolute;left:0;right:0;top:56px;bottom:0;background:#E2471F"></div></div>
+      <div class="wt" style="position:absolute;left:118px;top:30px;font-size:24px;font-weight:700">Afterimage</div>
+      <div style="position:absolute;left:118px;top:62px;font-size:18px;color:#8b8b8b">Nightshift</div>
+      <svg id="eq" style="position:absolute;left:408px;top:44px" width="40" height="30"><g fill="#F2552C">
+        <rect class="eb" x="2" y="0" width="5" height="30" rx="2"/><rect class="eb" x="12" y="0" width="5" height="30" rx="2"/><rect class="eb" x="22" y="0" width="5" height="30" rx="2"/><rect class="eb" x="32" y="0" width="5" height="30" rx="2"/></g></svg>
+      <div style="position:absolute;left:470px;top:34px;width:56px;height:56px;border-radius:50%;background:#fff">
+        <div style="position:absolute;left:19px;top:18px;width:6px;height:20px;border-radius:2px;background:#111"></div><div style="position:absolute;left:31px;top:18px;width:6px;height:20px;border-radius:2px;background:#111"></div></div>
+      <div id="tA" style="position:absolute;left:24px;top:106px;font-size:15px;color:#9a9a9a;font-variant-numeric:tabular-nums">1:12</div>
+      <div style="position:absolute;left:80px;top:114px;width:390px;height:6px;border-radius:3px;background:#3a3a3a"></div>
+      <div id="pf" style="position:absolute;left:80px;top:114px;width:390px;height:6px;border-radius:3px;background:#F2552C;transform-origin:0 50%"></div>
+      <div id="pk" style="position:absolute;left:80px;top:108px;width:18px;height:18px;margin-left:-9px;border-radius:50%;background:#fff;transform:scale(0)"></div>
+      <div id="tB" style="position:absolute;right:24px;top:106px;font-size:15px;color:#9a9a9a;font-variant-numeric:tabular-nums">-1:56</div>
+    </div>
+    <!-- 4 volume -->
+    <div class="L" id="L4" style="width:460px;height:72px;margin:-36px 0 0 -230px">
+      <svg style="position:absolute;left:22px;top:24px" width="26" height="24" viewBox="0 0 26 24"><path d="M2 8h5l6-5v18l-6-5H2z" fill="#111"/></svg>
+      <div id="vt" style="position:absolute;left:70px;top:33px;width:320px;height:6px;border-radius:3px;background:#E2DED7"></div>
+      <div id="vf" style="position:absolute;left:70px;top:33px;width:320px;height:6px;border-radius:3px;background:#F2552C;transform-origin:0 50%"></div>
+      <div id="vk" style="position:absolute;left:70px;top:24px;width:24px;height:24px;margin-left:-12px;border-radius:50%;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.25)"></div>
+      <svg style="position:absolute;right:20px;top:24px" width="32" height="24" viewBox="0 0 32 24"><path d="M2 8h5l6-5v18l-6-5H2z" fill="#111"/><path d="M18 7q4 5 0 10M22 4q7 8 0 16" stroke="#111" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+    </div>
+    <!-- 5 tabs -->
+    <div class="L" id="L5" style="width:480px;height:80px;margin:-40px 0 0 -240px">
+      <div id="ind" style="position:absolute;left:10px;top:10px;width:148px;height:60px;border-radius:30px;background:#111"></div>
+      <div class="tab" style="position:absolute;left:10px;top:10px;width:148px;line-height:60px;text-align:center;font-size:22px;font-weight:600">Day</div>
+      <div class="tab" style="position:absolute;left:166px;top:10px;width:148px;line-height:60px;text-align:center;font-size:22px;font-weight:600">Week</div>
+      <div class="tab" style="position:absolute;left:322px;top:10px;width:148px;line-height:60px;text-align:center;font-size:22px;font-weight:600">Month</div>
+    </div>
+    <!-- 6 toggle -->
+    <div class="L" id="L6" style="width:176px;height:96px;margin:-48px 0 0 -88px">
+      <div id="knob" style="position:absolute;left:10px;top:10px;width:76px;height:76px;border-radius:38px;background:#fff;box-shadow:0 3px 10px rgba(0,0,0,.2)"></div></div>
+    <!-- 7 command palette -->
+    <div class="L" id="L7" style="width:580px;height:320px;margin:-160px 0 0 -290px">
+      <svg style="position:absolute;left:28px;top:30px" width="24" height="24" viewBox="0 0 24 24"><circle cx="10" cy="10" r="7" stroke="#111" stroke-width="2.4" fill="none"/><path d="M15.5 15.5L21 21" stroke="#111" stroke-width="2.4" stroke-linecap="round"/></svg>
+      <div style="position:absolute;left:66px;top:26px;font-size:24px;font-weight:500;color:#111"><span id="typed"></span><span id="caret" style="display:inline-block;width:2px;height:26px;background:#F2552C;vertical-align:-4px;margin-left:2px"></span></div>
+      <div style="position:absolute;right:26px;top:28px;font-size:14px;color:#8d8a85;border:1px solid #ddd8d0;border-radius:6px;padding:2px 7px">⌘K</div>
+      <div style="position:absolute;left:0;right:0;top:80px;height:1px;background:#ECE8E2"></div>
+      <div id="hl" style="position:absolute;left:12px;right:12px;top:92px;height:60px;border-radius:14px;background:#F2EFEA;opacity:0"></div>
+      <div class="row" style="position:absolute;left:28px;top:104px;width:524px;height:36px;display:flex;align-items:center;gap:16px;font-size:21px;font-weight:600;color:#111">
+        <span style="width:36px;height:36px;border-radius:9px;background:#3B6BFF;display:inline-block;position:relative"><svg width="36" height="36" viewBox="0 0 36 36"><path d="M18 10v12M12 15l6-6 6 6M11 21v5h14v-5" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Share track<span id="ret" style="margin-left:auto;font-size:18px;color:#8d8a85">↵</span></div>
+      <div class="row" style="position:absolute;left:28px;top:164px;width:524px;height:36px;display:flex;align-items:center;gap:16px;font-size:21px;font-weight:600;color:#111">
+        <span style="width:36px;height:36px;border-radius:9px;background:#F2552C;display:inline-block"><svg width="36" height="36" viewBox="0 0 36 36"><path d="M9 12h5l8 12h5M9 24h5l2-3M22 12h5M24 9l3 3-3 3M24 21l3 3-3 3" stroke="#fff" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Shuffle</div>
+      <div class="row" style="position:absolute;left:28px;top:224px;width:524px;height:36px;display:flex;align-items:center;gap:16px;font-size:21px;font-weight:600;color:#b6b2ab">
+        <span style="width:36px;height:36px;border-radius:9px;background:#E4E0D9;display:inline-block"></span>Show lyrics</div>
+      <div class="row" style="position:absolute;left:28px;top:282px;font-size:14px;color:#a9a59e">3 results · ↑↓ to navigate</div>
+    </div>
+    <!-- 9 chart card -->
+    <div class="L" id="L9" style="width:600px;height:400px;margin:-200px 0 0 -300px">
+      <div style="position:absolute;left:24px;top:22px;width:300px;height:48px;border-radius:24px;background:#F2EFEA">
+        <div style="position:absolute;left:104px;top:4px;width:92px;height:40px;border-radius:20px;background:#111"></div>
+        <div style="position:absolute;left:4px;top:4px;width:92px;line-height:40px;text-align:center;font-size:17px;font-weight:600;color:#a9a59e">Day</div>
+        <div style="position:absolute;left:104px;top:4px;width:92px;line-height:40px;text-align:center;font-size:17px;font-weight:600;color:#fff">Week</div>
+        <div style="position:absolute;left:204px;top:4px;width:92px;line-height:40px;text-align:center;font-size:17px;font-weight:600;color:#a9a59e">Month</div></div>
+      <div style="position:absolute;right:24px;top:26px;width:40px;height:40px;border-radius:50%;background:#F2EFEA"><svg width="40" height="40" viewBox="0 0 40 40"><circle cx="18" cy="18" r="6.5" stroke="#111" stroke-width="2.2" fill="none"/><path d="M23 23l5 5" stroke="#111" stroke-width="2.2" stroke-linecap="round"/></svg></div>
+      <div style="position:absolute;left:26px;top:94px;font-size:15px;color:#a9a59e;font-weight:500">Listening · this week</div>
+      <div id="tot" style="position:absolute;left:24px;top:114px;font-size:44px;font-weight:700;color:#111;letter-spacing:-.02em;font-variant-numeric:tabular-nums">0h 00m</div>
+      <svg style="position:absolute;left:24px;top:190px;overflow:visible" width="552" height="150" viewBox="0 0 552 150">
+        <path d="M0 140H552" stroke="#EEEAE4" stroke-width="1.5"/>
+        <path id="vline" d="M276 40V140" stroke="#C9C5BE" stroke-width="1.5" stroke-dasharray="3 4" opacity="0"/>
+        <path id="curve" fill="none" stroke="#4B5BD7" stroke-width="3.5" stroke-linecap="round" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/>
+        <circle id="dot" cx="276" cy="40" r="7" fill="#fff" stroke="#4B5BD7" stroke-width="3.5" transform="scale(0)" transform-origin="276 40"/></svg>
+      <div id="tip" style="position:absolute;left:300px;top:170px;transform:translate(-50%,-100%);background:#111;color:#fff;font-size:15px;font-weight:600;padding:7px 12px;border-radius:9px;white-space:nowrap;opacity:0">Thu · 3h 05m</div>
+      <div style="position:absolute;left:24px;top:350px;width:552px;display:flex;justify-content:space-between;font-size:14px;color:#a9a59e;font-weight:500"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div>
+    </div>
+    <!-- 10 connected pill -->
+    <div class="L" id="L10" style="width:320px;height:72px;margin:-36px 0 0 -160px">
+      <div style="position:absolute;left:14px;top:14px;width:44px;height:44px;border-radius:11px;overflow:hidden;background:#F6EEE2"><div style="position:absolute;left:8px;top:17px;width:28px;height:28px;border-radius:50%;background:#F2552C"></div><div style="position:absolute;left:0;right:0;top:32px;bottom:0;background:#E2471F"></div></div>
+      <div class="wt" style="position:absolute;left:74px;top:22px;font-size:22px;font-weight:600">Connected</div>
+      <div id="cdots" style="position:absolute;right:24px;top:33px;display:flex;gap:5px"><i style="width:6px;height:6px;border-radius:50%;background:#F2552C;display:block"></i><i style="width:6px;height:6px;border-radius:50%;background:#F2552C;display:block"></i><i style="width:6px;height:6px;border-radius:50%;background:#F2552C;display:block"></i></div>
+    </div>
+    <!-- 8 toast -->
+    <div class="L" id="L8" style="width:330px;height:68px;margin:-34px 0 0 -165px;display:flex;align-items:center;justify-content:center;gap:14px">
+      <span style="width:30px;height:30px;border-radius:50%;background:#2DB55D;display:inline-block"><svg width="30" height="30" viewBox="0 0 30 30"><path d="M9 15.5l4 4 8-8" stroke="#fff" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <span class="lbl wt" style="font-size:23px">Link copied</span></div>
+  </div>
+    <svg id="cur" viewBox="0 0 30 30"><path d="M3 2 L3 24 L8.5 18.8 L12.3 27.5 L16 26 L12.3 17.4 L20 17.4 Z" fill="#111" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/></svg>
+  </div><!--zoom-->
+</main>
+<script src="../../lib/gsap.min.js"></script><script src="../../lib/stage.js"></script>
+<script>
+const tl = Motion.timeline();
+const $ = s => document.querySelector(s), el = $('#el');
+gsap.set(el,{xPercent:-50,yPercent:-50});
+const SPRING='back.out(1.5)';
+let cur='#L0';
+tl.set('#L0',{opacity:1},0);
+// 한 요소가 모양·색·내용을 바꾼다 (짧은 블러 동반)
+function morph(t, box, layer, dur=0.5){
+  tl.to(el,Object.assign({duration:dur,ease:SPRING},box),t);
+  tl.to(el,{filter:'blur(5px)',duration:0.09,ease:'power1.in'},t);
+  tl.to(el,{filter:'blur(0px)',duration:0.2,ease:'power1.out'},t+0.09);
+  tl.to(cur,{opacity:0,scale:0.9,duration:0.1},t);
+  tl.fromTo(layer,{opacity:0,scale:0.9},{opacity:1,scale:1,duration:0.35,ease:'back.out(2)'},t+0.14);
+  cur=layer;
+}
+function press(t){
+  tl.to(el,{scale:0.94,duration:0.08,ease:'power2.out'},t).to(el,{scale:1,duration:0.35,ease:'back.out(3)'},t+0.08);
+}
+const C=$('#cur');
+function mv(t,x,y,d=0.45,ease='power3.inOut'){ tl.to(C,{x,y,duration:d,ease},t); }
+function click(t){ tl.to(C,{scale:0.82,duration:0.07},t).to(C,{scale:1,duration:0.2,ease:'back.out(3)'},t+0.08); }
+const WHITE_SH='0 14px 34px rgba(0,0,0,.13), 0 2px 6px rgba(0,0,0,.06)', DARK_SH='0 18px 40px rgba(0,0,0,.28), 0 2px 6px rgba(0,0,0,.1)';
+
+tl.set(C,{x:860,y:900},0);
+/* 0.0 button → click */
+tl.from(el,{scale:0.6,opacity:0,duration:0.5,ease:SPRING},0);
+mv(0.15,566,552,0.8,'power3.out');
+click(1.0); press(1.0);
+/* 1.25 loader */
+morph(1.25,{width:96,height:96,borderRadius:48,backgroundColor:'#111',boxShadow:DARK_SH},'#L1');
+mv(1.4,690,650,0.6);
+tl.fromTo('#spin',{rotation:0,svgOrigin:'48 48'},{rotation:540,svgOrigin:'48 48',duration:1.0,ease:'none'},1.25);
+/* 2.25 success */
+morph(2.25,{width:130,height:130,borderRadius:65,backgroundColor:'#2DB55D'},'#L2');
+tl.to('#chk',{strokeDashoffset:0,duration:0.35,ease:'power2.out'},2.4);
+tl.to(el,{scale:1.06,duration:0.12,yoyo:true,repeat:1},2.75);
+/* 3.1 connected pill (원본: 체크 → Connected 알약) */
+morph(3.1,{width:320,height:72,borderRadius:36,backgroundColor:'#0E0E0F'},'#L10');
+tl.fromTo('#cdots i',{y:0},{y:-5,duration:0.16,yoyo:true,repeat:3,stagger:0.07,ease:'sine.inOut'},3.35);
+/* 3.75 music player (dynamic island) */
+morph(3.75,{width:560,height:150,borderRadius:40,backgroundColor:'#0E0E0F'},'#L3',0.55);
+const TOTAL=188, pos={s:72};
+const fmt=s=>{s=Math.round(s);return Math.floor(s/60)+':'+String(s%60).padStart(2,'0');};
+const setPos=()=>{const f=pos.s/TOTAL;$('#pf').style.transform=`scaleX(${f})`;$('#pk').style.left=(80+390*f)+'px';$('#tA').textContent=fmt(pos.s);$('#tB').textContent='-'+fmt(TOTAL-pos.s);};
+tl.to(pos,{s:73.2,duration:1.2,ease:'none',onUpdate:setPos},3.75);
+const eq={p:0}; const EB=[...document.querySelectorAll('.eb')];
+tl.to(eq,{p:1,duration:2.8,ease:'none',onUpdate(){EB.forEach((b,i)=>{const h=8+22*Math.abs(Math.sin(eq.p*38+i*1.7));b.setAttribute('y',30-h);b.setAttribute('height',h);});}},3.75);
+const knobX=80+390*(73.2/TOTAL), elL=540-280, elT=540-75;
+mv(4.6,elL+knobX,elT+117,0.45);
+tl.to('#pk',{scale:1,duration:0.2,ease:'back.out(3)'},4.95);
+click(5.1); tl.to('#pk',{scale:1.35,duration:0.15},5.1);
+mv(5.15,elL+80+390*0.75,elT+117,0.8,'power2.inOut');
+tl.to(pos,{s:TOTAL*0.75,duration:0.8,ease:'power2.inOut',onUpdate:setPos},5.15);
+tl.to('#pk',{scale:1,duration:0.15},6.0);
+/* 6.2 → volume slider (커서를 쥔 채 이어서) */
+morph(6.2,{width:460,height:72,borderRadius:36,backgroundColor:'#ffffff',boxShadow:WHITE_SH},'#L4');
+const vol={v:(elL+80+390*0.75-(540-230)-70)/320, o:0};
+const setVol=()=>{const o=vol.o;
+  $('#vf').style.width=$('#vt').style.width=(320+o)+'px'; $('#vf').style.transform=`scaleX(${vol.v})`;
+  $('#vk').style.left=(70+(320+o)*vol.v)+'px';
+  $('#L4').style.width=(460+o)+'px'; $('#L4').style.marginLeft=(-230-o/2)+'px';};
+const setStr=()=>{setVol(); el.style.width=(460+vol.o)+'px'; gsap.set(el,{x:vol.o/2});};
+const vx=v=>540-230+70+320*v;
+tl.to(vol,{v:vol.v,duration:0.01,onUpdate:setVol},6.2);
+tl.to(vol,{v:0.3,duration:0.45,ease:'power2.inOut',onUpdate:setVol},6.5); mv(6.5,vx(0.3),548,0.45,'power2.inOut');
+tl.to(vol,{v:1,duration:0.45,ease:'power2.in',onUpdate:setVol},6.95); mv(6.95,vx(1),548,0.45,'power2.in');
+/* 최대치를 넘겨 끌면 트랙 전체가 고무줄처럼 늘어난다(저항 0.45) */
+mv(7.4,vx(1)+90,548,0.4,'power2.out');
+tl.to(vol,{o:40,duration:0.4,ease:'power2.out',onUpdate:setStr},7.4);
+tl.to('#vk',{scaleX:1.25,scaleY:0.85,duration:0.3},7.4);
+/* 놓으면 스프링으로 복귀 */
+click(7.95);
+tl.to(vol,{o:0,duration:0.6,ease:'elastic.out(1,0.35)',onUpdate:setStr},8.0);
+tl.to('#vk',{scaleX:1,scaleY:1,duration:0.5,ease:'elastic.out(1,0.4)'},8.0);
+mv(8.05,575,560,0.4,'power3.out');
+/* 8.6 toggle */
+morph(8.6,{width:176,height:96,borderRadius:48,backgroundColor:'#CFCBC4',boxShadow:WHITE_SH},'#L6');
+click(9.05);
+tl.to('#knob',{x:80,duration:0.4,ease:'back.out(1.8)'},9.05);
+tl.to('#knob',{width:96,duration:0.12,ease:'power2.out'},9.05).to('#knob',{width:76,duration:0.3,ease:'back.out(2)'},9.17);
+tl.to(el,{backgroundColor:'#F2552C',duration:0.25,ease:'power2.out'},9.05);
+/* 9.6 tabs — 표시자의 두 모서리가 서로 다른 스프링(앞쪽 빠르게, 뒤쪽 늦게) */
+morph(9.6,{width:480,height:80,borderRadius:40,backgroundColor:'#ffffff'},'#L5');
+const TABS=[...document.querySelectorAll('.tab')];
+const setTab=(i,t)=>TABS.forEach((x,k)=>tl.set(x,{color:k===i?'#fff':'#8d8a85'},t));
+setTab(0,9.6);
+const ind={l:10,r:158}; const setInd=()=>{const I=$('#ind');I.style.left=ind.l+'px';I.style.width=(ind.r-ind.l)+'px';};
+function slide(t,l,r){ // 진행 방향 앞 모서리: 빠르고 오버슛 / 뒤 모서리: 80ms 늦게, 느슨한 스프링
+  tl.to(ind,{r,duration:0.38,ease:'back.out(2.2)',onUpdate:setInd},t);
+  tl.to(ind,{l,duration:0.6,ease:'back.out(1.1)',onUpdate:setInd},t+0.08);}
+mv(9.65,548,552,0.4); click(10.05); slide(10.05,166,314); setTab(1,10.15);
+mv(10.35,712,552,0.3); click(10.65); slide(10.65,322,470); setTab(2,10.75);
+mv(11.0,552,552,0.3); click(11.3);
+tl.to(ind,{l:166,duration:0.38,ease:'back.out(2.2)',onUpdate:setInd},11.3);
+tl.to(ind,{r:314,duration:0.6,ease:'back.out(1.1)',onUpdate:setInd},11.38); setTab(1,11.4);
+/* 11.75 Week → 차트 카드로 펼침, 선이 스스로 그려지고 툴팁 */
+morph(11.75,{width:600,height:400,borderRadius:32,backgroundColor:'#ffffff'},'#L9',0.6);
+const P=[[0,112],[92,96],[184,122],[276,40],[368,72],[460,58],[552,98]];
+let d='M'+P[0];for(let i=0;i<P.length-1;i++){const p0=P[i-1]||P[i],p1=P[i],p2=P[i+1],p3=P[i+2]||p2;
+  d+=` C${p1[0]+(p2[0]-p0[0])/6} ${p1[1]+(p2[1]-p0[1])/6} ${p2[0]-(p3[0]-p1[0])/6} ${p2[1]-(p3[1]-p1[1])/6} ${p2[0]} ${p2[1]}`;}
+$('#curve').setAttribute('d',d);
+const tot={m:0};
+tl.to(tot,{m:865,duration:0.9,ease:'power3.out',onUpdate(){const m=Math.round(tot.m);$('#tot').textContent=Math.floor(m/60)+'h '+String(m%60).padStart(2,'0')+'m';}},11.95);
+tl.to('#curve',{strokeDashoffset:0,duration:1.0,ease:'power2.inOut'},12.05);
+mv(12.3,550,588,0.55,'power3.inOut');
+tl.to('#vline',{opacity:1,duration:0.2},12.85);
+tl.to('#dot',{scale:1,duration:0.3,ease:'back.out(3)'},12.85);
+tl.fromTo('#tip',{opacity:0,y:8,scale:0.9},{opacity:1,y:0,scale:1,duration:0.35,ease:'back.out(2.5)'},12.92);
+/* 13.6 command palette */
+morph(13.6,{width:580,height:320,borderRadius:28,backgroundColor:'#ffffff'},'#L7',0.55);
+mv(13.65,860,760,0.5);
+tl.set('#typed',{textContent:''},13.6); tl.set('#typed',{textContent:'S'},13.8); tl.set('#typed',{textContent:'Sh'},14.0);
+tl.from('#L7 .row',{y:14,opacity:0,duration:0.3,stagger:0.08,ease:'power3.out'},14.05);
+tl.to('#hl',{opacity:1,duration:0.15},14.25);
+mv(14.2,640,470,0.4); click(14.7);
+tl.to('#hl',{backgroundColor:'#E6E1D9',duration:0.08,yoyo:true,repeat:1},14.7);
+tl.to('#ret',{color:'#F2552C',scale:1.3,duration:0.1,yoyo:true,repeat:1},14.7);
+/* 14.9 toast */
+morph(14.9,{width:330,height:68,borderRadius:34,backgroundColor:'#111',boxShadow:DARK_SH},'#L8');
+tl.fromTo(el,{y:30},{y:0,duration:0.5,ease:'back.out(2.2)'},14.9);
+mv(15.0,760,700,0.5);
+tl.to('#L8 span:first-child',{scale:1.2,duration:0.12,yoyo:true,repeat:1},15.2);
+/* 15.6 collapse back to button */
+morph(15.6,{width:240,height:76,borderRadius:38,backgroundColor:'#ffffff',boxShadow:WHITE_SH},'#L0');
+mv(15.7,570,556,0.5,'power3.out');
+tl.to(el,{scale:1.03,duration:0.3,ease:'power2.out'},16.0);
+Motion.ready();
+</script></body></html>

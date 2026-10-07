@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><title>대본 해설 모션 · Script Explainer</title>
+<link rel="stylesheet" href="../../lib/stage.css">
+<style>
+  .frame{background:#0a0c0e !important;background-image:none !important}
+  .scene{position:absolute;inset:0;overflow:hidden}
+  :root{--or:#FF6619;--card:#171b21;--fill:#1c2027;--bd:#2a2e37;--g:#313743;--g2:#4a4f5e;--wh:#f2efe9}
+  .bg{position:absolute;inset:0;background:radial-gradient(ellipse 60% 55% at 50% 50%,#1c1513 0%,#120f10 55%,#0a0c0e 100%)}
+  .grp{position:absolute;inset:0}
+  /* A: slide editor */
+  .thumb{position:absolute;left:179px;width:134px;height:72px;border-radius:7px;background:var(--card);border:1px solid #252833}
+  .thumb i{position:absolute;left:12px;height:4px;border-radius:2px;background:var(--g)}
+  .thumb i.o{background:var(--or);width:36px;top:12px}
+  .thumb b{position:absolute;right:12px;top:14px;width:26px;height:42px;border-radius:4px;background:var(--g)}
+  .hl{position:absolute;left:175px;top:146px;width:138px;height:76px;border:2px solid var(--or);border-radius:9px;box-shadow:0 0 14px rgba(255,102,25,.45)}
+  .slide{position:absolute;left:353px;top:150px;width:747px;height:420px}
+  .slide .face{position:absolute;inset:0;border-radius:14px;background:var(--fill);border:1px solid var(--bd)}
+  .slide svg.out{position:absolute;left:-2px;top:-2px;overflow:visible}
+  .bar{position:absolute;left:47px;top:52px;height:28px;width:0;border-radius:6px;background:var(--or)}
+  .ln{position:absolute;left:47px;height:8px;border-radius:4px;background:var(--g)}
+  .img{position:absolute;left:427px;top:52px;width:273px;height:314px;border-radius:12px;background:#22262e;overflow:hidden}
+  .pill{position:absolute;top:350px;height:20px;border-radius:10px;background:var(--g)}
+  .cb{position:absolute;bottom:116px;width:44px;border-radius:4px 4px 0 0;background:var(--g2);transform-origin:50% 100%}
+  .base{position:absolute;left:47px;top:311px;width:200px;height:2px;background:var(--g)}
+  .donut{position:absolute;left:430px;top:74px}
+  .ptrack{position:absolute;left:47px;top:352px;width:210px;height:12px;border-radius:6px;background:var(--g)}
+  .pfill{position:absolute;left:47px;top:352px;width:0;height:12px;border-radius:6px;background:var(--or)}
+  .rip{position:absolute;width:90px;height:90px;margin:-45px 0 0 -45px;border-radius:50%;border:2px solid var(--or);opacity:0}
+  /* B: people */
+  .pp{position:absolute;width:46px;height:50px;color:var(--g)}
+  .pp svg{width:46px;height:50px;display:block}
+  .pring{position:absolute;width:76px;height:76px;margin:-38px 0 0 -38px;border-radius:50%;border:1.5px solid rgba(255,102,25,.55);box-shadow:0 0 18px rgba(255,102,25,.25)}
+  .sweep{position:absolute;top:120px;left:0;width:80px;height:500px;background:linear-gradient(90deg,transparent,rgba(255,102,25,.28) 45%,rgba(255,140,60,.5) 50%,rgba(255,102,25,.28) 55%,transparent)}
+  .sweep i{position:absolute;top:0;bottom:0;width:1px;background:rgba(255,120,50,.6)}
+  /* C: feature cards */
+  .fc{position:absolute;top:176px;width:280px;height:346px;border-radius:14px;background:var(--card);border:1.5px solid #262a33}
+  .fc .dt{position:absolute;left:30px;top:36px;display:flex;gap:9px}
+  .fc .dt i{width:9px;height:9px;border-radius:50%;background:#3a3f4b}
+  .fc .dt i.o{background:var(--or)}
+  .fc .l1{position:absolute;left:30px;top:276px;width:140px;height:6px;border-radius:3px;background:#2a2f39}
+  .fc .l2{position:absolute;left:30px;top:294px;width:100px;height:6px;border-radius:3px;background:#2a2f39}
+  .fc svg.ic{position:absolute;left:0;top:60px}
+  .fc .hot{position:absolute;inset:-1.5px;border-radius:14px;border:2px solid var(--or);box-shadow:0 0 22px rgba(255,102,25,.45),inset 0 0 12px rgba(255,102,25,.12);opacity:0}
+  .crip{position:absolute;left:152px;top:163px;width:60px;height:60px;margin:-30px 0 0 -30px;border-radius:50%;border:2px solid var(--or);opacity:0}
+  .seed{position:absolute;width:22px;height:22px;margin:-11px 0 0 -11px;border-radius:50%;background:var(--or);box-shadow:0 0 16px rgba(255,102,25,.8);opacity:0}
+  /* D: speed + reticle */
+  .sk{position:absolute;left:0;height:2px;border-radius:2px}
+  .burst{position:absolute;left:640px;top:360px;width:0;height:0}
+  .burst div{position:absolute;left:0;top:0;width:0;height:0}
+  .burst i{position:absolute;left:0;top:-1px;height:2px;border-radius:1px}
+  .ret{position:absolute;left:640px;top:360px;width:0;height:0}
+  .glow{position:absolute;left:-260px;top:-260px;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,rgba(255,102,25,.22),rgba(255,102,25,.06) 45%,transparent 70%)}
+  .oring{position:absolute;left:-166px;top:-166px;width:332px;height:332px;border-radius:50%;border:2px solid rgba(255,102,25,.28)}
+  .iring{position:absolute;left:-64px;top:-64px;width:128px;height:128px;border-radius:50%;border:3px solid var(--or);box-shadow:0 0 22px rgba(255,102,25,.5),inset 0 0 14px rgba(255,102,25,.25)}
+  .cdot{position:absolute;left:-15px;top:-15px;width:30px;height:30px;border-radius:50%;background:var(--or);box-shadow:0 0 22px var(--or)}
+  .tk{position:absolute;left:-1px;top:0;width:2px;background:rgba(255,140,80,.7);transform-origin:1px 0}
+  .br{position:absolute;width:47px;height:47px;border:0 solid var(--wh)}
+</style></head>
+<body data-no="S01" data-cat="스타일 · STYLE" data-ko="대본 해설 모션" data-en="Script Explainer" data-meta="11초 · 대본→글자 없는 모션" data-dur="11" data-poster="7.9" data-size="1280x720">
+<main class="scene">
+  <div class="bg"></div>
+
+  <div class="grp" id="A">
+    <div id="thumbs"></div>
+    <div class="hl"></div>
+    <div class="slide">
+      <div class="face"></div>
+      <svg class="out" width="751" height="424"><rect class="ol" x="1.5" y="1.5" width="748" height="421" rx="14" fill="none" stroke="#e9e6e0" stroke-width="2" stroke-dasharray="2340" stroke-dashoffset="2340"/></svg>
+      <div class="bar"></div>
+      <div class="ln" style="top:121px;width:266px"></div>
+      <div class="ln" style="top:152px;width:226px"></div>
+      <div class="ln" style="top:183px;width:180px"></div>
+      <div class="img"><svg viewBox="0 0 273 314" width="273" height="314"><circle cx="74" cy="81" r="20" fill="#F09F47"/><path d="M0 314 L0 300 L82 190 L140 250 L198 150 L273 270 L273 314Z" fill="#4a4f5e"/></svg></div>
+      <div class="pill" style="left:47px;width:76px"></div><div class="pill" style="left:130px;width:78px"></div><div class="pill" style="left:219px;width:68px"></div>
+      <div class="cb" style="left:51px;height:88px"></div>
+      <div class="cb" style="left:115px;height:129px"></div>
+      <div class="cb" style="left:179px;height:177px;background:var(--or)"></div>
+      <div class="base"></div>
+      <svg class="donut" width="272" height="272" viewBox="0 0 272 272">
+        <circle cx="136" cy="136" r="136" fill="#1f232b"/>
+        <circle cx="136" cy="136" r="85" fill="none" stroke="#262a33" stroke-width="26"/>
+        <circle class="arc" cx="136" cy="136" r="85" fill="none" stroke="#FF6619" stroke-width="26" stroke-linecap="round" stroke-dasharray="534" stroke-dashoffset="534" transform="rotate(-80 136 136)"/>
+      </svg>
+      <div class="ptrack"></div><div class="pfill"></div>
+      <div class="rip r1" style="left:560px;top:180px"></div>
+      <div class="rip r2" style="left:170px;top:358px"></div>
+    </div>
+  </div>
+
+  <div class="grp" id="B">
+    <div id="ppl"></div>
+    <div class="sweep"><i style="left:22px"></i><i style="left:40px"></i><i style="left:58px"></i></div>
+  </div>
+
+  <div class="grp" id="C">
+    <div id="ghosts"></div>
+    <div class="row" style="position:absolute;inset:0">
+      <div class="fc f1" style="left:184px"><div class="dt"><i class="o"></i><i></i><i></i></div>
+        <svg class="ic" width="280" height="200" viewBox="0 0 280 200"><defs><clipPath id="vc"><circle class="va2" cx="200" cy="106" r="49"/></clipPath></defs>
+          <circle class="va" cx="78" cy="106" r="49" fill="#3a3f4b" stroke="#3a3f4b" stroke-width="2"/>
+          <circle class="vb" cx="200" cy="106" r="49" fill="#3a3f4b" stroke="#3a3f4b" stroke-width="2"/>
+          <circle class="vi" cx="78" cy="106" r="49" fill="#FF6619" clip-path="url(#vc)" opacity="0"/></svg>
+        <div class="l1"></div><div class="l2"></div><div class="hot"></div></div>
+      <div class="fc f2" style="left:500px"><div class="dt"><i class="o"></i><i class="o"></i><i></i></div>
+        <svg class="ic" width="280" height="200" viewBox="0 0 280 200">
+          <path class="y3" d="M140 150 L220 113 L140 76 L60 113Z" fill="#3a3f4b"/>
+          <path class="y2" d="M140 140 L220 103 L140 66 L60 103Z" fill="#5a6070"/>
+          <path class="y1" d="M140 130 L220 93 L140 56 L60 93Z" fill="#7d8396"/></svg>
+        <div class="l1"></div><div class="l2"></div><div class="hot"></div></div>
+      <div class="fc f3" style="left:816px"><div class="dt"><i class="o"></i><i class="o"></i><i class="o"></i></div>
+        <svg class="ic cur" width="280" height="200" viewBox="0 0 280 200"><path d="M152 103 L152 165 L166 151 L177 175 L187 170 L176 147 L196 147Z" fill="#f2efe9" stroke="#171b21" stroke-width="2" stroke-linejoin="round"/></svg>
+        <div class="crip"></div>
+        <div class="l1"></div><div class="l2"></div><div class="hot"></div></div>
+    </div>
+  </div>
+
+  <div class="grp" id="S"><i class="seed" style="left:380px;top:265px"></i><i class="seed" style="left:727px;top:464px"></i><i class="seed" style="left:986px;top:265px"></i></div>
+
+  <div class="grp" id="D">
+    <div id="streaks"></div>
+    <div class="burst" id="burst"></div>
+    <div class="ret">
+      <div class="glow"></div>
+      <div class="oring"></div>
+      <div id="ticks"></div>
+      <div class="iring"></div>
+      <div class="cdot"></div>
+      <div class="br b1" style="left:-169px;top:-169px;border-left-width:3px;border-top-width:3px"></div>
+      <div class="br b2" style="left:122px;top:-169px;border-right-width:3px;border-top-width:3px"></div>
+      <div class="br b3" style="left:-169px;top:122px;border-left-width:3px;border-bottom-width:3px"></div>
+      <div class="br b4" style="left:122px;top:122px;border-right-width:3px;border-bottom-width:3px"></div>
+    </div>
+  </div>
+</main>
+<script src="../../lib/gsap.min.js"></script><script src="../../lib/stage.js"></script>
+<script>
+const r = Motion.rand(11);
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+// ---------- build
+const TT = [150, 237, 324, 411, 498];
+TT.forEach(t => $('#thumbs').insertAdjacentHTML('beforeend',
+  `<div class="thumb" style="top:${t}px"><i class="o"></i><i style="top:25px;width:52px"></i><i style="top:35px;width:44px"></i><i style="top:45px;width:30px"></i><b></b></div>`));
+const person = '<svg viewBox="0 0 46 50"><circle cx="23" cy="13" r="10.5" fill="currentColor"/><path d="M4 48 Q4 28 23 28 Q42 28 42 48Z" fill="currentColor"/></svg>';
+const ROWS = [163, 265, 365, 464, 563], HOT = ['2,1', '9,1', '6,3'];
+ROWS.forEach((y, ry) => { for (let c = 0; c < 11; c++) {
+  const x = 207 + c * 86.6, hot = HOT.includes(c + ',' + ry);
+  if (hot) $('#ppl').insertAdjacentHTML('beforeend', `<div class="pring" style="left:${x}px;top:${y}px"></div>`);
+  $('#ppl').insertAdjacentHTML('beforeend', `<div class="pp ${hot ? 'hot' : 'cold'}" data-d="${Math.hypot(c - 5, (ry - 2) * 1.6).toFixed(2)}" style="left:${x - 23}px;top:${y - 25}px">${person}</div>`);
+}});
+// ghost trails of the (highlighted) card row for the speed transition
+for (let g = 0; g < 3; g++) {
+  const c = $('.row').cloneNode(true); c.className = 'gh'; c.style.opacity = 0;
+  c.querySelectorAll('.hot').forEach(h => h.style.opacity = 1);
+  c.querySelector('.y1').setAttribute('fill', '#FF6619');
+  c.querySelector('.va').setAttribute('cx', 111); c.querySelector('.vb').setAttribute('cx', 168);
+  c.querySelector('.vi').setAttribute('cx', 111); c.querySelector('.vi').setAttribute('opacity', 1);
+  $('#ghosts').appendChild(c);
+}
+for (let i = 0; i < 34; i++) {
+  const d = document.createElement('div'), o = i % 4 === 0;
+  d.className = 'sk';
+  d.style.top = (20 + r() * 680) + 'px';
+  d.style.width = (120 + r() * 420) + 'px';
+  d.style.background = o ? 'linear-gradient(90deg,transparent,rgba(255,102,25,.9),transparent)' : 'linear-gradient(90deg,transparent,rgba(235,230,222,.75),transparent)';
+  d.dataset.sp = (0.35 + r() * 0.5).toFixed(2); d.dataset.dl = (r() * 0.5).toFixed(2);
+  d.style.opacity = 0;
+  $('#streaks').appendChild(d);
+}
+for (let i = 0; i < 26; i++) {
+  const o = i % 3 === 0, w = document.createElement('div');
+  w.style.transform = `rotate(${(i * (360 / 26) + r() * 8).toFixed(1)}deg)`;
+  w.innerHTML = `<i style="width:${(60 + r() * 120).toFixed(0)}px;background:${o ? 'rgba(255,102,25,.85)' : 'rgba(235,230,222,.7)'}"></i>`;
+  $('#burst').appendChild(w);
+}
+for (let i = 0; i < 32; i++) {
+  const t = document.createElement('div'), L = i % 8 === 0;
+  t.className = 'tk'; t.style.height = (L ? 14 : 7) + 'px';
+  t.style.transform = `rotate(${i * 11.25}deg) translateY(${L ? 84 : 88}px)`;
+  $('#ticks').appendChild(t);
+}
+
+const tl = Motion.timeline();
+gsap.set('#B,#C,#D', {autoAlpha: 0});
+gsap.set('.face,.ln,.img,.pill,.cb,.base,.donut,.ptrack,.pfill,.hl', {autoAlpha: 0});
+
+// ---------- A 0–4.3 : dark slide editor evolving
+tl.from('.thumb', {x: -30, autoAlpha: 0, stagger: 0.07, duration: 0.45, ease: 'power3.out'}, 0.2);
+tl.to('.ol', {strokeDashoffset: 0, duration: 0.75, ease: 'power2.inOut'}, 0.1);
+tl.to('.face', {autoAlpha: 1, duration: 0.3}, 0.85);
+tl.to('.ol', {autoAlpha: 0, duration: 0.3}, 0.95);
+tl.to('.bar', {width: 280, duration: 0.45, ease: 'power3.out'}, 1.0);
+tl.to('.ln', {autoAlpha: 1, stagger: 0.06, duration: 0.25}, 1.2);
+tl.fromTo('.img', {autoAlpha: 0, scale: 0.9}, {autoAlpha: 1, scale: 1, duration: 0.4, ease: 'back.out(1.6)'}, 1.4);
+tl.fromTo('.pill', {autoAlpha: 0, scaleX: 0, transformOrigin: '0 50%'}, {autoAlpha: 1, scaleX: 1, stagger: 0.07, duration: 0.3}, 1.65);
+tl.fromTo('.hl', {autoAlpha: 0, scale: 1.12}, {autoAlpha: 1, scale: 1, duration: 0.25, ease: 'back.out(2)'}, 1.95);
+tl.to('.hl', {top: TT[1] - 4, duration: 0.25, ease: 'power3.inOut'}, 2.35);
+tl.to('.bar', {width: 330, duration: 0.3}, 2.4);
+// thumb 3 : image → donut
+tl.to('.hl', {top: TT[2] - 4, duration: 0.25, ease: 'power3.inOut'}, 2.7);
+tl.fromTo('.r1', {scale: 0.4, autoAlpha: 0.9}, {scale: 1.6, autoAlpha: 0, duration: 0.5, immediateRender: false}, 2.72);
+tl.to('.img', {autoAlpha: 0, scale: 0.85, filter: 'blur(6px)', duration: 0.3}, 2.75);
+tl.fromTo('.donut', {autoAlpha: 0, scale: 0.85}, {autoAlpha: 1, scale: 1, duration: 0.35, ease: 'back.out(1.5)'}, 2.85);
+tl.to('.arc', {strokeDashoffset: 90, duration: 0.7, ease: 'power2.inOut'}, 2.9);
+tl.to('.bar', {width: 370, duration: 0.3}, 2.9);
+// thumb 4 : bar chart
+tl.to('.hl', {top: TT[3] - 4, duration: 0.25, ease: 'power3.inOut'}, 3.2);
+tl.to('.ln,.pill', {autoAlpha: 0, duration: 0.2}, 3.2);
+tl.to('.base', {autoAlpha: 1, duration: 0.2}, 3.25);
+tl.fromTo('.cb', {autoAlpha: 1, scaleY: 0}, {scaleY: 1, stagger: 0.07, duration: 0.4, ease: 'back.out(1.7)'}, 3.25);
+// thumb 5 : progress bar
+tl.to('.hl', {top: TT[4] - 4, duration: 0.25, ease: 'power3.inOut'}, 3.55);
+tl.to('.ptrack', {autoAlpha: 1, duration: 0.15}, 3.6);
+tl.to('.pfill', {autoAlpha: 1, width: 120, duration: 0.4, ease: 'power2.out'}, 3.62);
+tl.fromTo('.r2', {scale: 0.4, autoAlpha: 0.9}, {scale: 1.5, autoAlpha: 0, duration: 0.5, immediateRender: false}, 3.6);
+tl.to('#A', {autoAlpha: 0, scale: 1.04, filter: 'blur(5px)', duration: 0.3, ease: 'power2.in'}, 4.1);
+
+// ---------- B 4.4–6.2 : many people, few know
+tl.set('#B', {autoAlpha: 1}, 4.4);
+gsap.set('.pring', {autoAlpha: 0, scale: 0.4});
+gsap.set('.sweep', {autoAlpha: 0});
+const pps = $$('.pp').sort((a, b) => a.dataset.d - b.dataset.d);
+tl.from(pps, {scale: 0, autoAlpha: 0, duration: 0.3, ease: 'back.out(2)', stagger: 0.008}, 4.4);
+tl.fromTo('.sweep', {x: 130, autoAlpha: 0}, {x: 1080, autoAlpha: 1, duration: 0.55, ease: 'power1.inOut'}, 5.0);
+tl.to('.sweep', {autoAlpha: 0, duration: 0.1}, 5.5);
+tl.to('.pp.hot', {color: '#FF6619', scale: 1.15, duration: 0.2, stagger: 0.07, ease: 'back.out(3)'}, 5.25);
+tl.to('.pring', {autoAlpha: 1, scale: 1, duration: 0.3, stagger: 0.07, ease: 'back.out(2)'}, 5.25);
+tl.to('.pp.cold', {autoAlpha: 0, scale: 0.6, duration: 0.35, stagger: {each: 0.004, from: 'random'}}, 5.75);
+tl.to('.pring', {autoAlpha: 0, scale: 0.6, duration: 0.2}, 5.8);
+tl.to('.pp.hot', {scale: 0.35, duration: 0.25, ease: 'power2.in'}, 5.9);
+tl.set('.pp.hot', {autoAlpha: 0}, 6.15);
+tl.set('#B', {autoAlpha: 0}, 6.2);
+// match cut: the three chosen people become orange seeds that fly to the card slots
+const SEEDX = [324, 640, 956];
+$$('.seed').forEach((d, i) => {
+  tl.fromTo(d, {opacity: 0, scale: 0.4}, {opacity: 1, scale: 1, duration: 0.15, ease: 'power2.out'}, 6.1);
+  tl.to(d, {left: SEEDX[i], top: 349, duration: 0.4 + i * 0.08, ease: 'power3.inOut'}, 6.2);
+  tl.to(d, {scale: 3, opacity: 0, duration: 0.25, ease: 'power2.out'}, 6.55 + i * 0.12);
+});
+
+// ---------- C 6.15–8.9 : three feature cards
+tl.set('#C', {autoAlpha: 1}, 6.15);
+['.f1', '.f2', '.f3'].forEach((c, i) =>
+  tl.fromTo('.row ' + c, {autoAlpha: 0, scale: 0.08}, {autoAlpha: 1, scale: 1, duration: 0.5, ease: 'expo.out'}, 6.55 + i * 0.12));
+tl.to('.row .f1 .hot', {opacity: 1, duration: 0.2}, 7.15);
+tl.to(['.row .va', '.row .vi'], {attr: {cx: 111}, duration: 0.35, ease: 'power3.inOut'}, 7.15);
+tl.to(['.row .vb', '.row .va2'], {attr: {cx: 168}, duration: 0.35, ease: 'power3.inOut'}, 7.15);
+tl.to('.row .vi', {attr: {opacity: 1}, duration: 0.3}, 7.2);
+tl.to(['.row .va', '.row .vb'], {attr: {stroke: '#9a9fab'}, duration: 0.2}, 7.2);
+tl.to('.row .f2 .hot', {opacity: 1, duration: 0.2}, 7.4);
+tl.to('.row .y1', {y: -10, attr: {fill: '#FF6619'}, duration: 0.3, ease: 'back.out(2)'}, 7.4);
+tl.to('.row .y3', {y: 8, duration: 0.3, ease: 'back.out(2)'}, 7.4);
+tl.to('.row .f3 .hot', {opacity: 1, duration: 0.2}, 7.7);
+tl.fromTo('.row .cur', {scale: 1}, {scale: 0.88, transformOrigin: '160px 130px', duration: 0.1, yoyo: true, repeat: 1}, 8.0);
+tl.fromTo('.row .crip', {scale: 0.3, autoAlpha: 1}, {scale: 1.6, autoAlpha: 0, duration: 0.5, immediateRender: false}, 8.05);
+// speed exit with stacked ghosts
+$$('.gh').forEach((g, i) => {
+  tl.set(g, {opacity: 0.32 - i * 0.09}, 8.35);
+  tl.to(g, {x: -1500, filter: 'blur(4px)', duration: 0.55, ease: 'power3.in'}, 8.35 + (i + 1) * 0.05);
+});
+tl.to('.row', {x: -1500, filter: 'blur(3px)', duration: 0.55, ease: 'power3.in'}, 8.35);
+tl.set('#C', {autoAlpha: 0}, 9.1);
+
+// ---------- D 8.3–11 : streaks → burst → orange reticle
+tl.set('#D', {autoAlpha: 1}, 8.3);
+gsap.set('.ret > *', {autoAlpha: 0});
+gsap.set('#burst i', {opacity: 0});
+$$('.sk').forEach(s => {
+  const w = parseFloat(s.style.width), t0 = 8.3 + +s.dataset.dl, sp = +s.dataset.sp;
+  tl.fromTo(s, {x: 1300, opacity: 0.9}, {x: -w - 40, duration: sp, ease: 'none', repeat: 1}, t0);
+});
+tl.to('.sk', {opacity: 0, duration: 0.25}, 9.45);
+tl.fromTo('#burst i', {opacity: 0, x: 60}, {opacity: 1, x: 330, duration: 0.5, ease: 'power2.out'}, 9.6);
+tl.to('#burst i', {opacity: 0, duration: 0.25}, 10.0);
+tl.to('.glow', {autoAlpha: 1, duration: 0.5}, 9.65);
+tl.fromTo('.cdot', {autoAlpha: 0, scale: 0}, {autoAlpha: 1, scale: 1, duration: 0.3, ease: 'back.out(3)'}, 9.7);
+tl.fromTo('.iring', {autoAlpha: 0, scale: 2}, {autoAlpha: 1, scale: 1, duration: 0.4, ease: 'expo.out'}, 9.75);
+[['.b1', -1, -1], ['.b2', 1, -1], ['.b3', -1, 1], ['.b4', 1, 1]].forEach(([c, x, y]) =>
+  tl.fromTo(c, {autoAlpha: 0, x: x * 70, y: y * 70}, {autoAlpha: 1, x: 0, y: 0, duration: 0.4, ease: 'back.out(2)'}, 9.8));
+tl.set('#ticks', {autoAlpha: 1}, 9.85);
+tl.from('.tk', {autoAlpha: 0, stagger: 0.008, duration: 0.12}, 9.85);
+tl.fromTo('#ticks', {rotate: -60}, {rotate: 0, duration: 0.7, ease: 'expo.out'}, 9.85);
+tl.fromTo('.oring', {autoAlpha: 0, scale: 0.6}, {autoAlpha: 1, scale: 1, duration: 0.5, ease: 'power3.out'}, 9.95);
+tl.fromTo('.iring', {scale: 1}, {scale: 0.92, duration: 0.1, yoyo: true, repeat: 1, immediateRender: false}, 10.15);
+Motion.ready();
+</script></body></html>

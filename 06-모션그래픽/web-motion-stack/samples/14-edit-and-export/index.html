@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><title>말로 고치고 4K로 출력 · Edit &amp; Export</title>
+<link rel="stylesheet" href="../../lib/stage.css">
+<style>
+.frame{background:#0b1012 !important;background-image:none !important}
+.scene{position:absolute;inset:0;overflow:hidden;font-family:Pretendard,'Noto Sans KR',sans-serif;color:#e9f1ef;letter-spacing:-.01em}
+.bg{position:absolute;inset:0;background:radial-gradient(55% 75% at 12% -5%,#15493e 0%,rgba(21,73,62,0) 70%),radial-gradient(55% 75% at 105% 105%,#2c2257 0%,rgba(44,34,87,0) 70%),#0b1012}
+.tag{position:absolute;display:flex;gap:8px;align-items:center;font:600 12px/1 'IBM Plex Mono',monospace;letter-spacing:.12em;color:#9fb3ae;text-transform:uppercase;white-space:nowrap}
+.tag b{background:#3ee6a8;color:#06231a;padding:3px 6px;border-radius:4px;font-weight:700}
+.panel{position:absolute;background:rgba(18,26,28,.82);border:1px solid rgba(255,255,255,.09);border-radius:12px}
+.code{font:13px/1.75 'IBM Plex Mono',monospace;color:#b9c9c4;white-space:pre}
+.chip{position:absolute;padding:7px 14px;border-radius:999px;border:1px solid rgba(62,230,168,.45);color:#bff5df;font:600 14px/1 Pretendard;background:rgba(62,230,168,.08);white-space:nowrap}
+.mint{color:#3ee6a8}.red{color:#ff5d4f}
+
+.win{left:64px;top:110px;width:720px;height:470px;overflow:hidden}
+.bar2{position:absolute;left:0;right:0;top:0;height:34px;border-bottom:1px solid rgba(255,255,255,.07);font:500 12px 'IBM Plex Mono';color:#6f817c;display:flex;align-items:center;padding-left:16px;gap:6px}
+.bar2 i{width:10px;height:10px;border-radius:50%;background:#3a4644;display:inline-block}
+.vid{position:absolute;left:20px;right:20px;top:50px;bottom:20px;border-radius:8px;background:radial-gradient(60% 70% at 50% 45%,#16483e,#070b0c)}
+.vt{position:absolute;left:0;right:0;top:150px;text-align:center;font:800 46px Pretendard}
+.topt{position:absolute;left:20px;top:14px;font:600 12px 'IBM Plex Mono';color:#9fb3ae}
+.bot{position:absolute;left:20px;right:20px;bottom:46px;font:500 12px Pretendard;color:#9fb3ae;display:flex;justify-content:space-between}
+.pb{position:absolute;left:20px;right:20px;bottom:18px;height:16px;display:flex;align-items:center;gap:10px;font:600 11px 'IBM Plex Mono';color:#cfdcd8}
+.pb s{flex:1;height:4px;border-radius:2px;background:rgba(255,255,255,.2);text-decoration:none;position:relative}
+.pb s:after{content:'';position:absolute;left:0;top:0;bottom:0;width:62%;background:#3ee6a8;border-radius:2px}
+.chat{position:absolute;left:820px;top:110px;width:400px}
+.rq{margin-left:auto;width:fit-content;max-width:330px;padding:10px 14px;border-radius:14px 14px 4px 14px;background:#2a3533;font:600 15px Pretendard;margin-bottom:10px}
+.rs{width:fit-content;padding:9px 13px;border-radius:14px 14px 14px 4px;background:rgba(62,230,168,.12);border:1px solid rgba(62,230,168,.35);color:#bff5df;font:600 14px Pretendard;margin-bottom:18px}
+.file{position:absolute;left:150px;top:200px;opacity:0}
+.spec{position:absolute;left:330px;top:180px;opacity:0}
+.k4{font:900 110px/1 Pretendard}
+.px{font:600 18px 'IBM Plex Mono';color:#9fb3ae;margin:6px 0 16px}
+.fps{font:900 64px/1 Pretendard;color:#3ee6a8}.fps small{font-size:24px}
+.ticks{display:flex;gap:2px;margin-top:18px}.ticks i{width:4px;height:22px;background:rgba(255,255,255,.12)}
+.tk{font:600 12px 'IBM Plex Mono';color:#9fb3ae;margin-top:8px}
+</style></head>
+<body data-no="G06" data-cat="문법 · 수정" data-ko="말로 고치고 4K로 출력" data-en="Edit & Export" data-meta="11초 · 요청→부분 수정→MP4 3840×2160·60fps" data-dur="11" data-poster="10.4" data-size="1280x720">
+<main class="scene"><div class="bg"></div>
+  <div class="tag" style="left:64px;top:60px"><b>05</b>수정하고, 출력하기</div>
+  <div class="panel win" id="win"><div class="bar2"><i></i><i></i><i></i>&nbsp; web-motion / index.html</div>
+    <div class="vid"><div class="topt" id="topt">WEB MOTION · 1920×1080 · 60 FPS · 10.0s</div><div class="vt">역동적인 <span class="mint">웹</span></div>
+      <div class="bot" id="bot"><span>웹은 역동적인 모션그래픽을 표현하기에 가장 적합한 환경이다</span><span>SIL OFL 1.1</span></div>
+      <div class="pb" id="pb"><span>❚❚</span><s></s><span>00:06 / 00:10</span></div></div></div>
+  <div class="file" id="file"><svg width="150" height="190"><path d="M10 10 H100 L140 50 V180 H10 Z" fill="none" stroke="#3ee6a8" stroke-width="3"/><path d="M100 10 V50 H140" fill="none" stroke="#3ee6a8" stroke-width="3"/><text x="75" y="110" text-anchor="middle" font-family="Pretendard" font-weight="800" font-size="28" fill="#e9f1ef">.mp4</text><path d="M66 128 L84 138 L66 148 Z" fill="#3ee6a8"/></svg></div>
+  <div class="spec" id="spec"><div class="k4">4K</div><div class="px">3840 × 2160</div><div class="fps">60<small>fps</small></div><div class="ticks" id="ticks"></div><div class="tk">1초 동안 <span id="fc">0</span> / 60장</div></div>
+  <div class="chat" id="chat">
+    <div class="rq" id="q1">상단·하단 문구 없애줘</div><div class="rs" id="a1">✓ 상단과 하단을 지웠어요</div>
+    <div class="rq" id="q2">재생 바도 함께 없애줘</div><div class="rs" id="a2">✓ 재생 바를 지웠어요</div>
+    <div class="rq" id="q3">4K 60fps mp4로 변환해줘</div><div class="rs" id="a3">✓ video_4k60.mp4 저장</div>
+  </div>
+</main>
+<script src="../../lib/gsap.min.js"></script><script src="../../lib/stage.js"></script>
+<script>
+const tk = document.getElementById('ticks'); for (let i = 0; i < 60; i++) tk.insertAdjacentHTML('beforeend', '<i></i>');
+const fc = {v: 0};
+const tl = Motion.timeline();
+tl.from('#win', {y: 24, autoAlpha: 0, duration: .6}, 0);
+tl.from('#q1', {y: 14, autoAlpha: 0, duration: .4}, .8); tl.from('#a1', {y: 14, autoAlpha: 0, duration: .4}, 1.8);
+tl.to('#topt,#bot', {autoAlpha: 0, y: 6, duration: .5}, 2.0);
+tl.from('#q2', {y: 14, autoAlpha: 0, duration: .4}, 3.0); tl.from('#a2', {y: 14, autoAlpha: 0, duration: .4}, 4.0);
+tl.to('#pb', {autoAlpha: 0, y: 6, duration: .5}, 4.2);
+tl.from('#q3', {y: 14, autoAlpha: 0, duration: .4}, 5.2);
+tl.to('#win', {scale: .3, autoAlpha: 0, x: -100, duration: .7, ease: 'power3.in'}, 6.0);
+tl.to('#file', {opacity: 1, duration: .1}, 6.6); tl.from('#file', {scale: .5, y: 20, duration: .6, ease: 'back.out(2)'}, 6.6);
+tl.to('#spec', {opacity: 1, duration: .1}, 7.0); tl.from('#spec > *', {x: 20, autoAlpha: 0, stagger: .1, duration: .4}, 7.0);
+tl.to(fc, {v: 60, duration: 2.2, ease: 'none', onUpdate() { const n = Math.round(fc.v); document.getElementById('fc').textContent = n; tk.querySelectorAll('i').forEach((e, i) => e.style.background = i < n ? '#3ee6a8' : 'rgba(255,255,255,.12)'); }}, 7.6);
+tl.from('#a3', {y: 14, autoAlpha: 0, duration: .4}, 9.6);
+Motion.ready();
+</script></body></html>

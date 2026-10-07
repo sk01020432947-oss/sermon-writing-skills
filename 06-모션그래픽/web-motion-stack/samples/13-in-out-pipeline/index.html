@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><title>입력에서 영상으로 · IN to OUT</title>
+<link rel="stylesheet" href="../../lib/stage.css">
+<style>
+.frame{background:#0b1012 !important;background-image:none !important}
+.scene{position:absolute;inset:0;overflow:hidden;font-family:Pretendard,'Noto Sans KR',sans-serif;color:#e9f1ef;letter-spacing:-.01em}
+.bg{position:absolute;inset:0;background:radial-gradient(55% 75% at 12% -5%,#15493e 0%,rgba(21,73,62,0) 70%),radial-gradient(55% 75% at 105% 105%,#2c2257 0%,rgba(44,34,87,0) 70%),#0b1012}
+.tag{position:absolute;display:flex;gap:8px;align-items:center;font:600 12px/1 'IBM Plex Mono',monospace;letter-spacing:.12em;color:#9fb3ae;text-transform:uppercase;white-space:nowrap}
+.tag b{background:#3ee6a8;color:#06231a;padding:3px 6px;border-radius:4px;font-weight:700}
+.panel{position:absolute;background:rgba(18,26,28,.82);border:1px solid rgba(255,255,255,.09);border-radius:12px}
+.code{font:13px/1.75 'IBM Plex Mono',monospace;color:#b9c9c4;white-space:pre}
+.chip{position:absolute;padding:7px 14px;border-radius:999px;border:1px solid rgba(62,230,168,.45);color:#bff5df;font:600 14px/1 Pretendard;background:rgba(62,230,168,.08);white-space:nowrap}
+.mint{color:#3ee6a8}.red{color:#ff5d4f}
+
+.ph{position:absolute;inset:0;opacity:0}
+.inb{left:110px;top:200px;width:430px;height:320px;padding:26px}
+.outb{left:760px;top:220px;width:400px;height:250px;border-color:rgba(62,230,168,.55)}
+.lbl{position:absolute;top:150px;font:700 12px 'IBM Plex Mono';letter-spacing:.12em;color:#9fb3ae}
+.lbl b{background:#3ee6a8;color:#06231a;padding:3px 6px;border-radius:4px;margin-right:6px}
+.q{font:700 26px/1.45 Pretendard;border-left:3px solid #3ee6a8;padding-left:16px;margin-top:60px}
+.row{display:flex;gap:14px;align-items:center;margin:12px 0;font:600 16px Pretendard;color:#cfdcd8}
+.row i{font-style:normal;width:90px;color:#3ee6a8}
+.row s{flex:1;height:8px;border-radius:4px;background:rgba(255,255,255,.12);text-decoration:none}
+.arr{position:absolute;left:575px;top:330px;font:300 54px Pretendard;color:#3ee6a8}
+.otitle{position:absolute;left:28px;top:30px;font:800 28px Pretendard}
+.bars{position:absolute;right:40px;bottom:60px;display:flex;gap:8px;align-items:flex-end}
+.bars span{width:20px;background:#3ee6a8;border-radius:3px}
+.play{position:absolute;left:28px;right:28px;bottom:24px;height:4px;background:rgba(255,255,255,.12);border-radius:2px}
+.play div{height:100%;background:#3ee6a8;border-radius:2px;transform-origin:left}
+.sl{position:absolute;left:28px;top:118px;font:600 15px/2.1 Pretendard;color:#cfdcd8}
+.sl b{color:#3ee6a8;font:700 13px 'IBM Plex Mono';margin-right:10px}
+.shot{position:absolute;left:800px;width:330px;height:46px}
+.shot div{position:absolute;left:16px;top:13px;height:20px;border-radius:4px}
+#wires path{fill:none;stroke:#3ee6a8;stroke-opacity:.6;stroke-width:1.8}
+.hd{position:absolute;left:110px;top:70px;font:800 34px Pretendard}
+</style></head>
+<body data-no="G05" data-cat="문법 · 과정" data-ko="입력에서 영상으로 (한 줄·기획서·대본)" data-en="IN to OUT" data-meta="11초 · 세 가지 요청 방식 비교" data-dur="11" data-poster="10.2" data-size="1280x720">
+<main class="scene"><div class="bg"></div>
+  <div class="hd" id="hd">무엇을 주느냐에 따라 <span class="mint">결과의 정밀도</span>가 달라진다</div>
+  <div class="ph" id="a">
+    <div class="lbl" style="left:110px"><b>IN</b>한 줄의 주제</div><div class="lbl" style="left:760px"><b>OUT</b>영상</div>
+    <div class="panel inb"><div class="q">웹은 역동적인 모션그래픽을<br>표현하기에 가장 적합한 환경이다</div></div>
+    <div class="arr">→</div>
+    <div class="panel outb"><div class="otitle">역동적인 웹</div><div class="bars"><span style="height:40px"></span><span style="height:70px"></span><span style="height:54px"></span></div><div class="play"><div class="pl"></div></div></div>
+  </div>
+  <div class="ph" id="b">
+    <div class="lbl" style="left:110px"><b>IN</b>구체적인 기획서</div><div class="lbl" style="left:760px"><b>OUT</b>영상</div>
+    <div class="panel inb"><div style="font:800 22px Pretendard;margin-bottom:18px">기획서</div>
+      <div class="row"><i>메시지</i><s></s></div><div class="row"><i>대상·톤</i><s></s></div><div class="row"><i>장면 구성</i><s></s></div><div class="row"><i>스타일</i><s></s></div><div class="row"><i>길이</i><s></s></div></div>
+    <div class="arr">→</div>
+    <div class="panel outb"><div class="otitle">역동적인 웹</div><div class="bars"><span style="height:40px"></span><span style="height:70px"></span><span style="height:54px"></span></div><div class="play"><div class="pl"></div></div></div>
+  </div>
+  <div class="ph" id="c">
+    <div class="lbl" style="left:110px"><b>IN</b>대본</div><div class="lbl" style="left:800px"><b>OUT</b>장면</div>
+    <div class="panel inb"><div style="font:800 22px Pretendard">스크립트</div>
+      <div class="sl"><b>01</b>한 문장이<br><b>02</b>장면이 되고<br><b>03</b>화면이 되고<br><b>04</b>움직임이 되어<br><b>05</b>영상이 됩니다</div></div>
+    <svg id="wires" width="1280" height="720" style="position:absolute;left:0;top:0"></svg>
+    <div class="panel shot" style="top:190px"><div style="width:24px;height:24px;top:11px;border-radius:50%;background:#3ee6a8"></div><div style="left:52px;width:120px;background:rgba(255,255,255,.18)"></div></div>
+    <div class="panel shot" style="top:250px"><div style="width:180px;background:#ff5d4f"></div></div>
+    <div class="panel shot" style="top:310px"><div style="width:14px;background:#3ee6a8;height:14px;top:20px"></div><div style="left:36px;width:14px;background:#3ee6a8;height:26px;top:8px"></div><div style="left:56px;width:14px;background:#3ee6a8"></div></div>
+    <div class="panel shot" style="top:370px"><div style="width:22px;height:22px;top:11px;border-radius:50%;border:2px solid #8b7bff;background:none"></div><div style="left:52px;width:120px;background:rgba(255,255,255,.18)"></div></div>
+    <div class="panel shot" style="top:430px"><div style="width:220px;background:#e9f1ef"></div></div>
+  </div>
+</main>
+<script src="../../lib/gsap.min.js"></script><script src="../../lib/stage.js"></script>
+<script>
+// 대본 줄 → 장면 칸 연결선
+let w = ''; for (let i = 0; i < 5; i++) { const y1 = 330 + i * 33.6, y2 = 213 + i * 60; w += `<path d="M548 ${y1} C 680 ${y1}, 670 ${y2}, 800 ${y2}"/>`; }
+document.getElementById('wires').innerHTML = w;
+document.querySelectorAll('#wires path').forEach(p => { const L = p.getTotalLength(); p.style.strokeDasharray = L; p.style.strokeDashoffset = L; });
+const tl = Motion.timeline();
+tl.from('#hd', {y: 20, autoAlpha: 0, duration: .6}, 0);
+const show = (id, t) => { tl.to(id, {opacity: 1, duration: .4}, t); tl.from(id + ' .panel:not(.shot)', {y: 24, autoAlpha: 0, stagger: .12, duration: .5}, t); };
+show('#a', .4); tl.fromTo('#a .pl', {scaleX: 0}, {scaleX: .35, duration: 2.2, ease: 'none'}, 1.2);
+tl.to('#a', {opacity: 0, duration: .4}, 3.4);
+show('#b', 3.7); tl.from('#b .row', {x: -14, autoAlpha: 0, stagger: .14, duration: .35}, 4.1); tl.fromTo('#b .pl', {scaleX: 0}, {scaleX: 1, duration: 2.2, ease: 'none'}, 4.6);
+tl.to('#b', {opacity: 0, duration: .4}, 7.1);
+show('#c', 7.4); tl.to('#wires path', {strokeDashoffset: 0, stagger: .2, duration: .8}, 7.9);
+tl.from('#c .shot', {x: 20, autoAlpha: 0, stagger: .2, duration: .4}, 8.3);
+Motion.ready();
+</script></body></html>

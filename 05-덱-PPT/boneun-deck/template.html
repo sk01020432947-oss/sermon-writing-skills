@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Boneun Deck — 읽지 않고 보는 PPT</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700&family=Nanum+Pen+Script&display=swap">
+<style>
+/* ══════════════════════════════════════════════════════════
+   강의 원칙 → 토큰
+   · 폰트는 "한 가족만" — Pretendard 패밀리(Light~ExtraBold)로 강약
+   · 명조(Noto Serif KR=본명조 계열)는 콘셉트·인용·대비에만
+   · 캘리(Nanum Pen)는 따옴표 안에만
+   · 컬러는 6:3:1 — c6(배경) : c3(본문·보조) : c1(포인트 단 하나)
+   · 기본은 무채색. 주제에 맥락색이 있을 때만 --c1을 그 색으로 교체
+   ══════════════════════════════════════════════════════════ */
+:root{
+  --c6:#F7F7F5;        /* 6 배경 — 무채색 오프화이트 */
+  --c3:#1A1A1A;        /* 3 본문·제목 잉크 */
+  --c3-sub:#8A8A8A;    /* 보조 회색 */
+  --c1:#1A1A1A;        /* 1 포인트 — 기본은 무채색(=잉크). 맥락색 있을 때만 교체 */
+  --serif:"Noto Serif KR",serif;
+  --calli:"Nanum Pen Script",cursive;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;background:#242424;overflow:hidden}
+body{font-family:"Pretendard Variable",Pretendard,-apple-system,"Noto Sans KR",sans-serif;
+  color:var(--c3);
+  letter-spacing:-.012em;  /* 자간 '좁게 0.5~2pt' — 강의 실측 반영 */
+  word-break:keep-all}
+
+#stage{position:absolute;top:50%;left:50%;width:1920px;height:1080px;
+  transform:translate(-50%,-50%) scale(var(--scale,1));transform-origin:center;background:var(--c6)}
+.slide{position:absolute;inset:0;display:none;background:var(--c6);overflow:hidden}
+.slide.active{display:block}
+
+/* ───── 텍스트 부품: 굵기 강약이 이 스킬의 전부다 ───── */
+/* Light 300 기본 + 강조만 ExtraBold 800. 밑줄·기울임·그림자 금지 */
+.kw{font-size:88px;font-weight:300;line-height:1.42;letter-spacing:-.03em}
+.kw b{font-weight:800}
+.kw .pt{color:var(--c1);font-weight:800}
+.body-txt{font-size:36px;font-weight:300;line-height:1.75}
+.body-txt b{font-weight:800}
+.cap-sm{font-size:24px;font-weight:500;color:var(--c3-sub);letter-spacing:.02em}
+
+/* 중앙 정렬 키워드 슬라이드 */
+.center{position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center;gap:34px;padding:0 8%}
+
+/* 좌측 정렬 본문 슬라이드 */
+.left-block{position:absolute;left:8%;top:0;bottom:0;right:8%;
+  display:flex;flex-direction:column;justify-content:center;gap:40px}
+
+/* ───── 히어로 이미지 슬라이드 ───── */
+.hero{position:absolute;inset:0;background:var(--img) center/cover no-repeat}
+/* 여백 없는 이미지 대응 ① 매트한 도형 */
+.mat{position:absolute;background:rgba(0,0,0,.55);padding:60px 80px}
+.mat.light{background:rgba(255,255,255,.82)}
+/* 여백 없는 이미지 대응 ② 그라디언트 */
+.grad{position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.62) 0%,rgba(0,0,0,.28) 45%,transparent 70%)}
+.grad.btm{background:linear-gradient(0deg,rgba(0,0,0,.66) 0%,rgba(0,0,0,.2) 40%,transparent 65%)}
+.hero-txt{color:#fff}
+.hero-txt .cap-sm{color:rgba(255,255,255,.75)}
+
+/* ───── 명조 콘셉트 (웰빙·품격·감성 주제) ───── */
+.serif-mode{font-family:var(--serif)}
+.serif-mode .kw{font-weight:400;letter-spacing:-.01em}
+.serif-mode .kw b{font-weight:700}
+
+/* ───── 인용 — 캘리는 따옴표 안에만, 출처는 고딕 ───── */
+.quote{font-family:var(--calli);font-size:76px;line-height:1.5;font-weight:400}
+.quote-src{font-size:26px;font-weight:500;color:var(--c3-sub);margin-top:18px}
+
+/* ───── 명조 vs 고딕 대비(비교) ───── */
+.vs{position:absolute;inset:0;display:flex}
+.vs>div{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px}
+.vs .serif-side{font-family:var(--serif)}
+.vs-word{font-size:96px;font-weight:700}
+.vs-desc{font-size:28px;color:var(--c3-sub)}
+
+/* ───── 섹션(챕터) — 포인트 컬러를 쓰는 유일한 큰 면 ───── */
+.chapter{position:absolute;inset:0;background:var(--c1);display:flex;
+  flex-direction:column;align-items:center;justify-content:center;gap:30px}
+.chapter .num{font-size:30px;font-weight:500;letter-spacing:.3em;color:rgba(255,255,255,.6)}
+.chapter .t{font-size:84px;font-weight:800;color:#fff;letter-spacing:-.03em}
+
+/* 페이지 하단 러닝 캡션(선택) */
+.foot{position:absolute;left:8%;bottom:5.5%;font-size:20px;font-weight:500;
+  color:var(--c3-sub);letter-spacing:.04em}
+
+/* ───── 모션 — 강의: 애니메이션도 덜 쓰는 게 좋다. 페이드만 ───── */
+.active .in{animation:fd .5s ease both}
+@keyframes fd{from{opacity:0}to{opacity:1}}
+.active .d1{animation-delay:.08s}.active .d2{animation-delay:.22s}.active .d3{animation-delay:.36s}
+.slide:not(.active) .in{opacity:0}
+
+@media print{
+  html,body{overflow:visible;background:#fff}
+  #stage{position:static;transform:none;width:auto;height:auto}
+  .slide{display:block!important;position:relative;width:1920px;height:1080px;page-break-after:always}
+  .in{animation:none!important;opacity:1!important}
+  #nav{display:none}
+}
+@page{size:1920px 1080px;margin:0}
+#nav{position:fixed;right:22px;bottom:14px;z-index:99;color:#777;font-size:15px}
+</style>
+</head>
+<body>
+<div id="stage">
+
+<!-- ═══ P1. 표지 — 히어로 이미지 + 텍스트 한 줄 ═══
+     이미지가 80%를 먹는다. 텍스트는 얹기만 한다. -->
+<section class="slide">
+  <div class="hero" style="--img:url('img/cover.jpg')"></div>
+  <div class="grad btm"></div>
+  <div class="center hero-txt" style="justify-content:flex-end;padding-bottom:9%">
+    <div class="cap-sm in d1">2026 상반기 전략 공유</div>
+    <div class="kw in d2" style="font-size:96px">읽지 않고 <b>보는</b> 발표</div>
+  </div>
+</section>
+
+<!-- ═══ P2. 키워드 — 무채색 배경 + Light/ExtraBold 강약 ═══ -->
+<section class="slide">
+  <div class="center">
+    <div class="kw in d1">청중은 슬라이드를<br><b>절대 읽지 않습니다</b></div>
+    <div class="cap-sm in d2">보고서는 읽고, 프레젠테이션은 봅니다</div>
+  </div>
+</section>
+
+<!-- ═══ P3. 본문 리스트 — 문장은 키워드로 압축, 강조만 굵게 ═══ -->
+<section class="slide">
+  <div class="left-block" style="right:34%">
+    <div class="cap-sm in d1">디자인의 본질</div>
+    <div class="body-txt in d2" style="font-size:44px;line-height:1.9">
+      디자인은 <b>꾸미는 것</b>이 아니라 <b>정리하는 것</b>입니다<br>
+      더하지 않고 <b>빼는 것</b>이 먼저입니다<br>
+      한 슬라이드에는 <b>하나의 주제</b>만 담습니다<br>
+      내용이 많으면 <b>장수를 늘립니다</b>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ P4. 히어로 이미지 + 키워드 (그라디언트 좌측) ═══ -->
+<section class="slide">
+  <div class="hero" style="--img:url('img/forest.jpg')"></div>
+  <div class="grad"></div>
+  <div class="left-block hero-txt" style="right:45%">
+    <div class="cap-sm in d1">HERO IMAGE</div>
+    <div class="kw in d2" style="font-size:76px">좋은 이미지가<br><b>발표의 80%</b>를<br>만듭니다</div>
+  </div>
+</section>
+
+<!-- ═══ P5. 명조 콘셉트 — 감성·품격 주제일 때만 ═══ -->
+<section class="slide serif-mode">
+  <div class="center">
+    <div class="cap-sm in d1">웰빙 라이프</div>
+    <div class="kw in d2">몸에 좋은 것만<br><b>담았습니다</b></div>
+  </div>
+</section>
+
+<!-- ═══ P6. 인용 — 캘리는 따옴표 안에만 ═══ -->
+<section class="slide">
+  <div class="center">
+    <div class="quote in d1">"디자인은 어떻게 보이느냐가 아니라<br>어떻게 작동하느냐다"</div>
+    <div class="quote-src in d2">— 스티브 잡스</div>
+  </div>
+</section>
+
+<!-- ═══ P7. 명조 vs 고딕 대비 ═══ -->
+<section class="slide">
+  <div class="vs">
+    <div class="serif-side" style="background:#EFEDE8">
+      <div class="vs-word in d1">화려함</div>
+      <div class="vs-desc in d2">섬세하고 유연한, 품격의 명조</div>
+    </div>
+    <div>
+      <div class="vs-word in d2" style="font-weight:800">심플함</div>
+      <div class="vs-desc in d3">모던하고 도시적인, 오늘의 고딕</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ P8. 챕터 — 포인트 컬러의 자리 ═══ -->
+<section class="slide">
+  <div class="chapter">
+    <div class="num in d1">CHAPTER 02</div>
+    <div class="t in d2">이미지</div>
+  </div>
+</section>
+
+</div>
+
+<div id="nav"><span id="navPage"></span></div>
+
+<script>
+const slides=[...document.querySelectorAll('.slide')];
+const navPage=document.getElementById('navPage');
+let cur=-1;
+function show(n){
+  cur=Math.max(0,Math.min(slides.length-1,n));
+  slides.forEach((s,i)=>s.classList.toggle('active',i===cur));
+  navPage.textContent=(cur+1)+' / '+slides.length;
+}
+addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key===' ')show(cur+1);
+  else if(e.key==='ArrowLeft')show(cur-1);
+  else if(e.key==='Home')show(0);
+  else if(e.key==='End')show(slides.length-1);
+});
+addEventListener('click',e=>{if(e.clientX<innerWidth/2)show(cur-1);else show(cur+1)});
+let tx=null;
+addEventListener('touchstart',e=>tx=e.touches[0].clientX);
+addEventListener('touchend',e=>{if(tx===null)return;
+  const dx=e.changedTouches[0].clientX-tx;
+  if(dx<-40)show(cur+1);else if(dx>40)show(cur-1);tx=null});
+function fit(){
+  const s=Math.min(innerWidth/1920,innerHeight/1080);
+  document.getElementById('stage').style.setProperty('--scale',s);
+}
+addEventListener('resize',fit);addEventListener('load',fit);fit();
+const _h=parseInt(location.hash.slice(1));show(isNaN(_h)?0:_h-1);
+addEventListener('hashchange',()=>{const n=parseInt(location.hash.slice(1));if(!isNaN(n))show(n-1)});
+if(location.search.indexOf('shot')>-1)document.getElementById('nav').style.display='none';
+</script>
+</body>
+</html>

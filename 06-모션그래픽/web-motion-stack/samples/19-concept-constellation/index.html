@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><title>개념 관계도 · Concept Constellation</title>
+<link rel="stylesheet" href="../../lib/stage.css">
+<style>
+.frame{background:#0b1012 !important;background-image:none !important}
+.scene{position:absolute;inset:0;overflow:hidden;font-family:Pretendard,'Noto Sans KR',sans-serif;color:#e9f1ef;letter-spacing:-.01em}
+.bg{position:absolute;inset:0;background:radial-gradient(55% 75% at 12% -5%,#15493e 0%,rgba(21,73,62,0) 70%),radial-gradient(55% 75% at 105% 105%,#2c2257 0%,rgba(44,34,87,0) 70%),#0b1012}
+.tag{position:absolute;display:flex;gap:8px;align-items:center;font:600 12px/1 'IBM Plex Mono',monospace;letter-spacing:.12em;color:#9fb3ae;text-transform:uppercase;white-space:nowrap}
+.tag b{background:#3ee6a8;color:#06231a;padding:3px 6px;border-radius:4px;font-weight:700}
+.panel{position:absolute;background:rgba(18,26,28,.82);border:1px solid rgba(255,255,255,.09);border-radius:12px}
+.code{font:13px/1.75 'IBM Plex Mono',monospace;color:#b9c9c4;white-space:pre}
+.chip{position:absolute;padding:7px 14px;border-radius:999px;border:1px solid rgba(62,230,168,.45);color:#bff5df;font:600 14px/1 Pretendard;background:rgba(62,230,168,.08);white-space:nowrap}
+.mint{color:#3ee6a8}.red{color:#ff5d4f}
+
+.w{position:absolute;transform:translate(-50%,-50%);font:700 26px Pretendard;color:#7c8f8a;white-space:nowrap}
+.c{font-size:54px;font-weight:900;color:#e9f1ef}
+#ln line{stroke:#3ee6a8;stroke-width:1.6;stroke-opacity:.55}
+.foot{position:absolute;left:64px;bottom:50px;font:600 14px Pretendard;color:#9fb3ae}
+.ttl{position:absolute;left:64px;top:84px;font:800 30px Pretendard}
+</style></head>
+<body data-no="X01" data-cat="응용 · 설교·강의" data-ko="개념 관계도 (추상 개념 시각화)" data-en="Concept Constellation" data-meta="10초 · 떠다니는 단어가 관계선으로 묶임" data-dur="10" data-poster="9.4" data-size="1280x720">
+<main class="scene"><div class="bg"></div>
+  <div class="tag" style="left:64px;top:50px"><b>응용</b>개념 · 관계 · 흐름</div>
+  <div class="ttl" id="tt">추상적인 개념도 <span class="mint">관계</span>로 보여 주면 이해된다</div>
+  <svg id="ln" width="1280" height="720" style="position:absolute;left:0;top:0"></svg>
+  <div id="ws"></div>
+  <div class="foot">예시 소재: 고린도전서 13장의 세 덕목 — 소재만 바꿔 쓰는 틀</div>
+</main>
+<script src="../../lib/gsap.min.js"></script><script src="../../lib/stage.js"></script>
+<script>
+const N = [['사랑', 640, 390, 1], ['믿음', 400, 300], ['소망', 880, 300], ['오래 참음', 330, 520], ['온유', 520, 590], ['진리', 770, 590], ['견딤', 950, 520], ['은혜', 640, 230]];
+const E = [[0,1],[0,2],[0,3],[0,4],[0,5],[0,6],[1,2],[0,7],[1,7],[2,7],[3,4],[5,6]];
+const r = Motion.rand(19);
+document.getElementById('ws').innerHTML = N.map((n, i) => `<div class="w ${n[3] ? 'c' : ''}" id="w${i}">${n[0]}</div>`).join('');
+document.getElementById('ln').innerHTML = E.map((e, i) => `<line id="e${i}"/>`).join('');
+const off = N.map(() => [(r() - .5) * 500, (r() - .5) * 160 + 20, r() * 6]);
+const st = {t: 0, k: 0};
+function draw() {
+  const pos = N.map((n, i) => { const f = 1 - st.k, o = off[i]; return [n[1] + o[0] * f + Math.sin(st.t * .8 + o[2]) * 10, n[2] + o[1] * f + Math.cos(st.t * .7 + o[2]) * 8]; });
+  pos.forEach((p, i) => { const e = document.getElementById('w' + i); e.style.left = p[0] + 'px'; e.style.top = p[1] + 'px'; });
+  E.forEach((e, i) => { const l = document.getElementById('e' + i), a = pos[e[0]], b = pos[e[1]]; const s = Math.max(0, Math.min(1, st.k * E.length * 1.2 - i)); l.setAttribute('x1', a[0]); l.setAttribute('y1', a[1]); l.setAttribute('x2', a[0] + (b[0] - a[0]) * s); l.setAttribute('y2', a[1] + (b[1] - a[1]) * s); });
+}
+const tl = Motion.timeline();
+tl.to(st, {t: 10, duration: 10, ease: 'none', onUpdate: draw}, 0);
+tl.from('.w', {autoAlpha: 0, scale: .6, stagger: .12, duration: .6}, .3);
+tl.from('#tt', {y: 20, autoAlpha: 0, duration: .6}, .2);
+tl.to(st, {k: 1, duration: 3.4, ease: 'power3.inOut'}, 2.6);
+tl.to('.w:not(.c)', {color: '#cfdcd8', duration: .6}, 5.4);
+tl.to('#w0', {color: '#3ee6a8', scale: 1.15, duration: .6}, 6.0);
+draw();
+Motion.ready();
+</script></body></html>

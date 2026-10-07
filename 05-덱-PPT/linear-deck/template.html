@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Linear Deck</title>
+<!-- Linear Display/Text는 사유 폰트다. 스펙이 지정한 폴백(SF Pro → system-ui)을 쓰고,
+     한글은 Pretendard가 받는다. -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+:root{
+  /* ── 라벤더 하나. 배경·카드 채움으로는 절대 쓰지 않는다 ── */
+  --primary:#5e6ad2; --primary-hover:#828fff; --primary-focus:#5e69d1;
+  --on-primary:#fff;
+  /* ── Surface 4단 사다리. 단계를 건너뛰지 않는다 ── */
+  --canvas:#010102;   /* 푸른 기가 도는 근사흑. 순검정(#000) 금지 */
+  --s1:#0f1011; --s2:#141516; --s3:#18191a; --s4:#191a1b;
+  --hairline:#23252a; --hair-strong:#34343a; --hair-3:#3e3e44;
+  /* ── Text ── */
+  --ink:#f7f8f8; --ink-muted:#d0d6e0; --ink-subtle:#8a8f98; --ink-3:#62666d;
+  --success:#27a644;
+  /* ── 타입 (원본 웹 토큰 × 2 = 1920 스테이지 값. 음수 자간도 2배) ── */
+  --d-xl:160px; --d-lg:112px; --d-md:80px; --headline:56px; --card-t:44px;
+  --subhead:40px; --body-lg:36px; --body:32px; --body-sm:28px; --cap:24px;
+  --btn:28px; --eyebrow:26px; --mono:26px;
+  /* ── 여백 (× 2) ── */
+  --xxs:8px; --xs:16px; --sm:24px; --md:32px; --lg:48px; --xl:64px; --xxl:96px; --sec:192px;
+  /* ── 라운딩 (× 2) ── */
+  --r-xs:8px; --r-sm:12px; --r-md:16px; --r-lg:24px; --r-xl:32px; --r-xxl:48px; --pill:9999px;
+  --f:"Linear Display","Linear Text","SF Pro Display","Pretendard Variable",
+      -apple-system,system-ui,"Segoe UI",Roboto,sans-serif;
+  --f-mono:"Linear Mono",ui-monospace,"SF Mono",Menlo,monospace;
+  --pad:112px;   /* 좌우 기준선 */
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;background:#000;overflow:hidden}
+body{font-family:var(--f);color:var(--ink);-webkit-font-smoothing:antialiased}
+
+#stage{position:absolute;top:50%;left:50%;width:1920px;height:1080px;
+  transform:translate(-50%,-50%) scale(var(--scale,1));transform-origin:center;background:var(--canvas)}
+/* 라이트 모드는 이 시스템에 없다. 모든 슬라이드가 다크다 */
+.slide{position:absolute;inset:0;display:none;background:var(--canvas);
+  padding:var(--sec) var(--pad);overflow:hidden}
+.slide.active{display:flex;flex-direction:column;justify-content:center}
+.slide.s1{background:var(--s1)}
+.slide.s2{background:var(--s2)}
+
+/* ═════ 타이포 — 디스플레이는 음수 자간이 정체성 ═════ */
+.eyebrow{font-size:var(--eyebrow);font-weight:500;letter-spacing:.8px;color:var(--ink-subtle);
+  margin-bottom:var(--md)}
+.eyebrow.brand{color:var(--primary)}
+h1{font-size:var(--d-xl);font-weight:600;line-height:1.05;letter-spacing:-6px}
+h2{font-size:var(--d-lg);font-weight:600;line-height:1.10;letter-spacing:-3.6px}
+h3{font-size:var(--d-md);font-weight:600;line-height:1.15;letter-spacing:-2px}
+h4{font-size:var(--headline);font-weight:600;line-height:1.20;letter-spacing:-1.2px}
+.sub{font-size:var(--subhead);font-weight:400;line-height:1.4;letter-spacing:-.4px;
+  color:var(--ink-muted);max-width:30em;margin-top:var(--md)}
+p{font-size:var(--body);font-weight:400;line-height:1.5;letter-spacing:-.1px;color:var(--ink-muted);
+  max-width:34em}
+.lead{font-size:var(--body-lg);line-height:1.5;letter-spacing:-.2px;color:var(--ink-muted)}
+.cap{font-size:var(--cap);line-height:1.4;color:var(--ink-subtle)}
+.mono{font-family:var(--f-mono);font-size:var(--mono);color:var(--ink-subtle)}
+b,strong{font-weight:600;color:var(--ink)}
+
+/* ═════ 버튼 — 8px(덱 16px) 모서리. pill로 만들지 않는다 ═════ */
+.btns{display:flex;gap:var(--xs);margin-top:var(--lg);flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;background:var(--primary);
+  color:var(--on-primary);font-size:var(--btn);font-weight:500;border-radius:var(--r-md);
+  padding:16px 28px;text-decoration:none}
+.btn.sec{background:var(--s1);color:var(--ink);border:1px solid var(--hairline)}
+.btn.ter{background:transparent;color:var(--ink);border:1px solid var(--hairline)}
+.btn:active{background:var(--primary-focus)}
+
+/* ═════ 카드 — surface-1, 12px(덱 24px) 라운딩, 그라디언트·스포트라이트 금지 ═════ */
+.cards{display:grid;grid-template-columns:repeat(var(--cols,3),1fr);gap:var(--sm);
+  margin-top:var(--xl)}
+.card{background:var(--s1);border:1px solid var(--hairline);border-radius:var(--r-lg);
+  padding:var(--lg);display:flex;flex-direction:column;gap:var(--xs)}
+.card.feat{background:var(--s2)}
+.card .t{font-size:var(--card-t);font-weight:500;letter-spacing:-.8px;line-height:1.25}
+.card p{font-size:var(--body-sm);line-height:1.5;color:var(--ink-subtle);max-width:none}
+.card .n{font-size:var(--d-md);font-weight:600;letter-spacing:-2px;line-height:1.05}
+.card .n em{font-style:normal;font-size:.4em;font-weight:400;color:var(--ink-subtle)}
+
+/* ═════ 제품 스크린샷 패널 — 이 시스템의 주인공 ═════ */
+.shot{background:var(--s1);border:1px solid var(--hairline);border-radius:var(--r-xl);
+  padding:var(--sm);overflow:hidden}
+.shot .inner{background:var(--img,var(--s3)) center/cover no-repeat;border-radius:var(--r-lg);
+  aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;
+  color:var(--ink-3);font-size:var(--body-sm)}
+/* 스크린샷 대체용 미니 UI — 이미지가 없을 때 */
+.uikit{width:100%;height:100%;padding:var(--md);display:flex;flex-direction:column;gap:12px}
+.uikit .r{height:22px;border-radius:6px;background:var(--s4);border:1px solid var(--hairline)}
+.uikit .r.a{width:38%}.uikit .r.b{width:62%}.uikit .r.c{width:48%}
+.uikit .r.on{background:var(--s2);border-color:var(--hair-strong)}
+.uikit .dot{width:12px;height:12px;border-radius:50%;background:var(--primary);flex:none}
+.uikit .row{display:flex;align-items:center;gap:12px}
+
+/* ═════ 2단 — 좌 텍스트 / 우 스크린샷 ═════ */
+.two{display:flex;gap:var(--xxl);align-items:center}
+.two>.tx{flex:0 0 40%}
+.two>.vis{flex:1;min-width:0}
+
+/* ═════ 행 나열 — changelog 스타일. 헤어라인만 ═════ */
+.rows{margin-top:var(--xl)}
+.row{display:flex;gap:var(--lg);align-items:baseline;padding:var(--sm) 0;
+  border-bottom:1px solid var(--hairline)}
+.row:first-child{border-top:1px solid var(--hairline)}
+.row .k{flex:0 0 24%;font-size:var(--body);font-weight:600;color:var(--ink);letter-spacing:-.2px}
+.row .v{flex:1;font-size:var(--body);color:var(--ink-muted)}
+.row .n{font-size:var(--headline);font-weight:600;letter-spacing:-1.2px;white-space:nowrap}
+
+/* ═════ 상태 배지 · 칩 ═════ */
+.badge{display:inline-block;background:var(--s2);color:var(--ink-muted);font-size:var(--cap);
+  border-radius:var(--pill);padding:6px 20px;border:1px solid var(--hairline)}
+.badge.ok{color:var(--success)}
+
+/* ═════ 인용 카드 ═════ */
+.quote{background:var(--s1);border:1px solid var(--hairline);border-radius:var(--r-lg);
+  padding:var(--xl)}
+.quote .q{font-size:var(--body-lg);line-height:1.5;color:var(--ink)}
+.quote .who{margin-top:var(--md);font-size:var(--body-sm);color:var(--ink-subtle)}
+
+/* ═════ CTA 배너 ═════ */
+.cta{background:var(--s1);border:1px solid var(--hairline);border-radius:var(--r-lg);
+  padding:var(--xxl);text-align:center;display:flex;flex-direction:column;align-items:center;
+  gap:var(--md)}
+
+/* ═════ 모션 — 짧고 절제된 상승. 스포트라이트·글로우 금지 ═════ */
+.in{opacity:0}
+.active .in{animation:rise .55s cubic-bezier(.16,1,.3,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.active .d1{animation-delay:.04s}.active .d2{animation-delay:.13s}.active .d3{animation-delay:.22s}
+.active .d4{animation-delay:.31s}.active .d5{animation-delay:.40s}.active .d6{animation-delay:.49s}
+
+#nav{position:fixed;right:24px;bottom:18px;font-size:15px;color:var(--ink-3);z-index:99}
+#nav .hint{margin-right:16px;color:#4a4d53}
+body.notes #nav{bottom:auto;top:18px}
+
+/* ═════ 발표자 노트 — S 토글. 좌우 여백 = 슬라이드 본문 끝선(--pad 112px) ═════ */
+body.notes #stage{top:0;transform:translateX(-50%) scale(var(--scale,1));transform-origin:top center}
+#notes{position:fixed;left:0;right:0;bottom:0;max-height:40vh;overflow:auto;display:none;
+  background:var(--s1);border-top:1px solid var(--hairline);z-index:100;
+  padding:20px var(--npad,30px) 26px}
+body.notes #notes{display:block}
+#notes .nlab{font-size:13px;font-weight:500;letter-spacing:.4px;color:var(--primary);
+  margin-bottom:10px;text-transform:uppercase}
+#notes .ntext{font-size:18px;line-height:1.6;color:var(--ink-muted)}
+#notes .ntext b{font-weight:600;color:var(--ink)}
+#notes .ntext span{color:var(--ink-3)}
+
+@media print{
+  html,body,#stage{overflow:visible;position:static;transform:none;width:auto;height:auto}
+  .slide{display:flex!important;position:relative;width:1920px;height:1080px;page-break-after:always}
+  .in{animation:none!important;opacity:1!important;transform:none!important}
+  #nav,#notes{display:none!important}
+}
+</style>
+</head>
+<body>
+<div id="stage">
+
+<!-- ═════ L1. 히어로 ═════ -->
+<section class="slide" data-note="여는 장. 이 시스템의 히어로는 <b>초대형 디스플레이 + 강한 음수 자간</b>이다. 80px에 -3px — 덱에서는 160px에 -6px. 자간을 0으로 두면 즉시 평범한 SaaS 덱이 된다.">
+  <div>
+    <div class="eyebrow in d1">제품 소개</div>
+    <h1 class="in d2">한 줄로<br>정의한다</h1>
+    <div class="sub in d3">부제는 두 줄 이내. 제품이 무엇을 대체하는지 한 문장으로 말한다.</div>
+    <div class="btns in d4"><a class="btn">시작하기</a><a class="btn sec">문서 보기</a></div>
+  </div>
+</section>
+
+<!-- ═════ L2. 섹션 오프너 ═════ -->
+<section class="slide" data-note="섹션 전환. <b>eyebrow(13px/500/+0.4px 양수 자간)</b>는 이 시스템에서 유일하게 자간이 양수인 요소다. 디스플레이의 음수 자간과 대비를 만든다.">
+  <div>
+    <div class="eyebrow brand in d1">CHAPTER 01</div>
+    <h2 class="in d2">섹션 제목을<br>여기 놓는다</h2>
+    <p class="in d3">이 섹션에서 다룰 것을 한 문장으로.</p>
+  </div>
+</section>
+
+<!-- ═════ L3. 기능 카드 3-up ═════ -->
+<section class="slide" data-note="기능 카드. 배경은 <b>surface-1(#0f1011)</b>, 강조 카드만 surface-2로 한 단계 올린다. 사다리를 건너뛰어 surface-3으로 점프하지 않는다.">
+  <div>
+    <div class="eyebrow in d1">기능</div>
+    <h3 class="in d2">세 가지가 달라진다</h3>
+    <div class="cards" style="--cols:3">
+      <div class="card in d3"><div class="t">첫 번째</div>
+        <p>카드 본문은 두세 줄. ink-subtle 회색으로 낮춘다.</p></div>
+      <div class="card feat in d4"><div class="t">두 번째</div>
+        <p>강조할 카드만 surface-2로 한 단계 올린다.</p></div>
+      <div class="card in d5"><div class="t">세 번째</div>
+        <p>라벤더를 카드 배경으로 쓰지 않는다.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════ L4. 제품 스크린샷 — 이 시스템의 주인공 ═════ -->
+<section class="slide" data-note="제품 UI 스크린샷이 섹션의 주인공이다. 이미지가 있으면 <code>.inner</code>에 <code>--img</code>를 지정하고, 없으면 내장된 미니 UI 목업을 그대로 쓴다. 패널 라운딩은 16px(덱 32px)로 카드보다 한 단계 크다.">
+  <div class="two">
+    <div class="tx">
+      <div class="eyebrow in d1">제품</div>
+      <h3 class="in d2">화면으로<br>보여준다</h3>
+      <p class="in d3">설명 대신 실제 화면을 놓는다. 이 시스템은 스크린샷이 논증이다.</p>
+      <div class="btns in d4"><a class="btn">데모 보기</a></div>
+    </div>
+    <div class="vis">
+      <div class="shot in d3">
+        <div class="inner">
+          <div class="uikit">
+            <div class="row"><span class="dot"></span><div class="r a"></div></div>
+            <div class="r b on"></div><div class="r c"></div>
+            <div class="row"><span class="dot" style="background:var(--ink-3)"></span><div class="r c"></div></div>
+            <div class="r b"></div><div class="r a on"></div><div class="r c"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════ L5. 수치 ═════ -->
+<section class="slide" data-note="지표. 숫자는 display-md(덱 80px) 600 웨이트에 -2px 자간. 단위는 0.4em 400으로 낮춰 숫자만 남긴다.">
+  <div>
+    <div class="eyebrow in d1">지표</div>
+    <h3 class="in d2">숫자로 보기</h3>
+    <div class="cards" style="--cols:4">
+      <div class="card in d3"><div class="n">2.4<em>×</em></div><p>첫 번째 지표</p></div>
+      <div class="card in d4"><div class="n">180<em>ms</em></div><p>두 번째 지표</p></div>
+      <div class="card in d5"><div class="n">99.9<em>%</em></div><p>세 번째 지표</p></div>
+      <div class="card feat in d6"><div class="n">40<em>%↓</em></div><p>네 번째 지표</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════ L6. 행 나열 / 비교 ═════ -->
+<section class="slide" data-note="비교·연혁 나열. changelog 행 형식이다 — <b>1px 헤어라인 가로선만</b> 쓰고 세로 괘선은 넣지 않는다.">
+  <div>
+    <div class="eyebrow in d1">비교</div>
+    <h3 class="in d2">무엇이 다른가</h3>
+    <div class="rows">
+      <div class="row in d3"><div class="k">항목 A</div><div class="v">설명을 한 줄로</div><div class="n">480</div></div>
+      <div class="row in d4"><div class="k">항목 B</div><div class="v">설명을 한 줄로</div><div class="n">550</div></div>
+      <div class="row in d5"><div class="k">항목 C</div><div class="v">설명을 한 줄로</div><div class="n">727</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════ L7. 인용 ═════ -->
+<section class="slide s1" data-note="인용. 배경을 surface-1로 깔고 카드는 그대로 두면 <b>면이 겹쳐 보이므로</b>, 이 장에서는 카드 대신 배경 자체를 한 단계 올리고 인용문만 놓는 것도 좋다.">
+  <div>
+    <div class="quote in d1">
+      <div class="q">인용문은 body-lg(덱 36px)로 놓는다. 큰따옴표 장식을 넣지 않고
+        문장만 남긴다. 두세 줄이 적당하다.</div>
+      <div class="who">이름 · 소속</div>
+    </div>
+    <div class="badge in d2" style="margin-top:var(--lg)">출처 표기</div>
+  </div>
+</section>
+
+<!-- ═════ L8. CTA 배너 클로징 ═════ -->
+<section class="slide" data-note="닫는 장. CTA 배너는 padding 48px(덱 96px)로 크게 잡는다. <b>버튼을 pill로 만들지 않는다</b> — 8px 모서리가 이 브랜드의 버튼 형태다.">
+  <div class="cta in d1">
+    <h4>다음 단계</h4>
+    <p style="max-width:26em">청중이 취할 행동 하나만 남긴다.</p>
+    <div class="btns" style="justify-content:center;margin-top:var(--xs)">
+      <a class="btn">시작하기</a><a class="btn ter">문의하기</a>
+    </div>
+  </div>
+</section>
+
+</div>
+
+<div id="nav"><span class="hint">S 발표자 노트</span><span id="navPage"></span></div>
+<div id="notes"><div class="nlab">발표자 노트</div><div class="ntext" id="noteText"></div></div>
+
+<script>
+const slides=[...document.querySelectorAll('.slide')];
+let cur=-1;
+const navPage=document.getElementById('navPage');
+const noteText=document.getElementById('noteText');
+function show(n){
+  cur=Math.max(0,Math.min(slides.length-1,n));
+  slides.forEach((s,i)=>s.classList.toggle('active',i===cur));
+  navPage.textContent=(cur+1)+' / '+slides.length;
+  noteText.innerHTML=slides[cur].dataset.note||'<span>이 장에는 노트가 없습니다.</span>';
+}
+addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key===' ')show(cur+1);
+  else if(e.key==='ArrowLeft')show(cur-1);
+  else if(e.key==='Home')show(0);
+  else if(e.key==='End')show(slides.length-1);
+  else if(e.key==='s'||e.key==='S'){document.body.classList.toggle('notes');fit();}
+});
+addEventListener('click',e=>{
+  if(e.target.closest('#notes'))return;
+  if(e.clientX<innerWidth/2)show(cur-1);else show(cur+1);
+});
+let tx=null;
+addEventListener('touchstart',e=>tx=e.touches[0].clientX);
+addEventListener('touchend',e=>{if(tx===null)return;
+  const dx=e.changedTouches[0].clientX-tx;
+  if(dx<-40)show(cur+1);else if(dx>40)show(cur-1);tx=null});
+function fit(){
+  const avail=document.body.classList.contains('notes')?innerHeight*.58:innerHeight;
+  const s=Math.min(innerWidth/1920,avail/1080);
+  document.getElementById('stage').style.setProperty('--scale',s);
+  document.documentElement.style.setProperty('--npad',
+    Math.round((innerWidth-1920*s)/2+112*s)+'px');
+}
+addEventListener('resize',fit);addEventListener('load',fit);fit();
+const _h=parseInt(location.hash.slice(1));show(isNaN(_h)?0:_h-1);
+addEventListener('hashchange',()=>{const n=parseInt(location.hash.slice(1));if(!isNaN(n))show(n-1)});
+if(location.search.indexOf('shot')>-1)document.getElementById('nav').style.display='none';
+</script>
+</body>
+</html>

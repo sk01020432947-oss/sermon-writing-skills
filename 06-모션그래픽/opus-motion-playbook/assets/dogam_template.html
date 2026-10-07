@@ -1,0 +1,691 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>오퍼스 모션 원리 도감</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=IBM+Plex+Sans+KR:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* 레이아웃: 애니메이션 노출표(dope sheet). 위는 박자 막대 히어로, 아래는 칸이 나뉜 원리 카드. 박자선=파랑, 큐(사건)=빨강 */
+:root{
+  --paper:#F1F2EE; --card:#FAFAF7; --ink:#17191C; --muted:#5A6058; --rule:#CDD1C8;
+  --cue:#D9432A; --beat:#2C5BCB; --wash:#E4E7E0;
+  --f-display:"Black Han Sans","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --f-body:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#111315; --card:#181B1E; --ink:#E8E9E4; --muted:#9BA197; --rule:#2D3236;
+  --cue:#FF6B4F; --beat:#7D9DFF; --wash:#1F2327; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#111315; --card:#181B1E; --ink:#E8E9E4; --muted:#9BA197; --rule:#2D3236;
+  --cue:#FF6B4F; --beat:#7D9DFF; --wash:#1F2327; color-scheme:dark}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--paper);color:var(--ink);font:15px/1.65 var(--f-body);margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding-inline:20px;padding-block:28px 80px}
+a{color:var(--beat)}
+h1,h2,h3{text-wrap:balance;margin:0}
+h1{font:400 clamp(34px,6vw,64px)/1.05 var(--f-display);letter-spacing:-.01em}
+h2{font:400 clamp(24px,3.4vw,34px)/1.15 var(--f-display);margin-bottom:6px}
+h3{font-size:17px;font-weight:700}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.eyebrow{font:500 12px/1 var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.lead{color:var(--muted);max-width:68ch}
+header.top{display:grid;gap:14px;padding-bottom:18px}
+.meta{display:flex;flex-wrap:wrap;gap:8px 18px;font:13px var(--f-mono);color:var(--muted)}
+.meta b{color:var(--ink);font-weight:500}
+.hero{border:1px solid var(--rule);background:var(--card);border-radius:4px;overflow:hidden}
+.hero canvas{display:block;width:100%;aspect-ratio:1180/330;max-width:100%}
+.hero .cap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;padding:10px 14px;border-top:1px solid var(--rule);font:13px var(--f-mono);color:var(--muted)}
+nav.toc{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--paper);border-bottom:1px solid var(--rule);margin:22px -20px 0;padding:10px 20px;display:flex;gap:6px 16px;flex-wrap:wrap;align-items:center}
+nav.toc a{font:500 14px var(--f-body);color:var(--ink);text-decoration:none;padding:4px 0;border-bottom:2px solid transparent}
+nav.toc a:hover,nav.toc a:focus-visible{border-color:var(--cue);outline:none}
+nav.toc .sp{flex:1}
+button{font:inherit;cursor:pointer;color:var(--ink);background:var(--card);border:1px solid var(--rule);border-radius:3px;padding:5px 10px}
+button:hover{border-color:var(--ink)}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--beat);outline-offset:2px}
+button.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+section{padding-top:48px;scroll-margin-top:60px}
+.sec-head{display:grid;gap:6px;margin-bottom:20px;border-top:3px solid var(--ink);padding-top:12px}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);margin:0;padding:0;gap:0;border:1px solid var(--rule);background:var(--card)}
+.steps li{list-style:none;padding:14px 16px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);min-width:0}
+.steps .n{font:500 12px var(--f-mono);color:var(--cue)}
+.steps p{margin:4px 0 0;color:var(--muted);font-size:14px}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px;margin-top:18px}
+.cols>*{min-width:0}
+.panel{background:var(--card);border:1px solid var(--rule);padding:16px}
+.panel h3{margin-bottom:8px}
+pre{background:var(--wash);border:1px solid var(--rule);padding:12px;overflow:auto;max-height:420px;font:12.5px/1.6 var(--f-mono);white-space:pre-wrap;word-break:break-word;margin:8px 0 0}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.calc{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px}
+.calc label{display:grid;gap:4px;font-size:13px;color:var(--muted)}
+input,select{font:15px var(--f-mono);padding:6px 8px;border:1px solid var(--rule);background:var(--paper);color:var(--ink);border-radius:3px;width:100%}
+.out{font:14px/1.7 var(--f-mono);margin-top:10px}
+.out b{color:var(--cue);font-weight:500}
+.filters{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;align-items:center}
+.filters input{max-width:260px}
+.tbl{overflow-x:auto;border:1px solid var(--rule);background:var(--card)}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font:500 12px var(--f-mono);letter-spacing:.06em;color:var(--muted);background:var(--wash)}
+td.pick{font-weight:700;color:var(--cue);white-space:nowrap}
+.badge{font:12px var(--f-mono);background:var(--ink);color:var(--paper);border-radius:10px;padding:1px 8px}
+.vids{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:12px}
+.vids .panel p{margin:6px 0 0;color:var(--muted);font-size:14px}
+.empty{color:var(--muted);font-style:italic}
+footer{margin-top:60px;color:var(--muted);font-size:13px;border-top:1px solid var(--rule);padding-top:14px}
+@media (max-width:900px){.steps{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:520px){nav.toc{flex-wrap:nowrap;overflow-x:auto;white-space:nowrap;scrollbar-width:none}nav.toc .sp{display:none}.steps{grid-template-columns:1fr}.hero canvas{aspect-ratio:400/220}}
+body{padding-bottom:76px}
+/* 목적으로 고르기 */
+.purposes{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.pcard{display:grid;gap:8px;text-align:left;padding:0 0 12px;background:var(--card);border:1px solid var(--rule);border-radius:4px;overflow:hidden;min-width:0}
+.pcard:hover{border-color:var(--ink)}
+.pcard .strip{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;background:var(--rule)}
+.pcard .strip img,.pcard .strip .ph{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;background:var(--wash)}
+.pcard .strip .ph{display:grid;place-items:center;font:12px var(--f-mono);color:var(--muted)}
+.pcard b{padding:0 12px;font-size:16px}
+.pcard .hint{padding:0 12px;color:var(--muted);font-size:13px;line-height:1.5}
+.pcard .ids{padding:0 12px;font-size:11px;color:var(--muted)}
+.pchips{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px;align-items:center}
+.pchips .lab{font:12px var(--f-mono);color:var(--muted);margin-right:4px}
+.chip{border-radius:14px;padding:4px 11px;font-size:13px}
+/* 갤러리 */
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
+.tile{position:relative;min-width:0}
+.tile .open{display:grid;gap:6px;width:100%;text-align:left;padding:0 0 10px;background:var(--card);border:1px solid var(--rule);border-radius:4px;overflow:hidden}
+.tile .open:hover,.tile .open:focus-visible{border-color:var(--ink)}
+.tile.sel .open{border-color:var(--cue);box-shadow:inset 0 0 0 1px var(--cue)}
+.thumb{position:relative;display:block;aspect-ratio:16/9;background:var(--wash);overflow:hidden}
+.thumb img,.thumb canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.thumb .ph{position:absolute;inset:0;display:grid;place-items:center;padding:10px;text-align:center;font:400 18px/1.2 var(--f-display);color:var(--muted)}
+.thumb .play{position:absolute;left:6px;bottom:6px;font:10px var(--f-mono);background:var(--ink);color:var(--paper);padding:1px 5px;border-radius:2px}
+.tmeta{display:flex;gap:8px;align-items:center;padding:0 10px}
+.tmeta .id{font:500 11px var(--f-mono);color:var(--paper);background:var(--ink);padding:1px 5px;border-radius:2px}
+.tmeta .cat{font:11px var(--f-mono);color:var(--muted)}
+.tile .nm{padding:0 10px;font-size:14px;font-weight:700;line-height:1.35}
+.tile .add{position:absolute;top:6px;right:6px;width:30px;height:30px;padding:0;border-radius:50%;font:700 16px/1 var(--f-body);background:var(--card)}
+.tile.sel .add{background:var(--cue);border-color:var(--cue);color:var(--paper)}
+/* 상세 대화상자 */
+dialog{border:1px solid var(--rule);border-radius:6px;background:var(--card);color:var(--ink);padding:0;width:min(1040px,calc(100vw - 32px));max-height:calc(100vh - 32px)}
+dialog::backdrop{background:rgba(10,12,14,.55)}
+.dwrap{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr)}
+.dmedia{background:var(--paper);border-right:1px solid var(--rule);padding:14px;display:grid;gap:10px;align-content:start}
+.dview{position:relative;aspect-ratio:16/9;background:var(--wash);border:1px solid var(--rule)}
+.dview canvas,.dview img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;display:block}
+.dview .ph{position:absolute;inset:0;display:grid;place-items:center;font:400 28px var(--f-display);color:var(--muted);padding:20px;text-align:center}
+.dcap{font:12px var(--f-mono);color:var(--muted)}
+.dtext{padding:16px 18px;display:grid;gap:12px;align-content:start;overflow:auto;max-height:calc(100vh - 34px)}
+.dtext h3{font:400 26px/1.2 var(--f-display)}
+.dtext .rule{margin:0}
+.dtext .pr{background:var(--wash);border-left:3px solid var(--cue);padding:10px 12px;font-size:14px}
+.dtext .pr .row{margin-top:8px}
+.dtext .src,.dtext .ap{font-size:13px;color:var(--muted)}
+.dnav{display:flex;align-items:center;gap:8px;border-top:1px solid var(--rule);padding-top:12px}
+.dnav .sp{flex:1}
+.dhd{display:flex;gap:8px;align-items:center}
+.dhd .id{font:500 12px var(--f-mono);color:var(--paper);background:var(--ink);padding:2px 6px;border-radius:2px}
+.dhd .cat{font:12px var(--f-mono);color:var(--muted)}
+.dhd .sp{flex:1}
+button.primary{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+/* 담기 막대 */
+.bbar{position:fixed;left:0;right:0;bottom:0;z-index:20;background:var(--card);border-top:1px solid var(--rule);padding:10px 20px calc(10px + env(safe-area-inset-bottom,0px));display:flex;gap:10px;align-items:center}
+.bbar .cnt{font:500 14px var(--f-body);white-space:nowrap}
+.bbar .cnt b{color:var(--cue);font-family:var(--f-mono)}
+.bmini{display:flex;gap:4px;overflow-x:auto;min-width:0;flex:1;scrollbar-width:none}
+.bmini button{font:11px var(--f-mono);padding:2px 6px;white-space:nowrap}
+.bmini .hint{font-size:13px;color:var(--muted);white-space:nowrap}
+.blist{display:flex;flex-wrap:wrap;gap:6px}
+.blist button{font-size:13px}
+.bd-wrap{padding:18px;display:grid;gap:12px}
+#toast{position:fixed;left:50%;bottom:84px;transform:translateX(-50%);z-index:30;background:var(--ink);color:var(--paper);padding:9px 14px;border-radius:4px;font-size:14px;display:flex;gap:12px;align-items:center;max-width:calc(100vw - 32px)}
+#toast button{background:transparent;color:var(--paper);border-color:var(--paper);font-size:13px}
+@media (max-width:760px){.dwrap{grid-template-columns:1fr}.dmedia{border-right:0;border-bottom:1px solid var(--rule)}.dtext{max-height:none}.tiles{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.tile .nm{font-size:13px}.bmini{display:none}}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <span class="eyebrow">Claude Opus 5.5 · 코드로 만드는 모션그래픽</span>
+  <h1>오퍼스 모션 원리 도감</h1>
+  <p class="lead">만들 영상을 고르면 필요한 원리가 담기고, 그림으로 훑어보며 더하거나 빼고, 담은 것을 프롬프트 하나로 복사합니다. 원리마다 원본 영상의 장면과 이 페이지가 직접 그린 움직임 데모가 있습니다.</p>
+  <div class="meta" id="meta"></div>
+</header>
+
+<div class="hero">
+  <canvas id="hero" data-demo="beatbar" aria-label="128 BPM 8마디 15초 박자 막대 데모"></canvas>
+  <div class="cap"><span>128 BPM × 8마디 = 32박 = 15.000초 · 강박에 단어 교체 · 박마다 펄스 · 16분음표로 글자 등장 · 4·8마디 히트</span><span>이사야 43:19 (개역개정)</span></div>
+</div>
+
+<nav class="toc" aria-label="목차">
+  <a href="#pick">고르기</a><a href="#dogam">도감</a><a href="#basket" id="navBasket">조립대 <span class="badge" id="bcount">0</span></a><a href="#guide">설명서</a><a href="#hybrid">코드↔생성</a><a href="#prompts">프롬프트 17</a><a href="#apply">응용</a><a href="#sources">출처</a>
+  <span class="sp"></span><button id="playBtn" type="button" aria-pressed="true">일시정지</button>
+</nav>
+
+<section id="pick">
+  <div class="sec-head"><span class="eyebrow">1단계 · 목적으로 고르기</span><h2>무엇을 만드세요?</h2>
+  <p class="lead">만들 영상을 누르면 그에 맞는 원리가 한꺼번에 담기고, 아래 도감에서 담긴 것만 보여 줍니다. 빼거나 더할 것은 도감에서 고르면 됩니다.</p></div>
+  <div class="purposes" id="purposes"></div>
+  <div class="pchips" id="pchips"><span class="lab">사역·교육</span></div>
+</section>
+
+<section id="dogam">
+  <div class="sec-head"><span class="eyebrow">2단계 · 훑어보고 고르기</span><h2>원리 도감 <span id="cnt" class="mono"></span></h2>
+  <p class="lead">그림을 누르면 자세히 볼 수 있습니다. 오른쪽 위 <b>+</b>는 담기, <b>▶ 움직임</b> 표시가 있는 카드는 마우스를 올리면 데모가 움직입니다.</p></div>
+  <div class="filters" id="filters"><input id="q" type="search" placeholder="검색: 박자, 스프링, 실사…" aria-label="원리 검색"></div>
+  <div class="tiles" id="tiles"></div>
+</section>
+
+<section id="guide">
+  <div class="sec-head"><span class="eyebrow">사용 설명서</span><h2>이렇게 씁니다</h2>
+  <p class="lead">세 가지 입구가 있습니다. Claude Code에서는 스킬로, Claude 앱에서는 프로젝트 지침으로, 어디서든 아래 도감의 문장을 담아 조립한 프롬프트로.</p></div>
+  <ol class="steps" id="steps"></ol>
+  <div class="cols">
+    <div class="panel">
+      <h3>Claude Code에서 스킬로 부르기</h3>
+      <pre id="skillUse"></pre>
+      <div class="row" style="margin-top:8px"><button type="button" data-copy="skillUse">복사</button></div>
+    </div>
+    <div class="panel">
+      <h3>박자 계산기</h3>
+      <div class="calc">
+        <label for="cDur">길이(초)<input id="cDur" type="number" value="15" min="1" step="0.5"></label>
+        <label for="cBars">마디 수<input id="cBars" type="number" value="8" min="1"></label>
+        <label for="cScenes">장면 수<input id="cScenes" type="number" value="4" min="1"></label>
+      </div>
+      <div class="out" id="cOut"></div>
+    </div>
+  </div>
+  <div class="cols">
+    <div class="panel"><h3>① 프로젝트 맞춤 지침 (8섹션)</h3><p class="lead" style="font-size:13px">Claude 앱 › 프로젝트 › 맞춤 지침에 붙여 넣고, 설정 › 기능 › 코드 실행 및 파일 생성을 켭니다. V1의 8섹션 구조에 이 도감의 규칙을 더한 판입니다. 원문 전문은 <a href="https://gptparkai.com/blog/claude-opus-kinetic-typography-video" target="_blank" rel="noopener">GPT PARK 블로그</a>에서 복사할 수 있습니다.</p><pre id="inst"></pre><div class="row" style="margin-top:8px"><button type="button" data-copy="inst">지침 복사</button></div></div>
+    <div class="panel"><h3>② 첫 메시지 (변수만)</h3><pre id="first"></pre><div class="row" style="margin-top:8px"><button type="button" data-copy="first">복사</button></div>
+      <h3 style="margin-top:18px">③ 수정 메시지</h3><pre id="rev"></pre><div class="row" style="margin-top:8px"><button type="button" data-copy="rev">복사</button></div></div>
+  </div>
+</section>
+
+<section id="hybrid">
+  <div class="sec-head"><span class="eyebrow">코드 단독 vs 생성형 연결</span><h2>언제 무엇을 붙이나</h2>
+  <p class="lead">V4가 같은 프롬프트로 두 번씩 만들어 잰 값입니다. 각 1회 실행이라 참고값입니다. 결론은 한 줄입니다. 글자·도형·그래프면 코드로 충분하고, 사람·실제 공간·표정이 필요할 때 생성형을 붙입니다. 붙이더라도 코드판을 먼저 만듭니다.</p></div>
+  <div class="cols" style="margin-top:0">
+    <div class="panel"><h3>판단 순서</h3><ol id="decide" style="margin:0;padding-left:20px"></ol></div>
+    <div class="panel"><h3>역할 분담</h3><table><tbody>
+      <tr><th>화면 글자·도형·그래프</th><td>Opus 코드 (생성 영상의 글자는 일그러짐)</td></tr>
+      <tr><th>사람·실공간·표정</th><td>이미지 생성 → 영상 생성(6초 컷)</td></tr>
+      <tr><th>음악·효과음</th><td>코드 합성(정확) 또는 ElevenLabs(풍부, 싱크 보정)</td></tr>
+      <tr><th>내레이션</th><td>TTS (맥 기본 음성은 알림음처럼 평평)</td></tr>
+      <tr><th>3D 인물 동작</th><td>이미지→3D 모델→모션 라이브러리</td></tr>
+      <tr><th>조립·싱크·검수</th><td>Opus</td></tr></tbody></table></div>
+  </div>
+  <h3 style="margin:22px 0 8px">실측 비교</h3>
+  <div class="tbl"><table id="costs"></table></div>
+  <h3 style="margin:22px 0 8px">제작 방식 9가지 (R)</h3>
+  <div class="tbl"><table id="methods"></table></div>
+</section>
+
+<section id="prompts">
+  <div class="sec-head"><span class="eyebrow">공개 프롬프트</span><h2>프롬프트 17</h2>
+  <p class="lead">V4가 연결한 저장소의 한국어 번역본입니다. 스킬 폴더 <span class="mono">references/opus-video-prompts/prompts/</span>에 전문이 있습니다. 상세 템플릿 15·16번은 입력 → 방향 → 구조 → 구현 → 함정 → 시작 블록으로 되어 있어 그대로 틀로 씁니다.</p></div>
+  <div class="tbl"><table id="p17"></table></div>
+</section>
+
+<section id="apply">
+  <div class="sec-head"><span class="eyebrow">응용 확장</span><h2>영상에 없던 쓰임</h2></div>
+  <div class="tbl"><table id="apps"></table></div>
+  <div class="panel" style="margin-top:14px"><h3>작업 방식 확장</h3><ol id="ways" style="margin:6px 0 0;padding-left:20px"></ol></div>
+</section>
+
+<section id="sources">
+  <div class="sec-head"><span class="eyebrow">출처</span><h2>분석한 자료</h2></div>
+  <div class="vids" id="vids"></div>
+</section>
+
+<footer id="foot"></footer>
+</div>
+
+<div class="bbar" id="bbar" role="region" aria-label="담은 원리">
+  <span class="cnt"><b id="bcount2">0</b>개 담음</span>
+  <span class="bmini" id="bmini"></span>
+  <button type="button" id="bClear2">비우기</button>
+  <button type="button" class="primary" id="bOpen">3단계 · 프롬프트 만들기</button>
+</div>
+
+<div id="toast" role="status" hidden></div>
+
+<dialog id="dlg" aria-labelledby="dName">
+  <div class="dwrap">
+    <div class="dmedia">
+      <div class="dview"><canvas id="dCanvas" data-demo="" aria-label="데모"></canvas><img id="dImg" alt=""><span class="ph" id="dPh"></span></div>
+      <div class="row" id="dSeg" role="group" aria-label="보기 전환"><button type="button" data-dview="demo">움직임 데모</button><button type="button" data-dview="ref">원본 장면</button></div>
+      <div class="dcap" id="dCap"></div>
+    </div>
+    <div class="dtext">
+      <div class="dhd"><span class="id" id="dId"></span><span class="cat" id="dCat"></span><span class="sp"></span><button type="button" data-close>닫기 (Esc)</button></div>
+      <h3 id="dName"></h3>
+      <p class="rule" id="dRule"></p>
+      <div class="pr"><span class="eyebrow">프롬프트 문장</span><div id="dPrompt"></div>
+        <div class="row"><button type="button" id="dCopy">복사</button><button type="button" id="dAdd" class="primary">담기</button></div></div>
+      <div class="ap" id="dApply"></div>
+      <div class="src" id="dSrc"></div>
+      <div class="dnav"><button type="button" id="dPrev">← 이전</button><span class="sp mono" id="dPos" style="text-align:center;font-size:12px;color:var(--muted)"></span><button type="button" id="dNext">다음 →</button></div>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="bdlg" aria-labelledby="bTitle">
+  <div class="bd-wrap">
+    <div class="dhd"><h3 id="bTitle" style="font:400 24px var(--f-display)">프롬프트 조립대</h3><span class="sp"></span><button type="button" data-close>닫기 (Esc)</button></div>
+    <label for="bTopic" style="font-size:13px;color:var(--muted)">무엇을 만들까요</label>
+    <input id="bTopic" type="text" value="우리 교회 가을 특별새벽기도회 15초 안내 영상">
+    <div id="bList"></div>
+    <pre id="bOut"></pre>
+    <div class="row"><button type="button" class="primary" data-copy="bOut">조립한 프롬프트 복사</button><button type="button" id="bClear">비우기</button></div>
+  </div>
+</dialog>
+
+<script>
+const DATA = __DATA__;
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmtT = s => Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
+function srcLink(v, t){
+  const V = DATA.videos[v];
+  if (V.id) return `<a href="https://www.youtube.com/watch?v=${V.id}&t=${t}s" target="_blank" rel="noopener">${v} ${fmtT(t)}</a>`;
+  return `<a href="${V.url}" target="_blank" rel="noopener">${v}</a>`;
+}
+function store(k, v){ try{ if (v === undefined) return JSON.parse(localStorage.getItem(k)); localStorage.setItem(k, JSON.stringify(v)); }catch(e){ return null; } }
+
+/* ---------- 정적 내용 ---------- */
+const items = DATA.items;
+const FRAMES = '오퍼스_모션원리_도감_자료/frames/';
+$('#meta').innerHTML = `<span>영상 <b>5편</b></span><span>원리 <b>${items.length}개</b></span><span>데모 <b>${items.filter(i=>i.demo).length}개</b></span><span>원본 장면 <b>${items.filter(i=>i.frame).length}장</b></span><span>공개 프롬프트 <b>17개</b> · 사례 <b>53건</b></span><span>분석일 <b>2026-10-05</b></span>`;
+$('#cnt').textContent = items.length;
+const STEPS = [
+  ['판단','글자·도형 위주면 코드만, 사람·실공간이 필요하면 하이브리드. 그래도 코드 초안 먼저.','E1·E2'],
+  ['출처와 변수','공식 URL·문서를 출처로. 반복 영상이면 8섹션 지침 고정 + 변수만.','A2·A3'],
+  ['박자표','길이·마디로 BPM 역산, 장면 경계는 강박.','B1·B2'],
+  ['검증 관문','코드 전 문구 표와 디자인 제안 → "진행"이면 끝까지.','A4'],
+  ['음악 먼저','상업 이용 가능 곡, 없으면 코드 합성.','B3·B6'],
+  ['제작','seek(t) 순수함수, 금지 목록, 글자는 코드, 얼굴 위 글자 금지.','C1·D14·E3'],
+  ['검수','강박 콘택트 시트를 직접 보고, ffprobe 결과 첨부.','C8'],
+  ['기록·수정','NOTES.md에 시간·크레딧·소재 구분. 수정은 장면 번호로.','A10·G3']];
+$('#steps').innerHTML = STEPS.map((s,i)=>`<li><span class="n">${String(i+1).padStart(2,'0')} · ${s[2]}</span><h3>${s[0]}</h3><p>${s[1]}</p></li>`).join('');
+$('#skillUse').textContent = DATA.skillUse;
+$('#inst').textContent = DATA.instruction;
+$('#first').textContent = DATA.firstMsg;
+$('#rev').textContent = DATA.revMsg;
+$('#decide').innerHTML = [
+  '화면 대부분이 글자·도형·그래프인가? → 예: <b>코드만</b> (생성형 붙여도 차이 작음)',
+  '사람 얼굴·표정·실제 공간·제품 실물이 핵심인가? → 예: <b>하이브리드</b>',
+  '요청이 연결할 도구의 강점(인물 동작·반사·실사 질감)을 겨누는가? → 아니면 붙여도 나아지지 않음',
+  '코드 초안을 먼저 보고, 실사 필요 컷 목록과 예상 크레딧을 승인받았는가?',
+  '실존 단체라 AI 인물을 뺐다면 → 직접 찍은 사람 영상으로 채울 자리 표시'].map(x=>`<li>${x}</li>`).join('');
+$('#costs').innerHTML = '<thead><tr><th>예시</th><th>코드 단독</th><th>Higgsfield 연결</th><th>크레딧</th><th>채택</th><th>이유</th></tr></thead><tbody>' +
+  DATA.costs.map(c=>`<tr><td><b>${esc(c.task)}</b></td><td>${esc(c.code)}</td><td>${esc(c.hybrid)}</td><td class="mono">${esc(c.credits)}</td><td class="pick">${esc(c.pick)}</td><td>${esc(c.why)}</td></tr>`).join('') + '</tbody>';
+$('#methods').innerHTML = '<thead><tr><th>방식</th><th>도구</th><th>사례</th></tr></thead><tbody>' + DATA.methods.map(m=>`<tr><td><b>${esc(m[0])}</b></td><td class="mono" style="font-size:12.5px">${esc(m[1])}</td><td>${esc(m[2])}</td></tr>`).join('') + '</tbody>';
+$('#p17').innerHTML = '<thead><tr><th>ID</th><th>프롬프트</th><th>작성자</th><th>유형</th><th>파일</th></tr></thead><tbody>' + DATA.prompts17.map(p=>`<tr><td class="mono">${p.id}</td><td><b>${esc(p.name)}</b></td><td>${esc(p.by)}</td><td>${esc(p.type)}</td><td><a class="mono" href="https://github.com/dandacompany/opus-video-prompts/blob/main/${p.file}" target="_blank" rel="noopener">${esc(p.file.replace('prompts/',''))}</a></td></tr>`).join('') + '</tbody>';
+$('#apps').innerHTML = '<thead><tr><th>만들 것</th><th>원리</th><th>핵심 지시</th></tr></thead><tbody>' + DATA.apps.map(a=>`<tr><td><b>${esc(a[0])}</b></td><td class="mono">${esc(a[1])}</td><td>${esc(a[2])}</td></tr>`).join('') + '</tbody>';
+$('#ways').innerHTML = DATA.ways.map(w=>`<li>${w}</li>`).join('');
+$('#vids').innerHTML = Object.entries(DATA.videos).map(([k,v])=>{
+  const href = v.id ? `https://www.youtube.com/watch?v=${v.id}` : v.url;
+  return `<div class="panel"><span class="eyebrow">${k}${v.len?' · '+v.len:''}</span><h3 style="margin-top:6px"><a href="${href}" target="_blank" rel="noopener">${esc(v.title)}</a></h3><p>${esc(v.by)}</p><p>${esc(v.gist)}</p></div>`}).join('');
+$('#foot').innerHTML = `정본: <span class="mono">~/Desktop/cysjavis/모션그래픽/오퍼스_모션원리_도감.html</span> · 스킬: <span class="mono">~/.claude/skills/opus-motion-playbook</span> · 데이터 정본 <span class="mono">references/principles.json</span>에서 build.py로 생성. 영상의 시간·비용은 게시자가 밝힌 값이며 같은 결과를 보장하지 않습니다.`;
+
+/* ---------- 계산기 ---------- */
+function calc(){
+  const d = +$('#cDur').value || 15, b = Math.max(1, +$('#cBars').value || 8), n = Math.max(1, +$('#cScenes').value || 4);
+  const bpm = b*4*60/d, beat = 60/bpm;
+  const downs = Array.from({length:b}, (_,i)=> i*beat*4);
+  const starts = Array.from({length:Math.min(n,b)}, (_,k)=> downs[Math.round(k*b/Math.min(n,b))]);
+  $('#cOut').innerHTML = `BPM <b>${bpm.toFixed(2)}</b> · 1박 ${beat.toFixed(4)}s · 1마디 ${(beat*4).toFixed(4)}s · ${b*4}박<br>장면 시작(강박): ${starts.map(s=>s.toFixed(3)+'s').join(' · ')}<br><span style="color:var(--muted)">셸: python3 beatgrid.py --duration ${d} --bars ${b} --scenes ${n}</span>`;
+}
+['#cDur','#cBars','#cScenes'].forEach(s=>$(s).addEventListener('input', calc)); calc();
+
+/* ---------- 담기 상태 ---------- */
+const byId = Object.fromEntries(items.map(i=>[i.id,i]));
+const frameUrl = i => `${encodeURI(FRAMES+i.id+'.jpg')}?v=${DATA.ver}`;
+let basket = (store('omp-basket') || []).filter(id=>byId[id]);
+let curCat = 'all', query = '', onlySel = false, shown = [];
+function setBasket(ids){ basket = items.filter(i=>ids.includes(i.id)).map(i=>i.id); store('omp-basket', basket); render(); renderBasket(); }
+function toggle(id){ setBasket(basket.includes(id) ? basket.filter(x=>x!==id) : [...basket, id]); }
+let toastTimer;
+function toast(msg, actions=[]){
+  const t = $('#toast'); t.innerHTML = `<span>${esc(msg)}</span>` + actions.map((a,k)=>`<button type="button" data-ta="${k}">${esc(a[0])}</button>`).join('');
+  t.hidden = false; t.onclick = e=>{ const b = e.target.closest('[data-ta]'); if (b){ actions[+b.dataset.ta][1](); t.hidden = true; } };
+  clearTimeout(toastTimer); toastTimer = setTimeout(()=>t.hidden = true, 9000);
+}
+
+/* ---------- 1단계: 목적으로 고르기 ---------- */
+const P = DATA.purposes;
+const thumbOf = id => byId[id]?.frame ? `<img src="${frameUrl(byId[id])}" alt="" loading="lazy">` : `<span class="ph">${id}</span>`;
+$('#purposes').innerHTML = P.map((p,k)=>p.group!=='main'?'':`<button type="button" class="pcard" data-p="${k}">
+  <span class="strip">${(p.thumbs||p.ids.filter(id=>byId[id]?.frame).slice(0,3)).map(thumbOf).join('')}</span>
+  <b>${esc(p.name)}</b><span class="hint">${esc(p.hint)}</span><span class="mono ids">원리 ${p.ids.length}개 · ${p.ids.join(' ')}</span></button>`).join('');
+$('#pchips').insertAdjacentHTML('beforeend', P.map((p,k)=>p.group==='main'?'':`<button type="button" class="chip" data-p="${k}" title="${esc(p.hint)}">${esc(p.name)}</button>`).join(''));
+document.addEventListener('click', e=>{
+  const b = e.target.closest('[data-p]'); if (!b) return;
+  const p = P[+b.dataset.p], prev = basket.slice(), prevTopic = $('#bTopic').value;
+  setBasket(p.ids); $('#bTopic').value = p.topic || p.name; renderBasket();
+  onlySel = true; syncFilters(); render();
+  $('#dogam').scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'});
+  toast(`「${p.name}」 원리 ${basket.length}개를 담았습니다`, [['프롬프트 보기', ()=>openBasket()], ['되돌리기', ()=>{ $('#bTopic').value = prevTopic; setBasket(prev); }]]);
+});
+
+/* ---------- 2단계: 갤러리 ---------- */
+const filt = $('#filters');
+const cats = [['all','전체'], ...Object.entries(DATA.cats)];
+filt.insertAdjacentHTML('afterbegin', cats.map(([k,v])=>`<button type="button" data-cat="${k}">${v}${k==='all'?'':' <span class="mono" style="opacity:.6">'+items.filter(i=>i.cat===k).length+'</span>'}</button>`).join('') + `<button type="button" data-only>담은 것만</button>`);
+function syncFilters(){
+  filt.querySelectorAll('[data-cat]').forEach(x=>x.classList.toggle('on', x.dataset.cat===curCat));
+  const o = filt.querySelector('[data-only]'); o.classList.toggle('on', onlySel); o.setAttribute('aria-pressed', onlySel);
+}
+filt.addEventListener('click', e=>{
+  const c = e.target.closest('[data-cat]'); if (c){ curCat = c.dataset.cat; }
+  if (e.target.closest('[data-only]')) onlySel = !onlySel;
+  syncFilters(); render();
+});
+$('#q').addEventListener('input', e=>{ query = e.target.value.trim().toLowerCase(); render(); });
+function render(){
+  shown = items.filter(i => (curCat==='all'||i.cat===curCat) && (!onlySel||basket.includes(i.id)) && (!query || (i.id+i.name+i.rule+i.prompt+i.apply).toLowerCase().includes(query)));
+  $('#cnt').textContent = `${shown.length} / ${items.length}`;
+  $('#tiles').innerHTML = shown.length ? shown.map(i=>{ const on = basket.includes(i.id); return `
+   <article class="tile${on?' sel':''}" data-id="${i.id}">
+    <button type="button" class="open" data-open="${i.id}" aria-label="${i.id} ${esc(i.name)} 자세히 보기">
+     <span class="thumb">${i.frame?`<img src="${frameUrl(i)}" alt="" loading="lazy">`:''}${i.demo?`<canvas data-demo="${i.demo}" data-tile ${i.frame?'hidden':''}></canvas><span class="play">▶ 움직임</span>`:''}${!i.frame&&!i.demo?`<span class="ph">${i.id}</span>`:''}</span>
+     <span class="tmeta"><span class="id">${i.id}</span><span class="cat">${DATA.cats[i.cat]}</span></span>
+     <span class="nm">${esc(i.name)}</span>
+    </button>
+    <button type="button" class="add" data-add="${i.id}" aria-pressed="${on}" aria-label="${i.id} ${on?'빼기':'담기'}">${on?'✓':'+'}</button>
+   </article>`}).join('') : `<p class="empty">${onlySel && !basket.length ? '아직 담은 원리가 없습니다. 위에서 목적을 고르거나 카드의 +를 누르세요.' : '맞는 원리가 없습니다. 검색어를 줄이거나 분류를 전체로 바꿔 보세요.'}</p>`;
+  observe();
+}
+function live(tile, on){
+  const c = tile?.querySelector('canvas[data-tile]'); if (!c) return;
+  const hasImg = !!tile.querySelector('.thumb img');
+  if (on){ c.hidden = false; c.dataset.live = '1'; drawOne(c); }
+  else { delete c.dataset.live; if (hasImg) c.hidden = true; else drawOne(c); }
+}
+const tiles = $('#tiles');
+tiles.addEventListener('pointerover', e=>{ const t = e.target.closest('.tile'); if (t && !t.contains(e.relatedTarget)) live(t, true); });
+tiles.addEventListener('pointerout', e=>{ const t = e.target.closest('.tile'); if (t && !t.contains(e.relatedTarget)) live(t, false); });
+tiles.addEventListener('focusin', e=>live(e.target.closest('.tile'), true));
+tiles.addEventListener('focusout', e=>live(e.target.closest('.tile'), false));
+tiles.addEventListener('click', e=>{
+  const a = e.target.closest('[data-add]'); if (a){ toggle(a.dataset.add); tiles.querySelector(`[data-add="${a.dataset.add}"]`)?.focus(); return; }
+  const o = e.target.closest('[data-open]'); if (o) openDetail(o.dataset.open);
+});
+
+/* ---------- 상세 보기 ---------- */
+const dlg = $('#dlg'), dCanvas = $('#dCanvas'), dImg = $('#dImg');
+let cur = null, dView = 'demo';
+function openDetail(id){ cur = id; dView = byId[id].demo ? 'demo' : 'ref'; fillDetail(); if (!dlg.open) dlg.showModal(); }
+function fillDetail(){
+  const i = byId[cur], on = basket.includes(cur), pos = shown.findIndex(x=>x.id===cur);
+  $('#dId').textContent = i.id; $('#dCat').textContent = DATA.cats[i.cat]; $('#dName').textContent = i.name;
+  $('#dRule').textContent = i.rule; $('#dPrompt').textContent = i.prompt;
+  $('#dApply').innerHTML = `<b style="color:var(--ink)">응용</b> ${esc(i.apply)}`;
+  $('#dSrc').innerHTML = `출처 ${i.src.map(s=>srcLink(s[0],s[1])).join(' · ')}`;
+  const add = $('#dAdd'); add.textContent = on ? '담음 ✓ (빼기)' : '담기'; add.classList.toggle('primary', !on);
+  $('#dPos').textContent = pos >= 0 ? `${pos+1} / ${shown.length}` : '';
+  $('#dPrev').disabled = pos <= 0; $('#dNext').disabled = pos < 0 || pos >= shown.length-1;
+  if (dView === 'demo' && !i.demo) dView = 'ref';
+  if (dView === 'ref' && !i.frame) dView = 'demo';
+  dCanvas.dataset.demo = i.demo || ''; dCanvas.hidden = !(i.demo && dView==='demo');
+  dImg.hidden = !(i.frame && dView==='ref'); if (i.frame) { dImg.src = frameUrl(i); dImg.alt = `${i.name} 원본 장면`; } else dImg.removeAttribute('src');
+  $('#dPh').hidden = !!(i.demo || i.frame); $('#dPh').textContent = i.name;
+  const seg = $('#dSeg'); seg.hidden = !(i.demo && i.frame);
+  seg.querySelectorAll('[data-dview]').forEach(b=>{ const s = b.dataset.dview===dView; b.classList.toggle('on', s); b.setAttribute('aria-pressed', s); });
+  $('#dCap').innerHTML = dView==='ref' && i.frame ? `원본 장면 · ${srcLink(i.frame[0], i.frame[1])} 에서 영상으로 이어 보기` : i.demo ? '이 페이지가 draw(t)로 그린 설명용 데모입니다' : '이 원리는 렌더 규칙이라 화면 예시 대신 문장으로 확인합니다';
+  if (!dCanvas.hidden) requestAnimationFrame(()=>drawOne(dCanvas));
+}
+function step(d){ const pos = shown.findIndex(x=>x.id===cur); const n = shown[pos+d]; if (n){ cur = n.id; fillDetail(); } }
+$('#dPrev').addEventListener('click', ()=>step(-1)); $('#dNext').addEventListener('click', ()=>step(1));
+$('#dSeg').addEventListener('click', e=>{ const b = e.target.closest('[data-dview]'); if (b){ dView = b.dataset.dview; fillDetail(); } });
+$('#dCopy').addEventListener('click', e=>copy(byId[cur].prompt, e.currentTarget));
+$('#dAdd').addEventListener('click', ()=>{ toggle(cur); fillDetail(); });
+dlg.addEventListener('keydown', e=>{ if (e.target.matches('input,textarea')) return; if (e.key==='ArrowRight') step(1); if (e.key==='ArrowLeft') step(-1); });
+document.querySelectorAll('dialog').forEach(d=>{
+  d.addEventListener('click', e=>{ if (e.target===d || e.target.closest('[data-close]')) d.close(); });
+});
+
+/* ---------- 3단계: 담기 막대와 조립대 ---------- */
+const bdlg = $('#bdlg');
+function openBasket(){ renderBasket(); bdlg.showModal(); }
+$('#bOpen').addEventListener('click', openBasket);
+$('#navBasket').addEventListener('click', e=>{ e.preventDefault(); openBasket(); });
+function clearAll(){ const prev = basket.slice(); setBasket([]); toast('담은 원리를 비웠습니다', [['되돌리기', ()=>setBasket(prev)]]); }
+$('#bClear').addEventListener('click', clearAll); $('#bClear2').addEventListener('click', clearAll);
+$('#bmini').addEventListener('click', e=>{ const b = e.target.closest('[data-open]'); if (b) openDetail(b.dataset.open); });
+$('#bList').addEventListener('click', e=>{ const b = e.target.closest('[data-rm]'); if (b) toggle(b.dataset.rm); });
+function renderBasket(){
+  const sel = items.filter(i=>basket.includes(i.id));
+  $('#bcount').textContent = sel.length; $('#bcount2').textContent = sel.length; $('#bClear2').disabled = !sel.length;
+  $('#bmini').innerHTML = sel.length ? sel.map(i=>`<button type="button" data-open="${i.id}" title="${esc(i.name)}">${i.id}</button>`).join('') : '<span class="hint">목적을 고르거나 카드의 + 를 눌러 담으세요</span>';
+  $('#bList').innerHTML = sel.length ? `<div class="blist">${sel.map(i=>`<button type="button" data-rm="${i.id}" aria-label="${i.id} 빼기"><span class="mono">${i.id}</span> ${esc(i.name)} ×</button>`).join('')}</div>` : '<p class="empty">담은 원리가 없어서 기본 세트(A4·B1·B2·C1·C8·D14)로 조립했습니다.</p>';
+  const use = sel.length ? sel : ['A4','B1','B2','C1','C8','D14'].map(id=>byId[id]);
+  const topic = $('#bTopic').value.trim() || '영상'; const last = topic.charCodeAt(topic.length-1); const obj = (last>=0xAC00&&last<=0xD7A3) ? ((last-0xAC00)%28 ? '을' : '를') : '을(를)';
+  $('#bOut').textContent = `${topic}${obj} 모션그래픽으로 만들어 줘.\n\n지킬 규칙:\n` + use.map((i,k)=>`${k+1}. ${i.prompt}`).join('\n') + `\n\n출처: {URL 또는 첨부}\n코드를 쓰기 전에 화면 문구 표와 박자표 스토리보드를 먼저 보여 줘.`;
+}
+$('#bTopic').addEventListener('input', renderBasket);
+syncFilters();
+
+function copy(text, btn){
+  const done = ok => { const o = btn.textContent; btn.textContent = ok ? '복사됨' : 'Ctrl+C로 복사'; setTimeout(()=>btn.textContent=o, 1400); };
+  if (navigator.clipboard) navigator.clipboard.writeText(text).then(()=>done(true), ()=>done(false)); else done(false);
+}
+document.addEventListener('click', e=>{
+  const b = e.target.closest('[data-copy]'); if (!b) return;
+  const el = document.getElementById(b.dataset.copy);
+  const sel = window.getSelection(); const r = document.createRange(); r.selectNodeContents(el); sel.removeAllRanges(); sel.addRange(r);
+  copy(el.textContent, b);
+});
+
+/* ---------- 데모: 모든 그림은 t의 순수함수 ---------- */
+const clamp=(x,a=0,b=1)=>Math.min(b,Math.max(a,x)), seg=(t,a,b)=>clamp((t-a)/(b-a));
+const ease=x=>x*x*(3-2*x), eOut=x=>1-Math.pow(1-x,3), back=x=>{const c=1.4;return 1+(c+1)*Math.pow(x-1,3)+c*Math.pow(x-1,2)};
+const hash=i=>{const s=Math.sin(i*127.1+311.7)*43758.5453;return s-Math.floor(s)};
+const spring=(t,w=14,z=.55)=>{ if(t<=0) return 0; const wd=w*Math.sqrt(1-z*z); return 1-Math.exp(-z*w*t)*(Math.cos(wd*t)+z*w/wd*Math.sin(wd*t)); };
+let C = {};
+function readColors(){ const s = getComputedStyle(document.documentElement); ['paper','card','ink','muted','rule','cue','beat','wash'].forEach(k=>C[k]=s.getPropertyValue('--'+k).trim()); }
+readColors();
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', readColors);
+new MutationObserver(readColors).observe(document.documentElement,{attributes:true,attributeFilter:['data-theme']});
+const F = (sz,w=500)=>`${w} ${sz}px "IBM Plex Sans KR","Apple SD Gothic Neo",sans-serif`;
+const FD = sz=>`${sz}px "Black Han Sans","Apple SD Gothic Neo",sans-serif`;
+const FM = sz=>`${sz}px "IBM Plex Mono",monospace`;
+function rr(x,y,w,h,r){const g=new Path2D();r=Math.min(r,w/2,h/2);g.roundRect?g.roundRect(x,y,w,h,r):g.rect(x,y,w,h);return g}
+function label(x,s,X,Y,col=C.muted,al='left'){x.fillStyle=col;x.font=FM(11);x.textAlign=al;x.textBaseline='alphabetic';x.fillText(s,X,Y)}
+
+const WORDS=['보라','내가','새 일을','행하리니','이제','나타낼','것이라','너희가'];
+const D = {
+ beatbar(x,w,h,t){ const T=15,tt=t%T,bpm=128,beat=60/bpm,b=Math.floor(tt/beat),bar=Math.floor(b/4),ph=(tt%beat)/beat;
+   const top=h*.12,gy=h*.74,L=24,R=w-24,W=R-L;
+   // flash on hits (bar 4,8 first beat)
+   const hit=(bar===3||bar===7)&&b%4===0; if(hit){x.globalAlpha=.18*(1-ph);x.fillStyle=C.cue;x.fillRect(0,0,w,h);x.globalAlpha=1}
+   const word=WORDS[bar], sinceBar=tt-bar*beat*4, chars=[...word], shown=Math.floor(sinceBar/(beat/4))+1;
+   const sc=1+.08*Math.exp(-ph*6), shake=hit?(hash(Math.floor(tt*60))-.5)*10*(1-ph):0;
+   x.save();x.translate(w/2+shake,top+h*.30);x.scale(sc,sc);x.font=FD(Math.min(h*.36,w*.12));x.textAlign='center';x.textBaseline='middle';
+   x.fillStyle=C.ink;x.fillText(chars.slice(0,shown).join(''),0,0);x.restore();
+   for(let i=0;i<=128;i++){const X=L+W*i/128; const tier=i%16===0?0:i%4===0?1:i%2===0?2:3; const hh=[h*.2,h*.11,h*.06,h*.035][tier];
+     const past=i*beat/4<=tt; x.fillStyle=tier===0?C.cue:tier===1?C.beat:C.muted; x.globalAlpha=past?1:.28; x.fillRect(X-(tier<2?1:.5),gy-hh,tier<2?2:1,hh);} x.globalAlpha=1;
+   for(let k=0;k<8;k++) label(x,String(k+1),L+W*k/8+4,gy+16,k===bar?C.cue:C.muted);
+   const px=L+W*tt/T; x.fillStyle=C.ink; x.fillRect(px-1,gy-h*.24,2,h*.3);
+   if(w>620) label(x,`${tt.toFixed(2)}s · 마디 ${bar+1} · 박 ${b%4+1}`,R,gy+16,C.ink,'right');
+   label(x,'강박=단어 교체  박=펄스  16분=글자 등장',L,h-8);
+ },
+ tiers(x,w,h,t){ const beat=60/128,T=beat*8,tt=t%T,n=Math.floor(tt/(beat/4)); const rows=[['강박','장면 전환',16,C.cue],['박','키워드 펄스',4,C.beat],['8분','글자 등장',2,C.ink],['16분','글자 등장',1,C.muted]];
+   const L=w*.24,W=w*.72,rh=h/5;
+   rows.forEach((r,i)=>{const y=rh*(i+.6); label(x,r[0],10,y+4,C.ink); label(x,r[1],10,y+17);
+     for(let k=0;k<32;k++){ if(k%r[2]) continue; const X=L+W*k/32; const on=k<=n&&n-k<r[2]; x.fillStyle=r[3]; x.globalAlpha=k<=n?(on?1:.45):.12; x.fillRect(X,y-8,Math.max(3,W/32*r[2]-3),14);} x.globalAlpha=1;});
+   const px=L+W*tt/T; x.fillStyle=C.ink; x.fillRect(px,rh*.2,2,rh*4);
+   label(x,'128 BPM · 2마디 반복',w-10,h-8,C.muted,'right');
+ },
+ seek(x,w,h,t){ const T=3,u=(t%T)/T; const P=v=>{const e=ease(v);return [w*.12+e*w*.76, h*.72-Math.sin(e*Math.PI)*h*.5]};
+   for(let k=0;k<=6;k++){const [X,Y]=P(k/6); x.globalAlpha=.25; x.strokeStyle=C.muted; x.beginPath(); x.arc(X,Y,12,0,7); x.stroke(); label(x,`t=${(k/6*T).toFixed(1)}`,X,h*.92,C.muted,'center');} x.globalAlpha=1;
+   const [X,Y]=P(u); x.fillStyle=C.cue; x.beginPath(); x.arc(X,Y,12,0,7); x.fill();
+   label(x,'draw(t): 어느 시각이든 바로 계산 → 순서 없이 병렬 렌더',12,18,C.ink);
+ },
+ boil(x,w,h,t){ const seed=Math.floor(t*12); const cx=w/2,cy=h*.52,R=Math.min(w,h)*.3;
+   for(let pass=0;pass<2;pass++){ x.beginPath(); for(let i=0;i<=40;i++){const a=i/40*Math.PI*2,k=i%40; const j=(hash(seed*97+k+pass*13)-.5)*R*.06; const r=R*(.78+.22*Math.cos(a*5))+j; const X=cx+Math.cos(a-Math.PI/2)*r, Y=cy+Math.sin(a-Math.PI/2)*r; i?x.lineTo(X,Y):x.moveTo(X,Y);} x.strokeStyle=pass?C.cue:C.ink; x.lineWidth=pass?1:2.5; x.globalAlpha=pass?.6:1; x.stroke(); } x.globalAlpha=1;
+   label(x,`jit 시드 ${seed%100} · 초당 12회 교체`,12,18,C.ink);
+ },
+ spring(x,w,h,t){ const T=5,tt=t%T; const ch=[[0,0],[.3,1],[1.9,.35],[3.3,.8]]; let v=0; for(let i=1;i<ch.length;i++) v+=(ch[i][1]-ch[i-1][1])*spring(tt-ch[i][0]);
+   const X=w*.1+v*w*.62; x.fillStyle=C.cue; x.fill(rr(X,h*.18,w*.18,h*.22,8));
+   ch.slice(1).forEach(c=>{x.fillStyle=C.rule; x.fillRect(w*.1+c[1]*w*.62+w*.09-1,h*.12,2,h*.34)});
+   x.strokeStyle=C.beat; x.lineWidth=2; x.beginPath(); for(let s=0;s<=200;s++){const ts=s/200*T; let vv=0; for(let i=1;i<ch.length;i++) vv+=(ch[i][1]-ch[i-1][1])*spring(ts-ch[i][0]); const px=w*.06+s/200*w*.88, py=h*.9-vv*h*.36; s?x.lineTo(px,py):x.moveTo(px,py);} x.stroke();
+   x.fillStyle=C.ink; x.fillRect(w*.06+tt/T*w*.88,h*.5,2,h*.42);
+   label(x,'목표가 바뀔 때마다 스프링 하나를 더한다',12,18,C.ink);
+ },
+ liquid(x,w,h,t){ const tabs=4,tw=w*.8/tabs,L=w*.1,y=h*.5,T=1.2,k=Math.floor(t/T),lt=t-k*T; const seq=[0,2,1,3,0];
+   const a=seq[k%4],b=seq[k%4+1]; const fwd=b>a; const fast=spring(lt,22,.7), slow=spring(lt,9,.8);
+   const lead=a+(b-a)*fast, tail=a+(b-a)*slow; const lo=Math.min(lead,tail), hi=Math.max(lead,tail);
+   for(let i=0;i<tabs;i++){x.fillStyle=C.muted;x.font=F(13);x.textAlign='center';x.fillText(['개요','본문','적용','기도'][i],L+tw*(i+.5),y-16)}
+   x.fillStyle=C.wash; x.fill(rr(L,y,tw*tabs,10,5)); x.fillStyle=C.cue; x.fill(rr(L+lo*tw+6,y,(hi-lo)*tw+tw-12,10,5));
+   label(x,'앞 끝=빠른 스프링 · 뒤 끝=느린 스프링',12,18,C.ink);
+ },
+ blur(x,w,h,t){ const T=1.6,pos=v=>w*.08+ease((v%T)/T)*w*.84;
+   x.save(); x.beginPath(); x.rect(0,0,w,h/2); x.clip(); x.fillStyle=C.ink; x.fill(rr(pos(t)-20,h*.12,40,h*.26,6)); x.restore();
+   x.save(); x.beginPath(); x.rect(0,h/2,w,h/2); x.clip(); for(let s=0;s<4;s++){x.globalAlpha=.28; x.fillStyle=C.cue; x.fill(rr(pos(t-.12+s*.04)-20,h*.6,40,h*.26,6));} x.globalAlpha=1; x.restore();
+   x.fillStyle=C.rule; x.fillRect(0,h/2,w,1); label(x,'1샘플',10,h*.46); label(x,'서브프레임 4장 tmix',10,h*.96);
+ },
+ morph(x,w,h,t){ const u=Math.min(h,w*.5),S=[{w:1.1,h:.34,c:'ink',txt:'▶ 재생'},{w:.42,h:.42,c:'beat',txt:''},{w:.42,h:.42,c:'cue',txt:'✓'},{w:1.6,h:.3,c:'ink',txt:'● 녹음 중 0:12'},{w:1.7,h:.16,c:'beat',txt:''}];
+   const T=1.1,k=Math.floor(t/T)%S.length,n=(k+1)%S.length,lt=t%T,p=spring(lt-.55,16,.62),A=S[k],B=S[n],m=(a,b)=>a+(b-a)*p;
+   const ww=m(A.w,B.w)*u,hh=m(A.h,B.h)*u,cx=w/2,cy=h*.52; x.fillStyle=p<.5?C[A.c]:C[B.c]; x.fill(rr(cx-ww/2,cy-hh/2,ww,hh,hh/2));
+   const cur=p<.5?A:B; x.globalAlpha=Math.min(1,Math.abs(p-.5)*2.2); x.fillStyle=C.paper; x.font=F(15,700); x.textAlign='center'; x.textBaseline='middle'; x.fillText(cur.txt,cx,cy+1);
+   if(cur===S[1]){x.strokeStyle=C.paper;x.lineWidth=3;x.beginPath();x.arc(cx,cy,hh*.28,t*6,t*6+4);x.stroke()}
+   if(cur===S[4]){x.fillStyle=C.paper;x.fill(rr(cx-ww/2+3,cy-hh/2+3,Math.max(hh-6,(ww-6)*(.25+.5*seg(lt,.6,1.1))),hh-6,hh))}
+   x.globalAlpha=1; x.textBaseline='alphabetic';
+   const cl=seg(lt,.3,.55),ax=cx+ww/2*.6+24*(1-cl),ay=cy+hh/2*.4+22*(1-cl); x.fillStyle=C.ink; x.strokeStyle=C.paper; x.lineWidth=1; x.beginPath(); x.moveTo(ax,ay); x.lineTo(ax+11,ay+15); x.lineTo(ax+4,ay+13); x.lineTo(ax,ay+20); x.closePath(); x.fill(); x.stroke();
+   label(x,'같은 물체 · 크기·모서리·색만 바뀜',12,18,C.ink);
+ },
+ typo(x,w,h,t){ const P=[['은혜','는 값없이 주어진다'],['믿음','은 들음에서 난다']],T=2.6,k=Math.floor(t/T)%2,lt=t%T,[key,rest]=P[k];
+   const a=back(seg(lt,0,.35)), b=eOut(seg(lt,.45,.9)), out=seg(lt,T-.3,T);
+   x.globalAlpha=1-out; x.textBaseline='alphabetic'; x.textAlign='left'; x.font=FD(h*.34); const kw=x.measureText(key).width;
+   x.save(); x.translate(w*.08,h*.58); x.scale(a,a); x.fillStyle=C.cue; x.fillText(key,0,0); x.restore();
+   x.font=F(h*.1,500); x.fillStyle=C.ink; x.globalAlpha=b*(1-out); x.fillText(rest,w*.08+kw*1.02+(1-b)*30,h*.58); x.globalAlpha=1;
+   label(x,'① 핵심 단어 먼저 크게  ② 나머지가 뒤따름',12,h-10);
+ },
+ recipe(x,w,h,t){ const T=6,tt=t%T,ing=[['진','30ml',C.beat],['캄파리','30ml',C.cue],['베르무트','30ml',C.ink]],step=Math.min(3,Math.floor(tt/1.5));
+   const gx=w*.36,gy=h*.16,gw=w*.28,gh=h*.62; x.strokeStyle=C.ink; x.lineWidth=2; x.strokeRect(gx,gy,gw,gh);
+   let lvl=0; ing.forEach((g,i)=>{const f=ease(seg(tt,i*1.5+.2,i*1.5+1.1)); const hh=gh*.28*f; x.fillStyle=g[2]; x.globalAlpha=.75; x.fillRect(gx+2,gy+gh-lvl-hh,gw-4,hh); x.globalAlpha=1;
+     if(f>0&&f<1||step===i){x.font=F(13,700);x.fillStyle=C.ink;x.textAlign='left';x.fillText(`+ ${g[0]} ${g[1]}`,gx+gw+12,gy+gh-lvl-hh/2+4)} lvl+=hh;});
+   for(let i=0;i<4;i++){x.fillStyle=i<=step?C.cue:C.rule; x.fillRect(w*.2+i*w*.15,h*.9,w*.13,5)} label(x,`${step+1}/4 단계`,w*.2,h*.86,C.ink);
+ },
+ pixel(x,w,h,t){ const PW=64,PH=36,o=D._pc||(D._pc=document.createElement('canvas')); o.width=PW;o.height=PH; const p=o.getContext('2d'); const q=Math.floor(t*10)/10;
+   p.fillStyle=C.wash;p.fillRect(0,0,PW,PH); p.fillStyle=C.rule; for(let i=0;i<8;i++){const X=Math.round(((i*9-q*30)%72+72)%72-4); p.fillRect(X,30,4,1)} p.fillStyle=C.muted; p.fillRect(0,29,PW,1);
+   const bx=24,by=Math.round(17+Math.abs(Math.sin(q*8))*-2); p.fillStyle=C.cue; p.fillRect(bx,by,14,6); p.fillRect(bx+12,by-4,4,6); p.fillStyle=C.ink; p.fillRect(bx+15,by-4,1,1);
+   const leg=(ph,lx)=>{const a=Math.round(Math.sin(q*8+ph)*2); p.fillStyle=C.ink; p.fillRect(lx+a,by+6,1,4); p.fillRect(lx+a,by+10,2,1)}; leg(0,bx+1);leg(3.1,bx+4);leg(1.5,bx+10);leg(4.6,bx+13);
+   x.imageSmoothingEnabled=false; const s=Math.floor(Math.min(w/PW,h/PH)); x.drawImage(o,(w-PW*s)/2,(h-PH*s)/2,PW*s,PH*s);
+   label(x,'64×36 논리 해상도 · 10fps 양자화 · 정수 좌표',12,18,C.ink);
+ },
+ zoom(x,w,h,t){ const L=['방','노트북','칩','결정 구조','원자','쿼크'],T=9,u=(t%T)/T*(L.length-1),lv=Math.floor(u),f=u-lv,z=Math.pow(5,ease(f)),base=Math.min(w/1.6,h/.9)*.86;
+   x.save(); x.translate(w/2,h/2); for(let i=0;i<3;i++){const idx=lv+i; if(idx>=L.length) break; const s2=base*z/Math.pow(5,i); if(s2<4) break; const col=[C.ink,C.beat,C.cue][(idx)%3];
+     x.globalAlpha=i===0?clamp(1.6-f*1.6,0,1):1; x.strokeStyle=col; x.lineWidth=2; x.strokeRect(-s2*.8,-s2*.45,s2*1.6,s2*.9);
+     if(s2>30){x.fillStyle=col;x.font=F(Math.max(11,Math.min(20,s2*.09)),700);x.textAlign='left';x.textBaseline='alphabetic';x.fillText(L[idx],-s2*.8+6,-s2*.45+Math.max(14,s2*.1))}} x.restore(); x.globalAlpha=1;
+   label(x,'컷 없는 확대 = 이야기 순서 · 개념 시각화',12,h-10);
+ },
+ proof(x,w,h,t){ const T=6,tt=t%T,lines=[['전제','모든 장면은 박자 위에 있다'],['추론','전환은 강박에 온다'],['∴','리듬이 영상을 묶는다']];
+   x.fillStyle=C.ink; x.fillRect(0,0,w,h);
+   lines.forEach((l,i)=>{const a=eOut(seg(tt,.4+i*1.1,.9+i*1.1)); x.globalAlpha=a; x.font=FM(13); x.fillStyle=C.cue; x.textAlign='left'; x.fillText(l[0],w*.08,h*(.28+i*.2)); x.font=F(Math.min(20,w*.045),700); x.fillStyle=C.paper; x.fillText(l[1],w*.22+(1-a)*20,h*(.28+i*.2));}); x.globalAlpha=1;
+   const q=back(seg(tt,4.1,4.6)); if(q>0){x.save();x.translate(w*.82,h*.8);x.scale(q,q);x.fillStyle=C.cue;x.fillRect(-16,-16,32,32);x.restore()}
+   label(x,'2색 · 증명 구조 · 끝은 Q.E.D. 표식',12,h-8,C.muted);
+ },
+ split(x,w,h,t){ const T=4,tt=t%T; x.fillStyle=C.wash; x.fillRect(w*.5,0,w*.5,h); x.fillStyle=C.muted; x.beginPath(); x.arc(w*.75,h*.42,h*.16,0,7); x.fill(); x.fillRect(w*.75-h*.22,h*.6,h*.44,h*.4);
+   x.strokeStyle=C.cue; x.setLineDash([4,4]); x.strokeRect(w*.75-h*.2,h*.22,h*.4,h*.42); x.setLineDash([]); label(x,'얼굴 영역',w*.75,h*.2,C.cue,'center');
+   ['김○○ 집사','30년 성가대','"찬양이 기도였어요"'].forEach((s,i)=>{const a=eOut(seg(tt,.3+i*.4,.8+i*.4)); x.globalAlpha=a; x.fillStyle=C.ink; x.font=F(i?14:20,i?500:700); x.textAlign='left'; x.fillText(s,w*.06-(1-a)*20,h*(.35+i*.17));}); x.globalAlpha=1;
+   label(x,'왼쪽 글자 / 오른쪽 영상',12,h-8);
+ },
+ mask(x,w,h,t){ const T=3.2,tt=t%T,a=eOut(seg(tt,.2,.8)),m=ease(seg(tt,1.6,2.4)); const y0=h*.58,fs=h*.3;
+   x.save(); x.beginPath(); x.rect(0,y0-fs,w,fs*1.15); x.clip(); x.font=FD(fs); x.textAlign='center'; x.fillStyle=C.ink; x.fillText('한 생각',w/2,y0+fs*(1-a)); x.restore();
+   const r=6+m*Math.min(w,h)*.5; x.fillStyle=C.cue; x.globalAlpha=m; x.beginPath(); x.arc(w*.5,h*.8,r,0,7); x.fill(); x.globalAlpha=1;
+   label(x,'마스크 리빌 → 원이 커지며 다음 장면으로',12,18,C.ink);
+ },
+ startend(x,w,h,t){ const T=4,u=ease(seg(t%T,.6,3.2)),pw=w*.28,ph=h*.6,y=h*.2;
+   const door=(X,o,lab,col)=>{x.strokeStyle=C.ink;x.lineWidth=2;x.strokeRect(X,y,pw,ph);x.fillStyle=C.wash;x.fillRect(X+pw*.3,y+ph*.2,pw*.4,ph*.8);x.fillStyle=col;x.fillRect(X+pw*.3,y+ph*.2,pw*.4*(1-o),ph*.8);label(x,lab,X+pw/2,y+ph+16,C.ink,'center')};
+   door(w*.03,0,'시작 프레임',C.muted); door(w*.36,u,'생성 구간',C.beat); door(w*.69,1,'끝 프레임',C.muted);
+   label(x,'같은 구도의 전·후 이미지를 양 끝에',12,16,C.ink);
+ },
+ behind(x,w,h,t){ const T=3,tt=t%T,a=.55+.45*back(seg(tt,.1,.5)),sx=Math.sin(t*1.3)*w*.04;
+   x.fillStyle=C.wash; x.fillRect(0,0,w,h); x.fillStyle=C.rule; x.fillRect(0,h*.78,w,h*.22);
+   x.save(); x.translate(w*.5,h*.66); x.scale(a,a); x.font=FD(h*.6); x.textAlign='center'; x.textBaseline='alphabetic'; x.fillStyle=C.ink; x.fillText('은혜',0,0); x.restore();
+   x.fillStyle=C.cue; const cx=w*.42+sx; x.beginPath(); x.arc(cx,h*.32,h*.11,0,7); x.fill(); x.fill(rr(cx-h*.17,h*.44,h*.34,h*.6,h*.12));
+   label(x,'배경 → 큰 글자 → 피사체(누끼) 순서로 쌓기',12,18,C.ink);
+ },
+ hud(x,w,h,t){ const T=7,tt=t%T,k=Math.floor(tt),dark='#16181B',lt='#ECEDE7',ac='#E9C33A';
+   const g=x.createLinearGradient(0,0,w,h); g.addColorStop(0,'#2A2F35'); g.addColorStop(1,'#101214'); x.fillStyle=g; x.fillRect(0,0,w,h);
+   x.fillStyle=dark; x.fillRect(0,0,w,h*.07); x.fillRect(0,h*.93,w,h*.07);
+   for(let i=0;i<7;i++){const X=w*.06+i*(w*.88/7),W2=w*.88/7-4; x.fillStyle='rgba(236,237,231,.25)'; x.fillRect(X,h*.11,W2,2); x.fillStyle=lt; x.fillRect(X,h*.11,W2*clamp(tt-i),2);}
+   x.textBaseline='alphabetic'; x.font=FM(10); x.fillStyle=lt; x.textAlign='left'; x.fillText('● FOLLOW ME · 7 WORLDS IN 7 SECONDS',w*.06,h*.2); x.textAlign='right'; x.font=FM(13); x.fillText(`0${k+1} / 07`,w*.94,h*.2);
+   x.strokeStyle=lt; x.lineWidth=1.5; const b=14,L=w*.08,R=w*.92,Tp=h*.26,Bt=h*.84; [[L,Tp,1,1],[R,Tp,-1,1],[L,Bt,1,-1],[R,Bt,-1,-1]].forEach(([X,Y,sx,sy])=>{x.beginPath();x.moveTo(X,Y+sy*b);x.lineTo(X,Y);x.lineTo(X+sx*b,Y);x.stroke()});
+   x.fillStyle=ac; x.fillRect(w*.08,h*.76,w*.22*eOut(seg(tt%1,0,.3)),h*.05); x.fillStyle=lt; x.font=FM(9); x.textAlign='left'; x.fillText(`LOC 0${k+1} · ${['승강장','대성당','광장','해변','시장','다리','정상'][k]}`,w*.08,h*.73);
+   x.textAlign='right'; x.fillStyle=ac; x.fillText('TELEPORT >>>',w*.92,h*.78); x.fillStyle=lt; x.fillText(`T+${tt.toFixed(2)}s`,w*.92,h*.83);
+ },
+ countup(x,w,h,t){ const T=4,tt=t%T,target=55,v=Math.round(target*eOut(seg(tt,.3,1.6)));
+   x.textBaseline='alphabetic'; x.font=FD(h*.42); x.textAlign='left'; x.fillStyle=C.beat; x.fillText(String(v),w*.07,h*.6); const nw=x.measureText('55').width;
+   x.font=F(15,700); x.fillStyle=C.ink; x.fillText('편의 가이드',w*.07+nw+12,h*.36);
+   const cols=11,s=Math.max(4,Math.min(10,(w*.88-nw-12)/cols-2)); for(let i=0;i<target;i++){const X=w*.07+nw+12+(i%cols)*(s+2),Y=h*.44+Math.floor(i/cols)*(s+2); x.fillStyle=i<v?C.beat:C.rule; x.fillRect(X,Y,s,s);}
+   label(x,'0 → 55 한 박에 세어 올림 · 점 하나 = 1 (예시 수치)',12,h-10);
+ },
+ scramble(x,w,h,t){ const T=3.6,tt=t%T,G='#%&?@$!*<>/=+0123456789',line=[...'믿음으로.'],n=line.length,res=Math.floor(seg(tt,.5,2.2)*(n+1)),tick=Math.floor(tt*16);
+   x.fillStyle=C.ink; x.fillRect(0,0,w,h); x.textAlign='left'; x.textBaseline='alphabetic';
+   x.font=FD(h*.17); x.fillStyle=C.paper; x.fillText('흔들리던 마음이',w*.07,h*.42);
+   let X=w*.07; x.font=FD(h*.22); line.forEach((c,i)=>{const ch=i<res?c:G[Math.floor(hash(tick*31+i)*G.length)]; x.fillStyle=i<res?C.paper:C.cue; x.fillText(ch,X,h*.72); X+=x.measureText(ch).width;});
+   label(x,'16분음표마다 왼쪽부터 한 글자씩 확정',12,h-10,C.muted);
+ },
+ kit(x,w,h,t){ const T=6,tt=t%T,L=w*.08,R=w*.92,Tp=h*.14,Bt=h*.8,b=16*eOut(seg(tt,0,.4));
+   x.textBaseline='alphabetic'; x.strokeStyle=C.ink; x.lineWidth=1.5; [[L,Tp,1,1],[R,Tp,-1,1],[L,Bt,1,-1],[R,Bt,-1,-1]].forEach(([X,Y,sx,sy])=>{x.beginPath();x.moveTo(X,Y+sy*b);x.lineTo(X,Y);x.lineTo(X+sx*b,Y);x.stroke()});
+   for(let i=0;i<5;i++){const on=tt>.5+i*.25; x.fillStyle=on?C.cue:C.rule; x.beginPath(); x.arc(w*.14+i*16,h*.27,5,0,7); x.fill();}
+   x.font=F(16,700); x.fillStyle=C.ink; x.textAlign='left'; x.globalAlpha=seg(tt,1.6,2); x.fillText('다섯 개 부서',w*.12,h*.42); x.globalAlpha=1;
+   ['1983  창립','2001  성전 건축','2024  다음세대관'].forEach((r,i)=>{const a=eOut(seg(tt,2.2+i*.4,2.6+i*.4)); x.globalAlpha=a; x.strokeStyle=i===2?C.cue:C.rule; x.strokeRect(w*.5+(1-a)*20,h*(.2+i*.18),w*.38,h*.13); x.font=FM(12); x.fillStyle=C.ink; x.fillText(r,w*.52+(1-a)*20,h*(.29+i*.18));}); x.globalAlpha=1;
+   x.fillStyle=C.rule; x.fillRect(L,h*.88,R-L,3); x.fillStyle=C.ink; x.fillRect(L,h*.88,(R-L)*tt/T,3);
+   label(x,'브래킷 · 점 카운터 · 목록 · 진행바 (예시 데이터)',12,h-4);
+ },
+ untangle(x,w,h,t){ const T=4.5,tt=t%T,m=ease(seg(tt,.6,2.4)),N=90;
+   x.fillStyle='#2338C8'; x.fillRect(0,0,w,h); x.strokeStyle='#F2C14E'; x.lineWidth=2.5; x.lineJoin='round'; x.beginPath();
+   for(let i=0;i<N;i++){const u=i/(N-1); const a=u*Math.PI*9, r=h*(.12+.18*hash(Math.floor(i/6))); const tx=w*.5+Math.cos(a)*r+Math.sin(u*23)*w*.12, ty=h*.45+Math.sin(a*1.3)*r;
+     const sx=w*(.15+.7*u), sy=h*.45; const X=tx+(sx-tx)*m, Y=ty+(sy-ty)*m; i?x.lineTo(X,Y):x.moveTo(X,Y);} x.stroke();
+   x.globalAlpha=seg(tt,2.5,3); x.textBaseline='alphabetic'; x.font=F(Math.min(22,w*.05),700); x.fillStyle='#FFFFFF'; x.textAlign='center'; x.fillText('복잡한 것을, 한 줄로',w/2,h*.72); x.globalAlpha=1;
+ },
+ notation(x,w,h,t){ const T=4.8,tt=t%T,k=Math.floor(tt/1.2),mv=['e4 e5','Nf3 Nc6','Bb5 a6','Qxe1'];
+   const g=x.createRadialGradient(w*.5,h*.5,10,w*.5,h*.5,w*.6); g.addColorStop(0,'#3A2A2E'); g.addColorStop(1,'#0E0F11'); x.fillStyle=g; x.fillRect(0,0,w,h);
+   x.fillStyle='#D9432A'; x.beginPath(); x.arc(w*.5,h*.34,h*.09,0,7); x.fill(); x.beginPath(); x.moveTo(w*.5-h*.06,h*.42); x.lineTo(w*.5+h*.06,h*.42); x.lineTo(w*.5+h*.14,h*.74); x.lineTo(w*.5-h*.14,h*.74); x.closePath(); x.fill(); x.fillRect(w*.5-h*.17,h*.74,h*.34,h*.05);
+   x.textBaseline='alphabetic'; x.fillStyle='#ECEDE7'; x.textAlign='right'; x.font=FM(12); x.fillText(mv[k],w*.94,h*.12);
+   x.textAlign='left'; x.font=FM(9); x.globalAlpha=.7; x.fillText('UNIT 01',w*.06,h*.8); x.globalAlpha=1; x.font=F(18,700); x.fillText('P A W N',w*.06,h*.9);
+   if(k===3){x.textAlign='center'; x.font=FD(h*.16); x.globalAlpha=clamp(back(seg(tt,3.7,4.1))); x.fillText('CHECK',w*.5,h*.62); x.globalAlpha=1}
+ },
+ strike(x,w,h,t){ const T=6,tt=t%T; x.font=F(14,700); x.textBaseline='middle'; x.textAlign='center';
+   const fade=1-seg(tt,2.2,2.6); if(fade>0){ x.globalAlpha=fade; ['디자이너','편집 프로그램'].forEach((c,i)=>{const X=w*(.3+i*.32),Y=h*.32,cw=i?118:84; x.fillStyle=C.wash; x.fill(rr(X-cw/2,Y-16,cw,32,6)); x.fillStyle=C.ink; x.fillText(c,X,Y); const sl=seg(tt,.6+i*.3,1+i*.3); x.fillStyle=C.cue; x.fillRect(X-cw/2+6,Y-1,(cw-12)*sl,2);});
+     const q=back(seg(tt,1.5,1.9)); x.save(); x.translate(w*.86,h*.32); x.scale(q,q); x.font=FD(30); x.fillStyle=C.cue; x.fillText('?',0,0); x.restore(); x.globalAlpha=1; }
+   if(tt>2.4){ const str='출처 URL + 지침대로 15초 영상', n=Math.floor(seg(tt,2.5,3.8)*str.length); x.strokeStyle=C.rule; x.lineWidth=1; x.stroke(rr(w*.12,h*.25,w*.76,h*.16,8)); x.textAlign='left'; x.font=F(13,500); x.fillStyle=C.ink; x.fillText(str.slice(0,n)+((Math.floor(t*3)%2)?'|':''),w*.15,h*.33);
+     ['MP4 영상','WAV 음원'].forEach((c,i)=>{const a=back(seg(tt,4+i*.3,4.4+i*.3)); if(a<=0) return; x.save(); x.translate(w*(.35+i*.3),h*.65); x.scale(a,a); x.fillStyle=C.card; x.fill(rr(-52,-18,104,36,6)); x.strokeStyle=C.rule; x.stroke(rr(-52,-18,104,36,6)); x.fillStyle=C.cue; x.fillRect(-44,-8,14,16); x.fillStyle=C.ink; x.textAlign='left'; x.font=F(12,700); x.fillText(c,-24,0); x.restore();}); }
+   x.textBaseline='alphabetic';
+ },
+ tile(x,w,h,t){ const rows=7,rh=h/rows;
+   x.fillStyle='#2338C8'; x.fillRect(0,0,w,h); x.textBaseline='middle'; x.font=FD(rh*.8);
+   for(let r=0;r<rows;r++){ const hi=r===3, word=hi?'오늘 ':'은혜 ', ww=x.measureText(word).width, dir=r%2?1:-1, off=((t*60*dir)%ww+ww)%ww;
+     if(hi){x.fillStyle='#D9432A'; x.fillRect(0,r*rh,w,rh)} x.fillStyle=hi?'#FFFFFF':'rgba(255,255,255,'+(r%2?.85:.45)+')'; x.textAlign='left';
+     for(let X=-ww+off;X<w;X+=ww) x.fillText(word,X,r*rh+rh/2); }
+   x.textBaseline='alphabetic';
+ }
+};
+
+let playing = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+let clock = playing ? 0 : 2.2, last = performance.now();
+const btn = $('#playBtn'); btn.textContent = playing ? '일시정지' : '재생'; btn.setAttribute('aria-pressed', playing);
+btn.addEventListener('click', ()=>{ playing=!playing; btn.textContent = playing?'일시정지':'재생'; btn.setAttribute('aria-pressed', playing); });
+const visible = new Set();
+const io = new IntersectionObserver(es=>es.forEach(e=>e.isIntersecting?visible.add(e.target):visible.delete(e.target)));
+function observe(){ document.querySelectorAll('canvas[data-demo]').forEach(c=>{ if (c.id==='dCanvas') return; io.observe(c); drawOne(c); }); }
+function drawOne(c){
+  if (c.hidden) return;
+  const r = c.getBoundingClientRect(), dpr = Math.min(2, devicePixelRatio||1);
+  const W = Math.round(r.width*dpr), H = Math.round(r.height*dpr); if (!W||!H) return;
+  if (c.width!==W||c.height!==H){ c.width=W; c.height=H; }
+  const x = c.getContext('2d'); x.setTransform(dpr,0,0,dpr,0,0); x.clearRect(0,0,r.width,r.height);
+  x.fillStyle = c.id==='hero' ? C.card : C.paper; x.fillRect(0,0,r.width,r.height);
+  const t = (c.dataset.tile!==undefined && !c.dataset.live) ? 2.2 : clock;
+  try{ if (D[c.dataset.demo]) D[c.dataset.demo](x, r.width, r.height, t); }catch(e){ console.error(c.dataset.demo, e); }
+}
+function loop(now){ if (playing) clock += Math.min(.05,(now-last)/1000); last = now; visible.forEach(c=>{ if (c.dataset.tile===undefined || c.dataset.live) drawOne(c); }); if (dlg.open && !dCanvas.hidden) drawOne(dCanvas); requestAnimationFrame(loop); }
+render(); renderBasket(); requestAnimationFrame(loop);
+if (document.fonts) document.fonts.ready.then(()=>document.querySelectorAll('canvas[data-demo]').forEach(drawOne));
+addEventListener('resize', ()=>document.querySelectorAll('canvas[data-demo]').forEach(drawOne));
+</script>

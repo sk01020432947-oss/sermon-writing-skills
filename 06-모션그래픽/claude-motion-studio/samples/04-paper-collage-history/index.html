@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><title>집고양이의 역사 · Paper Collage History</title>
+<link rel="stylesheet" href="../../lib/stage.css">
+<style>
+  .frame{background:#0d0f12 !important;background-image:none !important}
+  .scene{position:absolute;inset:0;overflow:hidden;background:#b98a52}
+  .layer{position:absolute;left:0;top:0;width:1280px;height:720px}
+  .layer>svg.bg{position:absolute;inset:0;width:1280px;height:720px}
+  .edge{position:absolute;pointer-events:none}
+  .stk{position:absolute;transform:scale(0)}
+  .stk svg{width:100%;height:100%;overflow:visible}
+  .grain{position:absolute;inset:0;pointer-events:none;mix-blend-mode:multiply;opacity:.5;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .4 0 0 0 0 .32 0 0 0 0 .22 0 0 0 .28 0'/></filter><rect width='300' height='300' filter='url(%23n)'/></svg>")}
+  /* 랜섬 노트 글자 타일 */
+  .tiles{position:absolute;display:flex;gap:10px;transform-origin:0 0}
+  .tile{width:124px;height:136px;display:flex;align-items:center;justify-content:center;font-size:98px;line-height:1;
+    box-shadow:2px 5px 8px rgba(0,0,0,.35);transform:scale(0)}
+  .t-red{background:#c8352b;color:#fff;font-family:"Gmarket Sans TTF";font-weight:700}
+  .t-cream{background:#f3ead6;color:#1d1a17;font-family:"Nanum Myeongjo","NanumMyeongjo";font-weight:800}
+  .t-teal{background:#2f8c8c;color:#fff;font-family:"Pretendard";font-weight:800}
+  .t-dark{background:#1e1c1a;color:#f3ead6;font-family:"Nanum Myeongjo","NanumMyeongjo";font-weight:800}
+  .t-yel{background:#e8b83a;color:#1d1a17;font-family:"Gmarket Sans TTF";font-weight:700}
+  .t-pink{background:#e99aa6;color:#1d1a17;font-family:"Noto Sans KR";font-weight:900}
+  .sub-en{position:absolute;font-family:"IBM Plex Mono";font-size:20px;letter-spacing:.35em;color:#f3ead6}
+  /* 마스킹 테이프 라벨 */
+  .tape{position:absolute;padding:8px 22px 6px 30px;background:#f6efdc;color:#26221e;font-family:"Nanum Pen Script OTF","Nanum Pen Script";font-size:54px;-webkit-text-stroke:.9px #26221e;
+    white-space:nowrap;box-shadow:1px 3px 5px rgba(0,0,0,.3);transform:scale(0);display:flex;align-items:center;gap:6px;
+    clip-path:polygon(0 6%,3% 0,97% 4%,100% 0,99% 50%,100% 100%,96% 95%,4% 100%,0 96%,2% 50%)}
+  .tape::before{content:"";position:absolute;left:-6px;top:-4px;width:28px;height:120%;background:rgba(214,92,104,.55);transform:rotate(4deg)}
+  .tape.teal::before{background:rgba(64,160,150,.55)}
+  .tape svg{width:34px;height:30px;overflow:visible}
+  .tape svg path{fill:none;stroke:#d0312d;stroke-width:4.5;stroke-linecap:round;stroke-linejoin:round}
+  /* 자막 */
+  .subs{position:absolute;left:0;right:0;bottom:30px;display:flex;justify-content:center;z-index:50}
+  .sub{position:absolute;bottom:0;padding:8px 18px;background:rgba(14,12,10,.78);color:#fff;font-family:"Pretendard";font-weight:600;font-size:30px;letter-spacing:-.01em;white-space:nowrap;opacity:0}
+  .hand{position:absolute;font-family:"Nanum Pen Script OTF","Nanum Pen Script";color:#2a2420;white-space:nowrap;-webkit-text-stroke:1.4px #2a2420}
+  /* 오려 붙인 영문 글자 (10,000 YEARS ...) */
+  .cut{position:absolute;display:flex;gap:3px;transform-origin:0 50%}
+  .cut span{display:inline-block;padding:3px 5px 1px;font:900 26px/1 "Gmarket Sans TTF";box-shadow:1px 2px 3px rgba(0,0,0,.35)}
+  .cut span:nth-child(odd){background:#1e1c1a;color:#f3ead6}.cut span:nth-child(even){background:#f3ead6;color:#1e1c1a}
+  .cut span.sp{background:none;box-shadow:none;width:8px;padding:0}
+</style></head>
+<body data-no="S04" data-cat="스타일 · STYLE" data-ko="집고양이의 역사" data-en="Paper Collage History" data-meta="종이 콜라주 · 스티커 팝 · 찢긴 종이 전환 · 자막 싱크" data-dur="14" data-size="1280x720" data-poster="7.9">
+<main class="scene">
+<svg width="0" height="0" style="position:absolute">
+<defs>
+  <!-- 스티커: 흰 테두리(찢긴 듯 흔들림) + 그림자 -->
+  <filter id="stk" x="-20%" y="-20%" width="140%" height="140%">
+    <feMorphology in="SourceAlpha" operator="dilate" radius="8" result="dil"/>
+    <feTurbulence type="fractalNoise" baseFrequency="0.07" numOctaves="2" seed="3" result="n"/>
+    <feDisplacementMap in="dil" in2="n" scale="7" result="torn"/>
+    <feFlood flood-color="#fbf8f0"/><feComposite in2="torn" operator="in" result="white"/>
+    <feGaussianBlur in="torn" stdDeviation="4"/><feOffset dx="3" dy="7" result="so"/>
+    <feFlood flood-color="#2a1a0a" flood-opacity=".38"/><feComposite in2="so" operator="in" result="shadow"/>
+    <feMerge><feMergeNode in="shadow"/><feMergeNode in="white"/><feMergeNode in="SourceGraphic"/></feMerge>
+  </filter>
+  <filter id="rough"><feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="2" seed="9" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="5"/></filter>
+  <linearGradient id="nsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f1d9a6"/><stop offset=".55" stop-color="#f6e2b4"/><stop offset="1" stop-color="#eccf92"/></linearGradient>
+  <linearGradient id="field" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d9a441"/><stop offset="1" stop-color="#b9802a"/></linearGradient>
+  <linearGradient id="river" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8fb0b0"/><stop offset=".6" stop-color="#c9cfb8"/><stop offset="1" stop-color="#9fb6b2"/></linearGradient>
+  <radialGradient id="sun" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#fff6d8"/><stop offset=".3" stop-color="#fbe3a2" stop-opacity=".9"/><stop offset="1" stop-color="#f6d58f" stop-opacity="0"/></radialGradient>
+  <linearGradient id="navy" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1b2a5a"/><stop offset="1" stop-color="#14204a"/></linearGradient>
+
+  <!-- 야생 고양이 (앉은 정면) 0..220 x 0..400 -->
+  <g id="wildcat">
+    <path d="M150,330 C230,330 240,250 200,240" fill="none" stroke="#d2a96c" stroke-width="20" stroke-linecap="round"/>
+    <path d="M196,256 l14,-4 M212,284 l14,2 M210,312 l12,8" stroke="#8d6638" stroke-width="5"/>
+    <path d="M60,170 C30,240 30,330 50,370 L170,370 C190,330 190,240 160,170Z" fill="#d9b37c"/>
+    <path d="M85,180 C70,240 80,320 110,360 C140,320 150,240 135,180Z" fill="#f1dfba"/>
+    <path d="M50,260 q20,6 30,-4 M44,300 q22,6 34,-4 M170,260 q-20,6 -30,-4 M176,300 q-22,6 -34,-4" fill="none" stroke="#a87f4a" stroke-width="5" stroke-linecap="round"/>
+    <rect x="72" y="300" width="30" height="74" rx="14" fill="#e6c995"/><rect x="118" y="300" width="30" height="74" rx="14" fill="#e6c995"/>
+    <path d="M52,70 L40,0 L95,45Z M168,70 L180,0 L125,45Z" fill="#d9b37c"/>
+    <path d="M58,58 L50,16 L84,46Z M162,58 L170,16 L136,46Z" fill="#eab3a4"/>
+    <ellipse cx="110" cy="105" rx="70" ry="62" fill="#ddb983"/>
+    <path d="M95,52 l5,22 M110,48 v26 M125,52 l-5,22" stroke="#a87f4a" stroke-width="4" stroke-linecap="round"/>
+    <ellipse cx="110" cy="138" rx="34" ry="24" fill="#f3e4c4"/>
+    <ellipse cx="82" cy="104" rx="15" ry="12" fill="#b8c35a"/><ellipse cx="138" cy="104" rx="15" ry="12" fill="#b8c35a"/>
+    <ellipse cx="82" cy="104" rx="4" ry="10" fill="#1a1a14"/><ellipse cx="138" cy="104" rx="4" ry="10" fill="#1a1a14"/>
+    <circle cx="86" cy="99" r="3" fill="#fff"/><circle cx="142" cy="99" r="3" fill="#fff"/>
+    <path d="M102,126 h16 l-8,9Z" fill="#d98a86"/><path d="M110,135 q-8,10 -16,4 M110,135 q8,10 16,4" fill="none" stroke="#5a4030" stroke-width="2.5"/>
+    <path d="M70,134 l-42,-6 M70,142 l-40,6 M150,134 l42,-6 M150,142 l40,6" stroke="#fff" stroke-width="1.8" opacity=".9"/>
+  </g>
+  <!-- 웅크려 자는 삼색 고양이 0..260 x 0..150 -->
+  <clipPath id="cbody"><ellipse cx="140" cy="95" rx="115" ry="58"/></clipPath>
+  <g id="sleepcat">
+    <ellipse cx="140" cy="95" rx="115" ry="58" fill="#f4ece0"/>
+    <g clip-path="url(#cbody)"><ellipse cx="180" cy="60" rx="70" ry="40" fill="#d98b3c"/><ellipse cx="230" cy="110" rx="40" ry="34" fill="#5a514a"/><ellipse cx="110" cy="45" rx="40" ry="20" fill="#7a6e64"/></g>
+    <path d="M150,148 C90,160 40,150 30,128" fill="none" stroke="#d98b3c" stroke-width="22" stroke-linecap="round"/>
+    <path d="M28,70 L30,22 L60,52Z M88,58 L104,16 L112,60Z" fill="#d98b3c"/>
+    <path d="M34,62 L35,34 L52,52Z" fill="#eab3a4"/>
+    <ellipse cx="70" cy="90" rx="52" ry="44" fill="#f6eee2"/>
+    <path d="M40,58 C60,40 100,44 108,70 C90,60 60,62 40,58Z" fill="#d98b3c"/>
+    <path d="M44,92 q10,8 20,0 M78,92 q10,8 20,0" fill="none" stroke="#3a2e26" stroke-width="3" stroke-linecap="round"/>
+    <path d="M66,104 h10 l-5,6Z" fill="#d98a86"/>
+    <path d="M40,108 l-28,2 M40,114 l-26,8 M100,108 l26,0 M100,114 l24,8" stroke="#8b7a6c" stroke-width="1.4"/>
+  </g>
+  <!-- 생쥐 정면 0..90 x 0..100 -->
+  <g id="mouse">
+    <path d="M70,82 C100,90 104,60 92,56" fill="none" stroke="#d6a49b" stroke-width="4" stroke-linecap="round"/>
+    <ellipse cx="45" cy="72" rx="34" ry="28" fill="#9d958e"/><ellipse cx="45" cy="78" rx="20" ry="18" fill="#cfc6bd"/>
+    <circle cx="20" cy="22" r="17" fill="#a8a097"/><circle cx="70" cy="22" r="17" fill="#a8a097"/>
+    <circle cx="20" cy="22" r="10" fill="#e9b4ad"/><circle cx="70" cy="22" r="10" fill="#e9b4ad"/>
+    <ellipse cx="45" cy="44" rx="27" ry="23" fill="#b3aba2"/>
+    <circle cx="35" cy="42" r="4.5" fill="#1a1716"/><circle cx="55" cy="42" r="4.5" fill="#1a1716"/>
+    <circle cx="36.5" cy="40.5" r="1.6" fill="#fff"/><circle cx="56.5" cy="40.5" r="1.6" fill="#fff"/>
+    <circle cx="45" cy="53" r="3.5" fill="#d98a86"/>
+    <path d="M38,55 l-22,-2 M38,58 l-20,5 M52,55 l22,-2 M52,58 l20,5" stroke="#5b5550" stroke-width="1"/>
+    <ellipse cx="45" cy="68" rx="9" ry="6" fill="#f0c058" stroke="#b67d1f"/>
+    <circle cx="34" cy="68" r="5" fill="#c8bfb6"/><circle cx="56" cy="68" r="5" fill="#c8bfb6"/>
+  </g>
+</defs>
+</svg>
+
+<!-- 1) 나일 들판 배경 + 스티커 -->
+<div class="layer" id="nile"><div class="layer" id="nileCam">
+<svg class="bg" viewBox="0 0 1280 720">
+  <rect width="1280" height="720" fill="url(#nsky)"/>
+  <circle cx="900" cy="200" r="190" fill="url(#sun)"/><circle cx="900" cy="205" r="34" fill="#fff4d2"/>
+  <path d="M0,250 L90,205 L170,228 L260,180 L370,222 L470,196 L560,236 L700,214 L800,238 L1280,226 L1280,280 L0,280Z" fill="#c9a77c" opacity=".8"/>
+  <path d="M0,266 L120,236 L240,256 L380,232 L520,260 L680,244 L1280,258 L1280,290 L0,290Z" fill="#b8936a" opacity=".85"/>
+  <path d="M0,282 C300,276 600,270 1280,300 L1280,350 C900,330 500,360 0,380Z" fill="url(#river)"/>
+  <g stroke="#fff7df" stroke-width="2" opacity=".7"><path d="M120,330 h80 M300,318 h50 M520,312 h90 M760,318 h40 M880,312 h70 M420,340 h60"/></g>
+  <g id="boat"><path d="M240,342 h80 l-12,12 h-56Z" fill="#6b4a2e"/><path d="M282,342 V262 L246,336Z" fill="#efe2c4"/><path d="M282,262 V342" stroke="#5a3e26" stroke-width="2"/></g>
+  <path d="M0,270 C200,262 360,268 520,276 L520,284 C340,280 180,276 0,282Z" fill="#7d8a4c"/>
+  <g fill="#6e7a3c" id="farpalms"></g>
+  <!-- 진흙 집 -->
+  <g filter="url(#rough)">
+    <rect x="830" y="230" width="120" height="110" fill="#c99a64"/><rect x="930" y="200" width="110" height="140" fill="#d4a771"/>
+    <rect x="1030" y="170" width="140" height="170" fill="#c3925c"/><rect x="1150" y="220" width="130" height="120" fill="#d1a26c"/>
+    <rect x="880" y="290" width="160" height="70" fill="#b98853"/><rect x="1060" y="280" width="170" height="90" fill="#c99a64"/>
+    <rect x="1040" y="160" width="60" height="14" fill="#a87a48"/><rect x="940" y="190" width="80" height="12" fill="#b88a58"/>
+  </g>
+  <g fill="#5a3c22" opacity=".8"><rect x="860" y="260" width="16" height="24"/><rect x="960" y="230" width="14" height="20"/><rect x="1000" y="236" width="14" height="20"/><rect x="1070" y="200" width="18" height="26"/><rect x="1120" y="210" width="16" height="22"/><rect x="1180" y="250" width="16" height="22"/><rect x="920" y="310" width="20" height="30"/><rect x="1100" y="300" width="22" height="34"/><rect x="1200" y="310" width="18" height="26"/></g>
+  <g id="palms"></g>
+  <rect x="0" y="370" width="1280" height="350" fill="url(#field)"/>
+  <g id="wheat" stroke="#a5701f" stroke-width="2" opacity=".55"></g>
+  <g fill="#e2b04c" stroke="#9a6a1e" stroke-width="2">
+    <path d="M70,560 l30,-90 l30,90Z"/><path d="M150,600 l26,-80 l26,80Z"/><path d="M1130,590 l28,-86 l28,86Z"/>
+  </g>
+</svg>
+<div class="stk" id="sMice" style="left:400px;top:360px;width:420px;height:300px"><svg viewBox="0 0 420 300"><g filter="url(#stk)">
+  <path d="M10,270 Q210,120 410,270 Q210,300 10,270Z" fill="#e0a93a"/><g id="grains"></g>
+  <use href="#mouse" transform="translate(70,110) scale(1.25)"/><use href="#mouse" transform="translate(240,104) scale(1.2)"/><use href="#mouse" transform="translate(150,58) scale(1.4)"/>
+</g></svg></div>
+<div class="stk" id="sCat" style="left:860px;top:250px;width:230px;height:410px"><svg viewBox="0 0 230 410"><g filter="url(#stk)"><use href="#wildcat" transform="translate(5,10)"/></g></svg></div>
+<div class="stk" id="sJar" style="left:380px;top:300px;width:480px;height:360px"><svg viewBox="0 0 480 360"><g filter="url(#stk)">
+  <path d="M60,40 h80 v20 C200,90 200,250 160,310 h-120 C0,250 0,90 60,60Z" fill="#c87443"/>
+  <path d="M60,40 h80 v20 h-80Z" fill="#a85a30"/><path d="M150,70 C200,60 205,130 170,140" fill="none" stroke="#a85a30" stroke-width="12"/>
+  <path d="M30,150 C80,165 120,165 170,150 M28,200 C80,215 120,215 172,200" stroke="#8e4a24" stroke-width="4" fill="none"/>
+  <path d="M120,80 C150,140 150,240 130,300" stroke="#e39a68" stroke-width="10" fill="none" opacity=".5"/>
+  <g stroke="#d8a540" stroke-width="4" stroke-linecap="round"><path d="M220,180 L190,90 M250,170 L240,70 M300,170 L320,80 M340,180 L380,96 M400,190 L440,120"/></g>
+  <g fill="#e9bb52"><ellipse cx="190" cy="88" rx="7" ry="16"/><ellipse cx="240" cy="66" rx="7" ry="16"/><ellipse cx="322" cy="76" rx="7" ry="16"/><ellipse cx="382" cy="92" rx="7" ry="16" transform="rotate(25 382 92)"/><ellipse cx="442" cy="116" rx="7" ry="16" transform="rotate(40 442 116)"/></g>
+  <ellipse cx="320" cy="196" rx="142" ry="22" fill="#8a5f1c"/>
+  <use href="#sleepcat" transform="translate(196,64) scale(.95)"/>
+  <path d="M178,198 Q320,222 462,198 L430,330 L210,330Z" fill="#c9973f"/>
+  <path d="M176,196 Q320,224 464,196" fill="none" stroke="#a87a2c" stroke-width="10" stroke-linecap="round"/>
+  <g stroke="#9a6d22" stroke-width="3"><path d="M192,236 H450 M198,264 H444 M204,292 H438 M209,318 H433"/><path d="M240,214 L246,330 M285,218 L288,330 M330,219 L330,330 M375,218 L372,330 M420,212 L414,330" opacity=".6"/></g>
+  <path d="M196,204 C214,214 252,218 268,212 C270,250 262,300 270,352 L214,348 C220,300 208,250 196,204Z" fill="#f4f0e6"/>
+  <path d="M232,214 C236,260 230,310 238,350" stroke="#ded6c4" stroke-width="3" fill="none"/>
+  <g stroke="#6e8fb0" stroke-width="4"><path d="M204,250 L264,248 M212,306 L268,304"/></g>
+</g></svg></div>
+</div></div>
+
+<!-- 2) 크라프트지 제목면 (위로 찢겨 걷힘) -->
+<div class="layer" id="kraft" style="background:#b98a52">
+  <svg class="bg" viewBox="0 0 1280 720"><filter id="kn"><feTurbulence type="fractalNoise" baseFrequency=".02" numOctaves="4" seed="21"/><feColorMatrix values="0 0 0 0 .45 0 0 0 0 .3 0 0 0 0 .15 0 0 0 .5 0"/></filter><rect width="1280" height="720" filter="url(#kn)"/></svg>
+  <svg class="edge" id="kraftEdge" style="left:0;top:712px;width:1280px;height:40px" viewBox="0 0 1280 40"></svg>
+</div>
+
+<!-- 3) 밤하늘 (오른쪽에서 밀려 들어옴) -->
+<div class="layer" id="night" style="transform:translateX(1340px)">
+  <svg class="bg" viewBox="0 0 1280 720"><rect width="1280" height="720" fill="url(#navy)"/>
+    <filter id="nn"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="4"/><feColorMatrix values="0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .12 0"/></filter><rect width="1280" height="720" filter="url(#nn)"/>
+    <g id="stars"></g>
+    <path id="shoot" d="M220,190 Q420,150 560,210" fill="none" stroke="#f3ead6" stroke-width="2" stroke-dasharray="6 8" opacity=".7"/>
+    <g filter="url(#stk)"><path d="M1060,90 A58,58 0 1 0 1120,190 A46,46 0 1 1 1060,90Z" fill="#efe0b4"/></g>
+  </svg>
+  <svg class="edge" id="nightEdge" style="left:-34px;top:0;width:40px;height:720px" viewBox="0 0 40 720"></svg>
+  <div class="tiles" id="tiles2" style="left:366px;top:250px">
+    <div class="tile t-yel">1</div><div class="tile t-red">만</div><div class="tile t-cream" style="margin-left:22px">년</div><div class="tile t-pink">뒤</div>
+  </div>
+  <div class="cut" id="en2" style="left:372px;top:410px"></div>
+</div>
+
+<!-- 4) 거실 (아래에서 올라옴) -->
+<div class="layer" id="room" style="transform:translateY(760px)">
+  <svg class="bg" viewBox="0 0 1280 720">
+    <rect width="1280" height="720" fill="#efe3c9"/>
+    <rect x="0" y="520" width="1280" height="200" fill="#c79f6c"/>
+    <g stroke="#a98250" stroke-width="2" opacity=".6"><path d="M0,560 H1280 M0,610 H1280 M0,670 H1280"/></g>
+    <!-- 창 -->
+    <rect x="640" y="70" width="460" height="360" fill="#f7f0de" stroke="#d8c7a4" stroke-width="10"/>
+    <rect x="652" y="82" width="436" height="336" fill="#cfe1e4"/>
+    <path d="M652,300 C760,250 860,290 960,262 C1020,248 1060,270 1088,262 L1088,418 L652,418Z" fill="#a9c08a"/>
+    <path d="M652,340 C760,320 900,350 1088,320 L1088,418 L652,418Z" fill="#8fab72"/>
+    <g stroke="#f7f0de" stroke-width="8"><path d="M870,82 V418 M652,250 H1088"/></g>
+    <path d="M600,50 C630,200 610,380 640,460 L700,460 C670,340 690,180 660,50Z" fill="#f8f2e4" opacity=".85"/>
+    <path d="M1140,50 C1110,200 1130,380 1100,460 L1040,460 C1070,340 1050,180 1080,50Z" fill="#f8f2e4" opacity=".85"/>
+    <!-- 바닥 빛과 러그 -->
+    <path d="M700,520 L1100,520 L1220,700 L780,700Z" fill="#f5e2b4" opacity=".55"/>
+    <path d="M300,560 L1000,560 L1120,712 L180,712Z" fill="#dcbf8a"/>
+    <g stroke="#c49d5e" stroke-width="3" opacity=".8"><path d="M290,580 H1010 M270,610 H1030 M250,645 H1060 M225,680 H1090"/></g>
+    <!-- 액자 -->
+    <rect x="70" y="80" width="220" height="150" fill="#b48a52"/><rect x="82" y="92" width="196" height="126" fill="#e8d6a8"/>
+    <path d="M82,190 L140,140 L190,170 L240,130 L278,160 L278,218 L82,218Z" fill="#b8a07a"/>
+    <!-- 화분 --><g transform="translate(640,0)">
+    <path d="M520,420 L600,420 L588,520 L532,520Z" fill="#c9b79a"/>
+    <g fill="#6f8a4c"><ellipse cx="540" cy="360" rx="18" ry="40" transform="rotate(-30 540 360)"/><ellipse cx="580" cy="350" rx="18" ry="44" transform="rotate(20 580 350)"/><ellipse cx="560" cy="320" rx="16" ry="46"/><ellipse cx="520" cy="300" rx="14" ry="36" transform="rotate(-40 520 300)"/><ellipse cx="602" cy="296" rx="14" ry="36" transform="rotate(40 602 296)"/></g>
+    <path d="M560,420 V300" stroke="#5a4a32" stroke-width="4"/></g>
+    <!-- 소파 -->
+    <rect x="30" y="360" width="420" height="120" rx="26" fill="#e6dccb"/>
+    <rect x="20" y="440" width="440" height="110" rx="20" fill="#ddd1bd"/>
+    <rect x="10" y="400" width="70" height="150" rx="28" fill="#e9e0d0"/><rect x="400" y="400" width="70" height="150" rx="28" fill="#e9e0d0"/>
+    <rect x="40" y="550" width="16" height="30" fill="#8a6a46"/><rect x="420" y="550" width="16" height="30" fill="#8a6a46"/>
+    <path d="M300,400 C340,380 410,390 420,430 C380,460 320,450 300,400Z" fill="#b8c49c"/>
+  </svg>
+  <svg class="edge" id="roomEdge" style="left:0;top:-30px;width:1280px;height:40px" viewBox="0 0 1280 40"></svg>
+  <div class="stk" id="sCat2" style="left:60px;top:262px;width:330px;height:230px"><svg viewBox="0 0 330 230"><g filter="url(#stk)">
+    <rect x="10" y="120" width="300" height="80" rx="34" fill="#efe6d6"/><g stroke="#8fa58a" stroke-width="6"><path d="M40,130 V192 M90,124 V198 M140,122 V200 M190,122 V200 M240,124 V198 M282,130 V192"/></g>
+    <use href="#sleepcat" transform="translate(24,10) scale(1.05)"/>
+  </g></svg></div>
+  <div class="stk" id="sToy" style="left:760px;top:520px;width:120px;height:80px"><svg viewBox="0 0 120 80"><g filter="url(#stk)">
+    <path d="M70,52 C40,40 30,20 50,10 C80,0 104,30 100,52Z" fill="#a7a3a0"/><circle cx="58" cy="16" r="9" fill="#bdb8b3"/><circle cx="58" cy="16" r="5" fill="#e9b4ad"/><circle cx="92" cy="40" r="3" fill="#222"/><circle cx="101" cy="51" r="3" fill="#d98a86"/>
+    <path d="M44,44 C20,54 20,70 4,66" fill="none" stroke="#c9a39a" stroke-width="3"/>
+  </g></svg></div>
+  <div class="stk" id="polar" style="left:1060px;top:60px;width:180px;height:220px"><svg viewBox="0 0 180 220"><g filter="url(#stk)">
+    <rect x="0" y="0" width="180" height="220" fill="#fbfaf6"/><rect x="12" y="12" width="156" height="150" fill="#e7cf9c"/>
+    <path d="M12,120 L168,110 L168,162 L12,162Z" fill="#d6a74c"/>
+    <use href="#wildcat" transform="translate(52,26) scale(.33)"/>
+  </g>
+  <rect x="50" y="-14" width="80" height="26" fill="rgba(232,200,120,.75)" transform="rotate(-6 90 0)"/>
+  <text x="90" y="198" text-anchor="middle" font-family="Nanum Pen Script OTF, Nanum Pen Script" font-size="32" stroke="#2a2420" stroke-width=".6" fill="#2a2420">쥐 사냥꾼</text>
+  <path id="strike" d="M34,190 C70,186 110,192 148,186" stroke="#d0312d" stroke-width="4" fill="none" stroke-linecap="round"/>
+  </svg></div>
+  <div class="hand" id="guard" style="left:330px;top:160px;font-size:76px;clip-path:inset(0 100% 0 0)">소파 경비원 <svg width="44" height="40" viewBox="0 0 34 30" style="vertical-align:-4px;overflow:visible"><path d="M4,14 L12,24 L30,2" fill="none" stroke="#d0312d" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+</div>
+
+<!-- 라벨 (나일 위) -->
+<div class="tape" id="lMouse" style="left:520px;top:300px">쥐</div>
+<div class="tape teal" id="lHunter" style="left:70px;top:90px">쥐 사냥꾼 <svg viewBox="0 0 34 30"><path d="M4,14 L12,24 L30,2"/></svg></div>
+<div class="tape" id="lGuest" style="left:70px;top:166px">손님 <svg viewBox="0 0 34 30"><path d="M4,14 L12,24 L30,2"/></svg></div>
+
+<!-- 제목 타일 (처음 중앙 → 오른쪽 위 구석) -->
+<div class="tiles" id="tiles1" style="left:366px;top:250px">
+  <div class="tile t-red">1</div><div class="tile t-cream">만</div><div class="tile t-teal" style="margin-left:22px">년</div><div class="tile t-dark">전</div>
+</div>
+<div class="cut" id="en1" style="left:372px;top:410px"></div>
+
+<div class="grain"></div>
+<div class="subs">
+  <div class="sub">1만 년 전, 사람들이 곡식을 쌓기 시작하자</div>
+  <div class="sub">쥐가 몰려왔어요.</div>
+  <div class="sub">쥐를 쫓아 야생 고양이가 따라왔고</div>
+  <div class="sub">사람들은 이 손님을 반겼죠.</div>
+  <div class="sub">그리고 1만 년 뒤…</div>
+  <div class="sub">고양이는 이제 쥐 대신 소파를 지킵니다.</div>
+</div>
+</main>
+<script src="../../lib/gsap.min.js"></script><script src="../../lib/stage.js"></script>
+<script>
+const r = Motion.rand(7), NS = 'http://www.w3.org/2000/svg';
+const el = (tag, attrs, parent) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); parent.appendChild(e); return e; };
+// 찢긴 흰 종이 가장자리 (horizontal: 가로 띠, 아니면 세로 띠)
+function torn(id, horizontal, len){
+  const s = document.getElementById(id); let d = '';
+  if (horizontal){ d = 'M0,40 L0,20 '; for (let x=0;x<=len;x+=14) d += `L${x},${8 + r()*24} `; d += `L${len},40Z`; }
+  else { d = 'M40,0 L20,0 '; for (let y=0;y<=len;y+=14) d += `L${8 + r()*24},${y} `; d += `L40,${len}Z`; }
+  el('path', {d, fill:'#fbf6ea'}, s);
+}
+torn('roomEdge', true, 1280); torn('nightEdge', false, 720);
+// 크라프트 아래 가장자리: 위아래 뒤집은 띠
+(()=>{ const s = document.getElementById('kraftEdge'); let d='M0,0 '; for (let x=0;x<=1280;x+=14) d += `L${x},${8+r()*26} `; d+='L1280,0Z'; el('path',{d:d.replace('M0,0','M0,0'),fill:'#fbf6ea'},s);
+  let d2='M0,0 '; for (let x=0;x<=1280;x+=18) d2 += `L${x},${2+r()*14} `; d2+='L1280,0Z'; el('path',{d:d2,fill:'#b98a52'},s); })();
+// 곡식 낟알
+const grains = document.getElementById('grains');
+for (let i=0;i<120;i++){ const x = 40 + r()*340, top = 270 - 140*Math.sin(Math.PI*(x-10)/400), y = top + 6 + r()*(276-top);
+  el('ellipse', {cx:x, cy:y, rx:6, ry:4, fill: r()<.5 ? '#f0c058' : '#e2a83e', stroke:'#b67d1f', 'stroke-width':.8, transform:`rotate(${r()*180} ${x} ${y})`}, grains); }
+// 밀 줄무늬
+const wheat = document.getElementById('wheat');
+for (let i=0;i<90;i++){ const x = r()*1280, y = 390 + r()*320, h = 14 + (y-370)*.08; el('path', {d:`M${x},${y} l${-3+r()*6},${-h}`}, wheat); }
+// 야자수
+function palm(g, x, y, h, c){ el('path', {d:`M${x},${y} q6,${-h/2} 2,${-h}`, stroke:c, 'stroke-width':h/18, fill:'none'}, g);
+  for (let k=0;k<6;k++){ const a = -160 + k*28; const ex = x+2 + Math.cos(a*Math.PI/180)*h*.45, ey = y-h + Math.sin(a*Math.PI/180)*h*.3 + h*.12;
+    el('path', {d:`M${x+2},${y-h} Q${(x+2+ex)/2},${y-h-h*.12} ${ex},${ey}`, stroke:c, 'stroke-width':h/9, fill:'none', 'stroke-linecap':'round'}, g); } }
+const palms = document.getElementById('palms');
+[[800,380,150],[1250,390,170],[760,360,110],[700,372,90]].forEach(([x,y,h])=>palm(palms,x,y,h,'#4f5a2c'));
+const far = document.getElementById('farpalms');
+for (let i=0;i<9;i++) palm(far, 30+i*60+r()*20, 280, 30+r()*16, '#6e7a3c');
+// 별
+const stars = document.getElementById('stars'), starEls = [];
+for (let i=0;i<34;i++){ const x = 30 + r()*1220, y = 20 + r()*680; if (x>300 && x<900 && y>260 && y<460) continue;
+  const s = 5 + r()*8; let d=''; for (let k=0;k<10;k++){ const rr = k%2? s*.45 : s, a = -Math.PI/2 + k*Math.PI/5; d += (k?'L':'M') + (x+Math.cos(a)*rr).toFixed(1)+','+(y+Math.sin(a)*rr).toFixed(1); }
+  starEls.push(el('path', {d:d+'Z', fill:'#f2c94c'}, stars)); }
+for (let i=0;i<60;i++) el('circle', {cx:r()*1280, cy:r()*720, r:1+r()*1.2, fill:'#f3ead6', opacity:.6}, stars);
+
+function draw(sel){ document.querySelectorAll(sel).forEach(p=>{ const L = p.getTotalLength(); p.style.strokeDasharray = L; p.style.strokeDashoffset = L; }); }
+draw('.tape svg path'); draw('#guard path'); draw('#strike');
+
+function cutWord(id, txt){ const e=document.getElementById(id); [...txt].forEach(ch=>{ const sp=document.createElement('span'); if(ch===' ') sp.className='sp'; else sp.textContent=ch; e.appendChild(sp); }); }
+cutWord('en1','10,000 YEARS AGO'); cutWord('en2','10,000 YEARS LATER');
+const tl = Motion.timeline();
+const cutIn = (sel, t) => document.querySelectorAll(sel+' span').forEach((c,i)=> tl.fromTo(c, {opacity:0, y:-14, rotation:(i%3-1)*14}, {opacity:1, y:0, rotation:(i%3-1)*4, duration:.18, ease:'back.out(3)'}, t + i*.025));
+const pop = (sel, t, rot) => tl.fromTo(sel, {scale:0, rotation:rot-14}, {scale:1, rotation:rot, duration:.55, ease:'back.out(2.2)'}, t);
+const out = (sel, t) => tl.to(sel, {scale:0, rotation:'+=10', duration:.3, ease:'back.in(2)'}, t);
+// 자막 싱크
+const subs = document.querySelectorAll('.sub'), cue = [0, 2.6, 4.2, 6.6, 8.6, 10.5, 13.9];
+subs.forEach((s,i)=>{ tl.set(s, {opacity:1}, cue[i] + (i?0:.05)); if (i < subs.length-1) tl.set(s, {opacity:0}, cue[i+1]); });
+
+// 0–1.6 크라프트 위 랜섬 타일 철썩
+document.querySelectorAll('#tiles1 .tile').forEach((t,i)=>{
+  const rot = [-6,4,-3,7][i];
+  tl.fromTo(t, {scale:1.9, rotation:rot*3, opacity:0}, {scale:1, rotation:rot, opacity:1, duration:.28, ease:'power4.in'}, .15 + i*.22);
+  tl.to(t, {y:3, duration:.06, yoyo:true, repeat:1, ease:'sine.out'}, .43 + i*.22);
+});
+cutIn('#en1', .7);
+// 1.6–2.3 크라프트가 위로 찢겨 걷히고 제목은 오른쪽 위로
+tl.to('#kraft', {y:-780, rotation:-1.5, duration:.75, ease:'power2.in'}, 1.85);
+tl.to('#en1', {x:1000-372, y:84-410, scale:.42, opacity:0, duration:.5, ease:'power3.in'}, 1.85);
+tl.to('#tiles1', {x:1030-366, y:22-250, scale:.36, duration:.75, ease:'power3.inOut'}, 1.95);
+tl.fromTo('#nileCam', {scale:1.08}, {scale:1.0, duration:7, ease:'sine.out'}, 1.85);
+// 2.6 쥐
+pop('#sMice', 2.7, -2);
+pop('#lMouse', 3.3, -5);
+// 4.2 야생 고양이
+pop('#sCat', 4.4, 3);
+tl.fromTo('#sMice', {x:0}, {x:-40, duration:.5, ease:'power2.out'}, 4.4);
+pop('#lHunter', 5.1, -3);
+tl.to('#lHunter path', {strokeDashoffset:0, duration:.35, ease:'power2.out'}, 5.55);
+// 6.6 손님: 쥐·고양이 빠지고 항아리+바구니+자는 고양이
+out('#sMice', 6.5); out('#sCat', 6.55); out('#lMouse', 6.5);
+pop('#sJar', 6.8, -1.5);
+pop('#lGuest', 7.3, 2);
+tl.to('#lGuest path', {strokeDashoffset:0, duration:.35, ease:'power2.out'}, 7.75);
+// 8.6 밤하늘이 찢긴 가장자리로 밀려 들어옴
+tl.to('#night', {x:0, duration:.55, ease:'power3.out'}, 8.55);
+tl.to(['#tiles1','#en1','#lHunter','#lGuest'], {opacity:0, duration:.2}, 8.75);
+document.querySelectorAll('#tiles2 .tile').forEach((t,i)=>{
+  const rot = [-4,5,-6,3][i];
+  tl.fromTo(t, {scale:1.9, rotation:rot*3, opacity:0}, {scale:1, rotation:rot, opacity:1, duration:.26, ease:'power4.in'}, 9.0 + i*.18);
+});
+cutIn('#en2', 9.7);
+starEls.forEach((s,i)=> tl.fromTo(s, {scale:.6, transformOrigin:'50% 50%', opacity:.5}, {scale:1.15, opacity:1, duration:.4, yoyo:true, repeat:1, ease:'sine.inOut'}, 8.7 + (i%7)*.12));
+draw('#shoot'); tl.to('#shoot', {strokeDashoffset:0, duration:.6, ease:'power1.out'}, 9.2);
+// 10.0 거실이 아래에서 찢겨 올라옴
+tl.to('#room', {y:0, duration:.55, ease:'power3.out'}, 10.45);
+pop('#sCat2', 10.9, -2);
+pop('#sToy', 11.15, 8);
+pop('#polar', 11.4, 6);
+tl.to('#strike', {strokeDashoffset:0, duration:.35, ease:'power1.inOut'}, 11.95);
+tl.to('#guard', {clipPath:'inset(0 0% 0 0)', duration:.7, ease:'none'}, 12.25);
+tl.to('#guard path', {strokeDashoffset:0, duration:.25, ease:'power2.out'}, 12.95);
+tl.fromTo('#room', {scale:1}, {scale:1.03, transformOrigin:'40% 50%', duration:2.7, ease:'sine.inOut', immediateRender:false}, 10.5);
+Motion.ready();
+</script></body></html>

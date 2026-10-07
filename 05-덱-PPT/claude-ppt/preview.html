@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>claude-ppt — 7타입 × 5장 샘플 (35장)</title>
+<style>
+  :root{
+    --bg:#F0EEE6; --bg-alt:#F7F4EE; --card:#E3DACC; --card-2:#DDD6CE;
+    --dark:#1C1810; --main:#CF6B4A; --main-deep:#A5472A; --main-soft:#E08B6A;
+    --main-pale:#EDCBB8; --tint:#EAD6CC; --gray:#B5ADA7; --rule:#D0C9C2;
+    --ink:#1C1810; --ink-2:#4A4540; --ink-3:#8A837C; --pos:#3D6B45; --neg:#A03030;
+    --tre:'Trebuchet MS','Pretendard','맑은 고딕',sans-serif;
+    --geo:Georgia,'Times New Roman',serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#191b20;color:#e8e8ec;font-family:var(--tre);padding:32px 20px 64px}
+  .page{max-width:1060px;margin:0 auto}
+  .page>h1{font-size:24px;font-weight:700;letter-spacing:-.3px}
+  .page>p{color:#9aa0ae;font-size:13px;margin:6px 0 10px;line-height:1.6}
+  .sec{margin:52px 0 4px;padding-bottom:8px;border-bottom:1px solid #2c313c}
+  .sec h2{font-size:17px;font-weight:700;color:#d8dae0}
+  .sec span{font-size:12px;color:#8a90a0}
+  .lbl{font-family:Consolas,monospace;font-size:11px;color:#8a90a0;letter-spacing:1.5px;margin:26px 0 8px}
+  .sw{position:relative;width:100%;border-radius:6px;overflow:hidden;box-shadow:0 2px 14px rgba(0,0,0,.4)}
+  .slide{position:absolute;top:0;left:0;width:1000px;height:563px;transform-origin:top left;font-family:var(--tre);color:var(--ink)}
+
+  /* ═══ TYPE 0 표지 ═══ */
+  .t0{background:var(--dark);color:#EDE8DE}
+  .t0 .vbar{position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--main)}
+  .t0 .mark{position:absolute;left:45px;top:42px;color:var(--main);font-weight:700;font-size:18px;letter-spacing:2.5px}
+  .t0 .hair{position:absolute;left:45px;top:70px;width:120px;height:1px;background:rgba(207,107,74,.45)}
+  .t0 .title{position:absolute;left:45px;top:138px;font-weight:700;font-size:62px;line-height:1.02;letter-spacing:-1px}
+  .t0 .year{position:absolute;left:45px;top:296px;color:var(--main);font-weight:700;font-size:28px}
+  .t0 .gov{position:absolute;left:45px;top:348px;font-family:var(--geo);font-style:italic;font-size:14px;color:#B9B2A6}
+  .t0 .drule{position:absolute;left:45px;top:392px;width:330px;height:1px;background:rgba(237,232,222,.18)}
+  .t0 .disc{position:absolute;left:45px;top:408px;font-size:10px;color:#8A837C;line-height:1.6;width:410px}
+  .t0 .date{position:absolute;left:45px;bottom:34px;font-size:11px;color:#8A837C;letter-spacing:1px}
+  .t0 .kpis{position:absolute;right:60px;top:128px;width:240px}
+  .t0 .kpi{padding:17px 0 15px;border-bottom:1px solid rgba(237,232,222,.15)}
+  .t0 .kpi .l{font-size:11px;color:#B9B2A6;letter-spacing:1px}
+  .t0 .kpi .v{font-size:38px;font-weight:700;color:var(--main);margin-top:4px}
+  .t0 .kpi .v small{font-size:16px}
+  .t0 .kpi .d{font-size:11px;color:var(--pos);margin-top:3px}
+
+  /* ═══ 공통 라이트 크롬 ═══ */
+  .lt{background:var(--bg)}
+  .hd{position:absolute;left:45px;right:45px;top:0;height:32px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--rule)}
+  .hd .bc{font-size:10px;color:var(--ink-3);letter-spacing:.5px}
+  .hd .mk{font-size:12px;font-weight:700;color:var(--main);letter-spacing:2px}
+  .hl{position:absolute;left:45px;top:55px;font-size:34px;font-weight:700;line-height:.9;letter-spacing:-.5px}
+  .gv{position:absolute;left:45px;top:97px;font-family:var(--geo);font-style:italic;font-size:14px;color:var(--ink-2)}
+  .fn{position:absolute;left:45px;bottom:22px;font-size:10px;color:var(--ink-3)}
+  .pg{position:absolute;right:45px;bottom:22px;font-size:10px;color:var(--ink-3)}
+
+  /* ═══ TYPE 1 KPI 5카드 ═══ */
+  .t1 .cards{position:absolute;left:45px;top:150px;display:flex;gap:20px}
+  .t1 .kcard{width:166px;height:300px;background:var(--card);border-radius:6px;overflow:hidden;position:relative}
+  .t1 .kcard .bar{height:7px}
+  .t1 .kcard .l{margin:22px 16px 0;font-size:12px;font-weight:700;color:var(--ink-2)}
+  .t1 .kcard .v{position:absolute;left:16px;right:16px;top:108px;font-size:42px;font-weight:700;color:var(--ink);letter-spacing:-1px}
+  .t1 .kcard .v small{font-size:17px;font-weight:700}
+  .t1 .kcard .c{position:absolute;left:16px;right:16px;top:170px;font-size:10px;color:var(--ink-3);line-height:1.5}
+  .t1 .kcard .btm{position:absolute;left:16px;right:16px;bottom:18px;border-top:1px solid var(--rule);padding-top:10px;font-size:12px;font-weight:700;color:var(--pos)}
+
+  /* ═══ TYPE 2 테이블 ═══ */
+  .t2 .tbl{position:absolute;left:45px;right:45px;top:150px}
+  .t2 .topbar{height:4px;background:var(--main);border-radius:2px 2px 0 0;width:100%}
+  .t2 table{width:100%;border-collapse:collapse;font-size:13px}
+  .t2 thead th{background:var(--card-2);color:var(--main-deep);font-size:11px;font-weight:700;height:34px;text-align:right;padding-right:18px;letter-spacing:.3px}
+  .t2 thead th:first-child{text-align:left;padding-left:18px;border-radius:6px 0 0 0}
+  .t2 thead th:last-child{border-radius:0 6px 0 0}
+  .t2 thead th.hot{background:var(--main);color:#fff}
+  .t2 thead{border-bottom:1.6px solid var(--ink-2)}
+  .t2 tbody td{height:36px;text-align:right;padding-right:18px;border-bottom:.8px solid var(--rule);color:var(--ink)}
+  .t2 tbody td:first-child{text-align:left;padding-left:18px;color:var(--ink-2)}
+  .t2 tbody td.hot{background:var(--tint);font-weight:700}
+  .t2 tbody tr.sum td{font-weight:700;background:var(--card);border-top:1.2px solid var(--ink-2)}
+  .t2 tbody tr:last-child td{border-bottom:1.6px solid var(--rule)}
+  .t2 td.up{color:var(--pos);font-weight:700}
+  .t2 td.dn{color:var(--neg);font-weight:700}
+  .t2 .unit{position:absolute;left:45px;bottom:60px;font-size:10px;color:var(--ink-3)}
+
+  /* ═══ TYPE 3 차트 2분할 ═══ */
+  .t3 .ch{position:absolute;top:140px;width:452px;height:340px;background:var(--card);border-radius:6px;padding:20px 24px}
+  .t3 .chL{left:45px}.t3 .chR{left:503px}
+  .t3 .ch h4{font-size:12px;font-weight:700;color:var(--ink-2)}
+  .plot{position:relative;height:212px;margin-top:14px;display:flex;align-items:flex-end;gap:34px;justify-content:center;border-bottom:1px solid var(--ink-2)}
+  .grid{position:absolute;left:0;right:0;border-top:1px dotted rgba(74,69,64,.25)}
+  .bcol{position:relative;width:44px;display:flex;flex-direction:column;align-items:center;z-index:1}
+  .bval{font-size:11px;font-weight:700;color:var(--ink-2);margin-bottom:4px}
+  .b{width:44px;background:var(--gray)}
+  .b.hot{background:var(--main)}
+  .xrow{display:flex;gap:34px;justify-content:center;margin-top:6px}
+  .bx{font-size:10px;color:var(--ink-3);text-align:center;width:44px}
+  .strip{margin-top:30px;border-top:1px solid var(--rule);padding-top:12px;display:flex;gap:26px;font-size:12px;color:var(--ink-2)}
+  .strip b{color:var(--main);font-weight:700}
+  .strip b.g{color:var(--pos)}
+
+  /* ═══ TYPE 4 차트 단독 ═══ */
+  .t4 .plot4{position:absolute;left:120px;right:120px;top:150px;height:330px;display:flex;align-items:flex-end;justify-content:space-between;border-bottom:1px solid var(--ink-2)}
+  .t4 .col{position:relative;width:92px;display:flex;flex-direction:column;align-items:center}
+  .t4 .seg{width:92px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700}
+  .s-deep{background:var(--main-deep);color:#fff}
+  .s-main{background:var(--main);color:#fff}
+  .s-pale{background:var(--main-pale);color:var(--ink)}
+  .t4 .xl{font-size:11px;color:var(--ink-3);margin-top:8px}
+  .t4 .call{position:absolute;bottom:100%;margin-bottom:8px;text-align:center;white-space:nowrap}
+  .t4 .call .tv{font-size:20px;font-weight:700;color:var(--ink)}
+  .t4 .call .tg{font-size:12px;font-weight:700;color:var(--pos)}
+  .leg{position:absolute;left:0;right:0;bottom:52px;display:flex;justify-content:center;gap:26px;font-size:10px;color:var(--ink-2)}
+  .leg i{display:inline-block;width:12px;height:12px;margin-right:6px;vertical-align:-2px}
+
+  /* ═══ TYPE 5 혼합 ═══ */
+  .t5 .ch{position:absolute;top:140px;width:452px;height:340px;background:var(--card);border-radius:6px;padding:20px 24px}
+  .t5 .chL{left:45px}.t5 .chR{left:503px}
+  .t5 .ch h4{font-size:12px;font-weight:700;color:var(--ink-2)}
+  .t5 .plot{height:180px}
+  .t5 .grow{display:flex;align-items:center;gap:12px;margin-top:16px}
+  .t5 .grow .gl{width:88px;font-size:11px;color:var(--ink-2)}
+  .t5 .grow .track{flex:1;height:10px;background:var(--card-2)}
+  .t5 .grow .fill{height:10px}
+  .t5 .grow .gvl{width:44px;text-align:right;font-size:12px;font-weight:700;color:var(--ink)}
+  .t5 .s100{margin-top:24px;border-top:1px solid var(--rule);padding-top:14px}
+  .t5 .s100 .cap{font-size:10px;color:var(--ink-3);margin-bottom:6px}
+  .t5 .sbar{display:flex;height:14px}
+  .t5 .leg5{display:flex;gap:18px;font-size:10px;color:var(--ink-2);margin-top:8px}
+  .t5 .leg5 i{display:inline-block;width:10px;height:10px;margin-right:5px;vertical-align:-1px}
+
+  /* ═══ TYPE 6 엔딩 ═══ */
+  .t6{background:var(--dark);display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .t6 .mark{color:var(--main);font-weight:700;font-size:26px;letter-spacing:4px}
+  .t6 .line{font-family:var(--geo);font-style:italic;font-size:15px;color:#B9B2A6;margin-top:18px}
+</style>
+</head>
+<body>
+<div class="page">
+  <h1>claude-ppt — 7타입 × 5장 샘플 (총 35장)</h1>
+  <p>실측 토큰(테라코타 <code>#CF6B4A</code> · 베이지 <code>#F0EEE6</code> · 잉크 브라운 <code>#1C1810</code>, Trebuchet MS + Georgia Italic) 기준.
+  타입마다 서로 다른 실무 시나리오 5개 — 연간 실적·분기·투자유치·신사업·ESG·운영·조직 등 — 로 변주했습니다.
+  데이터는 전부 가상의 「LUMENTEC」. 실제 산출물은 python-pptx 엔진으로 .pptx 생성 — 이 HTML은 룩앤필 확인용입니다.</p>
+
+<!-- ═══════════════ TYPE 0 ═══════════════ -->
+<div class="sec"><h2>TYPE 0 · 표지 (다크)</h2><span>워드마크 + 68px 대제목 + 우측 KPI 3단 스택 + 좌측 4px 액센트 바</span></div>
+
+<div class="lbl">0-1 · 연간 실적 보고</div>
+<div class="sw"><div class="slide t0">
+  <div class="vbar"></div><div class="mark">LUMENTEC</div><div class="hair"></div>
+  <div class="title">지속 가능한 성장,<br>수익성의 전환</div>
+  <div class="year">FY2025 연간 실적 보고</div>
+  <div class="gov">Growth is a story the numbers must tell on their own.</div>
+  <div class="drule"></div>
+  <div class="disc">본 자료는 주주 및 투자자 대상 정보 제공 목적으로 작성되었으며, 회사의 사전 서면 동의 없이 복제·배포할 수 없습니다.<br>재무 수치는 연결 기준이며 외부감사인의 감사 결과에 따라 변동될 수 있습니다.</div>
+  <div class="date">2026. 03. — IR TEAM</div>
+  <div class="kpis">
+    <div class="kpi"><div class="l">매출액</div><div class="v">1,284<small>억</small></div><div class="d">▲ +18.2% YoY</div></div>
+    <div class="kpi"><div class="l">영업이익</div><div class="v">214<small>억</small></div><div class="d">▲ +42.5% YoY</div></div>
+    <div class="kpi"><div class="l">영업이익률</div><div class="v">16.7<small>%</small></div><div class="d">▲ +2.9%p YoY</div></div>
+  </div>
+</div></div>
+
+<div class="lbl">0-2 · 분기 실적</div>
+<div class="sw"><div class="slide t0">
+  <div class="vbar"></div><div class="mark">LUMENTEC</div><div class="hair"></div>
+  <div class="title">두 분기 연속,<br>최대 실적 경신</div>
+  <div class="year">Q2 FY2026 분기 실적 발표</div>
+  <div class="gov">Momentum is easy to claim and hard to fake.</div>
+  <div class="drule"></div>
+  <div class="disc">본 자료의 분기 수치는 검토 전 잠정치이며, 분기 검토보고서 확정 시 일부 조정될 수 있습니다.<br>전년 동기 대비 수치는 동일 기준으로 재작성되었습니다.</div>
+  <div class="date">2026. 07. — IR TEAM</div>
+  <div class="kpis">
+    <div class="kpi"><div class="l">분기 매출</div><div class="v">361<small>억</small></div><div class="d">▲ +21.4% YoY</div></div>
+    <div class="kpi"><div class="l">영업이익</div><div class="v">63<small>억</small></div><div class="d">▲ +36.2% YoY</div></div>
+    <div class="kpi"><div class="l">수주잔고</div><div class="v">892<small>억</small></div><div class="d">▲ +27.8% YoY</div></div>
+  </div>
+</div></div>
+
+<div class="lbl">0-3 · 투자 유치 (Series C)</div>
+<div class="sw"><div class="slide t0">
+  <div class="vbar"></div><div class="mark">LUMENTEC</div><div class="hair"></div>
+  <div class="title">검증된 모델,<br>확장의 자본</div>
+  <div class="year">Series C Investment Proposal</div>
+  <div class="gov">We are not raising to survive. We are raising to compound.</div>
+  <div class="drule"></div>
+  <div class="disc">본 제안서는 잠재 투자자와의 논의 목적으로만 제공되며, 증권의 청약 권유를 구성하지 않습니다.<br>미래 예측 수치는 현재 가정에 기반하며 실제 결과와 다를 수 있습니다.</div>
+  <div class="date">2026. 05. — CONFIDENTIAL</div>
+  <div class="kpis">
+    <div class="kpi"><div class="l">ARR</div><div class="v">486<small>억</small></div><div class="d">▲ +64% YoY</div></div>
+    <div class="kpi"><div class="l">NRR</div><div class="v">128<small>%</small></div><div class="d">▲ +6%p YoY</div></div>
+    <div class="kpi"><div class="l">Rule of 40</div><div class="v">52</div><div class="d">▲ +11p YoY</div></div>
+  </div>
+</div></div>
+
+<div class="lbl">0-4 · 신사업 전략</div>
+<div class="sw"><div class="slide t0">
+  <div class="vbar"></div><div class="mark">LUMENTEC</div><div class="hair"></div>
+  <div class="title">코어 너머의<br>두 번째 성장 곡선</div>
+  <div class="year">신사업 전략 브리핑 2026–2028</div>
+  <div class="gov">The first curve pays for the second. The second defines us.</div>
+  <div class="drule"></div>
+  <div class="disc">본 자료의 중기 목표는 이사회 승인 전략계획 기준이며, 시장 상황에 따라 연 1회 재검토됩니다.<br>세그먼트 구분은 FY2026 개편 조직 기준입니다.</div>
+  <div class="date">2026. 01. — STRATEGY OFFICE</div>
+  <div class="kpis">
+    <div class="kpi"><div class="l">신사업 매출</div><div class="v">430<small>억</small></div><div class="d">▲ +34.4% YoY</div></div>
+    <div class="kpi"><div class="l">전사 매출 비중</div><div class="v">33<small>%</small></div><div class="d">▲ +4%p YoY</div></div>
+    <div class="kpi"><div class="l">3개년 목표 CAGR</div><div class="v">41<small>%</small></div><div class="d">FY26–28E</div></div>
+  </div>
+</div></div>
+
+<div class="lbl">0-5 · 지속가능경영 보고</div>
+<div class="sw"><div class="slide t0">
+  <div class="vbar"></div><div class="mark">LUMENTEC</div><div class="hair"></div>
+  <div class="title">성장의 방식이<br>기업의 품격이다</div>
+  <div class="year">2025 지속가능경영 보고</div>
+  <div class="gov">How we grow matters as much as how fast.</div>
+  <div class="drule"></div>
+  <div class="disc">본 보고서는 GRI Standards 및 K-ESG 가이드라인을 참조하여 작성되었습니다.<br>환경 데이터는 제3자 검증기관의 검증을 완료했습니다.</div>
+  <div class="date">2026. 06. — ESG COMMITTEE</div>
+  <div class="kpis">
+    <div class="kpi"><div class="l">탄소집약도</div><div class="v">−18<small>%</small></div><div class="d">▼ YoY 개선</div></div>
+    <div class="kpi"><div class="l">재생에너지 비중</div><div class="v">42<small>%</small></div><div class="d">▲ +9%p YoY</div></div>
+    <div class="kpi"><div class="l">여성 관리자 비율</div><div class="v">31<small>%</small></div><div class="d">▲ +4%p YoY</div></div>
+  </div>
+</div></div>
+
+<!-- ═══════════════ TYPE 1 ═══════════════ -->
+<div class="sec"><h2>TYPE 1 · 하이라이트 (KPI 5카드)</h2><span>상단 7px 컬러바 — 테라코타=실적, 녹색=개선 방향</span></div>
+
+<div class="lbl">1-1 · 연간 핵심 지표</div>
+<div class="sw"><div class="slide lt t1">
+  <div class="hd"><span class="bc">FY2025 Annual Report&nbsp;&nbsp;|&nbsp;&nbsp;02</span><span class="mk">LUMENTEC</span></div>
+  <div class="hl">전 부문 동반 개선 — 핵심 지표 요약</div>
+  <div class="gv">매출·이익·현금흐름·재무구조 네 축이 같은 방향을 가리킨다.</div>
+  <div class="cards">
+    <div class="kcard"><div class="bar" style="background:var(--main)"></div><div class="l">매출액</div><div class="v">1,284<small>억</small></div><div class="c">연결 기준<br>4년 연속 두 자릿수 성장</div><div class="btm">▲ +18.2%</div></div>
+    <div class="kcard"><div class="bar" style="background:var(--main)"></div><div class="l">영업이익</div><div class="v">214<small>억</small></div><div class="c">이익률 16.7%<br>믹스 개선 + 원가 절감</div><div class="btm">▲ +42.5%</div></div>
+    <div class="kcard"><div class="bar" style="background:var(--main)"></div><div class="l">순이익</div><div class="v">158<small>억</small></div><div class="c">일회성 제외 기준<br>ROE 14.2%</div><div class="btm">▲ +37.9%</div></div>
+    <div class="kcard"><div class="bar" style="background:var(--pos)"></div><div class="l">잉여현금흐름</div><div class="v">189<small>억</small></div><div class="c">CAPEX 78억 집행 후 기준</div><div class="btm">▲ +61.0%</div></div>
+    <div class="kcard"><div class="bar" style="background:var(--pos)"></div><div class="l">부채비율</div><div class="v">42<small>%</small></div><div class="c">차입금 상환 240억<br>무차입 경영 가시권</div><div class="btm">▼ −11%p</div></div>
+  </div>
+  <div class="fn">* 연결 재무제표 기준, 감사 전 잠정치. FCF = 영업활동현금흐름 − CAPEX.</div><div class="pg">02</div>
+</div></div>
+
+<div class="lbl">1-2 · 분기 지표</div>
+<div class="sw"><div class="slide lt t1">
+  <div class="hd"><span class="bc">Q2 FY2026 Earnings&nbsp;&nbsp;|&nbsp;&nbsp;02</span><span class="mk">LUMENTEC</span></div>
+  <div class="hl">분기 최대 실적 — 수주가 다음 분기를 보증</div>
+  <div class="gv">실적보다 빠르게 쌓이는 수주잔고가 이번 분기의 진짜 뉴스다.</div>
+  <div class="cards">
+    <div class="kcard"><div class="bar" style="background:var(--main)"></div><div class="l">분기 매출</div><div class="v">361<small>억</small></div><div class="c">분기 기준 사상 최대</div><div class="btm">▲ +21.4%</div></div>
+    <div class="kcard"><div class="bar" style="background:var(--main)"></div><div class="l">영업이익</div><div class="v">63<small>억</small></div><div class="c">이익률 17.4%</div><div class="btm">▲ +36.2%</div></div>
+    <div class="kcard"><div class="bar" style="background:var(--main)"></div><div class="l">영업이익률</div><div class="v">17.4<small>%</small></div><div class="c">전년 동기 15.5%</div><div class="btm">▲ +1.9%p</div></div>
+    <div class="kcard"><div class="bar" style="background:var(--pos)"></div><div class="l">수주잔고</div><div class="v">892<small>억</small></div><div class="c">약 2.5개 분기분<br>매출 커버</div><div class="btm">▲ +27.8%</div></div>
+    <div class="kcard"><div class="bar" style="background:var(--pos)"></div><div class="l">현금성자산</div><div class="v">512<small>억</small></div><div class="c">무차입 기준<br>순현금 512억</div><div class="btm">▲ +9.6%</div></div>
+  </div>
+  <div class="fn">* 검토 전 잠정치. 수주잔고는 확정 계약 기준.</div><div class="pg">02</div>
+</div></div>
+
+<div class="lbl">1-3 · 고객 지표 (SaaS)</div>
+<div class="sw"><div class="slide lt t1">
+  <div class="hd"><span class="bc">Series C Proposal&nbsp;&nbsp;|&nbsp;&nbsp;03</span><span class="mk">LUMENTEC</span></div>
+  <div class="hl">더 많은 고객이, 더 오래, 더 많이 쓴다</div>
+  <div class="gv">획득·유지·확장 세 지표가 모두 개선된 분기는 이번이 처음이다.</div>
+  <div class="cards">
+    <div class="kcard"><div class="bar" style="background:var(--main)"></div><div class="l">유료 고객</div><div class="v">1,840<small>사</small></div><div class="c">엔터프라이즈 214사 포함</div><div class="btm">▲ +23%</div></div>
+    <div class="kcard"><div class="bar" style="background:var(--main)"></div><div class="l">NRR</div><div class="v">128<small>%</small></div><div class="c">업셀 중심 확장<br>다운그레이드 2.1%</div><div class="btm">▲ +6%p</div></div>
+    <div class="kcard"><div class="bar" style="background:var(--pos)"></div><div class="l">월 이탈률</div><div class="v">0.8<small>%</small></div><div class="c">12개월 연속 1% 미만</div><div class="btm">▼ −0.3%p</div></div>
+    <div class="kcard"><div class="bar" style="background:var(--main)"></div><div class="l">ARPU</div><div class="v">640<small>만</small></div><div class="c">연 환산, 유료 고객 기준</div><div class="btm">▲ +11%</div></div>
+    <div class="kcard"><div class="bar" style="background:var(--main)"></div><div class="l">LTV / CAC</div><div class="v">5.2<small>x</small></div><div class="c">회수기간 14개월</div><div class="btm">▲ +0.8x</div></div>
+  </div>
+  <div class="fn">* 고객 지표는 Q1 FY2026 말 기준. NRR = 기존 고객 매출 유지·확장률.</div><div class="pg">03</div>
+</div></div>
+
+<div class="lbl">1-4 · 운영 지표 (제조)</div>
+<div class="sw"><div class="slide lt t1">
+  <div class="hd"><span class="bc">Operations Review&nbsp;&nbsp;|&nbsp;&nbsp;04</span><span class="mk">LUMENTEC</span></div>
+  <div class="hl">공장이 만든 이익률 — 운영 지표 전 항목 개선</div>
+  <div class="gv">이익률 개선분 2.9%p 중 1.8%p는 현장에서 나왔다.</div>
+  <div class="cards">
+    <div class="kcard"><div class="bar" style="background:var(--main)"></div><div class="l">가동률</div><div class="v">87<small>%</small></div><div class="c">2공장 증설분 포함</div><div class="btm">▲ +5%p</div></div>
+    <div class="kcard"><div class="bar" style="background:var(--pos)"></div><div class="l">불량률</div><div class="v">0.42<small>%</small></div><div class="c">공정 자동검사 도입 효과</div><div class="btm">▼ −0.11%p</div></div>
+    <div class="kcard"><div class="bar" style="background:var(--main)"></div><div class="l">납기 준수율</div><div class="v">98.2<small>%</small></div><div class="c">긴급 오더 제외 시 99.4%</div><div class="btm">▲ +1.4%p</div></div>
+    <div class="kcard"><div class="bar" style="background:var(--main)"></div><div class="l">재고 회전</div><div class="v">8.4<small>회</small></div><div class="c">연 환산 기준</div><div class="btm">▲ +1.1회</div></div>
+    <div class="kcard"><div class="bar" style="background:var(--pos)"></div><div class="l">중대 안전사고</div><div class="v">0<small>건</small></div><div class="c">2년 연속 무사고</div><div class="btm">유지</div></div>
+  </div>
+  <div class="fn">* 운영 지표는 국내 2개 공장 합산 기준.</div><div class="pg">04</div>
+</div></div>
+
+<div class="lbl">1-5 · 조직 지표</div>
+<div class="sw"><div class="slide lt t1">
+  <div class="hd"><span class="bc">People Report&nbsp;&nbsp;|&nbsp;&nbsp;05</span><span class="mk">LUMENTEC</span></div>
+  <div class="hl">조직이 커져도 밀도는 유지됐다</div>
+  <div class="gv">인원 +16% 성장에도 1인당 매출과 유지율이 함께 올랐다.</div>
+  <div class="cards">
+    <div class="kcard"><div class="bar" style="background:var(--main)"></div><div class="l">임직원</div><div class="v">412<small>명</small></div><div class="c">연중 순증 +58명</div><div class="btm">▲ +16.4%</div></div>
+    <div class="kcard"><div class="bar" style="background:var(--main)"></div><div class="l">기술직 비중</div><div class="v">61<small>%</small></div><div class="c">R&D + 엔지니어링</div><div class="btm">▲ +4%p</div></div>
+    <div class="kcard"><div class="bar" style="background:var(--pos)"></div><div class="l">자발적 이직률</div><div class="v">6.8<small>%</small></div><div class="c">업계 평균 11.2%</div><div class="btm">▼ −2.1%p</div></div>
+    <div class="kcard"><div class="bar" style="background:var(--main)"></div><div class="l">1인당 매출</div><div class="v">3.1<small>억</small></div><div class="c">연 환산, 평균 인원 기준</div><div class="btm">▲ +9%</div></div>
+    <div class="kcard"><div class="bar" style="background:var(--main)"></div><div class="l">인당 교육시간</div><div class="v">42<small>h</small></div><div class="c">직무·리더십 합산</div><div class="btm">▲ +12h</div></div>
+  </div>
+  <div class="fn">* 기준일 2025-12-31. 이직률은 12개월 누적.</div><div class="pg">05</div>
+</div></div>
+
+<!-- ═══════════════ TYPE 2 ═══════════════ -->
+<div class="sec"><h2>TYPE 2 · 테이블</h2><span>행 구분선 + 헤더 아래 1.6px 닫힘 + 강조열 틴트 + 소계행 — zebra 금지</span></div>
+
+<div class="lbl">2-1 · 요약 손익계산서</div>
+<div class="sw"><div class="slide lt t2">
+  <div class="hd"><span class="bc">FY2025 Annual Report&nbsp;&nbsp;|&nbsp;&nbsp;06</span><span class="mk">LUMENTEC</span></div>
+  <div class="hl">요약 손익계산서</div>
+  <div class="gv">이익의 질 — 매출총이익률과 영업이익률이 함께 올랐다.</div>
+  <div class="tbl"><div class="topbar"></div>
+  <table>
+    <thead><tr><th>구분</th><th>FY23</th><th>FY24</th><th class="hot">FY25</th><th>YoY</th></tr></thead>
+    <tbody>
+      <tr><td>매출액</td><td>972</td><td>1,086</td><td class="hot">1,284</td><td class="up">+18.2%</td></tr>
+      <tr><td>매출원가</td><td>(562)</td><td>(619)</td><td class="hot">(715)</td><td>+15.5%</td></tr>
+      <tr><td>매출총이익</td><td>410</td><td>467</td><td class="hot">569</td><td class="up">+21.8%</td></tr>
+      <tr><td>판매관리비</td><td>(289)</td><td>(317)</td><td class="hot">(355)</td><td>+12.0%</td></tr>
+      <tr class="sum"><td>영업이익</td><td>121</td><td>150</td><td class="hot">214</td><td class="up">+42.5%</td></tr>
+      <tr><td>당기순이익</td><td>94</td><td>115</td><td class="hot">158</td><td class="up">+37.9%</td></tr>
+    </tbody>
+  </table></div>
+  <div class="unit">(단위: 억 원, 괄호는 차감 항목)</div>
+  <div class="fn">* 연결 기준, 감사 전 잠정치.</div><div class="pg">06</div>
+</div></div>
+
+<div class="lbl">2-2 · 요약 재무상태표</div>
+<div class="sw"><div class="slide lt t2">
+  <div class="hd"><span class="bc">FY2025 Annual Report&nbsp;&nbsp;|&nbsp;&nbsp;07</span><span class="mk">LUMENTEC</span></div>
+  <div class="hl">요약 재무상태표</div>
+  <div class="gv">부채가 줄고 자본이 늘었다 — 성장의 재원이 내부화됐다.</div>
+  <div class="tbl"><div class="topbar"></div>
+  <table>
+    <thead><tr><th>구분</th><th>FY23</th><th>FY24</th><th class="hot">FY25</th><th>YoY</th></tr></thead>
+    <tbody>
+      <tr><td>유동자산</td><td>812</td><td>903</td><td class="hot">1,084</td><td class="up">+20.0%</td></tr>
+      <tr><td>비유동자산</td><td>640</td><td>688</td><td class="hot">742</td><td>+7.8%</td></tr>
+      <tr class="sum"><td>자산총계</td><td>1,452</td><td>1,591</td><td class="hot">1,826</td><td class="up">+14.8%</td></tr>
+      <tr><td>부채총계</td><td>622</td><td>588</td><td class="hot">540</td><td class="up">−8.2%</td></tr>
+      <tr class="sum"><td>자본총계</td><td>830</td><td>1,003</td><td class="hot">1,286</td><td class="up">+28.2%</td></tr>
+    </tbody>
+  </table></div>
+  <div class="unit">(단위: 억 원)</div>
+  <div class="fn">* 연결 기준. 부채 감소는 차입금 상환 240억 반영.</div><div class="pg">07</div>
+</div></div>
+
+<div class="lbl">2-3 · 사업부별 실적</div>
+<div class="sw"><div class="slide lt t2">
+  <div class="hd"><span class="bc">FY2025 Annual Report&nbsp;&nbsp;|&nbsp;&nbsp;08</span><span class="mk">LUMENTEC</span></div>
+  <div class="hl">사업부별 실적 — 성장의 절반은 신사업</div>
+  <div class="gv">코어의 안정 위에서 신사업이 성장률을 끌어올렸다.</div>
+  <div class="tbl"><div class="topbar"></div>
+  <table>
+    <thead><tr><th>사업부</th><th>FY23</th><th>FY24</th><th class="hot">FY25</th><th>YoY</th></tr></thead>
+    <tbody>
+      <tr><td>코어사업</td><td>640</td><td>690</td><td class="hot">760</td><td class="up">+10.1%</td></tr>
+      <tr><td>신사업</td><td>260</td><td>320</td><td class="hot">430</td><td class="up">+34.4%</td></tr>
+      <tr><td>기타</td><td>72</td><td>76</td><td class="hot">94</td><td class="up">+23.7%</td></tr>
+      <tr class="sum"><td>합계</td><td>972</td><td>1,086</td><td class="hot">1,284</td><td class="up">+18.2%</td></tr>
+    </tbody>
+  </table></div>
+  <div class="unit">(단위: 억 원)</div>
+  <div class="fn">* 사업부 구분은 FY2026 개편 조직 기준으로 소급 재작성.</div><div class="pg">08</div>
+</div></div>
+
+<div class="lbl">2-4 · 분기별 추이</div>
+<div class="sw"><div class="slide lt t2">
+  <div class="hd"><span class="bc">Q4 FY2025 Earnings&nbsp;&nbsp;|&nbsp;&nbsp;09</span><span class="mk">LUMENTEC</span></div>
+  <div class="hl">네 분기 연속 이익률 상승</div>
+  <div class="gv">분기마다 이익률이 올랐다 — 개선이 구조적이라는 증거.</div>
+  <div class="tbl"><div class="topbar"></div>
+  <table>
+    <thead><tr><th>구분</th><th>Q1</th><th>Q2</th><th>Q3</th><th class="hot">Q4</th><th>QoQ</th></tr></thead>
+    <tbody>
+      <tr><td>매출액</td><td>298</td><td>312</td><td>327</td><td class="hot">347</td><td class="up">+6.1%</td></tr>
+      <tr><td>영업이익</td><td>44</td><td>50</td><td>56</td><td class="hot">64</td><td class="up">+14.3%</td></tr>
+      <tr><td>영업이익률</td><td>14.8%</td><td>16.0%</td><td>17.1%</td><td class="hot">18.4%</td><td class="up">+1.3%p</td></tr>
+      <tr><td>잉여현금흐름</td><td>38</td><td>45</td><td>49</td><td class="hot">57</td><td class="up">+16.3%</td></tr>
+    </tbody>
+  </table></div>
+  <div class="unit">(단위: 억 원)</div>
+  <div class="fn">* FY2025 분기별, 연결 기준.</div><div class="pg">09</div>
+</div></div>
+
+<div class="lbl">2-5 · 투자 집행 계획</div>
+<div class="sw"><div class="slide lt t2">
+  <div class="hd"><span class="bc">Strategy Briefing&nbsp;&nbsp;|&nbsp;&nbsp;10</span><span class="mk">LUMENTEC</span></div>
+  <div class="hl">CAPEX — 생산이 아니라 역량에 쓴다</div>
+  <div class="gv">증가분의 대부분이 R&D 인프라로 향한다.</div>
+  <div class="tbl"><div class="topbar"></div>
+  <table>
+    <thead><tr><th>항목</th><th>FY24</th><th>FY25</th><th class="hot">FY26E</th><th>YoY</th></tr></thead>
+    <tbody>
+      <tr><td>생산설비</td><td>38</td><td>44</td><td class="hot">46</td><td>+4.5%</td></tr>
+      <tr><td>R&amp;D 인프라</td><td>22</td><td>29</td><td class="hot">44</td><td class="up">+51.7%</td></tr>
+      <tr><td>IT · 보안</td><td>9</td><td>12</td><td class="hot">15</td><td class="up">+25.0%</td></tr>
+      <tr><td>기타</td><td>5</td><td>5</td><td class="hot">6</td><td>+20.0%</td></tr>
+      <tr class="sum"><td>합계</td><td>74</td><td>90</td><td class="hot">111</td><td class="up">+23.3%</td></tr>
+    </tbody>
+  </table></div>
+  <div class="unit">(단위: 억 원, FY26E는 이사회 승인 예산)</div>
+  <div class="fn">* 집행률 관리 기준 95% 이상. 미집행분은 이월하지 않는다.</div><div class="pg">10</div>
+</div></div>
+
+<!-- ═══════════════ TYPE 3 ═══════════════ -->
+<div class="sec"><h2>TYPE 3 · 차트 2분할</h2><span>좌우 452px 카드 — 직각 막대, 비교=그레이, 당해=테라코타, 하단 요약 스트립</span></div>
+
+<div class="lbl">3-1 · 매출 vs 영업이익</div>
+<div class="sw"><div class="slide lt t3">
+  <div class="hd"><span class="bc">FY2025 Annual Report&nbsp;&nbsp;|&nbsp;&nbsp;11</span><span class="mk">LUMENTEC</span></div>
+  <div class="hl">성장과 수익성이 처음으로 같은 속도</div>
+  <div class="gv">매출 CAGR 14.8% 위에서 영업이익이 더 가파르게 늘었다.</div>
+  <div class="ch chL"><h4>매출액 추이 (억 원)</h4>
+    <div class="plot"><div class="grid" style="bottom:70px"></div><div class="grid" style="bottom:140px"></div>
+      <div class="bcol"><div class="bval">738</div><div class="b" style="height:115px"></div></div>
+      <div class="bcol"><div class="bval">861</div><div class="b" style="height:134px"></div></div>
+      <div class="bcol"><div class="bval">972</div><div class="b" style="height:151px"></div></div>
+      <div class="bcol"><div class="bval">1,086</div><div class="b" style="height:169px"></div></div>
+      <div class="bcol"><div class="bval">1,284</div><div class="b hot" style="height:200px"></div></div>
+    </div>
+    <div class="xrow"><span class="bx">FY21</span><span class="bx">FY22</span><span class="bx">FY23</span><span class="bx">FY24</span><span class="bx">FY25</span></div>
+    <div class="strip"><span>CAGR (4y) · <b>14.8%</b></span><span>FY25 YoY · <b class="g">+18.2%</b></span></div>
+  </div>
+  <div class="ch chR"><h4>영업이익 추이 (억 원)</h4>
+    <div class="plot"><div class="grid" style="bottom:70px"></div><div class="grid" style="bottom:140px"></div>
+      <div class="bcol"><div class="bval">92</div><div class="b" style="height:86px"></div></div>
+      <div class="bcol"><div class="bval">104</div><div class="b" style="height:97px"></div></div>
+      <div class="bcol"><div class="bval">121</div><div class="b" style="height:113px"></div></div>
+      <div class="bcol"><div class="bval">150</div><div class="b" style="height:140px"></div></div>
+      <div class="bcol"><div class="bval">214</div><div class="b hot" style="height:200px"></div></div>
+    </div>
+    <div class="xrow"><span class="bx">FY21</span><span class="bx">FY22</span><span class="bx">FY23</span><span class="bx">FY24</span><span class="bx">FY25</span></div>
+    <div class="strip"><span>이익률 · <b>16.7%</b></span><span>FY25 YoY · <b class="g">+42.5%</b></span></div>
+  </div>
+  <div class="fn">* 연결 기준.</div><div class="pg">11</div>
+</div></div>
+
+<div class="lbl">3-2 · 국내 vs 해외</div>
+<div class="sw"><div class="slide lt t3">
+  <div class="hd"><span class="bc">FY2025 Annual Report&nbsp;&nbsp;|&nbsp;&nbsp;12</span><span class="mk">LUMENTEC</span></div>
+  <div class="hl">해외가 성장의 방향을 바꿨다</div>
+  <div class="gv">국내는 한 자릿수, 해외는 4년째 40%대 — 비중 39%까지 왔다.</div>
+  <div class="ch chL"><h4>국내 매출 (억 원)</h4>
+    <div class="plot"><div class="grid" style="bottom:70px"></div><div class="grid" style="bottom:140px"></div>
+      <div class="bcol"><div class="bval">628</div><div class="b" style="height:161px"></div></div>
+      <div class="bcol"><div class="bval">672</div><div class="b" style="height:172px"></div></div>
+      <div class="bcol"><div class="bval">718</div><div class="b" style="height:184px"></div></div>
+      <div class="bcol"><div class="bval">745</div><div class="b" style="height:190px"></div></div>
+      <div class="bcol"><div class="bval">782</div><div class="b hot" style="height:200px"></div></div>
+    </div>
+    <div class="xrow"><span class="bx">FY21</span><span class="bx">FY22</span><span class="bx">FY23</span><span class="bx">FY24</span><span class="bx">FY25</span></div>
+    <div class="strip"><span>FY25 YoY · <b>+5.0%</b></span><span>비중 · <b>60.9%</b></span></div>
+  </div>
+  <div class="ch chR"><h4>해외 매출 (억 원)</h4>
+    <div class="plot"><div class="grid" style="bottom:70px"></div><div class="grid" style="bottom:140px"></div>
+      <div class="bcol"><div class="bval">110</div><div class="b" style="height:44px"></div></div>
+      <div class="bcol"><div class="bval">189</div><div class="b" style="height:75px"></div></div>
+      <div class="bcol"><div class="bval">254</div><div class="b" style="height:101px"></div></div>
+      <div class="bcol"><div class="bval">341</div><div class="b" style="height:136px"></div></div>
+      <div class="bcol"><div class="bval">502</div><div class="b hot" style="height:200px"></div></div>
+    </div>
+    <div class="xrow"><span class="bx">FY21</span><span class="bx">FY22</span><span class="bx">FY23</span><span class="bx">FY24</span><span class="bx">FY25</span></div>
+    <div class="strip"><span>FY25 YoY · <b class="g">+47.2%</b></span><span>비중 · <b>39.1%</b></span></div>
+  </div>
+  <div class="fn">* 소재지 기준 구분. 수출 물량 포함.</div><div class="pg">12</div>
+</div></div>
+
+<div class="lbl">3-3 · 고객 수 vs ARPU</div>
+<div class="sw"><div class="slide lt t3">
+  <div class="hd"><span class="bc">Series C Proposal&nbsp;&nbsp;|&nbsp;&nbsp;13</span><span class="mk">LUMENTEC</span></div>
+  <div class="hl">고객 수와 단가가 같이 오르는 드문 구간</div>
+  <div class="gv">보통 하나를 얻으면 하나를 잃는다 — 지금은 둘 다 얻고 있다.</div>
+  <div class="ch chL"><h4>유료 고객 수 (사)</h4>
+    <div class="plot"><div class="grid" style="bottom:70px"></div><div class="grid" style="bottom:140px"></div>
+      <div class="bcol"><div class="bval">940</div><div class="b" style="height:102px"></div></div>
+      <div class="bcol"><div class="bval">1,120</div><div class="b" style="height:122px"></div></div>
+      <div class="bcol"><div class="bval">1,330</div><div class="b" style="height:145px"></div></div>
+      <div class="bcol"><div class="bval">1,500</div><div class="b" style="height:163px"></div></div>
+      <div class="bcol"><div class="bval">1,840</div><div class="b hot" style="height:200px"></div></div>
+    </div>
+    <div class="xrow"><span class="bx">FY21</span><span class="bx">FY22</span><span class="bx">FY23</span><span class="bx">FY24</span><span class="bx">FY25</span></div>
+    <div class="strip"><span>FY25 YoY · <b class="g">+23%</b></span><span>엔터프라이즈 · <b>214사</b></span></div>
+  </div>
+  <div class="ch chR"><h4>ARPU (만 원, 연 환산)</h4>
+    <div class="plot"><div class="grid" style="bottom:70px"></div><div class="grid" style="bottom:140px"></div>
+      <div class="bcol"><div class="bval">512</div><div class="b" style="height:160px"></div></div>
+      <div class="bcol"><div class="bval">538</div><div class="b" style="height:168px"></div></div>
+      <div class="bcol"><div class="bval">560</div><div class="b" style="height:175px"></div></div>
+      <div class="bcol"><div class="bval">588</div><div class="b" style="height:184px"></div></div>
+      <div class="bcol"><div class="bval">640</div><div class="b hot" style="height:200px"></div></div>
+    </div>
+    <div class="xrow"><span class="bx">FY21</span><span class="bx">FY22</span><span class="bx">FY23</span><span class="bx">FY24</span><span class="bx">FY25</span></div>
+    <div class="strip"><span>FY25 YoY · <b class="g">+11%</b></span><span>동인 · <b>업셀 68%</b></span></div>
+  </div>
+  <div class="fn">* ARPU = 구독 매출 ÷ 평균 유료 고객 수.</div><div class="pg">13</div>
+</div></div>
+
+<div class="lbl">3-4 · CAPEX vs FCF</div>
+<div class="sw"><div class="slide lt t3">
+  <div class="hd"><span class="bc">FY2025 Annual Report&nbsp;&nbsp;|&nbsp;&nbsp;14</span><span class="mk">LUMENTEC</span></div>
+  <div class="hl">투자를 늘리면서도 현금이 남는 구조</div>
+  <div class="gv">CAPEX는 완만하게, FCF는 가파르게 — 투자 효율이 답이다.</div>
+  <div class="ch chL"><h4>CAPEX (억 원)</h4>
+    <div class="plot"><div class="grid" style="bottom:70px"></div><div class="grid" style="bottom:140px"></div>
+      <div class="bcol"><div class="bval">52</div><div class="b" style="height:133px"></div></div>
+      <div class="bcol"><div class="bval">58</div><div class="b" style="height:149px"></div></div>
+      <div class="bcol"><div class="bval">64</div><div class="b" style="height:164px"></div></div>
+      <div class="bcol"><div class="bval">71</div><div class="b" style="height:182px"></div></div>
+      <div class="bcol"><div class="bval">78</div><div class="b hot" style="height:200px"></div></div>
+    </div>
+    <div class="xrow"><span class="bx">FY21</span><span class="bx">FY22</span><span class="bx">FY23</span><span class="bx">FY24</span><span class="bx">FY25</span></div>
+    <div class="strip"><span>매출 대비 · <b>6.1%</b></span><span>FY25 YoY · <b>+9.9%</b></span></div>
+  </div>
+  <div class="ch chR"><h4>잉여현금흐름 (억 원)</h4>
+    <div class="plot"><div class="grid" style="bottom:70px"></div><div class="grid" style="bottom:140px"></div>
+      <div class="bcol"><div class="bval">74</div><div class="b" style="height:78px"></div></div>
+      <div class="bcol"><div class="bval">89</div><div class="b" style="height:94px"></div></div>
+      <div class="bcol"><div class="bval">102</div><div class="b" style="height:108px"></div></div>
+      <div class="bcol"><div class="bval">117</div><div class="b" style="height:124px"></div></div>
+      <div class="bcol"><div class="bval">189</div><div class="b hot" style="height:200px"></div></div>
+    </div>
+    <div class="xrow"><span class="bx">FY21</span><span class="bx">FY22</span><span class="bx">FY23</span><span class="bx">FY24</span><span class="bx">FY25</span></div>
+    <div class="strip"><span>FCF 마진 · <b>14.7%</b></span><span>FY25 YoY · <b class="g">+61.0%</b></span></div>
+  </div>
+  <div class="fn">* FCF = 영업활동현금흐름 − CAPEX.</div><div class="pg">14</div>
+</div></div>
+
+<div class="lbl">3-5 · 부채비율 vs 현금</div>
+<div class="sw"><div class="slide lt t3">
+  <div class="hd"><span class="bc">FY2025 Annual Report&nbsp;&nbsp;|&nbsp;&nbsp;15</span><span class="mk">LUMENTEC</span></div>
+  <div class="hl">재무구조 — 5년 만에 절반 이하로</div>
+  <div class="gv">부채비율은 반으로, 현금은 2.5배로 — 다음 침체가 두렵지 않다.</div>
+  <div class="ch chL"><h4>부채비율 (%)</h4>
+    <div class="plot"><div class="grid" style="bottom:70px"></div><div class="grid" style="bottom:140px"></div>
+      <div class="bcol"><div class="bval">94</div><div class="b" style="height:200px"></div></div>
+      <div class="bcol"><div class="bval">81</div><div class="b" style="height:172px"></div></div>
+      <div class="bcol"><div class="bval">68</div><div class="b" style="height:145px"></div></div>
+      <div class="bcol"><div class="bval">53</div><div class="b" style="height:113px"></div></div>
+      <div class="bcol"><div class="bval">42</div><div class="b hot" style="height:89px"></div></div>
+    </div>
+    <div class="xrow"><span class="bx">FY21</span><span class="bx">FY22</span><span class="bx">FY23</span><span class="bx">FY24</span><span class="bx">FY25</span></div>
+    <div class="strip"><span>5년 변화 · <b class="g">−52%p</b></span><span>FY25 · <b>42%</b></span></div>
+  </div>
+  <div class="ch chR"><h4>현금성자산 (억 원)</h4>
+    <div class="plot"><div class="grid" style="bottom:70px"></div><div class="grid" style="bottom:140px"></div>
+      <div class="bcol"><div class="bval">198</div><div class="b" style="height:77px"></div></div>
+      <div class="bcol"><div class="bval">246</div><div class="b" style="height:96px"></div></div>
+      <div class="bcol"><div class="bval">301</div><div class="b" style="height:118px"></div></div>
+      <div class="bcol"><div class="bval">388</div><div class="b" style="height:152px"></div></div>
+      <div class="bcol"><div class="bval">512</div><div class="b hot" style="height:200px"></div></div>
+    </div>
+    <div class="xrow"><span class="bx">FY21</span><span class="bx">FY22</span><span class="bx">FY23</span><span class="bx">FY24</span><span class="bx">FY25</span></div>
+    <div class="strip"><span>순현금 · <b>512억</b></span><span>FY25 YoY · <b class="g">+32.0%</b></span></div>
+  </div>
+  <div class="fn">* 현금성자산 = 현금 + 단기금융상품.</div><div class="pg">15</div>
+</div></div>
+
+<!-- ═══════════════ TYPE 4 ═══════════════ -->
+<div class="sec"><h2>TYPE 4 · 차트 단독 (풀 와이드)</h2><span>배경 카드 없음 — 누적 막대 deep→main→pale, 최신 열 콜아웃, 범례 하단 중앙</span></div>
+
+<div class="lbl">4-1 · 사업부별 매출</div>
+<div class="sw"><div class="slide lt t4">
+  <div class="hd"><span class="bc">FY2025 Annual Report&nbsp;&nbsp;|&nbsp;&nbsp;16</span><span class="mk">LUMENTEC</span></div>
+  <div class="hl">성장의 두 번째 엔진 — 신사업 매출 3배</div>
+  <div class="gv">코어가 버티는 동안 신사업이 전체 성장분의 절반을 만들었다.</div>
+  <div class="plot4">
+    <div class="col"><div class="seg s-pale" style="height:16px"></div><div class="seg s-main" style="height:35px">150</div><div class="seg s-deep" style="height:121px">520</div><div class="xl">FY21</div></div>
+    <div class="col"><div class="seg s-pale" style="height:17px"></div><div class="seg s-main" style="height:49px">210</div><div class="seg s-deep" style="height:135px">580</div><div class="xl">FY22</div></div>
+    <div class="col"><div class="seg s-pale" style="height:17px"></div><div class="seg s-main" style="height:61px">260</div><div class="seg s-deep" style="height:150px">640</div><div class="xl">FY23</div></div>
+    <div class="col"><div class="seg s-pale" style="height:18px"></div><div class="seg s-main" style="height:75px">320</div><div class="seg s-deep" style="height:161px">690</div><div class="xl">FY24</div></div>
+    <div class="col"><div class="call"><div class="tv">1,284억</div><div class="tg">▲ +18.2%</div></div><div class="seg s-pale" style="height:22px">94</div><div class="seg s-main" style="height:100px">430</div><div class="seg s-deep" style="height:178px">760</div><div class="xl">FY25</div></div>
+  </div>
+  <div class="leg"><span><i class="s-deep"></i>코어사업</span><span><i class="s-main"></i>신사업</span><span><i class="s-pale"></i>기타</span></div>
+  <div class="fn">* 억 원. FY21~24 기타 세그먼트 값(68·71·72·76)은 공간상 생략.</div><div class="pg">16</div>
+</div></div>
+
+<div class="lbl">4-2 · 비용 구조</div>
+<div class="sw"><div class="slide lt t4">
+  <div class="hd"><span class="bc">FY2025 Annual Report&nbsp;&nbsp;|&nbsp;&nbsp;17</span><span class="mk">LUMENTEC</span></div>
+  <div class="hl">비용은 매출보다 느리게 늘었다</div>
+  <div class="gv">매출 +18.2% vs 총비용 +14.3% — 그 차이가 이익률 2.9%p다.</div>
+  <div class="plot4">
+    <div class="col"><div class="seg s-pale" style="height:7px"></div><div class="seg s-main" style="height:62px">230</div><div class="seg s-deep" style="height:122px">450</div><div class="xl">FY21</div></div>
+    <div class="col"><div class="seg s-pale" style="height:8px"></div><div class="seg s-main" style="height:69px">255</div><div class="seg s-deep" style="height:135px">500</div><div class="xl">FY22</div></div>
+    <div class="col"><div class="seg s-pale" style="height:8px"></div><div class="seg s-main" style="height:78px">289</div><div class="seg s-deep" style="height:152px">562</div><div class="xl">FY23</div></div>
+    <div class="col"><div class="seg s-pale" style="height:9px"></div><div class="seg s-main" style="height:86px">317</div><div class="seg s-deep" style="height:168px">619</div><div class="xl">FY24</div></div>
+    <div class="col"><div class="call"><div class="tv">1,108억</div><div class="tg">+14.3%</div></div><div class="seg s-pale" style="height:10px"></div><div class="seg s-main" style="height:96px">355</div><div class="seg s-deep" style="height:194px">715</div><div class="xl">FY25</div></div>
+  </div>
+  <div class="leg"><span><i class="s-deep"></i>매출원가</span><span><i class="s-main"></i>판매관리비</span><span><i class="s-pale"></i>기타비용</span></div>
+  <div class="fn">* 억 원. 기타비용 값(26·28·31·33·38)은 공간상 생략.</div><div class="pg">17</div>
+</div></div>
+
+<div class="lbl">4-3 · 지역별 매출</div>
+<div class="sw"><div class="slide lt t4">
+  <div class="hd"><span class="bc">FY2025 Annual Report&nbsp;&nbsp;|&nbsp;&nbsp;18</span><span class="mk">LUMENTEC</span></div>
+  <div class="hl">해외 두 축이 자라는 중 — 아시아, 그리고 미주·유럽</div>
+  <div class="gv">국내 의존도 85% → 61%, 5년 만의 변화다.</div>
+  <div class="plot4">
+    <div class="col"><div class="seg s-pale" style="height:7px"></div><div class="seg s-main" style="height:18px"></div><div class="seg s-deep" style="height:147px">628</div><div class="xl">FY21</div></div>
+    <div class="col"><div class="seg s-pale" style="height:12px"></div><div class="seg s-main" style="height:32px">136</div><div class="seg s-deep" style="height:157px">672</div><div class="xl">FY22</div></div>
+    <div class="col"><div class="seg s-pale" style="height:20px"></div><div class="seg s-main" style="height:39px">168</div><div class="seg s-deep" style="height:168px">718</div><div class="xl">FY23</div></div>
+    <div class="col"><div class="seg s-pale" style="height:26px">111</div><div class="seg s-main" style="height:54px">230</div><div class="seg s-deep" style="height:174px">745</div><div class="xl">FY24</div></div>
+    <div class="col"><div class="call"><div class="tv">1,284억</div><div class="tg">▲ +18.2%</div></div><div class="seg s-pale" style="height:45px">192</div><div class="seg s-main" style="height:72px">310</div><div class="seg s-deep" style="height:183px">782</div><div class="xl">FY25</div></div>
+  </div>
+  <div class="leg"><span><i class="s-deep"></i>국내</span><span><i class="s-main"></i>아시아</span><span><i class="s-pale"></i>미주 · 유럽</span></div>
+  <div class="fn">* 억 원. 좁은 세그먼트 값(FY21 78·32, FY22 53, FY23 86)은 공간상 생략.</div><div class="pg">18</div>
+</div></div>
+
+<div class="lbl">4-4 · 수주잔고</div>
+<div class="sw"><div class="slide lt t4">
+  <div class="hd"><span class="bc">Q2 FY2026 Earnings&nbsp;&nbsp;|&nbsp;&nbsp;19</span><span class="mk">LUMENTEC</span></div>
+  <div class="hl">수주잔고 — 다음 해 매출의 3분의 2가 이미 계약</div>
+  <div class="gv">신규 수주가 잔고 증가를 이끌었다. 실행만 남았다.</div>
+  <div class="plot4">
+    <div class="col"><div class="seg s-pale" style="height:16px"></div><div class="seg s-main" style="height:44px">130</div><div class="seg s-deep" style="height:141px">420</div><div class="xl">FY21</div></div>
+    <div class="col"><div class="seg s-pale" style="height:19px"></div><div class="seg s-main" style="height:46px">138</div><div class="seg s-deep" style="height:148px">440</div><div class="xl">FY22</div></div>
+    <div class="col"><div class="seg s-pale" style="height:21px"></div><div class="seg s-main" style="height:50px">148</div><div class="seg s-deep" style="height:151px">450</div><div class="xl">FY23</div></div>
+    <div class="col"><div class="seg s-pale" style="height:19px"></div><div class="seg s-main" style="height:66px">195</div><div class="seg s-deep" style="height:150px">445</div><div class="xl">FY24</div></div>
+    <div class="col"><div class="call"><div class="tv">892억</div><div class="tg">▲ +27.8%</div></div><div class="seg s-pale" style="height:23px">67</div><div class="seg s-main" style="height:94px">280</div><div class="seg s-deep" style="height:183px">545</div><div class="xl">FY25</div></div>
+  </div>
+  <div class="leg"><span><i class="s-deep"></i>진행 계약</span><span><i class="s-main"></i>신규 수주</span><span><i class="s-pale"></i>옵션 물량</span></div>
+  <div class="fn">* 억 원, 회계연도 말 기준. 옵션 물량은 고객 행사 시 확정.</div><div class="pg">19</div>
+</div></div>
+
+<div class="lbl">4-5 · 인력 구성</div>
+<div class="sw"><div class="slide lt t4">
+  <div class="hd"><span class="bc">People Report&nbsp;&nbsp;|&nbsp;&nbsp;20</span><span class="mk">LUMENTEC</span></div>
+  <div class="hl">채용의 우선순위는 5년째 기술이다</div>
+  <div class="gv">순증 인원 10명 중 6명이 기술직 — 제품이 조직 구조를 결정한다.</div>
+  <div class="plot4">
+    <div class="col"><div class="seg s-pale" style="height:25px">34</div><div class="seg s-main" style="height:45px">62</div><div class="seg s-deep" style="height:86px">118</div><div class="xl">FY21</div></div>
+    <div class="col"><div class="seg s-pale" style="height:29px">40</div><div class="seg s-main" style="height:54px">74</div><div class="seg s-deep" style="height:98px">134</div><div class="xl">FY22</div></div>
+    <div class="col"><div class="seg s-pale" style="height:34px">47</div><div class="seg s-main" style="height:63px">86</div><div class="seg s-deep" style="height:115px">158</div><div class="xl">FY23</div></div>
+    <div class="col"><div class="seg s-pale" style="height:42px">58</div><div class="seg s-main" style="height:76px">104</div><div class="seg s-deep" style="height:140px">192</div><div class="xl">FY24</div></div>
+    <div class="col"><div class="call"><div class="tv">412명</div><div class="tg">▲ +16.4%</div></div><div class="seg s-pale" style="height:46px">63</div><div class="seg s-main" style="height:71px">98</div><div class="seg s-deep" style="height:183px">251</div><div class="xl">FY25</div></div>
+  </div>
+  <div class="leg"><span><i class="s-deep"></i>기술 · R&amp;D</span><span><i class="s-main"></i>사업 · 영업</span><span><i class="s-pale"></i>경영지원</span></div>
+  <div class="fn">* 명, 회계연도 말 정규직 기준.</div><div class="pg">20</div>
+</div></div>
+
+<!-- ═══════════════ TYPE 5 ═══════════════ -->
+<div class="sec"><h2>TYPE 5 · 혼합 (차트 + 게이지 리스트)</h2><span>좌 차트 카드 + 우 가로 바 게이지(강조 하나만 테라코타) + 하단 100% 스택 바</span></div>
+
+<div class="lbl">5-1 · 신사업 매출 + 점유율</div>
+<div class="sw"><div class="slide lt t5">
+  <div class="hd"><span class="bc">FY2025 Annual Report&nbsp;&nbsp;|&nbsp;&nbsp;21</span><span class="mk">LUMENTEC</span></div>
+  <div class="hl">신사업 — 매출은 3배, 점유율은 이제 시작</div>
+  <div class="gv">시장의 11%를 가졌다. 남은 89%가 성장 여력이다.</div>
+  <div class="ch chL"><h4>신사업 매출 추이 (억 원)</h4>
+    <div class="plot"><div class="grid" style="bottom:60px"></div><div class="grid" style="bottom:120px"></div>
+      <div class="bcol"><div class="bval">150</div><div class="b" style="height:63px"></div></div>
+      <div class="bcol"><div class="bval">210</div><div class="b" style="height:88px"></div></div>
+      <div class="bcol"><div class="bval">260</div><div class="b" style="height:109px"></div></div>
+      <div class="bcol"><div class="bval">320</div><div class="b" style="height:134px"></div></div>
+      <div class="bcol"><div class="bval">430</div><div class="b hot" style="height:180px"></div></div>
+    </div>
+    <div class="xrow"><span class="bx">FY21</span><span class="bx">FY22</span><span class="bx">FY23</span><span class="bx">FY24</span><span class="bx">FY25</span></div>
+    <div class="strip"><span>CAGR · <b>30.1%</b></span><span>FY25 YoY · <b class="g">+34.4%</b></span></div>
+  </div>
+  <div class="ch chR"><h4>사업부별 시장점유율</h4>
+    <div style="margin-top:20px">
+      <div class="grow"><span class="gl">코어사업</span><div class="track"><div class="fill" style="width:24%;background:var(--gray)"></div></div><span class="gvl">24%</span></div>
+      <div class="grow"><span class="gl">신사업</span><div class="track"><div class="fill" style="width:11%;background:var(--main)"></div></div><span class="gvl">11%</span></div>
+      <div class="grow"><span class="gl">기타</span><div class="track"><div class="fill" style="width:6%;background:var(--gray)"></div></div><span class="gvl">6%</span></div>
+    </div>
+    <div class="s100"><div class="cap">FY25 매출 구성</div>
+      <div class="sbar"><div class="s-deep" style="width:59%"></div><div class="s-main" style="width:34%"></div><div class="s-pale" style="width:7%"></div></div>
+      <div class="leg5"><span><i class="s-deep"></i>코어 59%</span><span><i class="s-main"></i>신사업 34%</span><span><i class="s-pale"></i>기타 7%</span></div>
+    </div>
+  </div>
+  <div class="fn">* 점유율은 외부 시장조사 기관 FY25 추정치 기준.</div><div class="pg">21</div>
+</div></div>
+
+<div class="lbl">5-2 · 해외 매출 + 지역 성장률</div>
+<div class="sw"><div class="slide lt t5">
+  <div class="hd"><span class="bc">FY2025 Annual Report&nbsp;&nbsp;|&nbsp;&nbsp;22</span><span class="mk">LUMENTEC</span></div>
+  <div class="hl">다음 성장은 미주에서 온다</div>
+  <div class="gv">가장 작은 지역이 가장 빠르다 — 리소스를 옮길 때다.</div>
+  <div class="ch chL"><h4>해외 매출 추이 (억 원)</h4>
+    <div class="plot"><div class="grid" style="bottom:60px"></div><div class="grid" style="bottom:120px"></div>
+      <div class="bcol"><div class="bval">110</div><div class="b" style="height:39px"></div></div>
+      <div class="bcol"><div class="bval">189</div><div class="b" style="height:68px"></div></div>
+      <div class="bcol"><div class="bval">254</div><div class="b" style="height:91px"></div></div>
+      <div class="bcol"><div class="bval">341</div><div class="b" style="height:122px"></div></div>
+      <div class="bcol"><div class="bval">502</div><div class="b hot" style="height:180px"></div></div>
+    </div>
+    <div class="xrow"><span class="bx">FY21</span><span class="bx">FY22</span><span class="bx">FY23</span><span class="bx">FY24</span><span class="bx">FY25</span></div>
+    <div class="strip"><span>CAGR · <b>46.2%</b></span><span>비중 · <b>39.1%</b></span></div>
+  </div>
+  <div class="ch chR"><h4>지역별 FY25 성장률</h4>
+    <div style="margin-top:20px">
+      <div class="grow"><span class="gl">국내</span><div class="track"><div class="fill" style="width:7%;background:var(--gray)"></div></div><span class="gvl">+5%</span></div>
+      <div class="grow"><span class="gl">아시아</span><div class="track"><div class="fill" style="width:48%;background:var(--gray)"></div></div><span class="gvl">+35%</span></div>
+      <div class="grow"><span class="gl">미주</span><div class="track"><div class="fill" style="width:100%;background:var(--main)"></div></div><span class="gvl">+73%</span></div>
+      <div class="grow"><span class="gl">유럽</span><div class="track"><div class="fill" style="width:70%;background:var(--gray)"></div></div><span class="gvl">+51%</span></div>
+    </div>
+    <div class="s100"><div class="cap">FY25 지역별 매출 구성</div>
+      <div class="sbar"><div class="s-deep" style="width:61%"></div><div class="s-main" style="width:24%"></div><div class="s-pale" style="width:15%"></div></div>
+      <div class="leg5"><span><i class="s-deep"></i>국내 61%</span><span><i class="s-main"></i>아시아 24%</span><span><i class="s-pale"></i>미주·유럽 15%</span></div>
+    </div>
+  </div>
+  <div class="fn">* 성장률은 현지통화 기준. 게이지 길이는 최대값 대비 비율.</div><div class="pg">22</div>
+</div></div>
+
+<div class="lbl">5-3 · 제품 매출 + 마진</div>
+<div class="sw"><div class="slide lt t5">
+  <div class="hd"><span class="bc">FY2025 Annual Report&nbsp;&nbsp;|&nbsp;&nbsp;23</span><span class="mk">LUMENTEC</span></div>
+  <div class="hl">가장 큰 제품이 가장 남는 제품</div>
+  <div class="gv">A라인 집중은 취향이 아니라 산수다.</div>
+  <div class="ch chL"><h4>제품 라인별 FY25 매출 (억 원)</h4>
+    <div class="plot" style="gap:60px"><div class="grid" style="bottom:60px"></div><div class="grid" style="bottom:120px"></div>
+      <div class="bcol" style="width:64px"><div class="bval">520</div><div class="b hot" style="width:64px;height:180px"></div></div>
+      <div class="bcol" style="width:64px"><div class="bval">480</div><div class="b" style="width:64px;height:166px"></div></div>
+      <div class="bcol" style="width:64px"><div class="bval">284</div><div class="b" style="width:64px;height:98px"></div></div>
+    </div>
+    <div class="xrow" style="gap:60px"><span class="bx" style="width:64px">A라인</span><span class="bx" style="width:64px">B라인</span><span class="bx" style="width:64px">C라인</span></div>
+    <div class="strip"><span>A라인 YoY · <b class="g">+27%</b></span><span>비중 · <b>40%</b></span></div>
+  </div>
+  <div class="ch chR"><h4>제품별 매출총이익률</h4>
+    <div style="margin-top:20px">
+      <div class="grow"><span class="gl">A라인</span><div class="track"><div class="fill" style="width:62%;background:var(--main)"></div></div><span class="gvl">62%</span></div>
+      <div class="grow"><span class="gl">B라인</span><div class="track"><div class="fill" style="width:48%;background:var(--gray)"></div></div><span class="gvl">48%</span></div>
+      <div class="grow"><span class="gl">C라인</span><div class="track"><div class="fill" style="width:31%;background:var(--gray)"></div></div><span class="gvl">31%</span></div>
+    </div>
+    <div class="s100"><div class="cap">FY25 제품별 매출 구성</div>
+      <div class="sbar"><div class="s-deep" style="width:40%"></div><div class="s-main" style="width:37%"></div><div class="s-pale" style="width:23%"></div></div>
+      <div class="leg5"><span><i class="s-deep"></i>A 40%</span><span><i class="s-main"></i>B 37%</span><span><i class="s-pale"></i>C 23%</span></div>
+    </div>
+  </div>
+  <div class="fn">* 매출총이익률은 제품별 직접원가 기준.</div><div class="pg">23</div>
+</div></div>
+
+<div class="lbl">5-4 · 채널 매출 + 비중</div>
+<div class="sw"><div class="slide lt t5">
+  <div class="hd"><span class="bc">FY2025 Annual Report&nbsp;&nbsp;|&nbsp;&nbsp;24</span><span class="mk">LUMENTEC</span></div>
+  <div class="hl">직판이 절반을 넘겼다</div>
+  <div class="gv">마진이 가장 좋은 채널이 가장 빨리 자라고 있다.</div>
+  <div class="ch chL"><h4>채널별 FY25 매출 (억 원)</h4>
+    <div class="plot" style="gap:60px"><div class="grid" style="bottom:60px"></div><div class="grid" style="bottom:120px"></div>
+      <div class="bcol" style="width:64px"><div class="bval">668</div><div class="b hot" style="width:64px;height:180px"></div></div>
+      <div class="bcol" style="width:64px"><div class="bval">424</div><div class="b" style="width:64px;height:114px"></div></div>
+      <div class="bcol" style="width:64px"><div class="bval">192</div><div class="b" style="width:64px;height:52px"></div></div>
+    </div>
+    <div class="xrow" style="gap:60px"><span class="bx" style="width:64px">직판</span><span class="bx" style="width:64px">파트너</span><span class="bx" style="width:64px">온라인</span></div>
+    <div class="strip"><span>직판 YoY · <b class="g">+24%</b></span><span>온라인 YoY · <b class="g">+41%</b></span></div>
+  </div>
+  <div class="ch chR"><h4>채널별 매출 비중</h4>
+    <div style="margin-top:20px">
+      <div class="grow"><span class="gl">직판</span><div class="track"><div class="fill" style="width:52%;background:var(--main)"></div></div><span class="gvl">52%</span></div>
+      <div class="grow"><span class="gl">파트너</span><div class="track"><div class="fill" style="width:33%;background:var(--gray)"></div></div><span class="gvl">33%</span></div>
+      <div class="grow"><span class="gl">온라인</span><div class="track"><div class="fill" style="width:15%;background:var(--gray)"></div></div><span class="gvl">15%</span></div>
+    </div>
+    <div class="s100"><div class="cap">채널 구성 변화 (FY21 → FY25)</div>
+      <div class="sbar"><div class="s-deep" style="width:52%"></div><div class="s-main" style="width:33%"></div><div class="s-pale" style="width:15%"></div></div>
+      <div class="leg5"><span><i class="s-deep"></i>직판 41→52%</span><span><i class="s-main"></i>파트너 44→33%</span><span><i class="s-pale"></i>온라인 15%</span></div>
+    </div>
+  </div>
+  <div class="fn">* 채널 구분은 최종 계약 주체 기준.</div><div class="pg">24</div>
+</div></div>
+
+<div class="lbl">5-5 · R&amp;D 투자 + 프로젝트 진행률</div>
+<div class="sw"><div class="slide lt t5">
+  <div class="hd"><span class="bc">Strategy Briefing&nbsp;&nbsp;|&nbsp;&nbsp;25</span><span class="mk">LUMENTEC</span></div>
+  <div class="hl">R&amp;D — 돈이 아니라 진도가 지표다</div>
+  <div class="gv">투자액 공개는 쉽다. 진행률 공개가 자신감이다.</div>
+  <div class="ch chL"><h4>R&amp;D 투자 추이 (억 원)</h4>
+    <div class="plot"><div class="grid" style="bottom:60px"></div><div class="grid" style="bottom:120px"></div>
+      <div class="bcol"><div class="bval">34</div><div class="b" style="height:73px"></div></div>
+      <div class="bcol"><div class="bval">41</div><div class="b" style="height:88px"></div></div>
+      <div class="bcol"><div class="bval">52</div><div class="b" style="height:111px"></div></div>
+      <div class="bcol"><div class="bval">66</div><div class="b" style="height:141px"></div></div>
+      <div class="bcol"><div class="bval">84</div><div class="b hot" style="height:180px"></div></div>
+    </div>
+    <div class="xrow"><span class="bx">FY21</span><span class="bx">FY22</span><span class="bx">FY23</span><span class="bx">FY24</span><span class="bx">FY25</span></div>
+    <div class="strip"><span>매출 대비 · <b>6.5%</b></span><span>FY25 YoY · <b class="g">+27.3%</b></span></div>
+  </div>
+  <div class="ch chR"><h4>핵심 프로젝트 진행률</h4>
+    <div style="margin-top:20px">
+      <div class="grow"><span class="gl">알파 (양산)</span><div class="track"><div class="fill" style="width:85%;background:var(--main)"></div></div><span class="gvl">85%</span></div>
+      <div class="grow"><span class="gl">베타 (검증)</span><div class="track"><div class="fill" style="width:60%;background:var(--gray)"></div></div><span class="gvl">60%</span></div>
+      <div class="grow"><span class="gl">감마 (개발)</span><div class="track"><div class="fill" style="width:35%;background:var(--gray)"></div></div><span class="gvl">35%</span></div>
+      <div class="grow"><span class="gl">델타 (탐색)</span><div class="track"><div class="fill" style="width:15%;background:var(--gray)"></div></div><span class="gvl">15%</span></div>
+    </div>
+    <div class="s100"><div class="cap">FY26 R&amp;D 투자 배분 계획</div>
+      <div class="sbar"><div class="s-deep" style="width:55%"></div><div class="s-main" style="width:30%"></div><div class="s-pale" style="width:15%"></div></div>
+      <div class="leg5"><span><i class="s-deep"></i>신제품 55%</span><span><i class="s-main"></i>공정 30%</span><span><i class="s-pale"></i>탐색 15%</span></div>
+    </div>
+  </div>
+  <div class="fn">* 진행률은 스테이지게이트 통과 기준, 분기 이사회 보고 수치.</div><div class="pg">25</div>
+</div></div>
+
+<!-- ═══════════════ TYPE 6 ═══════════════ -->
+<div class="sec"><h2>TYPE 6 · 엔딩 (다크)</h2><span>중앙 워드마크 + Georgia Italic 한 줄 — 그 외 아무것도 두지 않는다</span></div>
+
+<div class="lbl">6-1 · 연간 실적</div>
+<div class="sw"><div class="slide t6"><div class="mark">LUMENTEC</div><div class="line">Growth is a story the numbers must tell on their own.</div></div></div>
+
+<div class="lbl">6-2 · 분기 실적</div>
+<div class="sw"><div class="slide t6"><div class="mark">LUMENTEC</div><div class="line">Thank you — the numbers will take your questions.</div></div></div>
+
+<div class="lbl">6-3 · 투자 유치</div>
+<div class="sw"><div class="slide t6"><div class="mark">LUMENTEC</div><div class="line">We are not raising to survive. We are raising to compound.</div></div></div>
+
+<div class="lbl">6-4 · 신사업 전략</div>
+<div class="sw"><div class="slide t6"><div class="mark">LUMENTEC</div><div class="line">The second curve begins where comfort ends.</div></div></div>
+
+<div class="lbl">6-5 · 지속가능경영</div>
+<div class="sw"><div class="slide t6"><div class="mark">LUMENTEC</div><div class="line">How we grow matters as much as how fast.</div></div></div>
+
+</div>
+<script>
+document.querySelectorAll('.sw').forEach(w=>{
+  const fit=()=>{const sc=w.clientWidth/1000;
+    w.querySelector('.slide').style.transform=`scale(${sc})`;
+    w.style.height=(563*sc)+'px';};
+  new ResizeObserver(fit).observe(w); fit();
+});
+</script>
+</body>
+</html>

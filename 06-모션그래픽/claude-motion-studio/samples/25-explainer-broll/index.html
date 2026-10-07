@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><title>해설 영상 B롤 · Explainer B-roll</title>
+<link rel="stylesheet" href="../../lib/stage.css">
+<style>
+  .frame{background:#0b0b0c !important;background-image:none !important}
+  .scene{position:absolute;inset:0;overflow:hidden;font-family:Pretendard,sans-serif}
+  .sh{position:absolute;inset:0;overflow:hidden;visibility:hidden}
+  .full{position:absolute;inset:0}
+  .mono{font-family:"IBM Plex Mono",monospace}
+  /* A shapes */
+  #s1{background:#F5F2EA}
+  .dots{position:absolute;inset:0;background-image:radial-gradient(#c9c3b6 1.4px,transparent 1.6px);background-size:32px 32px;background-position:16px 16px}
+  /* C kinetic words */
+  #s3{background:#F5E61B}
+  .kw{position:absolute;left:0;right:0;top:225px;height:260px;visibility:hidden}
+  .kw .ly{position:absolute;left:0;right:0;text-align:center;font-family:"Pretendard Variable",Pretendard,sans-serif;font-weight:900;font-size:230px;line-height:260px;letter-spacing:-.04em}
+  .kw .ch{display:inline-block}
+  /* D eases */
+  #s4{background:#F5E61B}
+  .ew{position:absolute;left:0;right:0;top:170px;text-align:center;font-weight:900;font-size:300px;line-height:300px;letter-spacing:-.05em}
+  .ew span{position:absolute;left:0;right:0}
+  /* E runner */
+  #s5{background:#050506}
+</style></head>
+<body data-no="S25" data-cat="해설 · EXPLAINER" data-ko="해설 영상 B롤" data-en="Explainer B-roll" data-meta="3초 컷 5개 · 도형·점구·주석 타이포·이즈·잔상" data-dur="15" data-size="1280x720" data-poster="4.6">
+<main class="scene">
+  <!-- A: shape morph (circle > square > pentagon > triangle > star > square) with offset color layers + blue outline -->
+  <section class="sh" id="s1"><div class="dots"></div>
+    <svg class="full" viewBox="0 0 1280 720">
+      <g id="aG" transform="translate(640 360) scale(1.6)">
+        <path id="pY" fill="#F7D21E"/><path id="pP" fill="#F04E9A"/><path id="pO" fill="#F0461E"/>
+        <path id="pB" fill="none" stroke="#2a74e8" stroke-width="1.8"/>
+        <g id="orbs"><circle cx="-210" cy="10" r="5.5" fill="#111"/><circle cx="200" cy="-40" r="5.5" fill="#111"/><circle cx="40" cy="150" r="5.5" fill="#111"/></g>
+      </g>
+    </svg>
+  </section>
+  <!-- B: CMYK dot sphere -->
+  <section class="sh" id="s2"><canvas id="cv" width="1280" height="720" class="full"></canvas></section>
+  <!-- C: bounce / weight / stretch kinetic words on yellow -->
+  <section class="sh" id="s3">
+    <div class="kw" id="kB"><div class="ly" style="color:#E5231B"></div><div class="ly" style="color:#F2852C"></div><div class="ly" style="color:#1E6FD9"></div></div>
+    <div class="kw" id="kW"><div class="ly" style="color:#E5231B">weight</div><div class="ly" style="color:#F2852C">weight</div><div class="ly" style="color:#1E6FD9">weight</div></div>
+    <div class="kw" id="kS"><div class="ly" style="color:#E5231B">stretch</div><div class="ly" style="color:#F2852C">stretch</div><div class="ly" style="color:#1E6FD9">stretch</div></div>
+  </section>
+  <!-- D: eases -->
+  <section class="sh" id="s4">
+    <div class="ew" id="ew"><span style="color:#E5231B">eases</span><span style="color:#F2852C">eases</span><span style="color:#1E6FD9">eases</span></div>
+    <div class="ew" id="ghost" style="opacity:.0"><span style="color:#1E6FD9;opacity:.35">eases</span></div>
+    <svg class="full" viewBox="0 0 1280 720">
+      <g transform="translate(520 560)">
+        <line x1="0" y1="90" x2="240" y2="90" stroke="#0b0b0c55" stroke-width="2"/>
+        <line x1="0" y1="90" x2="0" y2="0" stroke="#0b0b0c55" stroke-width="2"/>
+        <path id="dcurve" d="M0 90 C40 10 90 4 240 2" fill="none" stroke="#0b0b0c" stroke-width="3" pathLength="1" stroke-dasharray="1" stroke-dashoffset="1"/>
+        <circle id="ddot" r="6" fill="#E5231B" cx="0" cy="90"/>
+      </g>
+    </svg>
+  </section>
+  <!-- E: runner with echo trail -->
+  <section class="sh" id="s5">
+    <svg class="full" viewBox="0 0 1280 720">
+      <line x1="80" y1="576" x2="1200" y2="576" stroke="#ffffff22" stroke-width="2"/>
+      <g id="runners" transform="translate(640 576) scale(1.6) translate(-640 -576)"></g>
+    </svg>
+  </section>
+</main>
+<script src="../../lib/gsap.min.js"></script><script src="../../lib/stage.js"></script>
+<script>
+const tl = Motion.timeline();
+const $ = s => document.querySelector(s);
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const SH=[[0,'s1'],[3,'s3'],[6,'s4'],[9,'s2'],[12,'s5']];  // 원본 순서: 도형 → 단어 → eases → 점 구(→토러스)
+
+/* ---------- A: morphing shape stack ---------- */
+const NPT=120;
+function polyPts(verts){ // resample closed polygon to NPT points by perimeter, starting at top vertex
+  const seg=[]; let tot=0; for(let i=0;i<verts.length;i++){const a=verts[i],b=verts[(i+1)%verts.length],l=Math.hypot(b[0]-a[0],b[1]-a[1]);seg.push([a,b,l]);tot+=l;}
+  const out=[]; for(let k=0;k<NPT;k++){let d=k/NPT*tot,i=0; while(d>seg[i][2]){d-=seg[i][2];i++;} const [a,b,l]=seg[i],u=d/l; out.push([a[0]+(b[0]-a[0])*u,a[1]+(b[1]-a[1])*u]);} return out; }
+const ngon=(n,r,rot)=>Array.from({length:n},(_,i)=>{const a=-Math.PI/2+rot+i*2*Math.PI/n;return [Math.cos(a)*r,Math.sin(a)*r];});
+const starV=Array.from({length:10},(_,i)=>{const a=-Math.PI/2+i*Math.PI/5,r=i%2?52:125;return [Math.cos(a)*r,Math.sin(a)*r];});
+const SHP=[polyPts(ngon(60,118,0)), polyPts(ngon(4,150,Math.PI/4)), polyPts(ngon(5,128,0)), polyPts(ngon(3,140,Math.PI)), polyPts(starV), polyPts(ngon(4,150,Math.PI/4))];
+const am={k:0,s:0,fin:0};
+const toD=(pts,sc,dx,dy,rot)=>{const c=Math.cos(rot),s=Math.sin(rot);return pts.map(([x,y],i)=>{x*=sc;y*=sc;return (i?'L':'M')+(x*c-y*s+dx).toFixed(1)+' '+(x*s+y*c+dy).toFixed(1);}).join('')+'Z';};
+function drawShapes(t){
+  const i=Math.min(Math.floor(am.k),SHP.length-2), u=am.k-i, P=SHP[i].map((p,j)=>[p[0]+(SHP[i+1][j][0]-p[0])*u,p[1]+(SHP[i+1][j][1]-p[1])*u]);
+  const base=t*0.25, f=am.fin, s=am.s;
+  $('#pY').setAttribute('d',toD(P,s*(1.04+0.12*f),22*(1-f),14*(1-f),base+0.16+0.1*f));
+  $('#pP').setAttribute('d',toD(P,s*(1.02-f),-20,10,base-0.2));
+  $('#pO').setAttribute('d',toD(P,s*(1-0.55*f),0,0,base-0.04*f));
+  $('#pB').setAttribute('d',toD(P,s*(1.04+0.32*f),4,-3,base+0.22+0.25*f+0.08*Math.sin(t*3)));
+  $('#orbs').setAttribute('transform',`rotate(${(t*40).toFixed(1)}) scale(${s.toFixed(3)})`);
+}
+tl.fromTo(am,{s:0.08},{s:1,duration:0.45,ease:'back.out(1.8)'},0.1);
+[[0.75,1],[1.2,2],[1.6,3],[2.0,4],[2.4,5]].forEach(([t,k])=>tl.to(am,{k,duration:0.3,ease:'power3.inOut'},t));
+tl.to(am,{fin:1,duration:0.4,ease:'expo.out'},2.45);
+
+/* ---------- B: dot sphere (canvas) ---------- */
+const cv=$('#cv'), g=cv.getContext('2d'), rnd=Motion.rand(25), PTS=[], RAYS=[];
+const NP=720, GA=Math.PI*(3-Math.sqrt(5));
+for(let i=1;i<20;i++){const th=i/20*Math.PI, y=-Math.cos(th), r=Math.sin(th), n=Math.max(8,Math.round(44*r)); const band=(i<=3||i>=17)?0:(i%2?1:2); for(let j=0;j<n;j++){const a=j/n*Math.PI*2+i*0.13; PTS.push([Math.cos(a)*r,y,Math.sin(a)*r,band,th,a]);}}
+for(let i=0;i<90;i++) RAYS.push({a:rnd()*Math.PI*2,e:(rnd()-0.5)*2.4,r:1.25+rnd()*0.5,l:0.06+rnd()*0.12,c:Math.floor(rnd()*3)});
+const CM=['#FF3D9A','#FFE600','#1E9BFF'];
+function drawSphere(t){
+  const lt=t-9, R=262*(1-Math.pow(1-clamp(lt/0.6,0,1),3)), ay=lt*0.9;
+  // 2.1초부터 구 → 토러스(원본 7:19), 배경 검정 → 회색
+  const m=clamp((lt-2.1)/0.7,0,1), mt=m<.5?4*m*m*m:1-Math.pow(-2*m+2,3)/2, ax=0.35+0.12*Math.sin(lt*1.3)+0.55*mt;
+  const bg=Math.round(0x8a*mt); g.fillStyle=`rgb(${bg},${bg},${bg})`; g.fillRect(0,0,1280,720);
+  g.strokeStyle='#1E6FD9'; g.lineWidth=2; g.globalAlpha=clamp(lt/0.4,0,1)*(1-mt); g.beginPath(); g.arc(640,360,342,0,6.283); g.stroke();
+  const cy=Math.cos(ay), sy=Math.sin(ay), cx=Math.cos(ax), sx=Math.sin(ax), list=[];
+  for(const p of PTS){const tw=p[4]*2, tr=1+0.42*Math.cos(tw), X=p[0]+(tr*Math.cos(p[5])*0.78-p[0])*mt, Y=p[1]+(0.42*Math.sin(tw)*0.78-p[1])*mt, Zp=p[2]+(tr*Math.sin(p[5])*0.78-p[2])*mt;
+    let x=X*cy+Zp*sy, z=-X*sy+Zp*cy, y=Y; const y2=y*cx-z*sx, z2=y*sx+z*cx; list.push([x,y2,z2,p[3]]);}
+  list.sort((a,b)=>a[2]-b[2]);
+  for(const [x,y,z,b] of list){const s=1/(1-z*0.35); g.globalAlpha=(0.35+0.65*(z+1)/2)*(1-0.35*mt); g.fillStyle=CM[b];
+    g.beginPath(); g.arc(640+x*R*s,360+y*R*s,(2.2+2.4*(z+1)/2)*s*R/210,0,6.283); g.fill();}
+  // radiating ticks
+  g.lineWidth=3; g.lineCap='round';
+  for(const k of RAYS){const a=k.a+lt*0.5, rr=(k.r+0.18*Math.sin(lt*3+k.a*5))*R, ex=Math.cos(a), ey=Math.sin(a)*Math.cos(k.e);
+    g.globalAlpha=0.85*(1-mt); g.strokeStyle=CM[k.c]; g.beginPath(); g.moveTo(640+ex*rr,360+ey*rr); g.lineTo(640+ex*rr*(1+k.l),360+ey*rr*(1+k.l)); g.stroke();}
+  g.globalAlpha=1;
+}
+
+/* ---------- C: bounce / weight / stretch ---------- */
+document.querySelectorAll('#kB .ly').forEach(l=>{l.innerHTML=[...'bounce'].map(c=>`<span class="ch">${c}</span>`).join('');});
+const LOFF=[[14,10],[7,5],[0,0]]; // red, orange, blue(front) offsets
+document.querySelectorAll('.kw').forEach(w=>[...w.children].forEach((l,i)=>{l.style.left=LOFF[i][0]+'px';l.style.top=LOFF[i][1]+'px';}));
+// bounce: letters drop in with bounce, back layers lag
+[...document.querySelectorAll('#kB .ly')].forEach((l,li)=>{
+  tl.fromTo(l.querySelectorAll('.ch'),{yPercent:-160},{yPercent:0,duration:0.55,stagger:0.07,ease:'bounce.out'},3.05+(2-li)*0.05);
+  tl.to(l.querySelectorAll('.ch'),{yPercent:-45,duration:0.16,stagger:0.05,yoyo:true,repeat:1,ease:'power2.out'},3.65+(2-li)*0.04);
+});
+// weight: thin -> heavy, settle down
+[...document.querySelectorAll('#kW .ly')].forEach((l,li)=>{
+  tl.fromTo(l,{fontWeight:100,y:-30},{fontWeight:900,y:0,duration:0.5,ease:'power3.in'},4.05+(2-li)*0.05);
+  tl.fromTo(l,{scaleY:1},{scaleY:0.86,duration:0.08,yoyo:true,repeat:1,ease:'power1.out',transformOrigin:'50% 100%'},4.55+(2-li)*0.05);
+});
+// stretch: sliver -> overshoot wide -> settle
+[...document.querySelectorAll('#kS .ly')].forEach((l,li)=>{
+  tl.fromTo(l,{scaleX:0.03},{scaleX:1,duration:0.7,ease:'elastic.out(1,0.45)'},5.05+(2-li)*0.06);
+});
+
+/* ---------- D: eases chromatic ---------- */
+const ch={o:1};
+function drawEases(t){
+  const lt=t-6, slide=clamp(1-Math.pow(1-clamp(lt/0.7,0,1),4),0,1), x=(1-slide)*900;
+  const off=ch.o, jit=Math.sin(lt*40)*3*off;
+  const sp=[...$('#ew').children];
+  sp[2].style.transform=`translate(${(x-off*34+jit).toFixed(1)}px,${(-off*6).toFixed(1)}px)`;
+  sp[1].style.transform=`translate(${(x+off*10).toFixed(1)}px,${(off*4).toFixed(1)}px)`;
+  sp[0].style.transform=`translate(${(x+off*38-jit).toFixed(1)}px,${(off*10).toFixed(1)}px)`;
+  $('#ghost').style.opacity=lt<0.8?(0.9*(1-slide)).toFixed(2):0;
+  $('#ghost').firstChild.style.transform=`translate(${(x+180).toFixed(1)}px,0)`;
+}
+tl.fromTo(ch,{o:1},{o:0.22,duration:1.2,ease:'expo.out'},6.5);
+tl.to(ch,{o:0.55,duration:0.12,yoyo:true,repeat:1,ease:'none'},7.8);
+tl.to('#dcurve',{strokeDashoffset:0,duration:0.8,ease:'power2.out'},6.6);
+const dd={u:0}; tl.to(dd,{u:1,duration:1.2,ease:'expo.out',onUpdate(){const u=dd.u,v=1-u;const bx=3*v*v*u*40+3*v*u*u*90+u*u*u*240, by=v*v*v*90+3*v*v*u*10+3*v*u*u*4+u*u*u*2;$('#ddot').setAttribute('cx',bx.toFixed(1));$('#ddot').setAttribute('cy',by.toFixed(1));}},7.2);
+
+/* ---------- E: runner with echo trail ---------- */
+const NG=5, RUN=[];
+for(let k=NG;k>=0;k--){const gr=document.createElementNS('http://www.w3.org/2000/svg','g');
+  gr.innerHTML='<path fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="18"/><circle r="17"/>';
+  const col=k===0?'#f4f1ea':(k%2?'#F2552C':'#3B7BFF'); gr.querySelector('path').setAttribute('stroke',col); gr.querySelector('circle').setAttribute('fill',col);
+  gr.setAttribute('opacity',k===0?1:(0.55-k*0.09).toFixed(2)); $('#runners').appendChild(gr); RUN.push({gr,k});}
+const D2R=Math.PI/180;
+function pose(p,hx,amp){
+  const lean=14*D2R*amp, hy=440-Math.abs(Math.cos(p))*14*amp;
+  const pt=(x,y,a,l)=>[x+Math.sin(a)*l,y+Math.cos(a)*l];
+  const leg=q=>{const a1=(38*Math.sin(q))*D2R*amp; const flex=clamp((14+86*(0.5+0.5*Math.sin(q-1.3)))*amp+8*(1-amp),10,100)*D2R; // knee only bends backward: shin = thigh - flex, flex>0
+    const k=pt(hx,hy,a1,64), f=pt(k[0],k[1],a1-flex,64); return `M${hx} ${hy}L${k[0].toFixed(1)} ${k[1].toFixed(1)}L${f[0].toFixed(1)} ${f[1].toFixed(1)}`;};
+  const sx=hx+Math.sin(lean)*92, sy=hy-Math.cos(lean)*92;
+  const arm=q=>{const u=(-46*Math.sin(q))*D2R*amp+lean*0.4; const e=pt(sx,sy,u,50), w=pt(e[0],e[1],u+(95*D2R)*amp+20*D2R*(1-amp)+Math.PI,-46);
+    return `M${sx.toFixed(1)} ${sy.toFixed(1)}L${e[0].toFixed(1)} ${e[1].toFixed(1)}L${w[0].toFixed(1)} ${w[1].toFixed(1)}`;};
+  return {d:leg(p)+leg(p+Math.PI)+`M${hx} ${hy}L${sx.toFixed(1)} ${sy.toFixed(1)}`+arm(p)+arm(p+Math.PI), hx:sx+Math.sin(lean)*30, hy:sy-Math.cos(lean)*30};
+}
+const rn={amp:1,gap:1};
+function drawRunner(t){
+  const lt=t-12, run=Math.min(lt,2.2);              // freeze after 14.2s
+  RUN.forEach(({gr,k})=>{
+    const tt=run-k*0.07*rn.gap, p=tt*11, hx=380+tt*150;
+    const P=pose(p,hx,rn.amp);
+    gr.querySelector('path').setAttribute('d',P.d);
+    const c=gr.querySelector('circle'); c.setAttribute('cx',P.hx.toFixed(1)); c.setAttribute('cy',P.hy.toFixed(1));
+  });
+}
+tl.to(rn,{gap:0,duration:0.5,ease:'power2.inOut'},13.9);
+tl.fromTo('#runners',{opacity:0},{opacity:1,duration:0.2},12.0);
+
+/* ---------- master clock ---------- */
+const clk={t:0};
+tl.to(clk,{t:15,duration:15,ease:'none',onUpdate(){
+  const t=clk.t; let si=0; SH.forEach((s,i)=>{if(t>=s[0]-1e-6)si=i;});
+  SH.forEach((s,i)=>{document.getElementById(s[1]).style.visibility=i===si?'visible':'hidden';});
+  const id=SH[si][1];
+  if(id!=='s3') ['#kB','#kW','#kS'].forEach(k=>$(k).style.visibility='hidden');  // 자식의 visible이 부모 hidden을 뚫지 않도록
+  if(id==='s1') drawShapes(t); if(id==='s3'){$('#kB').style.visibility=t<4?'visible':'hidden';$('#kW').style.visibility=t>=4&&t<5?'visible':'hidden';$('#kS').style.visibility=t>=5?'visible':'hidden';}
+  if(id==='s2') drawSphere(t); if(id==='s4') drawEases(t); if(id==='s5') drawRunner(t);
+}},0);
+Motion.ready();
+</script></body></html>

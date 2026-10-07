@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><title>왜 QWERTY일까 · Vox Retro Explainer</title>
+<link rel="stylesheet" href="../../lib/stage.css">
+<style>
+  .frame{background:#0d0f12 !important;background-image:none !important}
+  .scene{position:absolute;inset:0;overflow:hidden;background:#ebe5d4}
+  .paper{position:absolute;inset:0;pointer-events:none;mix-blend-mode:multiply;
+    background:radial-gradient(ellipse at 20% 15%,rgba(160,130,80,.16),rgba(0,0,0,0) 45%),radial-gradient(ellipse at 85% 90%,rgba(150,120,70,.2),rgba(0,0,0,0) 50%),radial-gradient(ellipse at 50% 50%,rgba(0,0,0,0) 60%,rgba(90,70,40,.22) 100%)}
+  .grain{position:absolute;inset:0;pointer-events:none;mix-blend-mode:multiply;opacity:.6;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='300'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .35 0 0 0 0 .3 0 0 0 0 .22 0 0 0 .25 0'/></filter><rect width='300' height='300' filter='url(%23n)'/></svg>")}
+  .fold{position:absolute;left:0;right:0;top:50%;height:2px;background:rgba(120,100,70,.12)}
+  #cam{position:absolute;inset:0;transform-origin:50% 45%}
+  .obj{position:absolute}
+  .obj>svg{width:100%;height:100%;overflow:visible}
+  .head{position:absolute;font-family:"Pretendard";font-weight:900;color:#141210;line-height:1;white-space:nowrap;letter-spacing:-.02em}
+  .head .bar{position:absolute;left:-8px;right:-8px;bottom:6%;height:42%;background:#F4C430;transform-origin:0 50%;transform:scaleX(0);z-index:-1}
+  .head .cond{display:inline-block;transform:scaleX(.8);transform-origin:0 50%}
+  .head .l{display:inline-block;opacity:0}
+  .tag{position:absolute;background:#f7f4ec;border:2.5px solid #1c1a17;padding:4px 12px;font-family:"Pretendard";font-weight:800;font-size:30px;color:#1c1a17;box-shadow:2px 4px 6px rgba(0,0,0,.25);white-space:nowrap}
+  .tape{position:absolute;width:90px;height:26px;background:rgba(226,214,180,.82);box-shadow:0 1px 2px rgba(0,0,0,.15)}
+  .lab{position:absolute;text-align:center;font-family:"Pretendard";color:#1c1a17;white-space:nowrap;transform:translateX(-50%)}
+  .lab b{display:block;font-size:26px;font-weight:800}
+  .lab i{display:block;font-style:normal;font-size:15px;color:#5a544a;margin-top:2px}
+  .ytag{display:inline-block;margin-top:8px;background:#F4C430;padding:2px 8px;font-family:"IBM Plex Mono";font-weight:700;font-size:14px;letter-spacing:.35em;color:#141210}
+  .callout{position:absolute;background:#fbf9f3;border:2px solid #1c1a17;padding:3px 10px;font-family:"Pretendard";font-weight:800;font-size:20px;line-height:1.1;white-space:nowrap}
+  .callout small{display:block;font-family:"IBM Plex Mono";font-size:10px;letter-spacing:.12em;font-weight:400}
+  .stamp{position:absolute;border:4px solid #c8302a;color:#c8302a;padding:6px 16px;font-family:"Pretendard";font-weight:900;font-size:34px;background:rgba(248,236,226,.85);white-space:nowrap;opacity:0}
+  .subs{position:absolute;left:0;right:0;bottom:14px;display:flex;justify-content:center;z-index:50}
+  .sub{position:absolute;bottom:0;padding:5px 14px;background:rgba(20,18,16,.82);color:#fff;font-family:"Pretendard";font-weight:600;font-size:22px;white-space:nowrap;opacity:0}
+</style></head>
+<body data-no="S05" data-cat="스타일 · STYLE" data-ko="왜 키보드는 QWERTY일까" data-en="Vox Retro Explainer" data-meta="신문지 · 하프톤 컷아웃 · 노란 형광 · 청사진 · 타임라인" data-dur="14" data-size="1280x720" data-poster="13.6">
+<main class="scene">
+<div class="fold"></div>
+<svg width="0" height="0" style="position:absolute"><defs>
+  <!-- 하프톤 + 흰 오려낸 테두리 + 부드러운 그림자 -->
+  <filter id="cut" x="-15%" y="-15%" width="130%" height="130%">
+    <feImage href="data:image/svg+xml;utf8,&lt;svg xmlns='http://www.w3.org/2000/svg' width='5' height='5'&gt;&lt;circle cx='2.5' cy='2.5' r='1.2' fill='black' fill-opacity='.45'/&gt;&lt;/svg&gt;" x="0" y="0" width="5" height="5" result="dot"/>
+    <feTile in="dot" result="dots"/>
+    <feComposite in="dots" in2="SourceAlpha" operator="in" result="d2"/>
+    <feBlend in="d2" in2="SourceGraphic" mode="multiply" result="ht"/>
+    <feMorphology in="SourceAlpha" operator="dilate" radius="6" result="dil"/>
+    <feTurbulence type="fractalNoise" baseFrequency="0.09" numOctaves="1" seed="7" result="n"/>
+    <feDisplacementMap in="dil" in2="n" scale="4" result="torn"/>
+    <feFlood flood-color="#fbfaf5"/><feComposite in2="torn" operator="in" result="white"/>
+    <feGaussianBlur in="torn" stdDeviation="7"/><feOffset dx="4" dy="9" result="so"/>
+    <feFlood flood-color="#2a2010" flood-opacity=".32"/><feComposite in2="so" operator="in" result="shadow"/>
+    <feMerge><feMergeNode in="shadow"/><feMergeNode in="white"/><feMergeNode in="ht"/></feMerge>
+  </filter>
+  <filter id="marker"><feTurbulence type="fractalNoise" baseFrequency="0.5" numOctaves="1" seed="2" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="3"/></filter>
+  <linearGradient id="cyl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1c1c1c"/><stop offset=".35" stop-color="#7a7a7a"/><stop offset=".55" stop-color="#3a3a3a"/><stop offset="1" stop-color="#161616"/></linearGradient>
+  <linearGradient id="bodyg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#4a4a4a"/><stop offset=".25" stop-color="#2a2a2a"/><stop offset=".8" stop-color="#222"/><stop offset="1" stop-color="#3c3c3c"/></linearGradient>
+  <linearGradient id="silver" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e9e9e9"/><stop offset="1" stop-color="#b9b9b9"/></linearGradient>
+  <radialGradient id="cap" cx=".4" cy=".35" r=".7"><stop offset="0" stop-color="#4a4a4a"/><stop offset="1" stop-color="#0d0d0d"/></radialGradient>
+  <g id="tw"></g>
+</defs></svg>
+
+<div id="cam">
+  <!-- 장면 A: 키캡 띠 + QWERTY + 타자기 -->
+  <div class="obj" id="tw1" style="left:70px;top:140px;width:460px;height:360px"><svg viewBox="0 0 440 340"><g filter="url(#cut)"><use href="#tw"/></g></svg></div>
+  <div class="tape" style="left:430px;top:136px;transform:rotate(28deg)" id="tw1tape"></div>
+  <div class="tag" id="t1870" style="left:56px;top:96px;transform:rotate(-7deg)">1870년대</div>
+  <div class="obj" id="callA" style="left:90px;top:440px;width:300px;height:110px">
+    <svg viewBox="0 0 300 110"><path id="leadA" d="M150,8 L60,70" stroke="#1c1a17" stroke-width="2" fill="none"/></svg>
+    <div class="callout" style="left:0;top:64px">자판 배열<small>KEYBOARD LAYOUT</small></div>
+  </div>
+  <div class="obj" id="keys" style="left:640px;top:70px;width:560px;height:230px"><svg viewBox="0 0 560 230"><g filter="url(#cut)" transform="rotate(-5 280 115)" id="keysG"></g></svg></div>
+  <div class="tape" id="ktape" style="left:640px;top:70px;transform:rotate(-20deg)"></div>
+  <div class="head" id="qw" style="left:690px;top:330px;font-size:150px"><span class="bar"></span><span class="cond"><span class="l">Q</span><span class="l">W</span><span class="l">E</span><span class="l">R</span><span class="l">T</span><span class="l">Y</span></span></div>
+
+  <!-- 장면 B: 청사진 카드 -->
+  <div class="obj" id="bp" style="left:150px;top:40px;width:980px;height:560px;transform:translateX(1300px) rotate(-1deg)">
+    <svg viewBox="0 0 980 560"><g filter="url(#cut)"><rect width="980" height="560" fill="#ecebe4"/></g>
+      <g id="grid" stroke="#2B4C8C" stroke-width=".6" opacity=".18"></g>
+      <g id="bpDraw" fill="none" stroke="#2B4C8C" stroke-width="2.2" stroke-linecap="round"></g>
+      <text x="40" y="530" font-family="IBM Plex Mono" font-size="15" letter-spacing="3" fill="#2B4C8C">DIAGRAM — TYPEBAR BASKET</text>
+      <g id="arrows" fill="none" stroke="#d6322a" stroke-width="4.5" stroke-linecap="round" filter="url(#marker)">
+        <path d="M300,400 C300,300 400,230 486,188"/><path d="M680,400 C680,300 580,230 494,188"/>
+        <path d="M486,188 l-22,-2 M486,188 l-12,18"/><path d="M494,188 l22,-2 M494,188 l12,18"/>
+        <path d="M476,166 l28,28 M504,166 l-28,28" stroke-width="6"/>
+      </g>
+      <ellipse id="ring" cx="490" cy="300" rx="300" ry="150" fill="none" stroke="#d6322a" stroke-width="4" filter="url(#marker)" transform="rotate(-3 490 300)"/>
+    </svg>
+    <div class="tape" style="left:-24px;top:-8px;transform:rotate(-35deg)"></div><div class="tape" style="right:-24px;top:-8px;transform:rotate(35deg)"></div>
+    <div class="callout" style="left:760px;top:70px;font-size:26px;color:#2B4C8C;border-color:#2B4C8C">글쇠<small>TYPEBAR</small></div>
+    <div class="callout" id="tangle" style="left:530px;top:130px;color:#d6322a;border-color:#d6322a;font-size:24px;opacity:0">엉킴!</div>
+    <div class="stamp" id="stamp" style="left:620px;top:440px;transform:rotate(-6deg)">통설 · 반론도 있음</div>
+  </div>
+
+  <!-- 장면 C/D: 타자기 → 노트북 → 스마트폰 타임라인 -->
+  <div class="obj" id="tw2" style="left:440px;top:120px;width:400px;height:310px;opacity:0"><svg viewBox="0 0 440 340"><g filter="url(#cut)"><use href="#tw"/></g>
+    <g fill="none" stroke="#d93a2b" stroke-width="13" stroke-linecap="round" filter="url(#marker)" opacity=".92"><path id="x1" d="M40,40 C160,140 280,230 410,320"/><path id="x2" d="M400,30 C290,130 160,230 30,330"/></g></svg></div>
+  <div class="obj" id="laptop" style="left:510px;top:230px;width:270px;height:200px"><svg viewBox="0 0 360 260"><g filter="url(#cut)" transform="rotate(-10 180 130)" id="lapG"></g></svg></div>
+  <div class="obj" id="phone" style="left:960px;top:200px;width:130px;height:240px"><svg viewBox="0 0 160 300"><g filter="url(#cut)" transform="rotate(9 80 150)" id="phoneG"></g></svg></div>
+  <div class="obj" id="line" style="left:0;top:0;width:1280px;height:720px;pointer-events:none"><svg viewBox="0 0 1280 720">
+    <path id="axis" d="M90,490 H1190" stroke="#1c1a17" stroke-width="3" fill="none"/><path id="axhead" d="M1176,480 L1192,490 L1176,500" stroke="#1c1a17" stroke-width="3" fill="none" opacity="0"/>
+    <g fill="#1c1a17"><circle class="node" cx="240" cy="490" r="7"/><circle class="node" cx="640" cy="490" r="7"/><circle class="node" cx="1030" cy="490" r="7"/></g></svg></div>
+  <div class="lab" id="lb1" style="left:640px;top:440px"><b>타자기</b><i>1870년대~</i><span class="ytag">QWERTY</span></div>
+  <div class="lab" id="lb2" style="left:640px;top:504px;opacity:0"><b>노트북</b><span class="ytag">QWERTY</span></div>
+  <div class="lab" id="lb3" style="left:1030px;top:504px;opacity:0"><b>스마트폰</b><i>오늘</i><span class="ytag">QWERTY</span></div>
+  <div class="head" id="fin" style="left:640px;top:58px;font-size:112px;transform:translateX(-50%)"><span class="bar"></span><span style="font-size:52px;margin-right:12px;vertical-align:28px">약</span>150년째,<span id="fin2" style="display:inline-block;margin-left:22px">그대로.</span></div>
+</div>
+
+<div class="paper"></div><div class="grain"></div>
+<div class="subs">
+  <div class="sub">쿼티 자판은 1870년대 타자기에서 시작됐습니다.</div>
+  <div class="sub">글쇠가 엉키지 않게 배열을 바꿨다는 설이 유명하죠.</div>
+  <div class="sub">타자기는 사라졌지만, 이 배열은 스마트폰까지 남았습니다.</div>
+  <div class="sub">150년째, 그대로요.</div>
+</div>
+</main>
+<script src="../../lib/gsap.min.js"></script><script src="../../lib/stage.js"></script>
+<script>
+const NS = 'http://www.w3.org/2000/svg';
+const el = (tag, attrs, parent, text) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (text) e.textContent = text; parent.appendChild(e); return e; };
+// ── 빈티지 타자기 (회색 톤) 440x340
+const tw = document.getElementById('tw');
+el('rect', {x:150, y:0, width:140, height:62, fill:'#f2f0ea'}, tw);
+el('path', {d:'M44,52 L12,28 L4,34 L36,60Z', fill:'#555'}, tw);
+el('rect', {x:62, y:38, width:316, height:44, rx:22, fill:'url(#cyl)'}, tw);
+[[50,60],[390,60]].forEach(([x,y])=>{ el('circle',{cx:x,cy:y,r:24,fill:'#2a2a2a'},tw); el('circle',{cx:x,cy:y,r:14,fill:'#5a5a5a'},tw); el('circle',{cx:x-4,cy:y-5,r:4,fill:'#9a9a9a'},tw); });
+el('path', {d:'M58,88 L382,88 L428,306 L12,306Z', fill:'url(#bodyg)'}, tw);
+el('path', {d:'M58,88 L90,88 L60,306 L12,306Z', fill:'#555', opacity:.6}, tw);
+el('path', {d:'M125,160 A95,95 0 0 1 315,160Z', fill:'#3c3c3c'}, tw);
+for (let a=184;a<=356;a+=4.5){ const rad=a*Math.PI/180; el('path',{d:`M${220+Math.cos(rad)*34},${160+Math.sin(rad)*34} L${220+Math.cos(rad)*92},${160+Math.sin(rad)*92}`,stroke:'#9b9b9b','stroke-width':1.6},tw); }
+el('circle', {cx:220, cy:126, r:9, fill:'#bbb'}, tw);
+el('rect', {x:70, y:160, width:300, height:22, fill:'#151515'}, tw);
+el('path', {d:'M180,171 h80', stroke:'#c9c9c9', 'stroke-width':2}, tw);
+const rows = ['1234567890','QWERTYUIOP','ASDFGHJKL','ZXCVBNM,.'];
+rows.forEach((row,ri)=>{ const y = 200 + ri*28, n = row.length, x0 = 220 - (n-1)*15 + ri*6;
+  [...row].forEach((ch,i)=>{ const x = x0 + i*30, hi = ri===1 && i<6; el('circle',{cx:x,cy:y,r:13.5,fill:hi?'#F4C430':'url(#cap)',stroke:hi?'#1c1a17':'#c4c4c4','stroke-width':2},tw);
+    el('text',{x, y:y+5.6, 'text-anchor':'middle','font-family':'IBM Plex Mono','font-weight':700,'font-size':16,fill:hi?'#141210':'#f4f4f4'},tw,ch); }); });
+el('rect', {x:140, y:312, width:160, height:11, rx:5, fill:'#9a9a9a', stroke:'#333'}, tw);
+el('rect', {x:24, y:304, width:46, height:20, rx:4, fill:'#1a1a1a'}, tw); el('rect', {x:370, y:304, width:46, height:20, rx:4, fill:'#1a1a1a'}, tw);
+
+// ── 큰 키캡 띠 Q W E R T Y (활자대 위)
+const kg = document.getElementById('keysG');
+el('path', {d:'M20,120 Q280,96 540,120 L540,215 L20,215Z', fill:'#2c2c2c'}, kg);
+for (let i=0;i<6;i++){ const x = 60 + i*88; el('path',{d:`M${x-10},120 L${x-24},210 L${x+6},210 L${x+12},120Z`,fill:'#6a6a6a'},kg); el('circle',{cx:x+14,cy:190,r:28,fill:'#3a3a3a',stroke:'#7b7b7b','stroke-width':3},kg); }
+'QWERTY'.split('').forEach((ch,i)=>{ const x = 60 + i*88, y = 78 - (i%2)*6;
+  el('circle',{cx:x,cy:y,r:44,fill:'#8c8c8c'},kg); el('circle',{cx:x,cy:y,r:38,fill:'url(#cap)'},kg); el('circle',{cx:x,cy:y,r:34,fill:'none',stroke:'#cfcfcf','stroke-width':2},kg);
+  el('text',{x, y:y+15, 'text-anchor':'middle','font-family':'NanumMyeongjo','font-weight':800,'font-size':42,fill:'#efefef'},kg,ch); });
+
+// ── 청사진: 활자대 바구니
+const bp = document.getElementById('bpDraw'), grid = document.getElementById('grid');
+for (let x=20;x<980;x+=40) el('path',{d:`M${x},0 V560`},grid); for (let y=20;y<560;y+=40) el('path',{d:`M0,${y} H980`},grid);
+const bpPaths = [];
+const P = (d, w) => { const p = el('path',{d},bp); if (w) p.setAttribute('stroke-width', w); bpPaths.push(p); return p; };
+P('M150,110 H830 A26,26 0 0 1 830,162 H150 A26,26 0 0 1 150,110Z'); P('M150,124 H830 M150,148 H830', 1);
+P('M108,136 A40,40 0 1 0 108,137 M872,136 A40,40 0 1 0 872,137');
+P('M120,190 L860,190 L920,470 L60,470Z'); P('M60,470 H920 M90,490 H890', 1.4);
+for (let a=192;a<=348;a+=4){ const rad=a*Math.PI/180; P(`M${490+Math.cos(rad)*60},${300+Math.sin(rad)*44} L${490+Math.cos(rad)*270},${300+Math.sin(rad)*130}`, 1.3); }
+P('M220,300 A270,130 0 0 1 760,300', 2.6); P('M430,300 A60,44 0 0 1 550,300', 2);
+P('M490,190 V256', 1.2);
+for (let i=0;i<10;i++) P(`M${200+i*64},420 a14,14 0 1 0 0.1,0`, 1.6);
+P('M150,380 L60,250 M830,380 L920,250', 1.4);
+// 기계 디테일: 톱니·레버·치수선
+[[96,330,44],[884,330,44]].forEach(([cx,cy,R])=>{ P(`M${cx+R},${cy} A${R},${R} 0 1 0 ${cx+R},${cy+.1}`, 1.6); P(`M${cx+R*.45},${cy} A${R*.45},${R*.45} 0 1 0 ${cx+R*.45},${cy+.1}`, 1.2);
+  for (let k=0;k<12;k++){ const a=k*Math.PI/6; P(`M${cx+Math.cos(a)*R},${cy+Math.sin(a)*R} L${cx+Math.cos(a)*(R+9)},${cy+Math.sin(a)*(R+9)}`, 2.4); } });
+for (let i=0;i<14;i++) P(`M${150+i*49},170 l-18,20`, .9);
+P('M150,74 H830 M150,66 V82 M830,66 V82', 1); P('M40,190 V470 M32,190 H48 M32,470 H48', 1);
+P('M250,190 C230,250 210,330 200,420 M730,190 C750,250 770,330 780,420', 1.2);
+
+// ── 노트북 / 스마트폰
+const lg = document.getElementById('lapG');
+el('rect',{x:20,y:10,width:320,height:22,rx:6,fill:'#2a2a2a'},lg);
+el('rect',{x:10,y:30,width:340,height:220,rx:16,fill:'url(#silver)'},lg);
+el('rect',{x:30,y:44,width:300,height:120,rx:6,fill:'#262626'},lg);
+const lr = ['QWERTYUIOP','ASDFGHJKL','ZXCVBNM'];
+for (let i=0;i<12;i++) el('rect',{x:36+i*24.4,y:50,width:20,height:16,rx:3,fill:'#3d3d3d'},lg);
+lr.forEach((row,ri)=>[...row].forEach((ch,i)=>{ const x = 46+ri*10+i*24.4, y = 72+ri*22;
+  el('rect',{x,y,width:20,height:18,rx:3,fill: ri===0 && i<6 ? '#F4C430' : '#3d3d3d'},lg); }));
+el('rect',{x:110,y:138,width:140,height:18,rx:3,fill:'#3d3d3d'},lg);
+el('rect',{x:120,y:176,width:120,height:62,rx:6,fill:'#c6c6c6',stroke:'#aaa'},lg);
+const pg = document.getElementById('phoneG');
+el('rect',{x:6,y:4,width:148,height:292,rx:24,fill:'#1b1b1b'},pg);
+el('rect',{x:14,y:14,width:132,height:272,rx:18,fill:'#f3f2ee'},pg);
+el('rect',{x:58,y:20,width:44,height:10,rx:5,fill:'#1b1b1b'},pg);
+el('rect',{x:14,y:186,width:132,height:100,fill:'#d4d4d2'},pg);
+[10,9,7].forEach((n,ri)=>{ for (let i=0;i<n;i++){ const x = 18 + (10-n)*6.4 + i*12.8, y = 194+ri*24;
+  el('rect',{x,y,width:10.6,height:19,rx:2,fill: ri===0 && i<6 ? '#F4C430' : '#fbfbfa'},pg); } });
+el('rect',{x:46,y:266,width:68,height:14,rx:3,fill:'#fbfbfa'},pg);
+el('rect',{x:24,y:40,width:100,height:16,rx:8,fill:'#e2e0d8'},pg); el('rect',{x:40,y:66,width:96,height:16,rx:8,fill:'#cfe0f0'},pg);
+
+function prep(nodes){ nodes.forEach(p=>{ const L = p.getTotalLength(); p.style.strokeDasharray = L; p.style.strokeDashoffset = L; }); }
+prep(bpPaths); prep([...document.querySelectorAll('#arrows path')]); prep([document.getElementById('ring'), document.getElementById('x1'), document.getElementById('x2'), document.getElementById('axis'), document.getElementById('leadA')]);
+
+const tl = Motion.timeline();
+const B = 'blur(14px)', C = 'blur(0px)';
+// 자막
+const subs = document.querySelectorAll('.sub'), cue = [0.1, 3.2, 6.6, 10.6];
+subs.forEach((s,i)=>{ tl.set(s,{opacity:1},cue[i]); if (i<subs.length-1) tl.set(s,{opacity:0},cue[i+1]); });
+// 카메라 느린 푸시인
+tl.fromTo('#cam', {scale:1}, {scale:1.05, duration:14, ease:'none'}, 0);
+
+// ── A 0–3.2: 키캡 띠 → Q → QWERTY → 타자기 옆에서 밀려옴
+tl.fromTo('#keys', {x:-330, y:30, scale:1.25, filter:B, opacity:0}, {filter:C, opacity:1, duration:.6, ease:'power2.out'}, 0);
+tl.fromTo('#ktape', {x:-330-60, y:30, opacity:0}, {opacity:1, duration:.2}, .5);
+tl.fromTo('#qw', {x:-330, y:40, scale:1.3, transformOrigin:'0 50%'}, {x:-330, duration:.01}, 0);
+const L = document.querySelectorAll('#qw .l');
+tl.to(L[0], {opacity:1, duration:.12}, .35);
+tl.fromTo('#qw .bar', {scaleX:0}, {scaleX:.2, duration:.25, ease:'power2.out'}, .4);
+tl.to([...L].slice(1), {opacity:1, duration:.08, stagger:.08}, .95);
+tl.to('#qw .bar', {scaleX:.86, duration:.5, ease:'power2.out'}, .95);
+// 1.6 측면 슬라이드: 키캡·제목 오른쪽 자리로, 타자기 등장(블러)
+tl.to(['#keys','#qw'], {x:0, y:0, scale:1, duration:.8, ease:'power3.inOut'}, 1.6);
+tl.to('#ktape', {x:0, y:0, duration:.8, ease:'power3.inOut'}, 1.6);
+tl.fromTo('#tw1', {x:-640, filter:B}, {x:0, filter:C, duration:.8, ease:'power3.out'}, 1.65);
+tl.fromTo('#tw1tape', {opacity:0}, {opacity:1, duration:.15}, 2.3);
+tl.fromTo('#t1870', {scale:1.8, opacity:0, rotation:-16}, {scale:1, opacity:1, rotation:-7, duration:.3, ease:'power4.in'}, 2.2);
+tl.fromTo('#callA', {opacity:0}, {opacity:1, duration:.2}, 2.55);
+tl.to('#leadA', {strokeDashoffset:0, duration:.3}, 2.55);
+// ── B 3.2–6.6: 모두 왼쪽으로 빠지고 청사진 등장
+tl.to(['#tw1','#tw1tape','#t1870','#callA','#keys','#ktape','#qw'], {x:'-=1500', filter:B, opacity:0, duration:.7, ease:'power3.in'}, 3.15);
+tl.to('#bp', {x:0, duration:.75, ease:'power3.out'}, 3.4);
+tl.fromTo('#bp', {filter:B}, {filter:C, duration:.75, ease:'power3.out', immediateRender:false}, 3.4);
+tl.to(bpPaths, {strokeDashoffset:0, duration:.7, stagger:.012, ease:'power1.out'}, 3.55);
+tl.to('#arrows path', {strokeDashoffset:0, duration:.35, stagger:.12, ease:'power2.out'}, 4.4);
+tl.fromTo('#tangle', {scale:1.6, opacity:0}, {scale:1, opacity:1, duration:.25, ease:'power4.in'}, 5.0);
+tl.to('#ring', {strokeDashoffset:0, duration:.6, ease:'power1.inOut'}, 5.2);
+tl.fromTo('#stamp', {scale:2, opacity:0}, {scale:1, opacity:1, duration:.22, ease:'power4.in'}, 5.85);
+// ── C 6.6–10.6: 청사진 빠지고 타자기 단독 → X → 타임라인
+tl.to('#bp', {x:-1400, filter:B, duration:.6, ease:'power3.in'}, 6.5);
+tl.fromTo('#tw2', {opacity:0, x:500, filter:B}, {opacity:1, x:0, filter:C, duration:.6, ease:'power3.out'}, 6.75);
+tl.fromTo('#lb1', {opacity:0, y:12}, {opacity:1, y:0, duration:.3}, 7.05);
+tl.to('#x1', {strokeDashoffset:0, duration:.28, ease:'power2.in'}, 7.45);
+tl.to('#x2', {strokeDashoffset:0, duration:.28, ease:'power2.in'}, 7.78);
+tl.to('#tw2', {x:-400, y:80, scale:.6, duration:.7, ease:'power3.inOut'}, 8.3);
+tl.to('#lb1', {left:240, top:504, duration:.7, ease:'power3.inOut'}, 8.3);
+tl.to('#axis', {strokeDashoffset:0, duration:.9, ease:'power2.inOut'}, 8.5);
+tl.to('#axhead', {opacity:1, duration:.1}, 9.35);
+tl.fromTo('.node', {scale:0, transformOrigin:'50% 50%'}, {scale:1, duration:.25, stagger:.25, ease:'back.out(3)'}, 8.6);
+tl.fromTo('#laptop', {opacity:0, x:420, y:-20, rotation:16, filter:B}, {opacity:1, x:0, y:0, rotation:0, filter:C, duration:.6, ease:'expo.out'}, 8.85);
+tl.to('#lb2', {opacity:1, duration:.25}, 9.15);
+tl.fromTo('#phone', {opacity:0, x:360, y:-20, rotation:22, filter:B}, {opacity:1, x:0, y:0, rotation:0, filter:C, duration:.6, ease:'expo.out'}, 9.45);
+tl.to('#lb3', {opacity:1, duration:.25}, 9.75);
+// ── D 10.6–14: 살짝 물러나며 큰 결론 + 노란 밑줄
+tl.to(['#tw2','#laptop','#phone'], {y:'+=30', duration:.8, ease:'power2.inOut'}, 10.5);
+tl.fromTo('#fin', {opacity:0, y:-30, filter:B}, {opacity:1, y:0, filter:C, duration:.5, ease:'power3.out'}, 10.6);
+tl.fromTo('#fin2', {opacity:0}, {opacity:0, duration:.01}, 10.6);
+tl.fromTo('#fin .bar', {scaleX:0}, {scaleX:.68, duration:.5, ease:'power2.out'}, 11.0);
+// 두 박자: '그대로.' 철썩 → 밑줄 끝까지
+tl.fromTo('#fin2', {opacity:0, scale:1.7, rotation:-6}, {opacity:1, scale:1, rotation:0, duration:.24, ease:'power4.in'}, 11.75);
+tl.to('#cam', {x:-4, y:3, duration:.05, yoyo:true, repeat:3, ease:'none'}, 11.99);
+tl.to('#fin .bar', {scaleX:1, duration:.35, ease:'power3.out'}, 11.99);
+// QWERTY 꼬리표가 시간 순으로 깜빡: 같은 배열이 이어진다
+document.querySelectorAll('.ytag').forEach((y,i)=> tl.fromTo(y, {scale:1}, {scale:1.25, duration:.14, yoyo:true, repeat:1, ease:'power2.out'}, 12.4 + i*.18));
+Motion.ready();
+</script></body></html>

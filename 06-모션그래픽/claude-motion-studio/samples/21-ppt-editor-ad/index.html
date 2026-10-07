@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><title>PPT 편집 화면 광고 · PPT Editor Ad</title>
+<link rel="stylesheet" href="../../lib/stage.css">
+<style>
+  .frame{background:#0b120a !important;background-image:none !important}
+  .scene{position:absolute;inset:0;overflow:hidden;font-family:"Pretendard",sans-serif;color:#e8ede6}
+  :root{--bg:#0d140c;--pan:#101810;--line:#1e291c;--txt:#c3cbbf;--dim:#6f7b6b;--lime:#C8FF2E;--grn:#22FF14}
+  #cam{position:absolute;left:0;top:0;width:1280px;height:720px;transform-origin:0 0;background:var(--bg)}
+  /* 창 틀 */
+  .e-title{position:absolute;left:0;right:0;top:0;height:24px;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--txt);letter-spacing:.02em}
+  .e-dots{position:absolute;left:10px;top:8px;display:flex;gap:6px}
+  .e-dots i{width:8px;height:8px;border-radius:50%;background:#3a4437}
+  .e-share{position:absolute;right:14px;top:4px;font-size:10px;font-weight:700;background:#2a3427;color:#dfe6dc;border-radius:9px;padding:2px 14px}
+  .e-tabs{position:absolute;left:0;right:0;top:26px;height:26px}
+  .e-tabs span{position:absolute;top:6px;font-size:11.5px;color:var(--txt);white-space:nowrap}
+  .e-ul{position:absolute;top:47px;height:2px;background:#e8ede6;border-radius:1px}
+  .e-rib{position:absolute;left:0;right:0;top:52px;height:46px;border-bottom:1px solid var(--line)}
+  .e-rb{position:absolute;inset:0;visibility:hidden}
+  .e-it{position:absolute;top:6px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:9px;color:var(--dim);white-space:nowrap}
+  .e-it svg{width:18px;height:18px;stroke:#d8dfd4;fill:none;stroke-width:1.6}
+  .e-sep{position:absolute;top:8px;width:1px;height:30px;background:var(--line)}
+  /* 썸네일 */
+  .e-side{position:absolute;left:0;top:99px;width:172px;bottom:22px;border-right:1px solid var(--line)}
+  .e-th{position:absolute;left:28px;width:132px;height:74px;border:1.5px solid #2a3427;border-radius:3px;overflow:hidden;background:#0f170d}
+  .e-th.on{border-color:#e8ede6}
+  .e-th .e-sl{transform:scale(.1535);transform-origin:0 0;position:absolute;left:0;top:0}
+  .e-th .e-w2{color:var(--lime)}
+  .e-tn{position:absolute;left:10px;font-size:9px;color:var(--dim)}
+  .e-ruler{position:absolute;left:172px;right:0;top:99px;height:12px;background:repeating-linear-gradient(90deg,#2a3427 0 1px,transparent 1px 16px);opacity:.6}
+  .e-rulv{position:absolute;left:174px;width:10px;top:112px;bottom:22px;background:repeating-linear-gradient(0deg,#2a3427 0 1px,transparent 1px 22px);opacity:.6}
+  .e-stat{position:absolute;left:0;right:0;bottom:0;height:22px;border-top:1px solid var(--line);font-size:9.5px;color:var(--dim)}
+  .e-stat span{position:absolute;top:5px}
+  /* 슬라이드 */
+  .e-slot{position:absolute;left:298px;top:150px;width:860px;height:484px}
+  .e-sl{position:absolute;left:0;top:0;width:860px;height:484px;overflow:hidden;
+        background:radial-gradient(120% 90% at 78% 18%,#16240f 0%,#0e160c 45%,#0a1109 100%);box-shadow:0 0 0 1px #141e12}
+  #slot .e-sl{visibility:hidden}
+  .e-k{position:absolute;left:60px;top:58px;font-size:11px;letter-spacing:.22em;color:#9aa596;font-weight:600;display:flex;align-items:center;gap:10px}
+  .e-k:before{content:"";width:22px;height:2px;background:var(--lime)}
+  .e-tag{font-size:10px;letter-spacing:0;border:1px solid #4d5a48;color:#9aa596;border-radius:8px;padding:1px 7px;font-weight:600}
+  .e-lime{color:var(--lime)}
+  .e-h{position:absolute;left:60px;font-weight:900;letter-spacing:-.03em;line-height:1.16;color:#f2f5f0;white-space:nowrap}
+  /* 1 제목 */
+  .e-tb{position:absolute;left:60px;top:84px;width:560px;height:180px}
+  .e-tbt{position:absolute;left:14px;top:12px;font-size:66px;font-weight:900;letter-spacing:-.035em;line-height:1.14;color:#f4f7f2;white-space:nowrap}
+  #car{display:inline-block;width:3px;height:.9em;background:var(--lime);vertical-align:-.08em;margin-left:3px}
+  #selw{position:relative}
+  #selw:before{content:"";position:absolute;left:-2px;right:-2px;top:.06em;bottom:.02em;background:rgba(80,140,255,.38);opacity:var(--sel,0)}
+  .e-box{position:absolute;border:1px solid #d9e0d5;pointer-events:none}
+  .e-box i{position:absolute;width:7px;height:7px;border-radius:50%;background:#d9e0d5;margin:-4px 0 0 -4px}
+  .e-dash{position:absolute;border:1.5px dashed #c9d1c5}
+  .e-mini{position:absolute;display:flex;gap:10px;align-items:center;background:#1b2419;border:1px solid #2e3a2b;border-radius:8px;padding:6px 10px;font-size:13px;font-weight:800;color:#dfe6dc}
+  .e-mini b{width:22px;height:12px;border-radius:6px;background:var(--grn);display:inline-block}
+  /* 2 숫자 */
+  .e-st{position:absolute;top:150px;width:240px}
+  .e-st .e-ix{width:12px;height:12px;background:var(--lime);color:#0a1109;font:800 9px/12px "Pretendard";text-align:center;border-radius:2px}
+  .e-st .e-big{margin-top:18px;font-size:72px;font-weight:900;color:var(--lime);letter-spacing:-.03em;line-height:1;white-space:nowrap}
+  .e-st .e-big small{font-size:22px;margin-left:4px}
+  .e-st .e-en{margin-top:16px;font-size:9px;letter-spacing:.2em;color:#76826f;font-weight:600}
+  .e-st .e-ko{margin-top:5px;font-size:15px;font-weight:700;color:#e8ede6}
+  .e-st+.e-st{border-left:1px solid #26321f;padding-left:26px}
+  .e-foot{position:absolute;left:60px;top:390px;font-size:13px;color:#8c9888}
+  /* 3 인용 */
+  .e-q{position:absolute;left:60px;top:120px;width:740px}
+  .e-q .e-mk{font:900 90px/0.6 "Gmarket Sans TTF";color:var(--lime)}
+  .e-q .e-qt{margin-top:28px;font-size:38px;font-weight:800;line-height:1.38;letter-spacing:-.03em;color:#f2f5f0;white-space:nowrap}
+  .e-q .e-who{margin-top:22px;font-size:14px;color:#8c9888}
+  .e-mark{position:relative;display:inline-block}
+  .e-mark:before{content:"";position:absolute;left:0;right:0;bottom:.06em;height:.16em;background:var(--lime);transform-origin:0 50%;transform:scaleX(var(--sx,0))}
+  /* 4 커리큘럼 */
+  .e-cd{position:absolute;top:196px;width:232px;height:156px;border-radius:10px;background:#121c10;box-shadow:0 0 0 1px #1f2b1c}
+  .e-cd .e-pl{position:absolute;left:18px;top:18px;background:var(--lime);color:#0a1109;font-size:11px;font-weight:800;border-radius:9px;padding:2px 10px}
+  .e-cd .e-no{position:absolute;right:16px;top:8px;font:700 54px "Gmarket Sans TTF";color:#26341f}
+  .e-cd .e-ct{position:absolute;left:18px;top:78px;font-size:17px;font-weight:800;line-height:1.35;color:#eef2ec;white-space:nowrap}
+  .e-cd .e-cs{position:absolute;left:18px;top:124px;font-size:11.5px;color:#7f8b7a}
+  /* 5·6 로고 */
+  .e-logo{position:absolute}
+  .e-logo rect{transition:none}
+  .e-wm{position:absolute;left:0;right:0;text-align:center;font-weight:900;letter-spacing:-.03em;color:#f4f7f2;white-space:nowrap}
+  .e-sub{position:absolute;left:0;right:0;text-align:center;font-weight:700;color:#c6cec2;white-space:nowrap}
+  .e-btns{position:absolute;left:0;right:0;display:flex;justify-content:center;gap:14px}
+  .e-bt{font-size:15px;font-weight:800;padding:9px 22px;border-radius:2px;white-space:nowrap}
+  .e-bt.f{background:var(--lime);color:#0a1109}
+  .e-bt.o{border:1.5px solid #c9d1c5;color:#f2f5f0}
+  /* 오버레이 */
+  .e-chipk{position:absolute;left:640px;top:648px;transform:translateX(-50%);border:1.5px solid var(--lime);background:#1a2a0e;color:var(--lime);font-size:12px;font-weight:800;padding:4px 14px;border-radius:7px;white-space:nowrap;visibility:hidden;z-index:40}
+  #gl{position:absolute;inset:0;z-index:60;pointer-events:none}
+  #gl i{position:absolute;top:0;bottom:0;visibility:hidden}
+  #cur{position:absolute;left:0;top:0;z-index:80;width:22px;height:26px}
+  #ring{position:absolute;left:0;top:0;width:30px;height:30px;margin:-15px 0 0 -15px;border:2px solid var(--lime);border-radius:50%;z-index:79;visibility:hidden}
+</style></head>
+<body data-no="S21" data-cat="광고 · AD" data-ko="PPT 편집 화면 광고" data-en="PPT Editor Ad" data-meta="편집 화면 안에서 커서가 PPT 기능만으로 광고 완성 → 슬라이드 쇼" data-dur="16" data-size="1280x720" data-poster="15.4">
+<main class="scene">
+<div id="cam">
+  <div class="e-title"><div class="e-dots"><i></i><i></i><i></i></div>KBG_성경공부강좌.pptx<span class="e-share">공유</span></div>
+  <div class="e-tabs">
+    <span style="left:30px">파일</span><span style="left:74px" id="tH">홈</span><span style="left:108px">삽입</span><span style="left:152px">디자인</span><span style="left:206px">전환</span><span style="left:250px" id="tA">애니메이션</span><span style="left:326px" id="tS">슬라이드 쇼</span><span style="left:400px">보기</span><span style="left:452px;visibility:hidden;font-weight:700;color:#fff" id="tF">도형 서식</span>
+    <div class="e-ul" id="ul" style="left:72px;width:16px;top:21px"></div>
+  </div>
+  <div class="e-rib">
+    <div class="e-rb" id="rbH" style="visibility:visible">
+      <div class="e-it" style="left:18px"><svg viewBox="0 0 18 18"><rect x="4" y="3" width="10" height="13" rx="1.5"/><path d="M7 2h4v3H7z"/></svg>붙여넣기</div>
+      <div class="e-it" style="left:72px"><svg viewBox="0 0 18 18"><rect x="2" y="3" width="13" height="10" rx="1"/><path d="M13 12v5M10.5 14.5h5"/></svg>새 슬라이드</div>
+      <div class="e-sep" style="left:132px"></div>
+      <div class="e-it" style="left:150px;align-items:flex-start"><span style="font-size:13px;font-weight:800;color:#dfe6dc">가 &nbsp;<span style="font-size:10px;font-weight:500">Pretendard ▾ &nbsp; 66</span></span>글꼴</div>
+      <div class="e-sep" style="left:290px"></div>
+      <div class="e-it" style="left:306px"><svg viewBox="0 0 18 18"><path d="M2 4h14M2 8h10M2 12h14M2 16h8"/></svg>단락</div>
+      <div class="e-it" style="left:370px"><svg viewBox="0 0 18 18"><circle cx="6" cy="7" r="4"/><path d="M11 15l3-6 3 6z"/></svg>도형</div>
+      <div class="e-it" style="left:428px"><svg viewBox="0 0 18 18"><path d="M3 3v12M8 3v12M13 3v12"/></svg>정렬</div>
+      <div class="e-it" style="left:488px"><svg viewBox="0 0 18 18"><rect x="2" y="4" width="14" height="10" rx="2"/><path d="M5 9h8"/></svg>빠른 스타일</div>
+      <div class="e-it" style="left:566px"><svg viewBox="0 0 18 18"><circle cx="8" cy="8" r="5"/><path d="M12 12l4 4"/></svg>편집</div>
+    </div>
+    <div class="e-rb" id="rbA">
+      <div class="e-it" style="left:18px"><svg viewBox="0 0 18 18"><path d="M5 3l10 6-10 6z"/></svg>미리 보기</div>
+      <div class="e-sep" style="left:74px"></div>
+      <div class="e-it" style="left:92px"><svg viewBox="0 0 18 18"><path d="M9 2l2 5h5l-4 3 2 5-5-3-5 3 2-5-4-3h5z"/></svg>나타내기</div>
+      <div class="e-it" style="left:150px"><svg viewBox="0 0 18 18"><circle cx="9" cy="9" r="6"/><path d="M9 5v4l3 2"/></svg>카운트</div>
+      <div class="e-it" style="left:208px"><svg viewBox="0 0 18 18"><path d="M2 9h14M10 4l6 5-6 5"/></svg>날아오기</div>
+      <div class="e-it" style="left:266px"><svg viewBox="0 0 18 18"><rect x="3" y="3" width="12" height="12" rx="2" stroke-dasharray="2 2"/></svg>효과 옵션</div>
+      <div class="e-it" style="left:330px"><svg viewBox="0 0 18 18"><circle cx="9" cy="9" r="6"/><path d="M9 6v3h3"/></svg>0.80초</div>
+    </div>
+    <div class="e-rb" id="rbF">
+      <div class="e-it" style="left:18px" id="iMerge"><svg viewBox="0 0 18 18"><circle cx="7" cy="9" r="5"/><circle cx="11" cy="9" r="5"/></svg>도형 병합</div>
+      <div class="e-it" style="left:84px"><svg viewBox="0 0 18 18"><path d="M3 15l6-12 6 12z"/></svg>도형 채우기</div>
+      <div class="e-it" style="left:150px"><svg viewBox="0 0 18 18"><path d="M3 15L15 3"/></svg>도형 윤곽선</div>
+      <div class="e-sep" style="left:214px"></div>
+      <div class="e-it" style="left:232px;align-items:flex-start"><span style="font-size:13px;font-weight:900;color:#fff;letter-spacing:6px">A<span style="color:var(--lime)">A</span>A<span style="color:var(--grn)">A</span></span>WordArt 스타일</div>
+      <div class="e-it" style="left:340px"><svg viewBox="0 0 18 18"><rect x="3" y="3" width="12" height="12"/><path d="M3 9h12"/></svg>크기</div>
+    </div>
+  </div>
+  <div class="e-side" id="side"></div>
+  <div class="e-ruler"></div><div class="e-rulv"></div>
+
+  <div class="e-slot" id="slot">
+    <!-- 1 제목 -->
+    <div class="e-sl" id="sl1">
+      <div id="tb" class="e-tb"><div id="tbt" class="e-tbt">성경을,<br><span id="selw"><span id="w2" class="e-w2">제대로</span></span> 읽습니다.</div></div>
+    </div>
+    <!-- 2 숫자 -->
+    <div class="e-sl" id="sl2">
+      <div class="e-k">BY THE NUMBERS <span class="e-tag">예시</span></div>
+      <div class="e-st" style="left:60px"><div class="e-ix">1</div><div class="e-big"><span id="n1">50</span>+</div><div class="e-en">COMMUNITIES</div><div class="e-ko">함께한 교회·공동체</div></div>
+      <div class="e-st" style="left:310px"><div class="e-ix">2</div><div class="e-big"><span id="n2">13.5</span><small>만</small></div><div class="e-en">VIEWS</div><div class="e-ko">강의 누적 조회</div></div>
+      <div class="e-st" style="left:580px"><div class="e-ix">3</div><div class="e-big"><span id="n3">17.3</span><small>만</small></div><div class="e-en">READING LOGS</div><div class="e-ko">성경 읽기 기록</div></div>
+      <div class="e-foot">★★★★★ &nbsp;강의 만족도 4.9 / 5.0 &nbsp;<span class="e-tag">예시</span></div>
+    </div>
+    <!-- 3 인용 -->
+    <div class="e-sl" id="sl3">
+      <div class="e-k">REVIEW <span class="e-tag">예시</span></div>
+      <div class="e-q" id="qq"><div class="e-mk">“</div>
+        <div class="e-qt">빨리, 많이 읽는 것보다<br><span class="e-mark" id="mk"><span id="mkt">한 절을 제대로 읽는 법</span></span>을 배웠습니다.</div>
+        <div class="e-who">— 3기 수강생 후기 (예시)</div></div>
+    </div>
+    <!-- 4 커리큘럼 -->
+    <div class="e-sl" id="sl4">
+      <div class="e-k">CURRICULUM</div>
+      <div class="e-h" style="top:84px;font-size:32px">처음부터 끝까지, <span class="e-lime">본문 중심으로.</span></div>
+      <div class="e-cd" id="cd1" style="left:60px"><span class="e-pl">관찰</span><span class="e-no">01</span><div class="e-ct">본문을 천천히,<br>여러 번 읽기</div><div class="e-cs">1–3주 · 읽기 노트</div></div>
+      <div class="e-cd" id="cd2" style="left:314px"><span class="e-pl">해석</span><span class="e-no">02</span><div class="e-ct">문맥과 원어로<br>뜻을 묻기</div><div class="e-cs">4–7주 · 문맥 지도</div></div>
+      <div class="e-cd" id="cd3" style="left:568px"><span class="e-pl">적용</span><span class="e-no">03</span><div class="e-ct">오늘의 삶으로<br>읽어 내기</div><div class="e-cs">8–10주 · 나눔 질문</div></div>
+    </div>
+    <!-- 5 로고 -->
+    <div class="e-sl" id="sl5">
+      <svg class="e-logo" id="lg5" style="left:370px;top:118px" width="120" height="96" viewBox="0 0 120 96">
+        <rect id="pL" x="4" y="10" width="52" height="78" rx="4" fill="#22FF14"/>
+        <rect id="pR" x="64" y="10" width="52" height="78" rx="4" fill="#22FF14"/>
+        <rect id="pB" x="84" y="0" width="16" height="50" fill="#22FF14"/>
+        <rect x="14" y="26" width="32" height="6" fill="#0a1109"/><rect x="14" y="42" width="24" height="6" fill="#0a1109"/>
+        <rect x="74" y="58" width="32" height="6" fill="#0a1109"/>
+      </svg>
+      <div class="e-wm" style="top:236px;font-size:46px">KBG Bible Labs</div>
+      <div class="e-sub" style="top:300px;font-size:16px;color:#8c9888">성경공부 강좌</div>
+    </div>
+    <!-- 6 슬라이드 쇼 엔드카드 -->
+    <div class="e-sl" id="sl6">
+      <svg class="e-logo" id="lg6" style="left:370px;top:92px" width="120" height="96" viewBox="0 0 120 96">
+        <rect x="4" y="10" width="52" height="78" rx="4" fill="#22FF14"/><rect x="64" y="10" width="52" height="78" rx="4" fill="#22FF14"/><rect x="84" y="0" width="16" height="50" fill="#22FF14"/>
+        <rect x="14" y="26" width="32" height="6" fill="#0a1109"/><rect x="14" y="42" width="24" height="6" fill="#0a1109"/><rect x="74" y="58" width="32" height="6" fill="#0a1109"/>
+      </svg>
+      <div class="e-wm" id="wm6" style="top:204px;font-size:50px">KBG Bible Labs</div>
+      <div class="e-sub" id="sb6" style="top:274px;font-size:17px">성경을, <span class="e-lime">제대로</span> 읽습니다. · 성경공부 강좌</div>
+      <div class="e-btns" id="bt6" style="top:322px"><span class="e-bt f" id="bf">강좌 신청하기 →</span><span class="e-bt o">커리큘럼 보기</span></div>
+    </div>
+    <!-- 선택 상자들 -->
+    <div class="e-box" id="bx"><i style="left:0;top:0"></i><i style="left:50%;top:0"></i><i style="left:100%;top:0"></i><i style="left:0;top:50%"></i><i style="left:100%;top:50%"></i><i style="left:0;top:100%"></i><i style="left:50%;top:100%"></i><i style="left:100%;top:100%"></i></div>
+    <div class="e-dash" id="mq" style="visibility:hidden"></div>
+    <div class="e-mini" id="mini" style="left:80px;top:96px;visibility:hidden">가 <span style="font-weight:900">B</span> <span style="text-decoration:underline">A</span> <b id="sw"></b></div>
+  </div>
+
+  <div class="e-stat"><span style="left:10px" id="snum">슬라이드 1 / 6</span><span style="left:90px">한국어</span><span style="right:120px;width:120px;height:2px;top:10px;background:#3a4437"></span><span style="right:56px">100%</span></div>
+</div>
+
+<div class="e-chipk" id="k1">애니메이션 › 미리 보기</div>
+<div class="e-chipk" id="k2">홈 › 글꼴 색 · 밑줄 강조</div>
+<div class="e-chipk" id="k3">Ctrl + D</div>
+<div class="e-chipk" id="k4">도형 병합 › 통합</div>
+<div class="e-chipk" id="k5">Shift + F5</div>
+<div id="gl"></div>
+<div id="ring"></div>
+<svg id="cur" viewBox="0 0 22 26"><path d="M2 2 L2 20 L7 15.5 L10.5 23 L13.5 21.6 L10.2 14.4 L17 14.4 Z" fill="#fff" stroke="#0a1109" stroke-width="1.6" stroke-linejoin="round"/></svg>
+</main>
+<script src="../../lib/gsap.min.js"></script><script src="../../lib/stage.js"></script>
+<script>
+const $=s=>document.querySelector(s);
+// 썸네일: 슬라이드마다 '만드는 중' 단계별 복제본을 겹쳐 두고, 그 슬라이드가 실제로 완성되는 시각에 바꿔 끼운다
+const side=$('#side');
+const q=(c,sel)=>[...c.querySelectorAll(sel)];
+const hideAll=(c,sel)=>q(c,sel).forEach(e=>e.style.visibility='hidden');
+const finalize=c=>{ // 타임라인이 트윈으로 만드는 최종 상태를 복제본에 고정
+  q(c,'.e-mark').forEach(e=>e.style.setProperty('--sx',1)); q(c,'.e-mark > span').forEach(e=>e.style.color='#C8FF2E');
+  q(c,'.e-logo rect').forEach(e=>{ if(e.getAttribute('fill')!=='#0a1109') e.setAttribute('fill','#22FF14'); }); };
+const STAGES={ // [표시 시각, 복제본 가공] — 첫 단계는 0초
+  1:[[0,c=>hideAll(c,'.e-tbt')],[2.6,c=>q(c,'.e-w2').forEach(e=>e.style.color='#f4f7f2')],[3.6,c=>{}]],
+  2:[[0,c=>q(c,'.e-big > span').forEach(e=>e.textContent='0')],[6.3,c=>{}]],
+  3:[[0,c=>{}],[8.3,finalize]],
+  4:[[0,c=>q(c,'.e-cd').slice(1).forEach(e=>e.style.visibility='hidden')],[9.75,c=>q(c,'.e-cd').slice(2).forEach(e=>e.style.visibility='hidden')],[10.1,c=>{}]],
+  5:[[0,c=>q(c,'.e-logo rect').forEach((e,k)=>{ if(k<3){ e.setAttribute('fill','#3a4437'); e.style.transform=['translate(-10px,6px)','translate(12px,-4px)','translate(0,-14px)'][k]; } })],[11.5,finalize]],
+  6:[[0,c=>hideAll(c,'.e-logo,.e-wm,.e-sub,.e-btns')],[12.3,c=>{}]]
+};
+const thLayers={};
+for(let i=1;i<=6;i++){
+  const th=document.createElement('div'); th.className='e-th'+(i===1?' on':''); th.id='th'+i; th.style.top=(14+(i-1)*98)+'px';
+  thLayers[i]=STAGES[i].map(([t,fn],k)=>{ const c=$('#sl'+i).cloneNode(true); c.removeAttribute('id'); c.querySelectorAll('[id]').forEach(e=>e.removeAttribute('id'));
+    c.style.visibility=k===0?'visible':'hidden'; fn(c); th.appendChild(c); return [t,c]; });
+  side.appendChild(th);
+  const n=document.createElement('span'); n.className='e-tn'; n.textContent=i; n.style.top=(16+(i-1)*98)+'px'; side.appendChild(n);
+}
+// 글리치 막대
+const gl=$('#gl'); for(let i=0;i<12;i++){ gl.insertAdjacentHTML('beforeend','<i></i>'); }
+const bars=[...gl.children];
+
+const tl = Motion.timeline();
+const Z=1280/860, OX=298, OY=150;           // 슬라이드가 화면을 꽉 채우는 배율
+const zs=(x,y)=>[x*Z, y*Z];                  // 슬라이드 좌표 → 확대 화면
+const us=(x,y)=>[OX+x, OY+y];                // 슬라이드 좌표 → 기본 화면
+const camZoom={x:-OX*Z,y:-OY*Z,scale:Z}, camOut={x:0,y:0,scale:1};
+gsap.set('#cam',camZoom);
+gsap.set('#sl1',{visibility:'visible'});
+gsap.set('#cur',{x:760,y:600});
+
+// 헬퍼
+const mv=(p,t,d=.45)=>tl.to('#cur',{x:p[0],y:p[1],duration:d,ease:'power2.inOut'},t);
+const click=(p,t)=>{ tl.set('#ring',{visibility:'visible',x:p[0],y:p[1]},t);
+  tl.fromTo('#ring',{scale:.4,autoAlpha:1},{scale:1.4,autoAlpha:0,duration:.35,ease:'power2.out'},t);
+  tl.to('#cur',{scale:.86,duration:.06,yoyo:true,repeat:1,transformOrigin:'0 0'},t); };
+const chip=(id,t,d=1.0)=>{ tl.set(id,{visibility:'visible'},t); tl.fromTo(id,{y:12,autoAlpha:0},{y:0,autoAlpha:1,duration:.25,ease:'back.out(2)'},t); tl.to(id,{autoAlpha:0,duration:.2},t+d); };
+const box=(x,y,w,h,t)=>tl.set('#bx',{left:x,top:y,width:w,height:h,autoAlpha:1},t);
+const unbox=t=>tl.set('#bx',{autoAlpha:0},t);
+const slide=(n,t)=>{ for(let i=1;i<=6;i++){ tl.set('#sl'+i,{visibility:i===n?'visible':'hidden'},t); tl.set('#th'+i,{className:'e-th'+(i===n?' on':'')},t);}
+  tl.set('#snum',{textContent:'슬라이드 '+n+' / 6'},t); };
+const tab=(left,w,rb,t)=>{ tl.to('#ul',{left,width:w,duration:.2,ease:'power2.out'},t); ['#rbH','#rbA','#rbF'].forEach(r=>tl.set(r,{visibility:r===rb?'visible':'hidden'},t)); };
+const thumb=n=>[94, 99+14+(n-1)*98+37];
+
+// 썸네일 단계 교체(타임라인에 묶어 seek 결정론 유지) + 갱신 순간 테두리 반짝
+for(let i=1;i<=6;i++) thLayers[i].forEach(([t,c],k)=>{ if(k===0) return;
+  thLayers[i].forEach(([,o],j)=>tl.set(o,{visibility:j===k?'visible':'hidden'},t));
+  tl.fromTo('#th'+i,{boxShadow:'0 0 0 2px rgba(200,255,46,.9)'},{boxShadow:'0 0 0 0px rgba(200,255,46,0)',duration:.5,ease:'power2.out',immediateRender:false},t); });
+
+// ── 1. 텍스트 상자 그리기 + 타이핑 (확대 화면) ─────────────────
+gsap.set('#bx',{autoAlpha:0}); gsap.set('#tbt',{autoAlpha:0});
+mv(zs(60,84),.1,.45);
+const dr={w:0,h:0};
+tl.set('#bx',{left:60,top:84,width:0,height:0,autoAlpha:1},.6);
+tl.to(dr,{w:560,h:180,duration:.4,ease:'power2.out',onUpdate(){ gsap.set('#bx',{width:dr.w,height:dr.h}); }},.6);
+tl.to('#cur',{x:zs(620,264)[0],y:zs(620,264)[1],duration:.4,ease:'power2.out'},.6);
+tl.to('#cur',{x:zs(640,330)[0],y:zs(640,330)[1],duration:.3},1.05);
+// 타이핑
+const full='성경을,\n제대로 읽습니다.';
+const typ={n:0};
+const tbt=$('#tbt');
+const renderT=n=>{ const s=full.slice(0,n); const [a,b]=s.split('\n');
+  let h=a; if(b!==undefined){ const w=b.slice(0,3), rest=b.slice(3); h+='<br><span id="selw"><span id="w2">'+w+'</span></span>'+rest; }
+  tbt.innerHTML=h+'<span id="car"></span>'; };
+tl.set('#tbt',{autoAlpha:1},1.0);
+tl.to(typ,{n:full.length,duration:1.5,ease:'none',onUpdate(){ renderT(Math.round(typ.n)); }},1.05);
+// 캐럿 깜빡(타임라인)
+tl.to({},{duration:.01,onUpdate(){ tbt.innerHTML=tbt.innerHTML.replace('<span id="car"></span>','<span id="car" style="opacity:0"></span>'); }},2.8);
+// "제대로" 선택 → 미니 툴바 → 라임
+mv(zs(74,180),2.6,.3);
+const selv={v:0};
+tl.to(selv,{v:1,duration:.25,ease:'none',onUpdate(){ const e=document.getElementById('selw'); if(e) e.style.setProperty('--sel',selv.v); }},2.9);
+tl.to('#cur',{x:zs(200,180)[0],duration:.25,ease:'none'},2.9);
+tl.set('#mini',{visibility:'visible',left:64,top:38},3.15);
+tl.fromTo('#mini',{y:8,autoAlpha:0},{y:0,autoAlpha:1,duration:.18},3.15);
+mv(zs(146,52),3.2,.25);
+click(zs(146,52),3.48);
+const lime={v:0};
+tl.to(lime,{v:1,duration:.15,onUpdate(){ const e=document.getElementById('w2'); if(e) e.style.color=lime.v>.5?'#C8FF2E':''; const s=document.getElementById('selw'); if(s) s.style.setProperty('--sel',1-lime.v); }},3.52);
+tl.to('#mini',{autoAlpha:0,duration:.15},3.7);
+unbox(3.75);
+
+// ── 2. 카메라 뒤로 → 편집 화면 전체 ──────────────────────────
+tl.to('#cam',{...camOut,duration:.7,ease:'power3.inOut'},3.75);
+tl.to('#cur',{x:us(560,330)[0],y:us(560,330)[1],duration:.7,ease:'power3.inOut'},3.75);
+
+// ── 3. 숫자 슬라이드 ─────────────────────────────────────────
+mv(thumb(2),4.5,.35); click(thumb(2),4.85); slide(2,4.9);
+const nums=[['#n1',50,0],['#n2',13.5,1],['#n3',17.3,1]];
+nums.forEach(([s])=>tl.set(s,{textContent:'0'},4.9));
+tl.set('#sl2 .e-big',{filter:'blur(0px)'},0);
+mv([262,40],4.95,.3); click([262,40],5.25); tab(248,58,'#rbA',5.28); chip('#k1',5.3,1.1);
+nums.forEach(([s,v,dec],i)=>{ const o={v:0}; const t=5.4+i*.12;
+  tl.to(o,{v,duration:.85,ease:'power2.out',onUpdate(){ document.querySelector(s).textContent=dec?o.v.toFixed(1):Math.round(o.v); }},t);
+  tl.fromTo(`#sl2 .e-st:nth-of-type(${i+2}) .e-big`,{filter:'blur(2px)',y:10},{filter:'blur(0px)',y:0,duration:.45,ease:'power3.out'},t); });
+mv(us(800,420),5.6,.6);
+
+// ── 4. 인용 슬라이드: 드래그 선택 상자 ───────────────────────
+mv(thumb(3),6.45,.35); click(thumb(3),6.8); slide(3,6.85); tab(72,16,'#rbH',6.85);
+gsap.set('#mk',{'--sx':0});
+mv(us(40,100),6.95,.3);
+const mq={w:0,h:0};
+tl.set('#mq',{visibility:'visible',left:40,top:100,width:0,height:0},7.28);
+tl.to(mq,{w:740,h:250,duration:.4,ease:'power2.out',onUpdate(){ gsap.set('#mq',{width:mq.w,height:mq.h}); }},7.28);
+tl.to('#cur',{x:us(780,350)[0],y:us(780,350)[1],duration:.4,ease:'power2.out'},7.28);
+tl.set('#mq',{visibility:'hidden'},7.72); box(52,112,716,226,7.72);
+chip('#k2',7.8,.9);
+tl.to('#mk',{'--sx':1,duration:.35,ease:'power3.out'},7.95);
+tl.to('#mkt',{color:'#C8FF2E',duration:.2},7.95);
+unbox(8.6);
+
+// ── 5. 커리큘럼: 카드 하나 → Ctrl+D 복제 ─────────────────────
+mv(thumb(4),8.5,.3); click(thumb(4),8.8); slide(4,8.85);
+gsap.set(['#cd2','#cd3'],{autoAlpha:0});
+mv(us(170,280),8.9,.3); click(us(170,280),9.2); box(60,196,232,156,9.22);
+chip('#k3',9.35,1.0);
+const dup=(id,from,t)=>{ tl.set(id,{autoAlpha:1},t); tl.fromTo(id,{x:from},{x:0,duration:.3,ease:'power3.out'},t); };
+// 복제 직후 0.6초는 1번 카드 문구, 이후 고유 문구
+const c1=['관찰','01','본문을 천천히,<br>여러 번 읽기','1–3주 · 읽기 노트'];
+// 단순화: 복제 직후 0.6초는 1번 카드 문구, 이후 고유 문구
+['#cd2','#cd3'].forEach(id=>{ const el=document.querySelector(id); const o=[el.querySelector('.e-pl').textContent,el.querySelector('.e-no').textContent,el.querySelector('.e-ct').innerHTML,el.querySelector('.e-cs').textContent];
+  el.dataset.o=JSON.stringify(o); });
+const setCard=(id,a)=>{ const el=document.querySelector(id); el.querySelector('.e-pl').textContent=a[0]; el.querySelector('.e-no').textContent=a[1]; el.querySelector('.e-ct').innerHTML=a[2]; el.querySelector('.e-cs').textContent=a[3]; };
+[['#cd2',9.45],['#cd3',9.75]].forEach(([id,t])=>{ const o=JSON.parse(document.querySelector(id).dataset.o);
+  const st={v:0}; tl.fromTo(st,{v:0},{v:1,duration:.6,ease:'none',onUpdate(){ setCard(id, st.v<.99?c1:o); }},t);
+  dup(id,-254,t); box(0,196,232,156,t); tl.to('#bx',{left:id==='#cd2'?314:568,duration:.3,ease:'power3.out'},t); });
+tl.to('#cur',{x:us(680,330)[0],y:us(680,330)[1],duration:.5},9.5);
+unbox(10.4);
+
+// ── 6. 로고: 도형 병합 ──────────────────────────────────────
+mv(thumb(5),10.3,.3); click(thumb(5),10.6); slide(5,10.65);
+gsap.set(['#pL','#pR','#pB'],{fill:'#3a4437',stroke:'#7d8a79',strokeWidth:1.5});
+gsap.set('#pL',{x:-10,y:6}); gsap.set('#pR',{x:12,y:-4}); gsap.set('#pB',{y:-14});
+box(366,104,128,116,10.65);
+tl.set('#tF',{visibility:'visible'},10.65); tab(450,52,'#rbF',10.68);
+mv([38,66],10.75,.4); click([38,66],11.2); chip('#k4',11.2,.9);
+tl.to(['#pL','#pR','#pB'],{x:0,y:0,duration:.3,ease:'power3.inOut'},11.25);
+tl.to(['#pL','#pR','#pB'],{fill:'#22FF14',strokeWidth:0,duration:.2},11.5);
+tl.fromTo('#lg5',{filter:'drop-shadow(0 0 0px #22FF14)'},{filter:'drop-shadow(0 0 18px rgba(34,255,20,.55))',duration:.3},11.5);
+
+// ── 7. 슬라이드 쇼 → 글리치 → 전체 화면 ─────────────────────
+mv([352,40],11.6,.35); click([352,40],11.98); chip('#k5',11.98,.5); tab(324,58,'#rbH',11.98);
+unbox(12.05);
+const R=Motion.rand(21);
+for(let s=0;s<7;s++){ const t=12.1+s*.065;
+  bars.forEach((b,i)=>{ const on=R()<.75; tl.set(b,{visibility:on?'visible':'hidden',left:Math.floor(R()*1240),width:6+Math.floor(R()*70),
+    background:R()<.5?'#22FF14':(R()<.5?'#C8FF2E':'#0a1109'),opacity:.55+R()*.45},t); });
+  tl.set('#slot',{x:(R()-.5)*30},t); }
+tl.set(bars,{visibility:'hidden'},12.56); tl.set('#slot',{x:0},12.56);
+tl.set('#cam',camZoom,12.3); slide(6,12.3); tl.set('#cur',{autoAlpha:0},12.1);
+gsap.set(['#wm6','#sb6','#bt6'],{autoAlpha:0});
+tl.fromTo('#lg6',{scale:.6,transformOrigin:'50% 50%'},{scale:1,duration:.5,ease:'back.out(2)'},12.45);
+tl.fromTo('#wm6',{y:24,autoAlpha:0},{y:0,autoAlpha:1,duration:.45},12.75);
+tl.fromTo('#sb6',{y:18,autoAlpha:0},{y:0,autoAlpha:1,duration:.4},13.0);
+tl.fromTo('#bt6',{y:18,autoAlpha:0},{y:0,autoAlpha:1,duration:.4},13.25);
+// 커서 버튼 누르기(전체 화면 좌표)
+tl.set('#cur',{autoAlpha:1,x:860,y:640},13.7);
+const bp=zs(365,342);
+mv(bp,13.75,.6);
+tl.to('#bf',{boxShadow:'0 0 0 3px rgba(200,255,46,.35)',duration:.15},14.3);
+click(bp,14.5);
+tl.to('#bf',{scale:.95,duration:.08,yoyo:true,repeat:1},14.5);
+Motion.ready();
+</script></body></html>

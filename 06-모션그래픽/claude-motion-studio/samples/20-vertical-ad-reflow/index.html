@@ -1,0 +1,298 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><title>세로 광고 재배치 · Vertical Ad Reflow</title>
+<link rel="stylesheet" href="../../lib/stage.css">
+<style>
+  .frame{background:#0d0f12 !important;background-image:none !important}
+  .scene{position:absolute;inset:0;overflow:hidden;font-family:"Pretendard",sans-serif}
+  :root{--b:#0346FF;--navy:#060B13;--ink:#0E1220}
+  .sc{position:absolute;inset:0;visibility:hidden}
+  .grid{background:#fff;background-image:linear-gradient(rgba(3,70,255,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(3,70,255,.07) 1px,transparent 1px);background-size:40px 40px}
+  .blue{background:var(--b)} .navy{background:var(--navy)}
+  .hdr{position:absolute;left:28px;right:28px;top:20px;display:flex;justify-content:space-between;font-size:13px;font-weight:600;color:#1a1d29;z-index:30;letter-spacing:.02em}
+  .hdr i{display:inline-block;width:11px;height:11px;border:2.5px solid currentColor;border-radius:3px;margin-right:6px;vertical-align:-1px}
+  .hdr .dim{opacity:.55;font-weight:500}
+  .h{position:absolute;left:90px;font-weight:900;color:var(--ink);letter-spacing:-.035em;line-height:1.14}
+  .ln{display:block;overflow:hidden;padding:0 .05em .06em 0;white-space:nowrap}
+  .w{display:inline-block}
+  .gm{font-family:"Gmarket Sans TTF";font-weight:700;color:var(--b);letter-spacing:-.04em}
+  /* 마스코트 */
+  .mas{position:absolute;width:150px;height:150px;z-index:13}
+  .cube{position:absolute;inset:0;background:#fff;border:5px solid var(--b);border-radius:30px;
+        box-shadow:0 12px 0 0 #DCE3FF,0 12px 0 5px var(--b)}
+  .n26{position:absolute;left:14px;top:8px;font:700 24px "Gmarket Sans TTF";color:var(--b)}
+  .face{position:absolute;left:20px;top:46px;width:100px;height:60px;transform-origin:50% 40%}
+  .badge{position:absolute;right:-18px;top:-16px;background:#FFC21A;color:#0E1220;font:800 20px "Pretendard";padding:5px 9px;border-radius:20px;border:3px solid #fff;visibility:hidden}
+  .bub{position:absolute;background:#fff;border:2.5px solid #1a1d29;border-radius:28px;font-weight:700;color:#1a1d29;padding:12px 26px;font-size:34px}
+  .dm{position:absolute;zoom:1.25;background:#fff;border-radius:22px;padding:11px 18px 11px 14px;font-size:19px;font-weight:700;color:#1a1d29;box-shadow:0 6px 20px rgba(20,30,80,.14);display:flex;align-items:center;gap:9px;white-space:nowrap}
+  .dm b{width:24px;height:24px;border-radius:50%;background:#E6EBFF;display:inline-block;position:relative}
+  .dm b:after{content:"";position:absolute;left:8px;top:5px;width:8px;height:8px;border-radius:50%;background:var(--b)}
+  /* 카드 */
+  .card{position:absolute;top:262px;width:230px;height:262px;background:#fff;border-radius:18px;padding:14px;box-shadow:0 14px 30px rgba(0,10,80,.25)}
+  .card .ic{height:112px;border-radius:12px;background:#EEF2FF;display:flex;align-items:center;justify-content:center}
+  .card h4{margin:14px 2px 2px;font-size:23px;font-weight:800;color:var(--ink)}
+  .card p{margin:0 2px;font-size:13px;color:#7a8099}
+  .card .pr{position:absolute;left:16px;bottom:16px;font-size:20px;font-weight:800;color:var(--b)}
+  .card .pill{position:absolute;right:14px;bottom:14px;background:var(--b);color:#fff;font-size:14px;font-weight:700;padding:5px 14px;border-radius:14px}
+  .chips{position:absolute;left:330px;top:556px;display:flex;gap:10px}
+  .chip{border:2px solid #fff;color:#fff;font-size:17px;font-weight:700;padding:6px 16px;border-radius:20px}
+  /* 폰 */
+  .phone{position:absolute;left:900px;top:104px;width:270px;height:556px;background:#111;border-radius:42px;padding:10px;z-index:12;visibility:hidden}
+  .scr{width:100%;height:100%;background:#fff;border-radius:33px;position:relative;overflow:hidden;padding:44px 16px 0}
+  .isl{position:absolute;left:50%;top:12px;width:78px;height:22px;margin-left:-39px;background:#111;border-radius:12px}
+  .stt{position:absolute;left:24px;top:14px;font-size:11px;font-weight:700}
+  .url{font-size:10px;color:#7a8099;background:#F2F4FA;border-radius:8px;padding:5px 8px}
+  .shop{display:flex;align-items:center;gap:8px;margin:10px 0 12px}
+  .shop i{width:30px;height:30px;border-radius:50%;background:var(--b);color:#fff;font:700 13px/30px "Pretendard";text-align:center;font-style:normal}
+  .shop b{font-size:15px}
+  .shop small{display:block;font-size:9px;color:#7a8099;font-weight:500}
+  .lbl{font-size:10px;font-weight:700;color:#333;display:flex;justify-content:space-between;margin-bottom:6px}
+  .cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+  .cal span{height:26px;border-radius:6px;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;color:#9aa0b5;background:#F1F3F9}
+  .cal span.e{background:none}
+  .cal span.on{background:var(--b);color:#fff}
+  .times{display:flex;gap:5px;margin:12px 0 14px}
+  .times span{flex:1;font-size:9px;font-weight:700;border:1.5px solid var(--b);border-radius:10px;text-align:center;padding:4px 0;color:var(--b)}
+  .times span.on{background:var(--b);color:#fff}
+  .go{background:var(--b);color:#fff;font-size:12px;font-weight:800;text-align:center;border-radius:12px;padding:10px 0}
+  .stamp{position:absolute;left:930px;top:250px;width:210px;height:210px;border-radius:50%;border:6px solid var(--b);background:rgba(255,255,255,.92);z-index:14;display:flex;align-items:center;justify-content:center;font:700 74px "Gmarket Sans TTF";color:var(--b);visibility:hidden}
+  .stamp:before{content:"";position:absolute;inset:10px;border-radius:50%;border:2px dashed var(--b)}
+  /* 타이머·알림 */
+  .timer{position:absolute;left:92px;top:236px;display:flex;align-items:center;gap:14px}
+  .timer .t{font:700 34px "IBM Plex Mono";color:var(--ink)}
+  .timer .s{font-size:16px;color:#7a8099;font-weight:600}
+  .noti{position:absolute;left:90px;width:480px;height:76px;background:#fff;border-radius:16px;box-shadow:0 8px 24px rgba(20,30,80,.13);display:flex;align-items:center;gap:14px;padding:0 18px}
+  .noti i{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font:800 18px "Pretendard";font-style:normal}
+  .noti b{font-size:20px;color:var(--ink)}
+  .noti small{display:block;font-size:13px;color:#7a8099;font-weight:500;margin-top:2px}
+  .box3{position:relative;display:inline-block;padding:0 .12em}
+  .box3:before{content:"";position:absolute;left:0;right:0;top:.06em;bottom:.02em;background:var(--b);border-radius:10px;transform-origin:0 50%;transform:scaleX(var(--sx,0))}
+  .box3 span{position:relative;color:#fff}
+  .hl{position:relative;display:inline-block;padding:0 .16em}
+  .hl:before{content:"";position:absolute;left:0;right:0;top:.04em;bottom:0;background:var(--b);border-radius:10px;transform-origin:0 50%;transform:scaleX(var(--sx,0))}
+  .hl span{position:relative;color:#fff}
+  .logo{width:128px;height:128px;border-radius:32px;background:var(--b);position:relative;box-shadow:0 10px 0 #C7D2FF}
+  .stairs{position:absolute;inset:0;z-index:11;pointer-events:none;visibility:hidden}
+  .stairs i{position:absolute;left:0;width:820px;height:49px;background:var(--b);border-radius:9px 0 0 9px}
+  .btn{position:absolute;left:50%;top:494px;transform:translateX(-50%);background:var(--b);color:#fff;font-size:24px;font-weight:800;padding:16px 36px;border-radius:40px;white-space:nowrap}
+
+  /* ===== 세로 9:16 재배치 ===== */
+  body.portrait .scene{left:0;top:0;right:auto;width:720px;height:1280px}
+  .hdr{right:140px;top:26px}
+  .h{left:56px}
+  .card{left:56px !important;top:auto;width:488px;height:138px;padding:10px;display:grid;grid-template-columns:116px 1fr;column-gap:16px;align-items:center}
+  .card .ic{height:116px;width:116px;grid-row:1/3}
+  .card{grid-template-rows:1fr 1fr}
+  .card h4{grid-column:2;grid-row:1}
+  .card p{grid-row:2 !important;margin-top:2px !important}
+  .card .ic svg{transform:scale(.95)}
+  .card h4{margin:0 0 6px;font-size:28px;align-self:end}
+  .card p{grid-column:2;font-size:16px;align-self:start}
+  .card .pr{left:auto;right:18px;bottom:20px;top:auto;font-size:21px}
+  .card .pill{right:14px;bottom:auto;top:16px}
+  .chips{left:56px;top:840px;flex-wrap:wrap;width:500px}
+  .phone{left:150px;top:470px;transform-origin:0 0}
+  .stamp{left:0;top:0}
+  .timer{left:58px;top:262px}
+  .noti{left:56px;width:488px}
+  .stairs{position:absolute;inset:0;z-index:11;pointer-events:none;visibility:hidden}
+  .stairs i{position:absolute;left:0;width:820px;height:49px;background:var(--b);border-radius:9px 0 0 9px}
+  .btn{left:360px;top:860px}
+</style></head>
+<body data-no="S20" data-cat="광고 · AD" data-ko="세로 광고 재배치" data-en="Vertical Ad Reflow" data-meta="07 빈칸 광고를 9:16으로 재배치 · 같은 대본·같은 타이밍" data-dur="15" data-size="720x1280" data-poster="14.6">
+<main class="scene">
+  <div class="sc grid" id="s1">
+    <div class="bub" id="bub" style="left:150px;top:470px">저기요…</div>
+    <svg id="tail" style="position:absolute;left:268px;top:528px" width="80" height="60"><path d="M10 0 L70 50 L34 2" fill="#fff" stroke="#1a1d29" stroke-width="2.5"/></svg>
+    <div class="h" style="top:150px;font-size:84px" id="h2">
+      <span class="ln"><span class="w">아직도</span> <span class="w">예약,</span></span>
+      <span class="ln"><span class="w"><span class="gm" style="font-size:92px">DM</span>으로</span></span>
+      <span class="ln"><span class="w">받으세요?</span></span>
+    </div>
+    <div class="dm" id="dm1" style="left:40px;top:500px"><b></b>내일 2시 돼요?</div>
+    <div class="dm" id="dm2" style="left:250px;top:430px"><b></b>가격 얼마예요?</div>
+    <div class="dm" id="dm3" style="left:120px;top:575px"><b></b>예약 가능한가요?</div>
+  </div>
+  <div class="sc blue" id="s3">
+    <div class="h" style="top:120px;font-size:50px;color:#fff">
+      <span class="ln"><span class="w">네일부터</span> <span class="w">필라테스,</span></span>
+      <span class="ln"><span class="w">원데이 클래스까지</span></span>
+    </div>
+    <div class="card" id="c1" style="top:350px"><div class="ic"><svg width="80" height="80" viewBox="0 0 80 80"><rect x="27" y="8" width="16" height="22" rx="3" fill="#0E1220"/><rect x="18" y="30" width="34" height="44" rx="9" fill="#0346FF"/><path d="M50 66 q12 -14 22 -2" stroke="#0346FF" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M62 14 v12 M56 20 h12" stroke="#0346FF" stroke-width="3" stroke-linecap="round"/></svg></div><h4>네일</h4><p>젤네일 · 60분</p><div class="pr">₩45,000</div><div class="pill">예약</div></div><div class="card" id="c2" style="top:510px"><div class="ic"><svg width="84" height="84" viewBox="0 0 84 84"><circle cx="42" cy="42" r="28" stroke="#0E1220" stroke-width="9" fill="none"/><rect x="4" y="32" width="12" height="20" rx="4" fill="#0346FF"/><rect x="68" y="32" width="12" height="20" rx="4" fill="#0346FF"/></svg></div><h4>필라테스</h4><p>1:1 레슨 · 50분</p><div class="pr">₩70,000</div><div class="pill">예약</div></div><div class="card" id="c3" style="top:670px"><div class="ic"><svg width="80" height="84" viewBox="0 0 80 84"><path d="M30 10 h20 v8 q-4 6 2 12 q18 14 10 38 q-3 8 -12 8 h-20 q-9 0 -12 -8 q-8 -24 10 -38 q6 -6 2 -12z" fill="#0346FF"/><rect x="28" y="6" width="24" height="7" rx="3" fill="#0E1220"/><path d="M20 50 h40" stroke="#fff" stroke-width="3" opacity=".5"/></svg></div><h4>원데이 클래스</h4><p>도자기 · 2시간</p><div class="pr">₩58,000</div><div class="pill">예약</div></div>
+    <div class="chips"><span class="chip">헤어</span><span class="chip">속눈썹</span><span class="chip">요가</span><span class="chip">왁싱</span><span class="chip">+12</span></div>
+  </div>
+  <div class="sc grid" id="s4">
+    <div class="h" style="top:120px;font-size:68px">
+      <span class="ln"><span class="w"><span class="logo" id="mini" style="display:inline-block;width:62px;height:62px;border-radius:16px;vertical-align:-6px;margin-right:14px;box-shadow:0 5px 0 #C7D2FF"><svg width="62" height="62" viewBox="0 0 62 62"><ellipse cx="23" cy="30" rx="4" ry="6" fill="#fff"/><ellipse cx="39" cy="30" rx="4" ry="6" fill="#fff"/></svg></span>빈칸,</span></span>
+      <span class="ln"><span class="w">링크</span> <span class="w">하나로</span></span>
+      <span class="ln"><span class="w"><span class="gm" style="font-size:78px">바꿔</span>드려요.</span></span>
+    </div>
+  </div>
+  <div class="sc grid" id="s5">
+    <div class="h" style="top:120px;font-size:80px" id="h5">
+      <span class="ln"><span class="w">딱</span> <span class="w"><span class="box3" id="b3"><span class="gm" style="color:#fff">3분</span></span>이면,</span></span>
+    </div>
+    <div class="timer"><svg width="54" height="54" viewBox="0 0 54 54"><circle cx="27" cy="27" r="22" stroke="#E3E8FA" stroke-width="7" fill="none"/><circle id="ring" cx="27" cy="27" r="22" stroke="#0346FF" stroke-width="7" fill="none" stroke-linecap="round" transform="rotate(-90 27 27)" stroke-dasharray="138.2" stroke-dashoffset="0"/></svg><span class="t" id="tt">03:00</span><span class="s" id="ts">예약 페이지 만드는 중</span></div>
+    <div class="h" id="h5b" style="top:330px;font-size:44px">
+      <span class="ln"><span class="w">예약금·</span><span class="w">알림·</span></span>
+      <span class="ln"><span class="w">노쇼 관리까지</span> <span class="w gm">끝.</span></span>
+    </div>
+    <div class="noti" id="n1" style="top:458px"><i style="background:#FFD43B;color:#0E1220">₩</i><div><b>예약금 입금 완료</b><small>김*연 님 · ₩20,000</small></div></div>
+    <div class="noti" id="n2" style="top:548px"><i style="background:#E6EBFF;color:#0346FF">●</i><div><b>내일 오후 2시 예약 알림</b><small>고객에게 자동 발송됨</small></div></div>
+  </div>
+  <div class="sc navy" id="s6">
+    <div class="h" style="top:300px;font-size:62px;color:#fff">
+      <span class="ln" id="l61"><span class="w">사장님은</span> <span class="w">손님만.</span></span>
+      <span class="ln" style="padding-top:10px"><span class="w">나머진,</span> <span class="w"><span class="hl" id="hl"><span class="gm" style="color:#fff">저희가.</span></span></span></span>
+    </div>
+  </div>
+  <div class="sc grid" id="s7">
+    <div style="position:absolute;left:0;right:0;top:390px;display:flex;flex-direction:column;align-items:center;gap:22px">
+      <div class="logo" id="logo"><svg id="lface" width="128" height="128" viewBox="0 0 128 128" style="transform-origin:50% 50%"><ellipse cx="48" cy="60" rx="8" ry="12" fill="#fff"/><ellipse cx="80" cy="60" rx="8" ry="12" fill="#fff"/><path d="M56 82 q8 7 16 0" stroke="#fff" stroke-width="5" fill="none" stroke-linecap="round"/></svg></div>
+      <div class="ln"><span class="w gm" style="font-size:118px;color:#0E1220;line-height:1.05">빈칸</span></div>
+    </div>
+    <div class="ln" style="position:absolute;left:0;right:0;top:720px;text-align:center"><span class="w" style="font-size:32px;font-weight:700;color:#3a3f55">일정은 <b style="color:#0346FF">꽉 차게</b>,<br>손은 가볍게.</span></div>
+    <div class="btn" id="btn">3분 만에 시작하기 →</div>
+  </div>
+  <div class="stairs" id="st"></div>
+  <!-- 공용: 마스코트·폰·도장·헤더 -->
+  <div class="mas" id="M"><div class="cube"><span class="n26">26</span>
+    <svg class="face" id="fN" viewBox="0 0 100 60"><ellipse cx="35" cy="24" rx="6.5" ry="10" fill="#0E1220"/><ellipse cx="65" cy="24" rx="6.5" ry="10" fill="#0E1220"/><path d="M44 44 q6 6 12 0" stroke="#0E1220" stroke-width="4" fill="none" stroke-linecap="round"/></svg>
+    <svg class="face" id="fD" viewBox="0 0 100 60" style="visibility:hidden"><path d="M35 24 m0 -10 a10 10 0 1 1 -10 10 a7 7 0 1 1 7 7 a4 4 0 1 1 -4 -4" stroke="#0E1220" stroke-width="3.5" fill="none" stroke-linecap="round"/><path d="M65 24 m0 -10 a10 10 0 1 1 -10 10 a7 7 0 1 1 7 7 a4 4 0 1 1 -4 -4" stroke="#0E1220" stroke-width="3.5" fill="none" stroke-linecap="round"/><path d="M38 46 l5 -4 l5 4 l5 -4 l5 4 l5 -4" stroke="#0E1220" stroke-width="3.5" fill="none" stroke-linejoin="round"/></svg>
+    <svg class="face" id="fH" viewBox="0 0 100 60" style="visibility:hidden"><path d="M26 28 l9 -10 l9 10 M56 28 l9 -10 l9 10" stroke="#0E1220" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/><path d="M42 40 q8 10 16 0" stroke="#0E1220" stroke-width="4.5" fill="#FF8FA3" stroke-linecap="round"/></svg>
+  </div><div class="badge" id="badge">+0</div></div>
+
+  <div class="phone" id="ph"><div class="scr"><span class="isl"></span><span class="stt">2:00</span>
+    <div class="url">🔗 빈칸 링크 · 유나네일</div>
+    <div class="shop"><i>유</i><b>유나네일<small>젤네일 · 아트 · 케어</small></b></div>
+    <div class="lbl"><span>날짜 선택</span><span style="color:#0346FF">10월</span></div>
+    <div class="cal" id="cal"></div>
+    <div class="lbl" style="margin-top:12px"><span>시간 선택</span></div>
+    <div class="times"><span>10:00</span><span class="on" id="tsel">11:30</span><span>14:00</span><span>16:30</span></div>
+    <div class="go">예약하기</div>
+  </div></div>
+  <div class="stamp" id="stamp">끝.</div>
+
+  <div class="hdr" id="hdr"><span><i></i>빈칸 <span class="dim">· 예약 문의</span></span><span class="dim">2026. 10</span></div>
+</main>
+<script src="../../lib/gsap.min.js"></script><script src="../../lib/stage.js"></script>
+<script>
+// 달력 칸(결정론으로 만든 정적 마크업)
+const cal = document.getElementById('cal');
+let html=''; for(let i=0;i<35;i++){ const d=i-2; html += (d<1||d>31)?'<span class="e"></span>':`<span>${d}</span>`; }
+cal.innerHTML = html;
+const st=document.getElementById('st'); for(let i=0;i<24;i++) st.innerHTML+=`<i style="top:${i*53.3+2}px"></i>`;
+const off=el=>{let x=0,y=0;for(let e=el;e&&e.id!=='s4'&&e.id!=='s7';e=e.offsetParent){x+=e.offsetLeft;y+=e.offsetTop;}return [x,y];};
+const [MX,MY]=off(document.getElementById('mini')), [LX,LY]=off(document.getElementById('logo'));
+
+gsap.set('.sc',{autoAlpha:0}); gsap.set('#s1',{autoAlpha:1});
+gsap.set('#M',{left:225,top:580});
+const tl = Motion.timeline();
+const show=(sel,t)=>tl.set(sel,{autoAlpha:1},t), hide=(sel,t)=>tl.set(sel,{autoAlpha:0},t);
+const rise=(sel,t,st=.14,d=.55)=>tl.fromTo(sel,{yPercent:140},{yPercent:0,duration:d,stagger:st,ease:'power3.out'},t);
+const pop=(sel,t,s0=0,d=.45)=>tl.fromTo(sel,{scale:s0,autoAlpha:1},{scale:1,duration:d,ease:'back.out(2.2)'},t);
+const face=(id,t)=>{ ['#fN','#fD','#fH'].forEach(f=>tl.set(f,{visibility:f===id?'visible':'hidden'},t)); };
+const blink=t=>tl.to('#M .face',{scaleY:.1,duration:.07,yoyo:true,repeat:1,ease:'none'},t);
+const hdr=(c,t)=>tl.set('#hdr',{color:c},t);
+
+// 마스코트 대기 바운스
+tl.to('#M .cube',{y:-7,duration:.5,yoyo:true,repeat:27,ease:'sine.inOut'},0);
+
+// S1 0.0 저기요.
+gsap.set(['#bub','#tail','#h2 .w','.dm'],{autoAlpha:0});
+pop('#M',.05,.3,.55);
+pop('#bub',.35,0,.4); tl.set('#tail',{autoAlpha:1},.45);
+tl.set('#bub',{transformOrigin:'80% 100%'},0);
+blink(.85);
+// S2 1.2 아직도 예약, DM으로 받으세요?
+tl.set(['#bub','#tail'],{autoAlpha:0},1.2);
+tl.to('#M',{left:285,top:880,scale:1.3,duration:.55,ease:'power3.inOut'},1.15);
+tl.set('#h2 .w',{autoAlpha:1},1.2);
+rise('#h2 .ln:nth-child(1) .w',1.25,.3);
+rise('#h2 .ln:nth-child(2) .w',2.0,.3);
+rise('#h2 .ln:nth-child(3) .w',2.35,.3);
+['#dm1','#dm2','#dm3'].forEach((s,i)=>{ tl.set(s,{transformOrigin:'0% 100%'},0); pop(s,2.55+i*.18,0,.35); });
+face('#fD',2.45);
+tl.set('#badge',{visibility:'visible'},2.45); pop('#badge',2.45,0,.3);
+const cnt={v:0}; tl.to(cnt,{v:99,duration:.9,ease:'power2.out',onUpdate(){document.getElementById('badge').textContent='+'+Math.round(cnt.v)}},2.45);
+tl.to('#M',{rotation:6,duration:.08,yoyo:true,repeat:7,ease:'none'},2.5);
+tl.to('#M',{rotation:0,duration:.08},3.15);
+
+// S3 3.6 파랑 — 오른쪽에서 밀려 들어옴
+// 계단 막대 와이프: 아래 줄부터 오른쪽에서 밀려 들어오며 마스코트를 태워 감
+tl.set('#st',{visibility:'visible'},3.45);
+tl.fromTo('#st i',{x:740},{x:0,duration:.5,ease:'power3.inOut',stagger:{each:.016,from:'end'}},3.45);
+tl.to('#M',{rotation:-14,duration:.3,ease:'power2.out'},3.6); tl.to('#M',{rotation:0,duration:.45,ease:'back.out(2)'},3.95);
+show('#s3',3.98); hide('#s1',3.98); tl.set('#st',{visibility:'hidden'},3.99); hdr('#fff',3.85);
+tl.set('#badge',{visibility:'hidden'},3.8); face('#fN',3.8);
+tl.to('#M',{left:430,top:940,scale:.9,duration:.55,ease:'power3.inOut'},3.62);
+rise('#s3 .ln:nth-child(1) .w',3.8,.4);
+rise('#s3 .ln:nth-child(2) .w',4.75);
+[['#c1',3.95],['#c2',4.4],['#c3',4.9]].forEach(([s,t])=>{tl.fromTo(s,{x:-620,rotation:-4},{x:0,duration:.55,ease:'power3.out'},t);tl.to(s,{rotation:0,duration:.5,ease:'back.out(3)'},t+.12);});
+face('#fH',5.0);
+tl.fromTo('.chip',{y:30,autoAlpha:0},{y:0,autoAlpha:1,duration:.35,stagger:.09,ease:'back.out(2)'},5.25);
+tl.to('#c3 .pill',{scale:1.25,duration:.12,yoyo:true,repeat:1},5.8);
+
+// S4 6.2 빈칸 링크 하나로 바꿔드려요.
+// 계단 퇴장 + 마스코트 → 제목 속 미니 로고 매치컷
+tl.set('#st',{visibility:'visible'},6.2); tl.set('#st i',{x:0},6.2);
+show('#s4',6.2); hide('#s3',6.2); hdr('#1a1d29',6.3);
+tl.to('#st i',{x:740,duration:.5,ease:'power3.in',stagger:{each:.016,from:'start'}},6.22);
+tl.set('#st',{visibility:'hidden'},7.1);
+gsap.set('#mini',{autoAlpha:0});
+tl.to('#M',{left:MX+31-75,top:MY+31-75,scale:.41,duration:.55,ease:'power3.inOut'},6.2);
+tl.set('#M',{autoAlpha:0},6.75); tl.set('#mini',{autoAlpha:1},6.75);
+tl.fromTo('#mini',{scale:1.15},{scale:1,duration:.3,ease:'back.out(3)'},6.75);
+rise('#s4 .ln:nth-child(1) .w',6.25);
+rise('#s4 .ln:nth-child(2) .w',6.75,.22);
+rise('#s4 .ln:nth-child(3) .w',7.3);
+tl.set('#ph',{visibility:'visible'},6.2);
+tl.set('#ph',{scale:1.15,left:145,top:420},6.2);tl.fromTo('#ph',{y:820},{y:0,duration:.7,ease:'power3.out'},6.3);
+tl.to('#mini svg',{scaleY:.1,duration:.07,yoyo:true,repeat:1,transformOrigin:'50% 50%'},7.6);
+
+// S5 8.0 딱 3분이면, 예약금·알림·노쇼 관리까지 끝.
+show('#s5',8.0); hide('#s4',8.0); tl.to('#ph',{left:350,top:660,scale:.72,duration:.45,ease:'power3.inOut'},8.0);
+rise('#h5 .w',8.05,.2);
+tl.fromTo('#b3',{'--sx':0},{'--sx':1,duration:.35,ease:'power3.out'},8.3);
+tl.fromTo('#b3 .gm',{color:'#0346FF'},{color:'#ffffff',duration:.2},8.32);
+tl.fromTo('.timer',{autoAlpha:0,x:-30},{autoAlpha:1,x:0,duration:.35},8.45);
+const tm={v:180}; tl.to(tm,{v:0,duration:1.3,ease:'power1.in',onUpdate(){
+  const s=Math.round(tm.v); document.getElementById('tt').textContent='0'+Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
+  document.getElementById('ring').setAttribute('stroke-dashoffset',(138.2*(1-tm.v/180)).toFixed(1));
+  document.getElementById('ts').textContent = s===0 ? '예약 페이지 완성 ✓' : '예약 페이지 만드는 중';
+}},8.5);
+const order=[...cal.querySelectorAll('span:not(.e)')]; const r=Motion.rand(26);
+order.map(e=>[r(),e]).sort((a,b)=>a[0]-b[0]).slice(0,22).forEach(([,e],i)=>tl.set(e,{className:'on'},8.6+i*.07));
+rise('#h5b .w',9.15,.32);
+tl.fromTo('#n1',{x:-640},{x:0,duration:.45,ease:'power3.out'},9.35);
+tl.fromTo('#n2',{x:-640},{x:0,duration:.45,ease:'power3.out'},9.7);
+tl.set('#stamp',{visibility:'visible',rotation:-14,left:350+97-105,top:660+200-105},10.15); tl.fromTo('#stamp',{scale:1.8,autoAlpha:0},{scale:1,autoAlpha:1,duration:.3,ease:'power4.in'},10.15);
+tl.to('#ph',{x:-6,duration:.05,yoyo:true,repeat:3},10.45);
+
+// S6 11.0 사장님은 손님만. 나머진, 저희가.
+// 위로 밀어내기
+show('#s6',10.75); tl.fromTo('#s6',{yPercent:100},{yPercent:0,duration:.5,ease:'power3.inOut'},10.75);
+tl.to('#s5',{yPercent:-100,duration:.5,ease:'power3.inOut'},10.75);
+tl.to(['#ph','#stamp'],{y:'-=1280',duration:.5,ease:'power3.inOut'},10.75);
+hide('#s5',11.25); hdr('#fff',11.0);
+tl.set(['#ph','#stamp'],{visibility:'hidden'},11.25);
+tl.set('#M',{autoAlpha:1,left:285,top:660,scale:1.35},11.0); face('#fN',11.0);
+tl.fromTo('#M',{scale:.8},{scale:1.35,duration:.4,ease:'back.out(2.2)'},11.0);
+rise('#s6 .ln:nth-child(1) .w',11.1,.3);
+tl.to('#l61',{color:'#5B6385',duration:.3},12.0);
+rise('#s6 .ln:nth-child(2) .w',12.0,.3);
+tl.fromTo('#hl',{'--sx':0},{'--sx':1,duration:.3,ease:'power3.out'},12.25);
+face('#fH',12.35); tl.to('#M',{y:-36,duration:.2,yoyo:true,repeat:1,ease:'power2.out'},12.35);
+
+// S7 13.2 엔드카드
+// 마스코트 중심 원형 마스크 + 로고 매치컷
+show('#s7',13.0); tl.fromTo('#s7',{clipPath:'circle(0px at 360px 735px)'},{clipPath:'circle(1500px at 360px 735px)',duration:.6,ease:'power2.in'},13.0);
+hide('#s6',13.6); hdr('#1a1d29',13.25); face('#fN',13.0);
+gsap.set('#logo',{autoAlpha:0});
+tl.to('#M',{left:LX+64-75,top:LY+64-75,scale:.853,duration:.5,ease:'power3.inOut'},13.0);
+tl.set('#M',{autoAlpha:0},13.5); tl.set('#logo',{autoAlpha:1},13.5);
+tl.fromTo('#logo',{scale:1.12},{scale:1,duration:.35,ease:'back.out(3)'},13.5);
+rise('#s7 .ln .w',13.4,.25);
+tl.fromTo('#btn',{y:40,autoAlpha:0},{y:0,autoAlpha:1,duration:.4,ease:'back.out(2)'},13.75);
+tl.to('#lface',{scaleY:.1,duration:.07,yoyo:true,repeat:1},14.0);
+Motion.ready();
+</script></body></html>

@@ -1,0 +1,660 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><title>화이트보드 설명 · Whiteboard Explainer</title>
+<link rel="stylesheet" href="../../lib/stage.css">
+<style>
+  .frame{background:#FAFAF9 !important;background-image:none !important}
+  .scene{position:absolute;inset:0;overflow:hidden;background:#FAFAF9}
+  :root{--k:#151515;--g1:#E6E6E4;--g2:#CFCFCC;--g3:#9A9A96;--acc:#D9573A}
+  #world{position:absolute;left:0;top:0;transform-origin:0 0;will-change:transform}
+  #grid{position:absolute;left:-2000px;top:-1400px;width:19000px;height:3600px;
+    background-image:linear-gradient(#E8E8E5 1px,transparent 1px),linear-gradient(90deg,#E8E8E5 1px,transparent 1px);
+    background-size:36px 36px;background-color:#FAFAF9}
+  .a{position:absolute}
+  svg.ov{position:absolute;left:0;top:0;width:16000px;height:1200px;overflow:visible;pointer-events:none}
+  .ln{fill:none;stroke:var(--k);stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+  .dr{stroke-dasharray:1;stroke-dashoffset:1}
+  .card{position:absolute;background:#fff;border:1.8px solid var(--k);border-radius:14px;box-shadow:0 8px 18px rgba(0,0,0,.06)}
+  .hd{position:absolute;display:flex;align-items:baseline;gap:12px;white-space:nowrap}
+  .hd i{font:400 64px/1 "Bodoni Moda",serif;font-variation-settings:"opsz" 11;font-style:normal;display:inline-block;transform:scaleX(.74);transform-origin:0 100%;margin-right:-14px;letter-spacing:-2px;color:var(--k)}
+  .hd b{font:800 28px/1 Pretendard;letter-spacing:-.03em;color:var(--k)}
+  .hd.s i{font-size:48px;margin-right:-10px}.hd.s b{font-size:24px}
+  .lb{position:absolute;font:800 24px/1 Pretendard;letter-spacing:-.03em;white-space:nowrap;color:var(--k)}
+  .pill{position:absolute;display:flex;align-items:center;gap:8px;white-space:nowrap;background:var(--k);color:#fff;border-radius:9px;padding:9px 16px;font:700 22px/1 Pretendard;letter-spacing:-.02em}
+  .pill.o{background:#fff;color:var(--k);border:1.8px solid var(--k)}
+  .bar{position:absolute;height:6px;border-radius:3px;background:var(--k);transform-origin:0 50%}
+  .bar.g{background:var(--g1)}
+  .play{position:absolute;width:150px;height:84px;border:1.8px solid var(--k);border-radius:10px;
+    background:repeating-linear-gradient(45deg,#fff 0 7px,#D8D8D5 7px 8.5px);box-shadow:0 6px 14px rgba(0,0,0,.08)}
+  .play::after{content:"";position:absolute;left:50%;top:50%;width:38px;height:38px;margin:-19px 0 0 -19px;border-radius:50%;background:var(--k)}
+  .play::before{content:"";position:absolute;left:50%;top:50%;margin:-7px 0 0 -4px;border-left:12px solid #fff;border-top:7px solid transparent;border-bottom:7px solid transparent;z-index:1}
+  .dotc{position:absolute;border-radius:50%;background:var(--k)}
+  .ring{position:absolute;border-radius:50%;border:1.8px solid var(--k);background:#fff}
+  .badge{position:absolute;width:26px;height:26px;border-radius:50%;background:var(--k);color:#fff;font:700 15px/26px Pretendard;text-align:center}
+  .ico{width:30px;height:30px;border:1.6px solid var(--k);border-radius:7px;display:flex;align-items:center;justify-content:center;flex:none;background:#fff}
+  .ico svg{width:18px;height:18px}
+  .row{position:absolute;display:flex;align-items:center;gap:12px;font:700 22px/1 Pretendard;letter-spacing:-.02em;white-space:nowrap}
+  .row .t{position:relative}
+  .row .t s{position:absolute;left:-3px;right:-3px;top:50%;height:2.6px;margin-top:-1px;background:var(--k);transform-origin:0 50%}
+  .row.mut .t{color:#9A9A96}
+  .chip{position:absolute;display:flex;align-items:center;justify-content:space-between;width:158px;height:44px;padding:0 12px;border:1.6px solid var(--k);border-radius:8px;background:#fff;font:700 19px/1 Pretendard;letter-spacing:-.02em}
+  .chip .t{position:relative;color:#8A8A86}
+  .chip .t s{position:absolute;left:-2px;right:-2px;top:50%;height:2.4px;background:var(--k);transform-origin:0 50%}
+  .dash{position:absolute;border:2px dashed var(--k);border-radius:6px;background:rgba(255,255,255,.6)}
+  .wf{position:absolute;background:#F1F1EF;border:1.4px solid #DDDDDA;border-radius:4px}
+  .sub{position:absolute;left:640px;top:648px;transform:translateX(-50%);background:var(--k);color:#fff;font:700 21px/1 Pretendard;letter-spacing:-.02em;padding:10px 16px;border-radius:8px;white-space:nowrap;opacity:0;z-index:5}
+  .film{position:absolute;height:120px;background:var(--k);overflow:hidden}
+  .film .holes{position:absolute;left:0;right:0;height:10px;background:repeating-linear-gradient(90deg,transparent 0 9px,#fff 9px 21px,transparent 21px 30px)}
+  .fc{position:absolute;top:22px;width:160px;height:76px;background:#fff;border-radius:6px;display:flex;align-items:center;justify-content:center}
+  .fc svg{width:110px;height:50px}
+  .box3{position:absolute;width:170px;height:118px;background:#fff;border:1.8px solid var(--k);border-radius:12px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;font:700 19px/1 Pretendard;box-shadow:0 8px 18px rgba(0,0,0,.06)}
+  .plus{position:absolute;width:30px;height:30px;border-radius:50%;background:var(--k);color:#fff;font:700 24px/28px Pretendard;text-align:center}
+  .mono{font-family:"IBM Plex Mono","Pretendard",monospace;letter-spacing:0}
+  .tag{font:500 15px/1 "IBM Plex Mono",monospace;color:#555}
+</style></head>
+<body data-no="S23" data-cat="스타일 · STYLE" data-ko="화이트보드 설명" data-en="Whiteboard Explainer" data-meta="모눈 화이트보드 · 카메라 팬 · 프롬프트 사다리" data-dur="35" data-size="1280x720" data-poster="21.6">
+<main class="scene">
+<div id="world">
+  <div id="grid"></div>
+  <svg class="ov" id="ov"></svg>
+
+  <!-- ===== B1 계단 ===== -->
+  <div class="hd" id="h01" style="left:70px;top:330px"><i>01</i><b>한 문장</b></div>
+  <div class="card" id="box01" style="left:70px;top:405px;width:270px;height:58px">
+    <span class="tag a" style="left:14px;top:20px">&gt;_</span>
+    <div class="bar" id="b01" style="left:48px;top:25px;width:150px"></div>
+    <div class="a" style="right:12px;top:15px;width:26px;height:24px;border:1.6px solid var(--k);border-radius:6px;font:600 14px/22px Pretendard;text-align:center">↵</div>
+  </div>
+  <div class="play" id="pl01" style="left:190px;top:470px" data-rot="4"></div>
+
+  <div class="hd" id="h02" style="left:610px;top:140px"><i>02</i><b>고퀄리티 프롬프트</b></div>
+  <div class="card" id="cd02" style="left:610px;top:215px;width:330px;height:160px">
+    <div class="bar l2" style="left:22px;top:26px;width:110px"></div><div class="bar g l2" style="left:22px;top:38px;width:250px"></div>
+    <div class="bar l2" style="left:22px;top:58px;width:120px"></div><div class="bar g l2" style="left:22px;top:70px;width:220px"></div>
+    <div class="bar l2" style="left:22px;top:90px;width:100px"></div><div class="bar g l2" style="left:22px;top:102px;width:190px"></div>
+    <div class="bar l2" style="left:22px;top:122px;width:120px"></div>
+  </div>
+  <div class="play" id="pl02" style="left:850px;top:325px" data-rot="-3"></div>
+
+  <div class="hd" id="h03" style="left:1130px;top:10px"><i>03</i><b>최종 버전</b></div>
+  <div class="card" id="cd03" style="left:1130px;top:85px;width:340px;height:150px">
+    <div class="bar l3" style="left:22px;top:24px;width:90px"></div><div class="bar g l3" style="left:22px;top:36px;width:230px"></div>
+    <div class="a l3" style="left:16px;top:52px;width:300px;height:22px;background:var(--k);border-radius:4px"></div>
+    <div class="bar l3" style="left:22px;top:88px;width:140px"></div><div class="bar g l3" style="left:22px;top:100px;width:200px"></div>
+    <div class="bar l3" style="left:22px;top:118px;width:110px"></div>
+  </div>
+  <div class="badge" id="av03" style="left:1116px;top:72px"><svg viewBox="0 0 24 24" width="16" height="16" style="margin-top:5px"><circle cx="12" cy="8" r="4" fill="none" stroke="#fff" stroke-width="2.2"/><path d="M4 21c1.5-4.5 14.5-4.5 16 0" fill="none" stroke="#fff" stroke-width="2.2"/></svg></div>
+  <div class="play" id="pl03" style="left:1390px;top:205px" data-rot="3"></div>
+
+  <!-- ===== B2 같은 프롬프트 ===== -->
+  <div class="lb" id="b2lab" style="left:2520px;top:288px">같은 프롬프트</div>
+  <div class="card" id="b2box" style="left:2520px;top:325px;width:250px;height:60px">
+    <span class="tag a" style="left:14px;top:21px">&gt;_</span><div class="bar" id="b2bar" style="left:48px;top:27px;width:160px"></div>
+  </div>
+  <div class="dotc" id="ref" style="left:2826px;top:329px;width:52px;height:52px">
+    <svg id="refi" viewBox="0 0 24 24" style="position:absolute;left:12px;top:12px;width:28px;height:28px"><path d="M19 9a7.5 7.5 0 0 0-13.5-1.5M5 15a7.5 7.5 0 0 0 13.5 1.5" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round"/><path d="M5 4v4h4M19 20v-4h-4" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </div>
+  <div class="card" id="r1" style="left:3090px;top:140px;width:270px;height:150px" data-rot="-2">
+    <div class="ring" style="left:122px;top:30px;width:16px;height:16px"></div>
+    <div class="dotc r1d" style="left:116px;top:62px;width:30px;height:30px"></div>
+    <div class="ring" style="left:84px;top:72px;width:16px;height:16px"></div>
+    <div class="ring" style="left:160px;top:72px;width:16px;height:16px"></div>
+    <div class="ring" style="left:122px;top:106px;width:16px;height:16px"></div>
+  </div>
+  <div class="badge" id="r1b" style="left:3077px;top:126px">1</div>
+  <div class="lb" id="neq2" style="left:3210px;top:322px;font-size:30px;font-weight:500">≠</div>
+  <div class="card" id="r2" style="left:3090px;top:400px;width:270px;height:150px" data-rot="1.5">
+    <div class="a" style="left:60px;bottom:28px;width:150px;height:84px">
+      <div class="a bb" style="left:0;bottom:0;width:20px;height:40px;border:1.8px solid var(--k);border-bottom:0"></div>
+      <div class="a bb" style="left:26px;bottom:0;width:20px;height:62px;border:1.8px solid var(--k);border-bottom:0"></div>
+      <div class="a bb" style="left:52px;bottom:0;width:20px;height:52px;border:1.8px solid var(--k);border-bottom:0"></div>
+      <div class="a bb" style="left:78px;bottom:0;width:20px;height:80px;background:var(--k)"></div>
+      <div class="a bb" style="left:104px;bottom:0;width:20px;height:44px;border:1.8px solid var(--k);border-bottom:0"></div>
+      <div class="a bb" style="left:130px;bottom:0;width:20px;height:26px;border:1.8px solid var(--k);border-bottom:0"></div>
+      <div class="a" style="left:-10px;right:-10px;bottom:-2px;height:2px;background:var(--k)"></div>
+    </div>
+  </div>
+  <div class="badge" id="r2b" style="left:3077px;top:386px">2</div>
+  <div class="lb" id="maebun" style="left:3420px;top:330px">매번 다름</div>
+
+  <!-- ===== B3 보여주기용 ≠ 원하는 영상 ===== -->
+  <div class="card" id="show" style="left:4000px;top:230px;width:300px;height:180px" data-rot="-3">
+    <div class="a" id="orb" style="left:150px;top:90px;width:0;height:0">
+      <div class="a" style="left:-56px;top:-56px;width:112px;height:112px;border-radius:50%;border:1.6px dashed #BDBDB9"></div>
+      <div class="dotc" style="left:-22px;top:-22px;width:44px;height:44px"></div>
+      <div class="ring" style="left:-9px;top:-65px;width:18px;height:18px"></div>
+      <div class="ring" style="left:38px;top:20px;width:18px;height:18px"></div>
+      <div class="ring" style="left:-62px;top:16px;width:18px;height:18px"></div>
+    </div>
+  </div>
+  <svg class="a sp" style="left:3955px;top:190px;width:34px;height:34px" viewBox="0 0 24 24"><path d="M12 2c.8 5 2 6.2 7 7-5 .8-6.2 2-7 7-.8-5-2-6.2-7-7 5-.8 6.2-2 7-7z" fill="none" stroke="#151515" stroke-width="1.6"/></svg>
+  <svg class="a sp" style="left:4300px;top:180px;width:26px;height:26px" viewBox="0 0 24 24"><path d="M12 2c.8 5 2 6.2 7 7-5 .8-6.2 2-7 7-.8-5-2-6.2-7-7 5-.8 6.2-2 7-7z" fill="none" stroke="#151515" stroke-width="1.8"/></svg>
+  <svg class="a sp" style="left:4310px;top:400px;width:30px;height:30px" viewBox="0 0 24 24"><path d="M12 2c.8 5 2 6.2 7 7-5 .8-6.2 2-7 7-.8-5-2-6.2-7-7 5-.8 6.2-2 7-7z" fill="none" stroke="#151515" stroke-width="1.7"/></svg>
+  <svg class="a sp" style="left:3960px;top:410px;width:22px;height:22px" viewBox="0 0 24 24"><path d="M12 2c.8 5 2 6.2 7 7-5 .8-6.2 2-7 7-.8-5-2-6.2-7-7 5-.8 6.2-2 7-7z" fill="none" stroke="#151515" stroke-width="2"/></svg>
+  <div class="row" id="showl" style="left:4070px;top:450px"><svg width="24" height="24" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none" stroke="#151515" stroke-width="1.8"/><path d="M7.5 12.5l3 3 6-6.5" fill="none" stroke="#151515" stroke-width="1.8"/></svg>보여주기용</div>
+  <div class="lb" id="neq3" style="left:4436px;top:290px;font-size:44px;font-weight:400">≠</div>
+  <div class="dash" id="want" style="left:4560px;top:230px;width:300px;height:180px">
+    <div class="wf" style="left:18px;top:16px;width:120px;height:14px"></div>
+    <div class="wf" style="left:18px;top:44px;width:76px;height:112px"></div>
+    <div class="wf" style="left:106px;top:44px;width:76px;height:112px"></div>
+    <div class="wf" style="left:194px;top:44px;width:84px;height:112px"></div>
+  </div>
+  <div class="lb" id="wantl" style="left:4650px;top:452px">원하는 영상</div>
+  <div class="ring" id="x3" style="left:4268px;top:205px;width:46px;height:46px"><svg viewBox="0 0 24 24" style="position:absolute;left:10px;top:10px;width:22px;height:22px"><path d="M6 6l12 12M18 6L6 18" stroke="#151515" stroke-width="2" stroke-linecap="round"/></svg></div>
+
+  <!-- ===== B4 스타일 지정 → 체인 ← 금지 ===== -->
+  <div class="card" id="sty" style="left:5330px;top:190px;width:270px;height:300px">
+    <div class="lb" style="left:22px;top:24px;font-size:24px">✎ 스타일 지정</div>
+    <div class="a" style="left:18px;right:18px;top:66px;height:1.4px;background:#DDD"></div>
+  </div>
+  <div class="card" id="chain" style="left:5700px;top:300px;width:200px;height:80px">
+    <div class="a cn" style="left:26px;top:28px;width:40px;height:24px;border-radius:5px;border:1.8px solid var(--k)"></div>
+    <div class="a" style="left:66px;top:39px;width:14px;height:1.8px;background:var(--k)"></div>
+    <div class="a cn" style="left:80px;top:28px;width:40px;height:24px;border-radius:5px;border:1.8px solid var(--k)"></div>
+    <div class="a" style="left:120px;top:39px;width:14px;height:1.8px;background:var(--k)"></div>
+    <div class="a cn" style="left:134px;top:28px;width:40px;height:24px;border-radius:5px;border:1.8px solid var(--k)"></div>
+  </div>
+  <div class="ring" id="chk4" style="left:5884px;top:284px;width:30px;height:30px"><svg viewBox="0 0 24 24" style="position:absolute;left:5px;top:5px;width:17px;height:17px"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="#151515" stroke-width="2.4"/></svg></div>
+  <div class="card" id="ban" style="left:6000px;top:190px;width:270px;height:300px">
+    <div class="pill" style="left:18px;top:18px;padding:7px 12px;font-size:21px">✕ 금지</div>
+    <div class="a" style="left:18px;right:18px;top:66px;height:1.4px;background:#DDD"></div>
+  </div>
+
+  <!-- ===== B5 네 블록 ===== -->
+  <!-- 01 재료 -->
+  <div class="hd s" id="h51" style="left:6830px;top:30px"><i>01</i><b>재료</b></div>
+  <div class="ring" id="ast1" style="left:6835px;top:110px;width:64px;height:64px"></div>
+  <div class="card" id="q51" style="left:6930px;top:100px;width:250px;height:160px"></div>
+  <div class="a" id="bub51" style="left:7150px;top:265px;width:200px;height:56px;background:var(--k);border-radius:10px">
+    <div class="a" style="left:18px;top:16px;width:150px;height:5px;background:#fff;border-radius:3px"></div>
+    <div class="a" style="left:18px;top:28px;width:120px;height:5px;background:#fff;border-radius:3px"></div>
+    <div class="a" style="left:18px;top:40px;width:90px;height:5px;background:#777;border-radius:3px"></div>
+  </div>
+  <div class="badge" id="av51" style="left:7360px;top:276px;width:34px;height:34px"><svg viewBox="0 0 24 24" width="18" height="18" style="margin-top:8px"><circle cx="12" cy="8" r="4" fill="none" stroke="#fff" stroke-width="2.2"/><path d="M4 21c1.5-4.5 14.5-4.5 16 0" fill="none" stroke="#fff" stroke-width="2.2"/></svg></div>
+  <!-- 02 연출 -->
+  <div class="hd s" id="h52" style="left:7530px;top:30px"><i>02</i><b>연출</b></div>
+  <div class="pill o" id="p52a" style="left:7535px;top:108px;padding:7px 12px;font-size:19px">✧ 느낌</div>
+  <div class="pill" id="p52b" style="left:7650px;top:108px;padding:7px 12px;font-size:19px">⇄ 화면 전환</div>
+  <div class="a" id="ghA" style="left:7560px;top:196px;width:60px;height:34px;border:1.4px solid #D5D5D2;border-radius:17px"></div>
+  <div class="a" id="ghB" style="left:7740px;top:186px;width:56px;height:56px;border:1.4px solid #D5D5D2;border-radius:10px"></div>
+  <div class="a" id="ghC" style="left:7920px;top:186px;width:56px;height:56px;border:1.4px solid #D5D5D2;border-radius:50%"></div>
+  <div class="a" id="mph" style="left:7560px;top:196px;width:60px;height:34px;background:var(--k);border-radius:17px"></div>
+  <div class="a" id="tick52" style="left:7560px;top:280px;width:420px;height:24px"></div>
+  <!-- 03 금지목록 -->
+  <div class="hd s" id="h53" style="left:6830px;top:430px"><i>03</i></div>
+  <div class="pill" id="p53" style="left:6900px;top:440px;font-size:22px">금지목록</div>
+  <div class="card" id="tpl" style="left:7170px;top:510px;width:200px;height:150px">
+    <div class="wf" style="left:16px;top:16px;width:100px;height:12px"></div>
+    <div class="wf" style="left:16px;top:40px;width:76px;height:92px"></div>
+    <div class="wf" style="left:104px;top:40px;width:78px;height:92px"></div>
+  </div>
+  <div class="pill" id="stp" style="left:7180px;top:565px;font-size:20px">✕ 템플릿 느낌</div>
+  <!-- 04 구현 -->
+  <div class="hd s" id="h54" style="left:7530px;top:430px"><i>04</i><b>구현</b></div>
+  <div class="card" id="lst" style="left:7540px;top:500px;width:150px;height:170px"></div>
+  <div class="ring" id="ast2" style="left:7790px;top:540px;width:84px;height:84px"></div>
+  <div class="a rg" style="left:7770px;top:520px;width:124px;height:124px;border-radius:50%;border:1.4px solid #CFCFCC"></div>
+  <div class="a rg" style="left:7752px;top:502px;width:160px;height:160px;border-radius:50%;border:1.2px solid #E0E0DD"></div>
+  <div class="card" id="ok54" style="left:7720px;top:676px;width:220px;height:50px;border-radius:10px">
+    <div class="badge" style="left:10px;top:11px"><svg viewBox="0 0 24 24" width="14" height="14" style="margin-top:6px"><circle cx="12" cy="8" r="4" fill="none" stroke="#fff" stroke-width="2.4"/><path d="M4 21c1.5-4.5 14.5-4.5 16 0" fill="none" stroke="#fff" stroke-width="2.4"/></svg></div>
+    <div class="lb" style="left:46px;top:14px;font-size:20px">몰라도 OK</div>
+    <svg class="a" viewBox="0 0 24 24" style="right:12px;top:13px;width:22px;height:22px"><path id="okck" class="ln dr" pathLength="1" d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+  </div>
+
+  <!-- B5 프롬프트 문서(원본: 왼쪽 긴 프롬프트 + 검은 강조 띠 → 오른쪽 블록) -->
+  <div class="card" id="doc" style="left:6500px;top:110px;width:290px;height:520px;z-index:3;border-radius:10px">
+    <div class="a" style="left:12px;top:12px;width:8px;height:8px;border-radius:50%;border:1.4px solid var(--k)"></div>
+    <div class="a" style="left:25px;top:12px;width:8px;height:8px;border-radius:50%;border:1.4px solid var(--k)"></div>
+    <div class="a" style="left:38px;top:12px;width:8px;height:8px;border-radius:50%;border:1.4px solid var(--k)"></div>
+    <div id="dbars"></div>
+    <div class="a" id="dband" style="left:12px;top:56px;width:266px;height:56px;background:var(--k);border-radius:3px;transform-origin:0 50%"></div>
+    <div class="a" id="darr" style="left:296px;top:81px;width:30px;height:6px"><div class="a" style="left:0;top:2px;width:24px;height:2.2px;background:var(--k)"></div><div class="a" style="left:20px;top:-2px;border-left:9px solid var(--k);border-top:5px solid transparent;border-bottom:5px solid transparent"></div></div>
+  </div>
+
+  <!-- ===== B6 필름 스트립 + 스킬 ===== -->
+  <div class="film" id="film" style="left:8500px;top:110px;width:1500px">
+    <div class="holes" style="top:6px"></div><div class="holes" style="bottom:6px"></div>
+    <div class="a" id="reel" style="left:0;top:0;height:120px;width:4000px"></div>
+  </div>
+  <div class="box3" id="rm" style="left:8800px;top:390px"><svg width="34" height="34" viewBox="0 0 24 24"><path d="M7 4.5v15l12-7.5z" fill="#151515"/></svg>Remotion</div>
+  <div class="plus" id="pl1" style="left:8995px;top:434px">+</div>
+  <div class="box3" id="hf" style="left:9050px;top:390px"><svg width="34" height="34" viewBox="0 0 24 24"><rect x="2.5" y="4" width="19" height="16" rx="3" fill="#151515"/><path d="M9.5 9l-3 3 3 3M14.5 9l3 3-3 3" stroke="#fff" stroke-width="1.9" fill="none" stroke-linecap="round"/></svg>Hyperframes</div>
+  <div class="plus" id="pl2" style="left:9245px;top:434px">+</div>
+  <div class="a" id="sk" style="left:9300px;top:380px;width:190px;height:140px">
+    <div class="box3" style="left:16px;top:0;width:170px;height:118px"></div>
+    <div class="box3" style="left:8px;top:8px;width:170px;height:118px"></div>
+    <div class="box3" style="left:0;top:16px;width:170px;height:118px"><div style="display:flex;gap:6px"><span class="ico"><svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2" fill="none" stroke="#151515" stroke-width="2"/></svg></span><span class="ico"><svg viewBox="0 0 24 24"><path d="M12 3c.6 4 1.6 5 5.5 5.6-3.9.6-4.9 1.6-5.5 5.6-.6-4-1.6-5-5.5-5.6C10.4 8 11.4 7 12 3z" fill="none" stroke="#151515" stroke-width="1.8"/></svg></span><span class="ico"><svg viewBox="0 0 24 24"><path d="M5 9h11l-3-3M19 15H8l3 3" fill="none" stroke="#151515" stroke-width="1.8" stroke-linecap="round"/></svg></span></div>스킬</div>
+  </div>
+
+  <!-- ===== B7 타임라인 ===== -->
+  <div class="card tc" id="t1" style="left:10290px;top:240px;width:230px;height:130px"><div class="hd s" style="left:16px;top:6px"><i style="font-size:38px;margin-right:-8px">01</i><b style="font-size:22px">장면</b></div>
+    <div class="a" style="left:16px;top:72px;width:56px;height:34px;border:1.6px solid var(--k);border-radius:5px"><div class="bar" style="left:8px;top:9px;width:36px;height:3px"></div><div class="bar" style="left:8px;top:16px;width:30px;height:3px"></div><div class="bar" style="left:8px;top:23px;width:36px;height:3px"></div></div>
+    <div class="a" style="left:82px;top:72px;width:56px;height:34px;border:1.6px solid var(--k);border-radius:5px"><div class="dotc" style="left:34px;top:12px;width:10px;height:10px"></div><div class="ring" style="left:10px;top:12px;width:10px;height:10px"></div></div>
+    <div class="a" style="left:148px;top:72px;width:56px;height:34px;border:1.6px solid var(--k);border-radius:5px"><div class="a" style="left:8px;top:9px;width:16px;height:16px;border:1.6px solid var(--k);border-radius:3px"></div><div class="a" style="left:30px;top:8px;width:18px;height:18px;background:var(--k);border-radius:3px"></div></div>
+  </div>
+  <div class="card tc" id="t2" style="left:10620px;top:240px;width:230px;height:130px"><div class="hd s" style="left:16px;top:6px"><i style="font-size:38px;margin-right:-8px">02</i><b style="font-size:22px">박자</b></div>
+    <div class="a" id="wave" style="left:18px;top:66px;width:196px;height:44px"></div>
+  </div>
+  <div class="card tc" id="t3" style="left:10950px;top:240px;width:230px;height:130px"><div class="hd s" style="left:16px;top:6px"><i style="font-size:38px;margin-right:-8px">03</i><b style="font-size:22px">금지 효과</b></div>
+    <div class="bar" style="left:44px;top:74px;width:130px;height:3px"></div><div class="bar" style="left:44px;top:92px;width:110px;height:3px"></div><div class="bar g" style="left:44px;top:110px;width:90px;height:3px;background:#CCC"></div>
+    <div class="tag a" style="left:18px;top:66px">✧</div><div class="tag a" style="left:18px;top:84px">ϟ</div><div class="tag a" style="left:18px;top:102px">⇄</div>
+    <div class="tag a" style="left:194px;top:66px">⊗</div><div class="tag a" style="left:194px;top:84px">⊗</div>
+  </div>
+  <div class="a" id="ruler" style="left:10250px;top:470px;width:1100px;height:20px"></div>
+  <div class="a" id="ph" style="left:10260px;top:415px;width:0;height:0">
+    <div class="a" style="left:-9px;top:0;border-left:9px solid transparent;border-right:9px solid transparent;border-top:12px solid var(--k)"></div>
+    <div class="a" style="left:-1px;top:8px;width:2px;height:66px;background:var(--k)"></div>
+  </div>
+  <div class="pill" id="mdp" style="left:10750px;top:470px;font-size:24px;padding:12px 22px;box-shadow:0 10px 20px rgba(0,0,0,.18)">✎ 모션 디자인</div>
+
+  <!-- ===== B8 사람 → 모니터 ===== -->
+  <div class="card" id="th1" style="left:11760px;top:120px;width:130px;height:84px;border-radius:22px"><div class="a" style="left:12px;top:12px;width:102px;height:56px;border:1.6px solid var(--k);border-radius:8px"><svg class="a" viewBox="0 0 100 56" style="left:0;top:0;width:100px;height:56px"><path d="M18 28L38 16 58 28 38 40zM58 28h20" fill="none" stroke="#151515" stroke-width="1.8"/><circle cx="18" cy="28" r="4" fill="#fff" stroke="#151515" stroke-width="1.6"/><circle cx="38" cy="16" r="4" fill="#fff" stroke="#151515" stroke-width="1.6"/><circle cx="38" cy="40" r="4" fill="#fff" stroke="#151515" stroke-width="1.6"/><circle cx="80" cy="28" r="6" fill="#151515"/></svg></div></div>
+  <div class="ring tb" style="left:11790px;top:222px;width:12px;height:12px"></div><div class="ring tb" style="left:11786px;top:244px;width:9px;height:9px"></div>
+  <div class="dotc" id="ps1" style="left:11760px;top:290px;width:64px;height:64px"><svg viewBox="0 0 24 24" style="position:absolute;left:16px;top:15px;width:32px;height:32px"><circle cx="12" cy="8" r="4" fill="none" stroke="#fff" stroke-width="1.8"/><path d="M4.5 20.5c1.5-4.5 13.5-4.5 15 0" fill="none" stroke="#fff" stroke-width="1.8"/></svg></div>
+  <div class="a" id="wall" style="left:11980px;top:220px;width:26px;height:200px;background:repeating-linear-gradient(#151515 0 9px,#3a3a3a 9px 10px);transform-origin:50% 100%"></div>
+  <div class="ring" id="x8" style="left:11975px;top:202px;width:36px;height:36px"><svg viewBox="0 0 24 24" style="position:absolute;left:8px;top:8px;width:17px;height:17px"><path d="M6 6l12 12M18 6L6 18" stroke="#151515" stroke-width="2.2" stroke-linecap="round"/></svg></div>
+  <div class="a" id="mon1" style="left:12030px;top:236px;width:200px;height:180px">
+    <div class="a" style="left:0;top:0;width:200px;height:130px;border:2px solid var(--k);border-radius:6px;background:#fff"></div>
+    <div class="a" style="left:96px;top:130px;width:8px;height:30px;background:var(--k)"></div><div class="a" style="left:56px;top:158px;width:88px;height:6px;border-radius:3px;background:var(--k)"></div>
+  </div>
+  <div class="lb" id="l81" style="left:12010px;top:442px;font-size:22px">만들 줄 모름</div>
+
+  <div class="card" id="th2" style="left:12360px;top:120px;width:130px;height:84px;border-radius:22px"><div class="a" style="left:12px;top:12px;width:102px;height:56px;border:1.6px solid var(--k);border-radius:8px"><svg class="a" viewBox="0 0 100 56" style="left:0;top:0;width:100px;height:56px"><path d="M18 28L38 16 58 28 38 40zM58 28h20" fill="none" stroke="#151515" stroke-width="1.8"/><circle cx="18" cy="28" r="4" fill="#fff" stroke="#151515" stroke-width="1.6"/><circle cx="38" cy="16" r="4" fill="#fff" stroke="#151515" stroke-width="1.6"/><circle cx="38" cy="40" r="4" fill="#fff" stroke="#151515" stroke-width="1.6"/><circle cx="80" cy="28" r="6" fill="#151515"/></svg></div></div>
+  <div class="ring tb2" style="left:12390px;top:222px;width:12px;height:12px"></div><div class="ring tb2" style="left:12386px;top:244px;width:9px;height:9px"></div>
+  <div class="dotc" id="ps2" style="left:12360px;top:290px;width:64px;height:64px"><svg viewBox="0 0 24 24" style="position:absolute;left:16px;top:15px;width:32px;height:32px"><circle cx="12" cy="8" r="4" fill="none" stroke="#fff" stroke-width="1.8"/><path d="M4.5 20.5c1.5-4.5 13.5-4.5 15 0" fill="none" stroke="#fff" stroke-width="1.8"/></svg></div>
+  <div class="a" id="pc8" style="left:12440px;top:276px;width:140px;height:92px;background:var(--k);border-radius:10px;box-shadow:0 8px 18px rgba(0,0,0,.18)">
+    <div class="tag a" style="left:12px;top:16px;color:#fff">▤</div><div class="a p8" style="left:34px;top:20px;width:88px;height:5px;background:#fff;border-radius:3px"></div>
+    <div class="tag a" style="left:12px;top:38px;color:#fff">⇄</div><div class="a p8" style="left:34px;top:42px;width:72px;height:5px;background:#fff;border-radius:3px"></div>
+    <div class="tag a" style="left:12px;top:60px;color:#fff">ϟ</div><div class="a p8" style="left:34px;top:64px;width:80px;height:5px;background:#fff;border-radius:3px"></div>
+  </div>
+  <div class="a" id="mon2" style="left:12640px;top:236px;width:200px;height:180px">
+    <div class="a" style="left:0;top:0;width:200px;height:130px;border:2px solid var(--k);border-radius:6px;background:#fff"></div>
+    <svg class="a" viewBox="0 0 100 56" style="left:40px;top:30px;width:120px;height:67px"><path id="md2" class="ln dr" pathLength="1" d="M18 28L38 16 58 28 38 40zM58 28h20"/><circle class="mdn" cx="18" cy="28" r="4" fill="#fff" stroke="#151515" stroke-width="1.6"/><circle class="mdn" cx="38" cy="16" r="4" fill="#fff" stroke="#151515" stroke-width="1.6"/><circle class="mdn" cx="38" cy="40" r="4" fill="#fff" stroke="#151515" stroke-width="1.6"/><circle class="mdn" cx="80" cy="28" r="6" fill="#151515"/></svg>
+    <div class="a" style="left:96px;top:130px;width:8px;height:30px;background:var(--k)"></div><div class="a" style="left:56px;top:158px;width:88px;height:6px;border-radius:3px;background:var(--k)"></div>
+  </div>
+  <div class="ring" id="ok8" style="left:12822px;top:218px;width:36px;height:36px"><svg viewBox="0 0 24 24" style="position:absolute;left:8px;top:8px;width:18px;height:18px"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="#151515" stroke-width="2.4"/></svg></div>
+  <div class="lb" id="l82" style="left:12715px;top:442px;font-size:22px">설명</div>
+
+  <!-- ===== B9 한 문장 → 수정 → 원하는 방향 ===== -->
+  <div class="pill" id="p91" style="left:13230px;top:250px;font-size:19px;padding:7px 12px"><span class="mono" style="font-size:15px">&gt;_</span> 한 문장</div>
+  <div class="card" id="box91" style="left:13230px;top:298px;width:300px;height:96px;border-radius:10px">
+    <div class="a mono" id="typ" style="left:16px;top:16px;width:270px;font-size:16px;line-height:1.55;color:#222;white-space:pre-wrap"></div>
+  </div>
+  <div class="card" id="fix" style="left:13700px;top:160px;width:290px;height:380px;border-radius:12px">
+    <div class="pill" style="left:-10px;top:-18px;font-size:17px;padding:6px 11px">✎ 수정</div>
+  </div>
+  <div class="a" id="pen" style="left:13960px;top:210px;width:26px;height:26px"><svg viewBox="0 0 24 24" width="26" height="26"><path d="M4 20l1.2-4.6L16 4.6a2 2 0 0 1 2.8 0l.6.6a2 2 0 0 1 0 2.8L8.6 18.8z" fill="#fff" stroke="#151515" stroke-width="1.7" stroke-linejoin="round"/></svg></div>
+  <div class="a" id="tgt" style="left:14300px;top:350px;width:0;height:0">
+    <div class="ring tr" style="left:-80px;top:-80px;width:160px;height:160px"></div>
+    <div class="ring tr" style="left:-54px;top:-54px;width:108px;height:108px"></div>
+    <div class="ring tr" style="left:-28px;top:-28px;width:56px;height:56px"></div>
+    <div class="dotc tr" style="left:-9px;top:-9px;width:18px;height:18px"></div>
+  </div>
+  <svg class="a" id="dart" viewBox="0 0 84 24" style="left:14296px;top:338px;width:84px;height:24px;overflow:visible"><path d="M4 12h72M4 12l11-7M4 12l11 7M68 12l9-8M68 12l9 8M60 12l9-8M60 12l9 8" fill="none" stroke="#151515" stroke-width="2.4" stroke-linecap="round"/></svg>
+  <div class="lb" id="l9" style="left:14228px;top:458px;font-size:24px">원하는 방향</div>
+</div>
+
+<div class="sub" id="s1">한 문장에서 최종 버전까지, 순서대로</div>
+<div class="sub" id="s2">같은 프롬프트도 돌릴 때마다 결과가 다릅니다</div>
+<div class="sub" id="s3">보여주기용으로는 멋지지만, 원하는 영상은 아니죠</div>
+<div class="sub" id="s4">원하는 스타일과 쓰지 말 것을 명확하게</div>
+<div class="sub" id="s5">재료 · 연출 · 금지목록 · 구현, 네 칸으로 나눕니다</div>
+<div class="sub" id="s6">여러 스킬을 엮어서 만들던 것을</div>
+<div class="sub" id="s7">장면 · 박자 · 금지 효과, 그 판단이 모션 디자인</div>
+<div class="sub" id="s8">만들 줄 몰라도, 설명할 수 있으면 됩니다</div>
+<div class="sub" id="s9">한 문장에서 시작해 고쳐 가며 원하는 방향으로</div>
+</main>
+<script src="../../lib/gsap.min.js"></script><script src="../../lib/stage.js"></script>
+<script>
+const $ = s => document.querySelector(s), $$ = s => [...document.querySelectorAll(s)];
+const r = Motion.rand(23);
+const NS = 'http://www.w3.org/2000/svg', ov = $('#ov');
+const W = $('#world');
+
+// ---------- 손그림 선 ----------
+function wob(pts, amp = 2.6, step = 22){
+  let d = '';
+  for (let i = 0; i < pts.length - 1; i++){
+    const [x0,y0] = pts[i], [x1,y1] = pts[i+1];
+    const n = Math.max(1, Math.round(Math.hypot(x1-x0, y1-y0) / step));
+    for (let k = (i ? 1 : 0); k <= n; k++){
+      const t = k / n, e = (k === 0 || k === n) ? 0 : 1;
+      const x = x0 + (x1-x0)*t + (r()-.5)*amp*e, y = y0 + (y1-y0)*t + (r()-.5)*amp*e;
+      d += (d ? 'L' : 'M') + x.toFixed(1) + ' ' + y.toFixed(1);
+    }
+  }
+  return d;
+}
+function path(d, w = 2.2, extra = ''){
+  const p = document.createElementNS(NS, 'path');
+  p.setAttribute('d', d); p.setAttribute('pathLength', '1');
+  p.setAttribute('class', 'ln dr'); p.style.strokeWidth = w;
+  if (extra) p.setAttribute('marker-end', extra);
+  ov.appendChild(p); return p;
+}
+let mk = 0;
+function dotted(d, w = 2.2){
+  const id = 'm' + (mk++);
+  const m = document.createElementNS(NS, 'mask');
+  m.setAttribute('id', id); m.setAttribute('maskUnits', 'userSpaceOnUse');
+  m.setAttribute('x', -3000); m.setAttribute('y', -3000); m.setAttribute('width', 22000); m.setAttribute('height', 8000);
+  const mp = document.createElementNS(NS, 'path');
+  mp.setAttribute('d', d); mp.setAttribute('pathLength', '1');
+  mp.setAttribute('style', 'fill:none;stroke:#fff;stroke-width:14;stroke-dasharray:1;stroke-dashoffset:1');
+  m.appendChild(mp); ov.appendChild(m);
+  const p = document.createElementNS(NS, 'path');
+  p.setAttribute('d', d); p.setAttribute('mask', `url(#${id})`);
+  p.setAttribute('style', `fill:none;stroke:#151515;stroke-width:${w};stroke-linecap:round;stroke-dasharray:0.5 7`);
+  ov.appendChild(p); return mp;
+}
+function head(x, y, ang, s = 9){ // 화살촉(그려지는 대상 아님 → pop)
+  const g = document.createElementNS(NS, 'path');
+  const a1 = ang + 2.6, a2 = ang - 2.6;
+  g.setAttribute('d', `M${x+Math.cos(a1)*s} ${y+Math.sin(a1)*s}L${x} ${y}L${x+Math.cos(a2)*s} ${y+Math.sin(a2)*s}`);
+  g.setAttribute('class', 'ln'); ov.appendChild(g); return g;
+}
+
+// B1 계단선 + 점선 호
+const stair = path(wob([[20,540],[560,544],[560,420],[1080,424],[1080,300],[1680,304]], 2.2), 2.4);
+const arc1 = dotted('M120 640 C 520 700, 900 560, 1180 470 S 1600 300, 1700 250');
+const arc1h = head(1700, 250, -0.5);
+// B2 가지
+const br1 = path(wob([[2880,352],[2950,352]],1) + ' C 3010 352, 3000 215, 3088 215', 2);
+const br2 = path(wob([[2880,358],[2950,358]],1) + ' C 3010 358, 3000 475, 3088 475', 2);
+const brk = path('M3378 200 C 3396 200, 3398 210, 3398 240 L3398 320 L3408 345 L3398 370 L3398 450 C 3398 480, 3396 490, 3378 490', 1.8);
+// B4 화살표
+const a4a = path(wob([[5610,340],[5692,340]],1), 2); const a4ah = head(5692,340,0);
+const a4b = path(wob([[5990,340],[5908,340]],1), 2); const a4bh = head(5908,340,Math.PI);
+// B5 화살표
+const a54 = path(wob([[7700,585],[7780,585]],1), 2); const a54h = head(7780,585,0);
+// B6 곡선 화살표 (필름 → 스킬)
+const a6 = path(wob([[9700,236],[9720,300]],1.5) + ' C 9730 400, 9640 440, 9500 448', 2); const a6h = head(9500,448,Math.PI-0.05);
+// B7 수렴선
+const cv = [10405,10735,11065].map(x => path(`M${x} 282 C ${x} 360, 10860 330, 10860 400`, 2));
+// B8 화살표
+const a81 = path(wob([[11830,322],[11972,322]],1), 2); const a81h = head(11972,322,0);
+const a82 = path(wob([[12586,322],[12632,322]],1), 2); const a82h = head(12632,322,0);
+// B9 점선 화살표, 수정 → 표적
+const arc9 = dotted('M13530 360 C 13600 440, 13640 420, 13692 360'); const arc9h = head(13692,360,-0.85);
+const a9 = path(wob([[14000,350],[14196,350]],1), 2); const a9h = head(14196,350,0);
+
+// ---------- 내용 채우기 ----------
+const IC = {
+  col:'<circle cx="8" cy="12" r="3.6" fill="#151515"/><circle cx="16" cy="12" r="3.6" fill="none" stroke="#151515" stroke-width="1.8"/>',
+  font:'<text x="12" y="16.5" text-anchor="middle" font-family="Pretendard" font-weight="700" font-size="12" fill="#151515">Aa</text>',
+  mov:'<path d="M5 7c4 0 4 10 9 10h5M16 14l3 3-3 3" fill="none" stroke="#151515" stroke-width="1.8" stroke-linecap="round"/>',
+  cam:'<circle cx="11" cy="11" r="6" fill="none" stroke="#151515" stroke-width="1.8"/><path d="M15.5 15.5L20 20" stroke="#151515" stroke-width="1.8" stroke-linecap="round"/>',
+  bnc:'<path d="M5 9h11l-3-3M19 15H8l3 3" fill="none" stroke="#151515" stroke-width="1.8" stroke-linecap="round"/>',
+  par:'<path d="M12 3c.6 4 1.6 5 5.5 5.6-3.9.6-4.9 1.6-5.5 5.6-.6-4-1.6-5-5.5-5.6C10.4 8 11.4 7 12 3z" fill="none" stroke="#151515" stroke-width="1.6"/><circle cx="18" cy="18" r="1.6" fill="#151515"/>',
+  glo:'<path d="M13 3L6 13h5l-1 8 7-10h-5z" fill="none" stroke="#151515" stroke-width="1.6" stroke-linejoin="round"/>',
+  tpl:'<rect x="4" y="5" width="16" height="14" rx="2" fill="none" stroke="#151515" stroke-width="1.6"/><path d="M4 9h16" stroke="#151515" stroke-width="1.6"/>',
+  scn:'<rect x="4" y="5" width="16" height="12" rx="2" fill="none" stroke="#151515" stroke-width="1.8"/><path d="M9 20h6" stroke="#151515" stroke-width="1.8"/>',
+  mus:'<path d="M9 17V6l10-2v11" fill="none" stroke="#151515" stroke-width="1.8"/><circle cx="7" cy="17" r="2.4" fill="#151515"/><circle cx="17" cy="15" r="2.4" fill="#151515"/>'
+};
+const ico = k => `<span class="ico"><svg viewBox="0 0 24 24">${IC[k]}</svg></span>`;
+const ck = `<svg class="ckc" viewBox="0 0 30 30" width="30" height="30"><circle class="ln dr" pathLength="1" cx="15" cy="15" r="12" style="stroke-width:1.8"/><path class="ln dr" pathLength="1" d="M9.5 15.5l3.8 3.8 7.5-8" style="stroke-width:2"/></svg>`;
+const xx = `<svg viewBox="0 0 30 30" width="28" height="28" class="xc"><circle cx="15" cy="15" r="11" fill="none" stroke="#151515" stroke-width="1.8"/><path d="M10.5 10.5l9 9M19.5 10.5l-9 9" stroke="#151515" stroke-width="1.8" stroke-linecap="round"/></svg>`;
+// 스타일 지정 행
+[['col','색'],['font','폰트'],['mov','움직임'],['cam','카메라']].forEach(([k,t],i) => {
+  $('#sty').insertAdjacentHTML('beforeend', `<div class="row sr" style="left:20px;top:${88+i*50}px;width:228px">${ico(k)}<span class="t">${t}</span><span style="margin-left:auto">${ck}</span></div>`);
+});
+// 금지 행
+[['bnc','바운스'],['par','파티클'],['glo','글로우'],['tpl','템플릿']].forEach(([k,t],i) => {
+  $('#ban').insertAdjacentHTML('beforeend', `<div class="row br mut" style="left:20px;top:${88+i*50}px;width:228px">${ico(k)}<span class="t">${t}<s></s></span><span style="margin-left:auto">${xx}</span></div>`);
+});
+// 01 재료 질문 카드
+[['scn','장면?'],['col','색?'],['mus','음악?']].forEach(([k,t],i) => {
+  $('#q51').insertAdjacentHTML('beforeend', `<div class="row qr" style="left:18px;top:${20+i*44}px">${ico(k)}<span>${t}</span></div>`);
+});
+// 아스터리스크
+function aster(el, R, w){
+  let s = `<svg viewBox="-50 -50 100 100" style="position:absolute;left:0;top:0;width:100%;height:100%">`;
+  for (let i = 0; i < 12; i++){ const a = i*Math.PI/6; s += `<line x1="${(Math.cos(a)*6).toFixed(1)}" y1="${(Math.sin(a)*6).toFixed(1)}" x2="${(Math.cos(a)*R).toFixed(1)}" y2="${(Math.sin(a)*R).toFixed(1)}" stroke="#D9573A" stroke-width="${w}" stroke-linecap="round"/>`; }
+  el.insertAdjacentHTML('beforeend', s + `<circle r="5" fill="#D9573A"/></svg>`);
+}
+aster($('#ast1'), 30, 5); aster($('#ast2'), 30, 5);
+// 02 연출 눈금
+for (let i = 0; i < 29; i++){ const big = (i % 7 === 3); $('#tick52').insertAdjacentHTML('beforeend', `<div class="a tk" style="left:${i*15}px;top:${big?0:7}px;width:${big?3:1.6}px;height:${big?24:10}px;background:${big?'#151515':'#AAA'}"></div>`); }
+// 03 금지 칩
+['바운스','파티클','글로우','그라디언트','아이콘 불일치','빈 시간'].forEach((t,i) => {
+  const c = i % 2, rr = (i/2)|0;
+  $('#tpl').insertAdjacentHTML('beforebegin', `<div class="chip ch" style="left:${6830 + c*168}px;top:${500 + rr*54}px;${t.length>4?'font-size:16px':''}"><span class="t">${t}<s></s></span>${xx.replace('width="28" height="28"','width="22" height="22"')}</div>`);
+});
+// 04 번호 목록
+for (let i = 0; i < 6; i++){
+  $('#lst').insertAdjacentHTML('beforeend', `<div class="tag a li" style="left:14px;top:${18+i*24}px;font-size:12px">${i+1}</div><div class="bar li" style="left:36px;top:${22+i*24}px;width:${[90,74,96,64,84,58][i]}px;height:4px"></div>`);
+}
+// 필름 카드
+const FC = [
+  '<rect x="6" y="17" width="22" height="16" rx="3" fill="none" stroke="#151515" stroke-width="2.4"/><rect x="44" y="17" width="22" height="16" rx="3" fill="none" stroke="#151515" stroke-width="2.4"/><rect x="82" y="17" width="22" height="16" rx="3" fill="#151515"/><path d="M28 25h16M66 25h16" stroke="#151515" stroke-width="2.4"/>',
+  '<path d="M10 12l3 3 5-6M10 26l3 3 5-6M10 40l3 3 5-6" fill="none" stroke="#151515" stroke-width="2.2"/><path d="M28 12h70M28 26h56M28 40h64" stroke="#151515" stroke-width="3"/>',
+  '<rect x="18" y="8" width="34" height="34" rx="5" fill="none" stroke="#151515" stroke-width="2.4"/><circle cx="35" cy="25" r="7" fill="none" stroke="#151515" stroke-width="2.4"/><rect x="60" y="8" width="34" height="34" rx="5" fill="#151515"/><rect x="70" y="18" width="14" height="14" fill="#fff"/>',
+  '<circle cx="55" cy="25" r="9" fill="#151515"/><circle cx="55" cy="6" r="4" fill="none" stroke="#151515" stroke-width="2"/><circle cx="34" cy="30" r="4" fill="none" stroke="#151515" stroke-width="2"/><circle cx="76" cy="30" r="4" fill="none" stroke="#151515" stroke-width="2"/>',
+  '<path d="M18 25L42 12 66 25 42 38zM66 25h24" fill="none" stroke="#151515" stroke-width="2.2"/><circle cx="18" cy="25" r="5" fill="#fff" stroke="#151515" stroke-width="2"/><circle cx="42" cy="12" r="5" fill="#fff" stroke="#151515" stroke-width="2"/><circle cx="42" cy="38" r="5" fill="#fff" stroke="#151515" stroke-width="2"/><circle cx="92" cy="25" r="7" fill="#151515"/>'
+];
+for (let i = 0; i < 20; i++) $('#reel').insertAdjacentHTML('beforeend', `<div class="fc" style="left:${20+i*186}px"><svg viewBox="0 0 110 50">${FC[i%5]}</svg></div>`);
+// 박자 파형
+for (let i = 0; i < 17; i++){ const h = i===7 ? 34 : 8 + ((i*37)%19); $('#wave').insertAdjacentHTML('beforeend', `<div class="a wv" style="left:${i*12}px;top:${22-h/2}px;width:${i===7?4:3}px;height:${h}px;border-radius:2px;background:${i===7?'#151515':'#BDBDBA'}"></div>`); }
+// 눈금자
+for (let i = 0; i <= 55; i++){ const big = i % 5 === 0; $('#ruler').insertAdjacentHTML('beforeend', `<div class="a rt" style="left:${i*20}px;top:${big?-8:-4}px;width:1.6px;height:${big?16:8}px;background:#151515"></div>`); }
+$('#ruler').insertAdjacentHTML('afterbegin', '<div class="a" id="rl" style="left:0;top:-1px;width:1100px;height:2px;background:#151515;transform-origin:0 50%"></div>');
+// 떨어지는 점선 + 점
+[10405,10735,11065].forEach((x,i) => { $('#world').insertAdjacentHTML('beforeend', `<div class="a drop" id="dp${i}" style="left:${x-1}px;top:372px;width:0;height:98px;border-left:2px dashed #151515;transform-origin:50% 0"></div><div class="dotc dd" id="dd${i}" style="left:${x-6}px;top:464px;width:12px;height:12px"></div>`); });
+// 수정 카드 행
+const TAGS = ['<inputs>','<direction>','<structure>','<build>'];
+TAGS.forEach((t,i) => {
+  $('#fix').insertAdjacentHTML('beforeend', `<div class="tag a fr" style="left:20px;top:${36+i*84}px;font-size:15px;color:#151515">${t.replace('<','&lt;').replace('>','&gt;')}</div>
+  <div class="a fr" style="left:20px;top:${62+i*84}px;width:250px;height:10px;border-radius:5px;background:#EDEDEB"></div>
+  <div class="bar fb" id="fb${i}" style="left:20px;top:${62+i*84}px;width:250px;height:10px;border-radius:5px"></div>`);
+});
+
+// 회전값
+$$('[data-rot]').forEach(e => gsap.set(e, {rotation: +e.dataset.rot}));
+$$('.hd i').forEach(e => gsap.set(e, {scaleX: .86, transformOrigin: '0% 100%'}));
+
+// 문서 막대(결정론적 길이)
+{ let h=''; const L=[.92,.7,.84,.55,.88,.62,.95,.48];
+  for (let k=0;k<4;k++) for (let r=0;r<5;r++){ const y=58+k*110+r*11, w=Math.round(250*L[(k*5+r)%8]);
+    h+=`<div class="a" style="left:14px;top:${y}px;width:${w}px;height:4px;border-radius:2px;background:${r===0?'#151515':'#DADAD7'}"></div>`; }
+  $('#dbars').innerHTML=h;
+  // 띠 안의 흰 글줄
+  $('#dband').innerHTML=[0,1,2,3].map(r=>`<div class="a" style="left:10px;top:${9+r*11}px;width:${[200,232,170,214][r]}px;height:3.5px;border-radius:2px;background:${r?'#8a8a86':'#fff'}"></div>`).join(''); }
+// ---------- 타임라인 ----------
+const tl = Motion.timeline();
+const pop = (s, t, o = {}) => tl.fromTo(s, {autoAlpha:0, scale:o.from ?? .6, y:o.y ?? 0}, {autoAlpha:1, scale:1, y:0, duration:o.d ?? .45, ease:o.ease ?? 'back.out(2.2)', stagger:o.st ?? 0}, t);
+const rise = (s, t, o = {}) => tl.fromTo(s, {autoAlpha:0, y:14}, {autoAlpha:1, y:0, duration:.4, ease:'power3.out', stagger:o.st ?? 0}, t);
+const draw = (s, t, d = .5, e = 'power2.inOut') => tl.fromTo(s, {strokeDashoffset:1}, {strokeDashoffset:0, duration:d, ease:e}, t);
+const grow = (s, t, o = {}) => tl.fromTo(s, {scaleX:0}, {scaleX:1, duration:o.d ?? .4, ease:'power3.out', stagger:o.st ?? 0, transformOrigin:'0% 50%'}, t);
+const strike = (s, t, st = .14) => tl.fromTo(s, {scaleX:0}, {scaleX:1, duration:.28, ease:'power2.in', stagger:st, transformOrigin:'0% 50%'}, t);
+const cam = (t, cx, cy, s, d = .85, ease = 'power3.inOut') => tl.to(W, {x:640-cx*s, y:360-cy*s, scale:s, duration:d, ease}, t);
+const sub = (id, a, b) => { tl.fromTo(id, {autoAlpha:0, y:8}, {autoAlpha:1, y:0, duration:.3}, a); tl.to(id, {autoAlpha:0, duration:.2, ease:'none'}, b); };
+const fade = (s, t, d = .35) => tl.to(s, {autoAlpha:0, duration:d, ease:'power1.out'}, t);
+
+gsap.set(W, {x:640-300*1.3, y:360-430*1.3, scale:1.3});
+// 머리 점(head) 화살촉은 처음에 숨김
+[arc1h, a4ah, a4bh, a54h, a6h, a81h, a82h, arc9h, a9h].forEach(h => tl.fromTo(h, {opacity:0}, {opacity:0, duration:0}, 0));
+
+// ---- B1 계단 0–3.3
+sub('#s1', .25, 3.1);
+draw(stair, .15, 2.35, 'power1.inOut');
+rise('#h01', .2); pop('#box01', .32); grow('#b01', .5, {d:.5}); pop('#pl01', .65);
+cam(.95, 830, 300, 1.2, .8);
+rise('#h02', 1.15); pop('#cd02', 1.25); grow('#cd02 .l2', 1.35, {st:.04});  pop('#pl02', 1.6);
+cam(1.75, 1320, 200, 1.2, .7);
+rise('#h03', 1.95); pop('#cd03', 2.02); grow('#cd03 .l3', 2.12, {st:.04}); pop('#av03', 2.3); pop('#pl03', 2.35);
+cam(2.5, 830, 340, .6, .75);
+tl.to(stair, {strokeDashoffset:0, duration:.01}, 2.5);
+tl.fromTo(arc1, {strokeDashoffset:1}, {strokeDashoffset:0, duration:.55, ease:'power2.inOut'}, 2.65);
+tl.to(arc1h, {opacity:1, duration:.1}, 3.15);
+
+// ---- B2 같은 프롬프트 3.3–6.4
+cam(3.15, 2990, 350, 1.0, .9);
+sub('#s2', 3.5, 6.25);
+rise('#b2lab', 3.6); pop('#b2box', 3.65); grow('#b2bar', 3.8);
+pop('#ref', 3.95, {from:.3});
+tl.fromTo('#refi', {rotation:0}, {rotation:360, duration:.7, ease:'power2.inOut', transformOrigin:'50% 50%'}, 4.05);
+draw(br1, 4.25, .35); pop('#r1', 4.5); pop('#r1b', 4.6, {from:.2});
+tl.fromTo('.r1d', {scale:.4}, {scale:1, duration:.5, ease:'back.out(3)'}, 4.6);
+tl.to('#refi', {rotation:720, duration:.7, ease:'power2.inOut'}, 4.7);
+draw(br2, 4.75, .35); pop('#r2', 4.95); pop('#r2b', 5.05, {from:.2});
+tl.fromTo('#r2 .bb', {scaleY:0}, {scaleY:1, duration:.4, ease:'back.out(2)', stagger:.04, transformOrigin:'50% 100%'}, 5.0);
+pop('#neq2', 5.2);
+draw(brk, 5.3, .4); rise('#maebun', 5.45);
+tl.to(W, {x:640-2990*1.06, y:360-350*1.06, scale:1.06, duration:1.1, ease:'sine.inOut'}, 5.15);
+
+// ---- B3 보여주기용 ≠ 원하는 영상 6.4–9.4
+cam(6.3, 4440, 340, 1.05, .9);
+sub('#s3', 6.6, 9.25);
+pop('#show', 6.85);
+tl.fromTo('#orb', {rotation:0}, {rotation:200, duration:2.4, ease:'sine.inOut'}, 6.85);
+pop('.sp', 7.0, {from:0, st:.08});
+tl.to('.sp', {rotation:90, scale:.8, duration:.5, ease:'sine.inOut', yoyo:true, repeat:3, stagger:.12}, 7.4);
+rise('#showl', 7.3);
+pop('#neq3', 7.6);
+pop('#want', 7.8, {from:.85});
+tl.fromTo('#want .wf', {autoAlpha:0}, {autoAlpha:1, duration:.25, stagger:.07}, 7.95);
+rise('#wantl', 8.1);
+pop('#x3', 8.45, {from:.2});
+tl.to('#show', {rotation:-6, x:-10, duration:.4, ease:'back.out(2)'}, 8.5);
+
+// ---- B4 스타일 지정 → 체인 ← 금지 9.4–12.8
+cam(9.3, 5465, 340, 1.35, .9);
+sub('#s4', 9.6, 12.65);
+pop('#sty', 9.85, {from:.85});
+pop('#sty .sr', 10.0, {from:.85, st:.18});
+tl.fromTo('#sty .ckc circle', {strokeDashoffset:1}, {strokeDashoffset:0, duration:.25, stagger:.18}, 10.1);
+tl.fromTo('#sty .ckc path', {strokeDashoffset:1}, {strokeDashoffset:0, duration:.2, stagger:.18}, 10.25);
+cam(10.85, 5800, 340, 1.0, .75);
+draw(a4a, 11.0, .3); tl.to(a4ah, {opacity:1, duration:.05}, 11.28);
+pop('#chain', 11.1);
+pop('#ban', 11.25, {from:.85});
+pop('#ban .br', 11.35, {from:.85, st:.1});
+draw(a4b, 11.45, .3); tl.to(a4bh, {opacity:1, duration:.05}, 11.73);
+strike('#ban .br .t s', 11.75, .15);
+pop('#ban .xc', 11.8, {from:.2, st:.15});
+tl.fromTo('#chain .cn', {backgroundColor:'rgba(21,21,21,0)'}, {backgroundColor:'rgba(21,21,21,1)', duration:.15, stagger:{each:.22, yoyo:true, repeat:1}}, 11.4);
+tl.to('#chain .cn:nth-child(3)', {backgroundColor:'rgba(21,21,21,1)', duration:.15}, 12.35);
+pop('#chk4', 12.35, {from:.2});
+
+// ---- B5 네 블록 12.8–22.35
+const S5 = 1.4;
+// 블록 방문마다 문서가 블록 왼쪽으로 옮겨 붙고, 검은 강조 띠가 해당 절로 미끄러진다. 지난 블록은 흐리게.
+const B5 = [['#h51','#ast1','#q51','#bub51','#av51'],['#h52','#p52a','#p52b','#ghA','#ghB','#ghC','#mph','#tick52'],['#h53','#p53','#tpl','#stp','.ch'],[]];
+const DP = [[6500,110],[7200,0],[6500,280],[7200,170]];
+const dim = (els, t) => tl.to(els, {autoAlpha:.12, duration:.3, ease:'power1.out'}, t);
+function docAt(k, t, first){
+  if (first){ tl.set('#doc', {left:DP[0][0], top:DP[0][1]}, 0); pop('#doc', t+.2, {from:.9, ease:'power3.out'}); }
+  else tl.to('#doc', {left:DP[k][0], top:DP[k][1], duration:.6, ease:'power3.inOut'}, t);
+  tl.set(['#dband','#darr'], {y:k*110}, t+.05);
+  tl.fromTo('#dband', {scaleX:0}, {scaleX:1, duration:.4, ease:'power3.out'}, t+.35);
+  tl.fromTo('#darr', {autoAlpha:0, x:-10}, {autoAlpha:1, x:0, duration:.3, ease:'power3.out'}, t+.6);
+}
+cam(12.7, 6950, 320, 1.15, .85);
+docAt(0, 12.7, true);
+sub('#s5', 12.95, 22.2);
+rise('#h51', 13.1); pop('#ast1', 13.2, {from:.2});
+tl.fromTo('#ast1 svg', {rotation:-90}, {rotation:0, duration:.8, ease:'power3.out'}, 13.2);
+pop('#q51', 13.35, {from:.85}); pop('#q51 .qr', 13.45, {from:.8, st:.13});
+pop('#bub51', 13.85, {from:.7}); pop('#av51', 13.9, {from:.2});
+cam(15.1, 7600, 265, 1.15, .6);
+docAt(1, 15.1); dim(B5[0], 15.1);
+rise('#h52', 15.35); pop('#p52a', 15.45); pop('#p52b', 15.55);
+tl.fromTo(['#ghA','#ghB','#ghC'], {autoAlpha:0}, {autoAlpha:1, duration:.2, stagger:.06}, 15.5);
+tl.fromTo('#tick52 .tk', {scaleY:0}, {scaleY:1, duration:.2, stagger:.012, transformOrigin:'50% 100%'}, 15.55);
+pop('#mph', 15.6, {from:.3});
+tl.to('#mph', {left:7740, top:186, width:56, height:56, borderRadius:10, duration:.4, ease:'back.inOut(1.6)'}, 15.8);
+tl.to('#mph', {left:7920, borderRadius:28, duration:.4, ease:'back.inOut(1.6)'}, 16.1);
+cam(17.4, 6935, 540, 1.15, .6);
+docAt(2, 17.4); dim(B5[1], 17.4);
+rise('#h53', 17.65); pop('#p53', 17.7);
+pop('.ch', 17.75, {from:.8, st:.06});
+strike('.ch .t s', 18.05, .07);
+pop('#tpl', 18.15, {from:.85});
+tl.fromTo('#stp', {autoAlpha:0, scale:1.8, rotation:-14}, {autoAlpha:1, scale:1, rotation:-8, duration:.35, ease:'back.out(1.4)'}, 18.35);
+cam(19.7, 7570, 450, 1.15, .6);
+docAt(3, 19.7); dim(B5[2], 19.7);
+rise('#h54', 19.95); pop('#lst', 19.97, {from:.85});
+tl.fromTo('#lst .li', {autoAlpha:0, x:-6}, {autoAlpha:1, x:0, duration:.18, stagger:.025}, 20.05);
+draw(a54, 20.15, .25); tl.to(a54h, {opacity:1, duration:.05}, 20.38);
+pop('#ast2', 20.25, {from:.2});
+tl.fromTo('#ast2 svg', {rotation:-120}, {rotation:0, duration:.8, ease:'power3.out'}, 20.25);
+tl.fromTo('.rg', {autoAlpha:0, scale:.6}, {autoAlpha:1, scale:1, duration:.5, stagger:.08, ease:'power2.out'}, 20.3);
+pop('#ok54', 20.35, {from:.85}); draw('#okck', 21.9, .2);
+fade('#doc', 21.75, .25);
+tl.to([...B5[0],...B5[1],...B5[2]], {autoAlpha:1, duration:.3}, 21.85);
+cam(21.9, 7440, 390, .76, .45, 'power2.inOut');
+
+// ---- B6 필름 + 스킬 22.4–25.4
+cam(22.4, 9180, 360, 1.0, .85);
+sub('#s6', 22.6, 25.25);
+tl.fromTo('#film', {autoAlpha:0, scaleX:.2}, {autoAlpha:1, scaleX:1, duration:.5, ease:'power3.out', transformOrigin:'0% 50%'}, 22.7);
+tl.fromTo('#reel', {x:0}, {x:-1500, duration:3.0, ease:'none'}, 22.75);
+pop('#rm', 23.3); pop('#pl1', 23.48, {from:.2}); pop('#hf', 23.6); pop('#pl2', 23.78, {from:.2});
+pop('#sk > .box3', 23.9, {from:.7, st:.07});
+draw(a6, 24.25, .45); tl.to(a6h, {opacity:1, duration:.05}, 24.68);
+
+// ---- B7 타임라인 25.4–28.4
+cam(25.3, 10405, 380, 1.7, .85);
+tl.to(W, {x:640-11065*1.7, duration:1.15, ease:'sine.inOut'}, 26.15);   // 재생헤드를 따라 카드별로 팬
+cam(27.3, 10820, 360, 1.0, .5);
+sub('#s7', 25.6, 28.25);
+grow('#rl', 25.75, {d:.5}); tl.fromTo('#ruler .rt', {scaleY:0}, {scaleY:1, duration:.15, stagger:.006}, 25.8);
+pop('#ph', 25.9, {from:.3});
+tl.fromTo('#ph', {x:0}, {x:1060, duration:1.4, ease:'none'}, 26.05);
+[0,1,2].forEach(i => {
+  const t = 26.05 + (145 + i*330)/1060*1.4;
+  pop('#dd'+i, t, {from:.2}); tl.fromTo('#dp'+i, {scaleY:0, autoAlpha:1}, {scaleY:1, duration:.2, ease:'power2.out'}, t);
+  pop('#t'+(i+1), t+.05, {from:.7});
+});
+tl.fromTo('#wave .wv', {scaleY:.2}, {scaleY:1, duration:.25, stagger:.02, ease:'back.out(3)'}, 26.55);
+fade(['#ruler','#ph','.drop','.dd'], 27.5, .3);
+tl.to('.tc', {y:-90, duration:.5, ease:'power3.inOut'}, 27.5);
+cv.forEach((p,i) => tl.fromTo(p, {strokeDashoffset:1}, {strokeDashoffset:0, duration:.35, ease:'power2.inOut'}, 27.75 + i*.04));
+pop('#mdp', 27.95, {from:.5});
+gsap.set('#mdp', {xPercent:-50, left:10860, top:400});
+
+// ---- B8 사람 → 모니터 28.4–31.2
+cam(28.3, 11990, 300, 1.25, .85);
+sub('#s8', 28.55, 31.05);
+pop('#ps1', 28.7, {from:.3}); pop('.tb', 28.78, {from:.2, st:.06}); pop('#th1', 28.85, {from:.6});
+draw(a81, 28.95, .3); tl.to(a81h, {opacity:1, duration:.05}, 29.23);
+tl.fromTo('#wall', {scaleY:0}, {scaleY:1, duration:.35, ease:'back.out(1.6)'}, 29.05);
+pop('#mon1', 29.15, {from:.8});
+pop('#x8', 29.35, {from:.2});
+rise('#l81', 29.4);
+cam(29.65, 12300, 300, .98, .7);
+pop('#ps2', 29.9, {from:.3}); pop('.tb2', 29.95, {from:.2, st:.06}); pop('#th2', 30, {from:.6});
+pop('#pc8', 30.1, {from:.7}); grow('#pc8 .p8', 30.2, {st:.06});
+draw(a82, 30.3, .2); tl.to(a82h, {opacity:1, duration:.05}, 30.48);
+pop('#mon2', 30.35, {from:.8});
+draw('#md2', 30.5, .35); pop('#mon2 .mdn', 30.55, {from:0, st:.05});
+pop('#ok8', 30.75, {from:.2}); rise('#l82', 30.8);
+
+// ---- B9 한 문장 → 수정 → 원하는 방향 31.2–30
+cam(31.1, 13385, 330, 1.3, .85);
+sub('#s9', 31.35, 35.3);
+pop('#p91', 31.55); pop('#box91', 31.6, {from:.85});
+const TXT = '모션 영상 하나 만들어 줘.\n멋지게, 15초로.';
+const ty = {n:0};
+tl.to(ty, {n:TXT.length, duration:.75, ease:'none', onUpdate(){ $('#typ').textContent = TXT.slice(0, Math.round(ty.n)) + (ty.n < TXT.length ? '▍' : ''); }}, 31.75);
+cam(32.3, 13800, 345, 1.0, .75);
+tl.fromTo(arc9, {strokeDashoffset:1}, {strokeDashoffset:0, duration:.35, ease:'power2.inOut'}, 32.45); tl.to(arc9h, {opacity:1, duration:.05}, 32.78);
+pop('#fix', 32.6, {from:.85});
+rise('#fix .fr', 32.7, {st:.03});
+grow('#fix .fb', 32.75, {st:.06, d:.3});
+pop('#pen', 32.8, {from:.3});
+[[0,.55,.86],[1,.3,.72],[2,.45,.9],[3,.62,.78]].forEach(([i,a,b],k) => {
+  const t = 32.9 + k*.14;
+  tl.to('#pen', {y:i*84, x:-250*(1-b), duration:.12, ease:'power2.inOut'}, t);
+  tl.to('#fb'+i, {scaleX:a, duration:.06, ease:'none'}, t+.02);
+  tl.to('#fb'+i, {scaleX:b, duration:.1, ease:'power2.out'}, t+.08);
+});
+fade('#pen', 33.5, .2);
+draw(a9, 33.4, .25); tl.to(a9h, {opacity:1, duration:.05}, 33.63);
+pop('#tgt .tr', 33.42, {from:.3, st:.04});
+gsap.set('#dart', {rotation:-18, transformOrigin:'4px 12px'});
+tl.fromTo('#dart', {autoAlpha:0, x:190, y:-62}, {autoAlpha:1, x:0, y:0, duration:.28, ease:'power3.in'}, 33.52);
+tl.to('#tgt', {x:4, duration:.06, yoyo:true, repeat:1}, 33.8);
+rise('#l9', 33.65);
+
+Motion.ready();
+</script></body></html>

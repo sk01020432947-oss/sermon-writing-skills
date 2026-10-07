@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{PAGE_TITLE}}</title>
+
+<style>
+@font-face{
+  font-family:'RIDIBatang';
+  src:local('RIDIBatang'),
+      url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2107@1.1/RIDIBatang.woff') format('woff');
+  font-display:swap;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#f3eee3; --surface:#fffdf8; --border:#ddd5c6;
+  --ink:#2a2521; --muted:#8c8275; --accent:#8a5a2b; --accent-soft:#b58a55;
+  --reading:30px; --guide:rgba(138,90,43,.55);
+}
+/* 어두운(프롬프터) 배경 */
+body.dark{
+  --bg:#0d0d0f; --surface:#17171b; --border:#33333a;
+  --ink:#f3efe6; --muted:#9a948a; --accent:#e0b977; --accent-soft:#c79a55;
+  --guide:rgba(224,185,119,.6);
+}
+
+html{scroll-behavior:auto}
+body{background:var(--bg);color:var(--ink);
+  font-family:'Apple SD Gothic Neo','Pretendard',sans-serif;
+  line-height:1.9;-webkit-font-smoothing:antialiased;transition:background .25s,color .25s}
+
+body.font-ridi  #doc{font-family:'RIDIBatang','Batang',serif}
+body.font-apple #doc{font-family:'Apple SD Gothic Neo','Pretendard',sans-serif}
+
+/* ───────── 컨트롤 바 ───────── */
+#control-bar{position:sticky;top:0;z-index:200;
+  display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+  padding:10px 16px;background:rgba(255,253,248,.94);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
+body.dark #control-bar{background:rgba(20,20,24,.92)}
+.ctrl-group{display:flex;align-items:center;gap:7px}
+.ctrl-label{font-size:12px;color:var(--muted);letter-spacing:.5px;white-space:nowrap}
+.divider{width:1px;height:22px;background:var(--border)}
+#voice-display{font-size:12px;color:var(--accent);font-weight:600;
+  background:rgba(138,90,43,.10);padding:4px 10px;border-radius:20px;white-space:nowrap}
+#voice-select{font-family:inherit;font-size:12px;color:var(--ink);background:var(--surface);
+  border:1px solid var(--border);border-radius:7px;padding:4px 8px;max-width:240px;cursor:pointer}
+#voice-select:hover{border-color:var(--accent-soft)}
+body.dark #voice-select{background:#23211c;color:#f0ece3;border-color:#3a352c}
+.bar-right{margin-left:auto;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+.pill{border:1px solid var(--border);background:var(--surface);color:var(--ink);
+  padding:5px 11px;border-radius:7px;font-size:12.5px;transition:.18s;white-space:nowrap}
+.pill:hover{border-color:var(--accent-soft);color:var(--accent)}
+.pill.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+body.dark .pill.active{color:#16130d}
+.btn-primary{background:var(--accent);color:#fff;padding:6px 14px;border-radius:7px;
+  font-size:13px;font-weight:700;transition:.18s;white-space:nowrap}
+body.dark .btn-primary{color:#16130d}
+.btn-primary:hover{filter:brightness(1.05)}
+.btn-primary.on{background:#b3402e;color:#fff}
+.btn-ghost{border:1px solid var(--border);color:var(--muted);
+  padding:6px 11px;border-radius:7px;font-size:12.5px}
+.mini{border:1px solid var(--border);background:var(--surface);
+  width:30px;height:30px;border-radius:7px;font-size:14px;transition:.18s}
+.mini:hover{border-color:var(--accent-soft);color:var(--accent)}
+#scroll-speed-readout,#size-readout{font-size:12px;color:var(--muted);min-width:30px;text-align:center}
+#tts-progress{font-size:12px;color:var(--muted);min-width:48px}
+
+/* ───────── 읽기 가이드선 ───────── */
+#guide{position:fixed;left:0;right:0;top:40vh;z-index:90;display:none;pointer-events:none}
+body.guide #guide{display:block}
+#guide::before{content:"";display:block;border-top:2px dashed var(--guide)}
+#guide .tri{position:absolute;top:-7px;width:0;height:0;
+  border-top:8px solid transparent;border-bottom:8px solid transparent}
+#guide .tri.l{left:6px;border-left:12px solid var(--guide)}
+#guide .tri.r{right:6px;border-right:12px solid var(--guide)}
+
+/* ───────── 문서 ───────── */
+#doc{max-width:860px;margin:0 auto;padding:14vh 28px 64vh;font-size:var(--reading)}
+.doc-header{text-align:center;padding-bottom:24px;margin-bottom:24px;border-bottom:2px solid var(--accent)}
+.doc-header .subtitle{font-size:.5em;letter-spacing:3px;text-transform:uppercase;color:var(--accent-soft);margin-bottom:12px}
+.doc-header .title{font-size:1.35em;font-weight:700;line-height:1.4}
+.doc-header .ref{display:inline-block;margin-top:14px;font-size:.62em;color:var(--accent);
+  background:rgba(138,90,43,.10);padding:5px 14px;border-radius:20px}
+
+.scripture-card{background:var(--surface);border:1px solid var(--border);
+  border-left:4px solid var(--accent-soft);border-radius:0 8px 8px 0;padding:18px 22px;margin:26px 0}
+.scripture-card .sc-label{font-size:.5em;letter-spacing:2px;color:var(--accent);font-weight:600;margin-bottom:8px}
+.scripture-card p{font-size:.8em;margin:.3em 0}
+
+.sermon-block{margin:42px 0;scroll-margin-top:74px;border-radius:10px;padding:6px 14px;transition:background .3s}
+.sermon-block.reading{background:rgba(181,138,85,.12)}
+.block-title{display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+  font-size:1.05em;font-weight:700;color:var(--accent);
+  padding-bottom:8px;margin-bottom:16px;border-bottom:1px solid var(--border)}
+.btn-read{border:1px solid var(--accent-soft);color:var(--accent);background:var(--surface);
+  padding:3px 11px;border-radius:20px;font-size:.55em;font-weight:600;transition:.18s;white-space:nowrap}
+.btn-read:hover{background:var(--accent);color:#fff}
+.btn-read.playing{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+.block-body p{margin:0 0 1.9em;line-height:1.9}
+.block-body p:last-child{margin-bottom:0}
+.block-body strong{font-weight:700;color:var(--accent)}
+.block-body blockquote{border-left:3px solid var(--accent-soft);background:rgba(181,138,85,.10);
+  padding:10px 18px;margin:18px 0;border-radius:0 6px 6px 0}
+.block-body .no-tts{font-size:.78em;color:var(--muted);background:rgba(140,130,117,.12);
+  border-radius:6px;padding:8px 12px;margin:14px 0}
+
+.doc-footer{max-width:860px;margin:0 auto;padding:0 28px 40px;text-align:center;color:var(--muted);font-size:12px;line-height:1.7}
+
+@media(max-width:560px){#control-bar{gap:10px;padding:9px 10px}#doc{padding:12vh 16px 64vh}}
+</style>
+</head>
+
+<body class="font-ridi guide">
+
+<!-- 읽기 가이드선 -->
+<div id="guide"><span class="tri l"></span><span class="tri r"></span></div>
+
+<!-- ───────── 컨트롤 바 ───────── -->
+<div id="control-bar">
+  <!-- 프롬프터(자동 스크롤) -->
+  <button id="btn-scroll" class="btn-primary">▶ 스크롤</button>
+  <div class="ctrl-group">
+    <span class="ctrl-label">속도</span>
+    <button class="pill scr-speed" data-speed="22">느림</button>
+    <button class="pill scr-speed active" data-speed="36">보통</button>
+    <button class="pill scr-speed" data-speed="54">빠름</button>
+    <button class="mini" id="scr-down">−</button>
+    <span id="scroll-speed-readout">36</span>
+    <button class="mini" id="scr-up">＋</button>
+  </div>
+  <button class="btn-ghost" id="btn-top">⤒ 처음</button>
+
+  <div class="divider"></div>
+
+  <!-- TTS(Sarah 낭독) -->
+  <div class="ctrl-group">
+    <span class="ctrl-label">음성</span>
+    <select id="voice-select" title="재생할 성우 선택"><option value="">음성 로딩 중…</option></select>
+  </div>
+  <span id="voice-display">🎙 음성 로딩 중…</span>
+  <div class="ctrl-group">
+    <span class="ctrl-label">낭독</span>
+    <button class="pill tts-rate active" data-rate="1.0">1.0×</button>
+    <button class="pill tts-rate" data-rate="1.25">1.25×</button>
+    <button class="pill tts-rate" data-rate="1.5">1.5×</button>
+  </div>
+  <button class="btn-ghost" id="btn-read-all">▶ 전체 읽기</button>
+  <button class="btn-ghost" id="btn-tts-stop">■</button>
+  <span id="tts-progress"></span>
+
+  <!-- 글꼴·크기·배경(우측 상단) -->
+  <div class="bar-right">
+    <div class="ctrl-group">
+      <span class="ctrl-label">글꼴</span>
+      <button class="pill font-btn active" data-font="ridi">리디바탕</button>
+      <button class="pill font-btn" data-font="apple">애플고딕</button>
+    </div>
+    <div class="ctrl-group">
+      <span class="ctrl-label">크기</span>
+      <button class="mini" id="size-down">가−</button>
+      <span id="size-readout">30</span>
+      <button class="mini" id="size-up">가＋</button>
+    </div>
+    <div class="ctrl-group">
+      <span class="ctrl-label">배경</span>
+      <button class="pill bg-btn active" data-bg="light">밝게</button>
+      <button class="pill bg-btn" data-bg="dark">어둡게</button>
+    </div>
+    <button class="pill active" id="guide-btn">가이드선</button>
+  </div>
+</div>
+
+<!-- ───────── 설교 본문 ───────── -->
+<article id="doc">
+  <header class="doc-header">
+    <div class="subtitle">{{DOC_SUBTITLE}}</div>
+    <div class="title">{{DOC_TITLE}}</div>
+    <span class="ref">{{SCRIPTURE_REF}}</span>
+  </header>
+
+  {{SCRIPTURE_BLOCK}}
+
+  {{SERMON_SECTIONS}}
+</article>
+
+<footer class="doc-footer">
+  {{DOC_TITLE}} · 생성일 {{GEN_DATE}}<br>
+  프롬프터: 자동 스크롤(속도 조절) · TTS: 성우 선택 가능 · 1.0×/1.25×/1.5×<br>
+  단축키 — Space: 스크롤 시작/정지 · ↑/↓: 속도 · Home: 처음으로 · ←/→: 단락 이동
+</footer>
+
+<script>
+(function(){
+  'use strict';
+
+  /* ════════ 자동 스크롤(프롬프터) ════════ */
+  const scr = { on:false, speed:36, raf:0, last:0, acc:0 };  // speed = px/sec
+  const SCR_MIN=6, SCR_MAX=140, SCR_STEP=3;
+  const btnScroll = document.getElementById('btn-scroll');
+  const scrReadout= document.getElementById('scroll-speed-readout');
+  const scrPresets= Array.from(document.querySelectorAll('.scr-speed'));
+
+  function atBottom(){ return window.innerHeight + window.scrollY >= document.body.scrollHeight - 1; }
+
+  function tick(t){
+    if(!scr.on) return;
+    if(!scr.last) scr.last = t;
+    const dt = (t - scr.last) / 1000; scr.last = t;
+    scr.acc += scr.speed * dt;
+    const step = Math.floor(scr.acc);
+    if(step > 0){ window.scrollBy(0, step); scr.acc -= step; }
+    if(atBottom()){ stopScroll(); return; }
+    scr.raf = requestAnimationFrame(tick);
+  }
+  function startScroll(){
+    if(scr.on) return;
+    if(atBottom()) window.scrollTo(0,0);
+    scr.on = true; scr.last = 0; scr.acc = 0;
+    btnScroll.textContent = '⏸ 정지'; btnScroll.classList.add('on');
+    scr.raf = requestAnimationFrame(tick);
+  }
+  function stopScroll(){
+    scr.on = false; cancelAnimationFrame(scr.raf);
+    btnScroll.textContent = '▶ 스크롤'; btnScroll.classList.remove('on');
+  }
+  function setSpeed(v, fromPreset){
+    scr.speed = Math.max(SCR_MIN, Math.min(SCR_MAX, v));
+    scrReadout.textContent = Math.round(scr.speed);
+    scrPresets.forEach(b => b.classList.toggle('active',
+      fromPreset && parseInt(b.dataset.speed,10) === Math.round(scr.speed)));
+  }
+  btnScroll.addEventListener('click', () => scr.on ? stopScroll() : startScroll());
+  scrPresets.forEach(b => b.addEventListener('click', () => setSpeed(parseInt(b.dataset.speed,10), true)));
+  document.getElementById('scr-up').addEventListener('click', () => setSpeed(scr.speed + SCR_STEP, false));
+  document.getElementById('scr-down').addEventListener('click', () => setSpeed(scr.speed - SCR_STEP, false));
+  document.getElementById('btn-top').addEventListener('click', () => { stopScroll(); window.scrollTo({top:0,behavior:'smooth'}); });
+
+  /* ════════ 글꼴 · 크기 · 배경 · 가이드선 ════════ */
+  const SIZES = [20,24,28,30,34,40,48];
+  let sizeIdx = 3;
+  const doc = document.getElementById('doc');
+  const sizeReadout = document.getElementById('size-readout');
+  function applySize(){ const px = SIZES[sizeIdx]; doc.style.setProperty('--reading', px+'px'); sizeReadout.textContent = px; }
+  document.getElementById('size-up').addEventListener('click', () => { if(sizeIdx<SIZES.length-1){sizeIdx++;applySize();} });
+  document.getElementById('size-down').addEventListener('click', () => { if(sizeIdx>0){sizeIdx--;applySize();} });
+  applySize();
+
+  document.querySelectorAll('.font-btn').forEach(b => b.addEventListener('click', () => {
+    document.querySelectorAll('.font-btn').forEach(x => x.classList.remove('active')); b.classList.add('active');
+    document.body.classList.toggle('font-ridi',  b.dataset.font==='ridi');
+    document.body.classList.toggle('font-apple', b.dataset.font==='apple');
+  }));
+  document.querySelectorAll('.bg-btn').forEach(b => b.addEventListener('click', () => {
+    document.querySelectorAll('.bg-btn').forEach(x => x.classList.remove('active')); b.classList.add('active');
+    document.body.classList.toggle('dark', b.dataset.bg==='dark');
+  }));
+  const guideBtn = document.getElementById('guide-btn');
+  guideBtn.addEventListener('click', () => {
+    document.body.classList.toggle('guide');
+    guideBtn.classList.toggle('active', document.body.classList.contains('guide'));
+  });
+
+  /* ════════ TTS(Sarah 낭독) ════════ */
+  const tts = { rate:1.0, voice:null, currentIdx:-1, playingAll:false };
+  const voiceDisplay = document.getElementById('voice-display');
+  const voiceSelect  = document.getElementById('voice-select');
+  let voiceList = [];
+
+  // ── 제시할 성우 화이트리스트(설치된 것만 노출). 지정한 순서대로 정렬 ──
+  const ALLOWED = [
+    { re:/민수/,      label:'민수(고품질)'   },
+    { re:/소라/,      label:'소라(고품질)'   },
+    { re:/수현/,      label:'수현(고품질)'   },
+    { re:/유나/,      label:'유나(프리미엄)' },
+    { re:/지안/,      label:'지안(프리미엄)' },
+    { re:/shamanda/i, label:'Shamanda (English)' }
+  ];
+  function allowIndex(v){ return v ? ALLOWED.findIndex(a=>a.re.test(v.name)) : -1; }
+  function voiceLabel(v){ const i=allowIndex(v); return i>=0 ? ALLOWED[i].label : (v ? v.name+' · '+v.lang : ''); }
+  function showSelected(){
+    voiceDisplay.textContent = tts.voice ? '🎙 ' + voiceLabel(tts.voice) : '🎙 기본 음성';
+  }
+  const ttsProgress  = document.getElementById('tts-progress');
+  const btnReadAll   = document.getElementById('btn-read-all');
+  const btnTtsStop   = document.getElementById('btn-tts-stop');
+  const rateBtns     = Array.from(document.querySelectorAll('.tts-rate'));
+  const blocks       = Array.from(document.querySelectorAll('.sermon-block'));
+  const readBtns     = Array.from(document.querySelectorAll('.btn-read'));
+
+  function initVoice(){
+    const voices = window.speechSynthesis.getVoices();
+    if(!voices.length) return;
+    // 허용 목록을 지정 순서대로 훑어, 각 성우당 음성 1개만 채택(중복 노출 방지)
+    voiceList = [];
+    ALLOWED.forEach(a=>{
+      const v = voices.find(x=>a.re.test(x.name));
+      if(v && !voiceList.includes(v)) voiceList.push(v);
+    });
+    // 허용 음성이 하나도 설치돼 있지 않으면 빈 목록 방지를 위해 전체로 대체
+    if(!voiceList.length) voiceList = voices.slice();
+    if(!tts.voice || !voiceList.includes(tts.voice)) tts.voice = voiceList[0];
+    // 드롭다운 채우기 — 지정한 라벨로 표시
+    voiceSelect.innerHTML = '';
+    voiceList.forEach((v,i)=>{
+      const o=document.createElement('option');
+      o.value=String(i);
+      o.textContent = voiceLabel(v);
+      if(v===tts.voice) o.selected=true;
+      voiceSelect.appendChild(o);
+    });
+    showSelected();
+  }
+  window.speechSynthesis.onvoiceschanged = initVoice; initVoice();
+  voiceSelect.addEventListener('change', ()=>{
+    const v = voiceList[parseInt(voiceSelect.value,10)];
+    if(!v) return;
+    window.speechSynthesis.cancel(); resetTts();
+    tts.voice = v; showSelected();
+  });
+
+  function getBlockText(block){
+    const c = block.cloneNode(true);
+    c.querySelectorAll('.no-tts,.btn-read').forEach(n=>n.remove());
+    return (c.innerText||c.textContent||'').replace(/[「」『』]/g,'').replace(/\s+/g,' ').trim();
+  }
+  function splitChunks(text){
+    const parts = text.split(/(?<=[.!?。…])\s+|\n+/).filter(Boolean);
+    const out=[]; parts.forEach(p=>{ p.length<=280?out.push(p):p.split(/(?<=[,，])\s+/).forEach(s=>out.push(s)); });
+    return out.length?out:[text];
+  }
+  function setActive(idx){
+    blocks.forEach((b,i)=>b.classList.toggle('reading',i===idx));
+    readBtns.forEach((b,i)=>{ b.classList.toggle('playing',i===idx); b.textContent=(i===idx)?'⏸ 읽는 중':'▶ 읽기'; });
+    if(idx>=0){ if(!scr.on) blocks[idx].scrollIntoView({behavior:'smooth',block:'start'});
+      ttsProgress.textContent=(idx+1)+' / '+blocks.length; }
+    else ttsProgress.textContent='';
+    tts.currentIdx = idx;
+  }
+  function resetTts(){ setActive(-1); btnReadAll.textContent='▶ 전체 읽기'; tts.playingAll=false; }
+  function speakChunks(chunks,i,onDone){
+    if(i>=chunks.length){ onDone&&onDone(); return; }
+    const u=new SpeechSynthesisUtterance(chunks[i]);
+    u.lang=(tts.voice&&tts.voice.lang)||'ko-KR'; u.rate=tts.rate; if(tts.voice) u.voice=tts.voice;
+    u.onend=()=>speakChunks(chunks,i+1,onDone); u.onerror=()=>resetTts();
+    window.speechSynthesis.speak(u);
+  }
+  function playBlock(idx,onDone){
+    if(idx<0||idx>=blocks.length){ resetTts(); return; }
+    window.speechSynthesis.cancel(); setActive(idx);
+    speakChunks(splitChunks(getBlockText(blocks[idx])),0,onDone);
+  }
+  function playAll(idx){
+    if(!tts.playingAll||idx>=blocks.length){ resetTts(); return; }
+    playBlock(idx,()=>{ if(tts.playingAll) playAll(idx+1); });
+  }
+  rateBtns.forEach(b=>b.addEventListener('click',()=>{
+    tts.rate=parseFloat(b.dataset.rate);
+    rateBtns.forEach(x=>x.classList.remove('active')); b.classList.add('active');
+    if(tts.currentIdx>=0){ const i=tts.currentIdx; window.speechSynthesis.cancel();
+      setTimeout(()=>tts.playingAll?playAll(i):playBlock(i,null),160); }
+  }));
+  readBtns.forEach((b,i)=>b.addEventListener('click',()=>{
+    if(tts.currentIdx===i&&!tts.playingAll){ window.speechSynthesis.cancel(); resetTts(); }
+    else { tts.playingAll=false; btnReadAll.textContent='▶ 전체 읽기'; playBlock(i,null); }
+  }));
+  btnReadAll.addEventListener('click',()=>{
+    if(tts.playingAll){ window.speechSynthesis.cancel(); resetTts(); }
+    else { tts.playingAll=true; btnReadAll.textContent='⏸ 정지'; playAll(0); }
+  });
+  btnTtsStop.addEventListener('click',()=>{ window.speechSynthesis.cancel(); resetTts(); });
+
+  /* ════════ 단락 이동 ════════ */
+  function jumpSection(dir){
+    const y = window.scrollY + window.innerHeight*0.4;
+    let target = null;
+    if(dir>0){ for(const b of blocks){ if(b.offsetTop > y+4){ target=b; break; } } }
+    else { for(let k=blocks.length-1;k>=0;k--){ if(blocks[k].offsetTop < y-4){ target=blocks[k]; break; } } }
+    if(target) window.scrollTo({top:Math.max(0,target.offsetTop - window.innerHeight*0.38), behavior:'smooth'});
+  }
+
+  /* ════════ 단축키 ════════ */
+  window.addEventListener('keydown', e => {
+    if(['INPUT','TEXTAREA'].includes(e.target.tagName)) return;
+    if(e.code==='Space'){ e.preventDefault(); scr.on?stopScroll():startScroll(); }
+    else if(e.key==='ArrowUp'){ e.preventDefault(); setSpeed(scr.speed+SCR_STEP,false); }
+    else if(e.key==='ArrowDown'){ e.preventDefault(); setSpeed(scr.speed-SCR_STEP,false); }
+    else if(e.key==='Home'){ e.preventDefault(); stopScroll(); window.scrollTo({top:0,behavior:'smooth'}); }
+    else if(e.key==='ArrowRight'){ e.preventDefault(); jumpSection(1); }
+    else if(e.key==='ArrowLeft'){ e.preventDefault(); jumpSection(-1); }
+  });
+  window.addEventListener('beforeunload',()=>window.speechSynthesis.cancel());
+})();
+</script>
+</body>
+</html>

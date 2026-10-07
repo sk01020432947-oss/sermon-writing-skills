@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><title>QT 묵상 쇼츠 · QT Shorts Vertical</title>
+<link rel="stylesheet" href="../../lib/stage.css">
+<style>
+  .frame{background:#EEE7D8 !important;background-image:none !important}
+  .scene,body.portrait .scene{position:absolute;inset:0;overflow:hidden;color:#1c1a17}
+  :root{--ink:#1c1a17;--red:#D7261E;--yel:#F7D84A;--paperC:#FAF6EC;
+        --serifK:"Noto Serif KR","NanumMyeongjo","Nanum Myeongjo","AppleMyungjo",serif;
+        --head:"Gmarket Sans TTF","Gmarket Sans","Pretendard",sans-serif}
+  .paper{position:absolute;inset:0;background:radial-gradient(ellipse 90% 70% at 50% 40%,#F2ECDF,#E4D9C3 100%)}
+  .dots{position:absolute;inset:0;background-image:radial-gradient(rgba(60,45,20,.07) 1.1px,transparent 1.6px);background-size:7px 7px}
+  .grain{position:absolute;inset:0;opacity:.5;mix-blend-mode:multiply;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='260' height='260'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .3 0 0 0 0 .24 0 0 0 0 .15 0 0 0 .22 0'/></filter><rect width='260' height='260' filter='url(%23n)'/></svg>")}
+  .safe{position:absolute;left:80px;top:0;width:560px;height:1280px}
+  .grp{position:absolute;inset:0}
+  .tape{position:absolute;background:rgba(236,222,170,.78);box-shadow:0 1px 2px rgba(0,0,0,.12);
+        background-image:repeating-linear-gradient(90deg,rgba(255,255,255,.18) 0 2px,transparent 2px 7px)}
+  .label{left:0;top:96px;padding:12px 22px 12px 18px;transform:rotate(-2.5deg);font-family:var(--sans);font-weight:800;font-size:30px;letter-spacing:-.01em}
+  .label b{color:var(--red);font-weight:800}
+  .cut{filter:url(#cut)}
+  .card{position:absolute;background:var(--paperC);box-shadow:0 14px 26px rgba(70,50,20,.22),0 2px 4px rgba(70,50,20,.15)}
+  .card .tape{width:120px;height:34px}
+  .verse{left:10px;top:556px;width:540px;padding:44px 44px 36px;transform:rotate(-1.5deg)}
+  .verse .tx{font-family:var(--serifK);font-weight:800;font-size:50px;line-height:1.5;letter-spacing:-.02em}
+  .verse .rf{margin-top:18px;font-family:var(--mono);font-size:19px;letter-spacing:.12em;color:var(--red)}
+  .verse .rf span{color:#7a6e5a;margin-left:12px;font-size:15px}
+  .hl{position:relative;z-index:0;white-space:nowrap}
+  .hl i{position:absolute;left:-6px;right:-6px;bottom:.12em;height:.44em;background:var(--yel);z-index:-1;transform:scaleX(0);transform-origin:0 50%;border-radius:2px 6px 3px 5px}
+  .big{position:absolute;left:0;right:0;text-align:center;font-family:var(--head);font-weight:700;letter-spacing:-.03em;line-height:1.1}
+  .gk{position:absolute;left:0;right:0;text-align:center;font-family:var(--mono);font-size:26px;letter-spacing:.08em;color:#6b5f4c}
+  .gk b{color:var(--ink);font-weight:400;font-family:"Bodoni Moda",serif;font-style:italic;font-size:36px;margin-right:12px}
+  svg.ov{position:absolute;left:0;top:0;width:560px;height:1280px;overflow:visible}
+  .mk{fill:none;stroke:var(--ink);stroke-width:6;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1}
+  .mk.red{stroke:var(--red);stroke-width:8}
+  .q{left:10px;top:470px;width:540px;padding:40px 36px 46px;transform:rotate(1deg)}
+  .q .lb{font-family:var(--mono);font-size:17px;letter-spacing:.2em;color:var(--red);margin-bottom:22px}
+  .q .tx{font-family:var(--head);font-weight:700;font-size:40px;line-height:1.55;letter-spacing:-.03em;position:relative}
+  .pill{position:absolute;left:50%;top:430px;transform:translateX(-50%);background:var(--ink);color:#F2ECDF;font-family:var(--mono);font-size:17px;letter-spacing:.16em;padding:10px 18px;border-radius:40px;white-space:nowrap}
+  .pill::before{content:"";display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--red);margin-right:10px;vertical-align:1px}
+.trk{position:absolute;left:0;top:1124px;width:560px;height:60px}
+  .trk span{position:absolute;top:0;width:112px;text-align:center;font-family:var(--head);font-weight:700;font-size:21px;letter-spacing:-.02em;color:#9b8f78}
+  .trk .ln{position:absolute;left:20px;right:20px;top:46px;height:2px;background:rgba(60,45,20,.18)}
+  #trkI{position:absolute;left:24px;top:41px;width:64px;height:12px;border-radius:6px 3px 7px 2px;background:var(--red)}
+</style></head>
+<body data-no="S14" data-cat="묵상 · QT" data-ko="QT 묵상 쇼츠" data-en="QT Shorts Vertical" data-meta="복스 레트로 종이 콜라주 · 세로" data-dur="15" data-size="720x1280" data-poster="14.6">
+<main class="scene">
+  <svg width="0" height="0" style="position:absolute"><defs>
+    <filter id="cut" x="-25%" y="-25%" width="150%" height="150%">
+      <feMorphology in="SourceAlpha" operator="dilate" radius="6" result="d"/>
+      <feFlood flood-color="#ffffff"/><feComposite in2="d" operator="in" result="w"/>
+      <feGaussianBlur in="d" stdDeviation="7" result="b"/><feOffset in="b" dx="5" dy="10" result="o"/>
+      <feFlood flood-color="#3a2a10" flood-opacity=".32"/><feComposite in2="o" operator="in" result="s"/>
+      <feMerge><feMergeNode in="s"/><feMergeNode in="w"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <pattern id="ht" width="6" height="6" patternUnits="userSpaceOnUse"><circle cx="3" cy="3" r="1.3" fill="rgba(40,25,10,.22)"/></pattern>
+  </defs></svg>
+  <div class="paper"></div><div class="dots" id="dots" style="inset:-60px"></div>
+
+  <div class="safe">
+    <div class="tape label" id="label">오늘의 묵상 <b>·</b> 10.04</div>
+
+    <!-- A: 성경 + 말씀 카드 -->
+    <div class="grp" id="gA">
+      <svg class="cut" id="bible" viewBox="0 0 440 270" style="position:absolute;left:60px;top:246px;width:440px">
+        <path d="M14 78 Q220 46 426 78 L428 240 Q220 214 12 240 Z" fill="#5a2f1f"/>
+        <path d="M24 236 Q120 214 218 236 L222 248 Q120 226 20 246 Z" fill="#E2D5B6"/>
+        <path d="M222 236 Q320 214 420 236 L422 246 Q320 226 218 248 Z" fill="#E2D5B6"/>
+        <path d="M26 64 Q124 40 218 74 L218 232 Q124 202 26 222 Z" fill="#F5EDD8"/>
+        <path d="M222 74 Q316 40 414 64 L414 222 Q316 202 222 232 Z" fill="#F5EDD8"/>
+        <g stroke="#8d7f63" stroke-width="3.2" stroke-linecap="round">
+          <path d="M48 92 Q120 78 200 100"/><path d="M48 110 Q120 96 200 118"/><path d="M48 128 Q120 114 200 136"/><path d="M48 146 Q120 132 170 148"/>
+          <path d="M48 170 Q120 156 200 178"/><path d="M48 188 Q120 174 200 196"/>
+          <path d="M240 100 Q320 78 392 92"/><path d="M240 118 Q320 96 392 110"/><path d="M240 136 Q320 114 392 128"/>
+          <path d="M240 160 Q320 138 392 152"/><path d="M240 178 Q320 156 392 170"/><path d="M240 196 Q300 178 350 184"/>
+        </g>
+        <path d="M200 74 Q214 78 220 76 Q226 78 240 74 L238 232 Q226 236 220 236 Q214 236 202 232 Z" fill="rgba(90,60,30,.18)"/>
+        <path d="M216 76 L230 76 L236 262 L226 252 L218 262 Z" fill="#B3241C"/>
+        <path d="M26 64 Q124 40 218 74 L218 232 Q124 202 26 222 Z M222 74 Q316 40 414 64 L414 222 Q316 202 222 232 Z" fill="url(#ht)" opacity=".5"/>
+      </svg>
+      <div class="card verse" id="verse">
+        <div class="tape" style="left:-30px;top:-14px;transform:rotate(-28deg)"></div>
+        <div class="tape" style="right:-34px;top:-10px;transform:rotate(24deg)"></div>
+        <div class="tx">내가 <span class="hl"><i></i>받은 것</span>을<br><span class="hl"><i></i>먼저</span> 너희에게<br><span class="hl"><i></i>전하였노니</span></div>
+        <div class="rf">고전 15:3<span>개역한글</span></div>
+      </div>
+    </div>
+
+    <!-- B1: 받은 것 -->
+    <div class="grp" id="g1">
+      <div class="big" style="top:250px;font-size:128px"><span class="hl"><i></i>받은 것</span></div>
+      <div class="gk" style="top:420px"><b>parelabon</b>내가 받은</div>
+      <svg class="cut" viewBox="0 0 300 230" style="position:absolute;left:130px;top:650px;width:300px">
+        <path d="M30 78 L150 44 L272 78 L150 112 Z" fill="#8E5E2E"/>
+        <path d="M30 78 L-4 40 L112 10 L150 44 Z" fill="#D9AA6C"/><path d="M272 78 L302 38 L190 10 L150 44 Z" fill="#CF9E60"/>
+        <path d="M30 78 L150 112 L150 222 L30 186 Z" fill="#C48D52"/><path d="M272 78 L150 112 L150 222 L272 186 Z" fill="#B07C44"/>
+        <path d="M30 78 L150 112 L150 222 L30 186 Z" fill="url(#ht)" opacity=".6"/>
+        <path d="M90 96 L90 150 M210 96 L210 150" stroke="rgba(255,255,255,.35)" stroke-width="12"/>
+      </svg>
+      <svg class="ov"><path class="mk" pathLength="1" d="M236 470 C 170 540, 360 560, 286 680"/><path class="mk" pathLength="1" d="M258 656 L284 686 L312 660"/></svg>
+    </div>
+
+    <!-- B2: 먼저 -->
+    <div class="grp" id="g2">
+      <div class="big" style="top:296px;font-size:176px">먼저</div>
+      <svg class="ov"><path class="mk red" pathLength="1" d="M200 300 C 100 318, 70 420, 120 478 C 190 548, 420 530, 480 450 C 530 380, 470 300, 330 290 C 280 287, 230 292, 190 306"/></svg>
+      <div class="gk" style="top:560px"><b>en prōtois</b>가장 중요한 것으로</div>
+      <div style="position:absolute;left:140px;top:600px;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(247,216,74,.55),rgba(247,216,74,0) 65%)" id="glow"></div>
+      <svg class="cut" viewBox="0 0 270 210" style="position:absolute;left:150px;top:660px;width:270px">
+        <path d="M134 46 C 120 70, 122 92, 136 98 C 152 92, 152 70, 134 46 Z" fill="#F6A72C"/>
+        <path d="M135 64 C 128 78, 130 90, 136 93 C 143 90, 143 78, 135 64 Z" fill="#FFE38A"/>
+        <rect x="128" y="96" width="14" height="16" fill="#6b4a22"/>
+        <path d="M40 150 C 40 112, 230 104, 250 120 L 266 112 L 262 130 C 250 162, 60 180, 40 150 Z" fill="#C08A2E"/>
+        <path d="M70 116 C 90 108, 190 106, 212 116 L 206 126 C 180 118, 96 120, 74 128 Z" fill="#E1B256"/>
+        <path d="M40 150 C 10 150, 6 120, 34 118" fill="none" stroke="#9c6b1e" stroke-width="10" stroke-linecap="round"/>
+        <path d="M90 168 L 186 168 L 176 196 L 100 196 Z" fill="#9c6b1e"/>
+        <path d="M40 150 C 40 112, 230 104, 250 120 L 262 130 C 250 162, 60 180, 40 150 Z" fill="url(#ht)" opacity=".6"/>
+      </svg>
+    </div>
+
+    <!-- B3: 전하였노니 -->
+    <div class="grp" id="g3">
+      <div class="big" style="top:250px;font-size:100px"><span class="hl"><i></i>전하였노니</span></div>
+      <div class="gk" style="top:388px"><b>paredōka</b>내가 전한</div>
+      <svg class="cut" viewBox="0 0 560 300" style="position:absolute;left:0;top:820px;width:560px;overflow:visible">
+        <path d="M-30 260 C 110 170, 200 250, 300 170 S 470 90, 590 80" fill="none" stroke="#D3BE90" stroke-width="58" stroke-linecap="round"/>
+        <path d="M-30 260 C 110 170, 200 250, 300 170 S 470 90, 590 80" fill="none" stroke="#FAF3DE" stroke-width="4" stroke-dasharray="16 16"/>
+      </svg>
+      <svg class="cut pp" viewBox="0 0 90 140" style="position:absolute;left:40px;top:720px;width:90px"><circle cx="45" cy="36" r="24" fill="#E9B98F"/><path d="M21 34 C 20 6, 70 6, 69 34 C 60 18, 30 18, 21 34 Z" fill="#2b2118"/><path d="M8 140 C 8 82, 82 82, 82 140 Z" fill="#2F5D8C"/><path d="M8 140 C 8 82, 82 82, 82 140 Z" fill="url(#ht)" opacity=".5"/></svg>
+      <svg class="cut pp" viewBox="0 0 90 140" style="position:absolute;left:236px;top:770px;width:90px"><circle cx="45" cy="36" r="24" fill="#D9A47A"/><path d="M19 40 C 14 4, 76 4, 71 40 C 66 22, 26 22, 19 40 Z" fill="#5a3a22"/><path d="M8 140 C 8 82, 82 82, 82 140 Z" fill="#D7261E"/><path d="M8 140 C 8 82, 82 82, 82 140 Z" fill="url(#ht)" opacity=".5"/></svg>
+      <svg class="cut pp" viewBox="0 0 90 140" style="position:absolute;left:430px;top:700px;width:90px"><circle cx="45" cy="36" r="24" fill="#EDC39C"/><path d="M22 30 C 26 8, 66 8, 68 30 Z" fill="#3a3a3a"/><path d="M8 140 C 8 82, 82 82, 82 140 Z" fill="#3D7A4A"/><path d="M8 140 C 8 82, 82 82, 82 140 Z" fill="url(#ht)" opacity=".5"/></svg>
+      <svg class="ov">
+        <path class="mk" pathLength="1" d="M250 440 C 190 520, 110 580, 88 700"/><path class="mk" pathLength="1" d="M70 676 L88 704 L108 680"/>
+        <path class="mk" pathLength="1" d="M280 440 C 300 560, 262 660, 280 752"/><path class="mk" pathLength="1" d="M260 730 L280 756 L298 730"/>
+        <path class="mk" pathLength="1" d="M310 440 C 390 500, 450 580, 474 684"/><path class="mk" pathLength="1" d="M452 664 L474 690 L490 660"/>
+      </svg>
+    </div>
+
+    <!-- Q: 질문 카드 -->
+    <div class="grp" id="gQ">
+      <div class="card q">
+        <div class="tape" style="left:50%;margin-left:-60px;top:-18px;transform:rotate(-3deg)"></div>
+        <div class="lb">오늘의 질문 · QUESTION</div>
+        <div class="tx">나는 무엇을 받았고,<br>누구에게 전하고 있나?
+          <svg style="position:absolute;left:0;top:0;width:470px;height:140px;overflow:visible"><path class="mk red" pathLength="1" d="M4 128 C 80 120, 150 134, 196 124" style="stroke-width:7"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- E: 엔딩 -->
+    <div class="grp" id="gE">
+      <div class="pill">KBG Bible Labs</div>
+      <div class="big" style="top:520px;font-size:62px;line-height:1.35">저장해 두고<br><span class="hl"><i></i>하루 한 번</span> 묵상</div>
+      <svg class="cut" viewBox="0 0 80 150" style="position:absolute;left:240px;top:740px;width:80px"><path d="M8 0 L72 0 L72 146 L40 118 L8 146 Z" fill="#C7261E"/><path d="M8 0 L72 0 L72 146 L40 118 L8 146 Z" fill="url(#ht)" opacity=".5"/><path d="M20 0 L20 120" stroke="rgba(255,255,255,.25)" stroke-width="5"/></svg>
+    </div>
+<div class="trk" id="trk"><div class="ln"></div><div id="trkI"></div><span style="left:0px">말씀</span><span style="left:112px">받은 것</span><span style="left:224px">먼저</span><span style="left:336px">전함</span><span style="left:448px">질문</span></div>
+  </div>
+  <div class="grain"></div>
+</main>
+<script src="../../lib/gsap.min.js"></script><script src="../../lib/stage.js"></script>
+<script>
+const tl = Motion.timeline();
+const q = (s, r=document) => [...r.querySelectorAll(s)];
+gsap.set(['#g1','#g2','#g3','#gQ','#gE'],{autoAlpha:0});
+
+// 장면 교체: 빠른 휩 (나가는 쪽 power3.in, 들어오는 쪽 expo.out)
+const TS=[...document.querySelectorAll('#trk span')];
+let step=0;
+function track(i,t){ // 하단 진행 표시: 빨간 마커가 다음 칸으로 미끄러지고(앞 0.08초 늘어남) 글자색 교대
+  tl.to('#trkI',{keyframes:[{width:64+112*(i-step)*.6,duration:.14,ease:'power2.in'},{x:112*i,width:64,duration:.45,ease:'back.out(1.6)'}]},t);
+  tl.to(TS[step],{color:'#9b8f78',duration:.2},t); tl.to(TS[i],{color:'#1c1a17',duration:.2},t+.12); step=i; }
+function swap(a, b, t){
+  tl.to('#dots',{x:'-=14',duration:.9,ease:'power2.out'},t-.3);   // 배경 점 패턴이 조금 늦게 따라와 깊이감
+  tl.to(a,{x:-620,rotation:-4,duration:.34,ease:'power3.in'},t-.34);
+  tl.set(a,{autoAlpha:0},t);
+  tl.fromTo(b,{autoAlpha:1,x:720,rotation:3},{x:0,rotation:0,duration:.62,ease:'expo.out',immediateRender:false},t);
+}
+const draw = (sel, t, d=.5, st=0) => tl.fromTo(sel,{strokeDashoffset:1},{strokeDashoffset:0,duration:d,ease:'power3.inOut',stagger:st},t);
+const hl = (sel, t) => tl.to(sel,{scaleX:1,duration:.45,ease:'power3.out'},t);
+
+// 라벨 (계속 고정)
+tl.from('#label',{y:-30,rotation:-8,autoAlpha:0,duration:.6,ease:'expo.out'},.1);
+
+tl.from('#trk',{y:40,autoAlpha:0,duration:.6,ease:'expo.out'},.5); tl.set(TS[0],{color:'#1c1a17'},.5);
+// A 0.2–3.9 성경 + 말씀 카드
+tl.from('#bible',{y:50,rotation:-6,scale:.9,autoAlpha:0,duration:.7,ease:'expo.out'},.25);
+tl.from('#verse',{y:80,rotation:4,autoAlpha:0,duration:.75,ease:'expo.out'},.55);
+tl.from(q('#verse .tape'),{scaleX:0,duration:.3,stagger:.08},1.05);
+hl(q('#verse .hl i')[0],1.6); hl(q('#verse .hl i')[1],1.95); hl(q('#verse .hl i')[2],2.3);
+
+// B1 3.9–5.9 받은 것 → 상자로
+swap('#gA','#g1',3.9); track(1,3.9);
+hl('#g1 .hl i',4.3);
+tl.from('#g1 .gk',{autoAlpha:0,y:8,duration:.4},4.45);
+tl.from('#g1 svg.cut',{y:60,autoAlpha:0,duration:.6,ease:'expo.out'},4.3);
+draw(q('#g1 .mk'),4.7,.55,.4);
+
+// B2 5.9–7.9 먼저 → 붉은 동그라미
+swap('#g1','#g2',5.9); track(2,5.9);
+draw('#g2 .mk',6.35,.7);
+tl.from('#g2 .gk',{autoAlpha:0,y:8,duration:.4},6.7);
+tl.from('#g2 svg.cut',{y:60,autoAlpha:0,duration:.6,ease:'expo.out'},6.5);
+tl.from('#glow',{scale:.3,autoAlpha:0,duration:.9,ease:'power3.out'},6.8);
+
+// B3 7.9–10.0 전하였노니 → 사람들에게
+swap('#g2','#g3',7.9); track(3,7.9);
+hl('#g3 .hl i',8.3);
+tl.from('#g3 .gk',{autoAlpha:0,y:8,duration:.4},8.4);
+tl.from('#g3 svg.cut:not(.pp)',{autoAlpha:0,y:40,duration:.5,ease:'expo.out'},8.3);
+tl.from('#g3 .pp',{y:50,scale:.6,autoAlpha:0,duration:.5,ease:'expo.out',stagger:.12},8.5);
+draw(q('#g3 .mk').filter((_,i)=>i%2===0),8.75,.55,.12);
+draw(q('#g3 .mk').filter((_,i)=>i%2===1),9.25,.25,.12);
+
+// Q 10.0–12.5 질문 카드
+swap('#g3','#gQ',10.0); track(4,10.0);
+draw('#gQ .mk',10.9,.6);
+
+// E 12.5–15 채널 슬롯 + 저장 권유 (마지막 1.4초 정지)
+swap('#gQ','#gE',12.5);
+tl.to('#trkI',{x:0,width:560-48,duration:.6,ease:'power3.inOut'},12.6); tl.to(TS,{color:'#1c1a17',duration:.3,stagger:.04},12.7);
+tl.from('#gE .pill',{y:-14,autoAlpha:0,duration:.5,ease:'expo.out'},12.75);
+hl('#gE .hl i',13.1);
+tl.from('#gE svg.cut',{y:-40,rotation:-10,autoAlpha:0,duration:.55,ease:'expo.out'},13.2);
+Motion.ready();
+</script></body></html>

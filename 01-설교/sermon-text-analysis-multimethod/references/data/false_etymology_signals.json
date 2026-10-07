@@ -1,0 +1,87 @@
+{
+  "_meta": {
+    "purpose": "한국 강단에 흔한 가짜 어원학·과장된 단어 의미를 패턴으로 식별. 본 카탈로그의 표현이 응답 안에 등장하려 할 때 *반드시 검증·교정*한다.",
+    "fallacy_categories": ["Folk Etymology", "Illegitimate Totality Transfer", "Root Fallacy", "Diachronic Fallacy"]
+  },
+  "blocked_etymology_claims": {
+    "ἀγάπη_vs_φιλέω_strict_distinction": {
+      "false_claim": "아가페는 신적 사랑, 필레오는 인간적 사랑으로 항상 구분된다",
+      "why_false": "요한복음 5:20, 11:3, 11:5, 11:36 등에서 두 단어는 상호교환적으로 사용됨",
+      "correction": "두 단어는 *문맥에 따라* 의미가 결정되며 일률적 구분은 학계 거부 (D.A. Carson, Exegetical Fallacies)",
+      "category": "Diachronic Fallacy"
+    },
+    "δύναμις_dynamite_etymology": {
+      "false_claim": "헬라어 δύναμις(뒤나미스)는 영어 *dynamite*의 어원이므로 폭발적 능력을 의미한다",
+      "why_false": "Time-reversed etymology. 영어 dynamite는 1867년 Alfred Nobel이 헬라어를 *차용*한 것. 1세기 헬라어 의미가 19세기 영어 폭약 의미로 결정될 수 없음.",
+      "correction": "δύναμις는 단순히 *능력, 힘, 기적*. 폭발과 무관.",
+      "category": "Diachronic Fallacy (Anachronism)"
+    },
+    "ἐκκλησία_called_out_etymology": {
+      "false_claim": "ἐκκλησία(에클레시아)는 ἐκ(밖으로) + καλέω(부르다)이므로 *세상에서 부르심 받은 자들*이라는 신학적 의미를 가진다",
+      "why_false": "1세기 코이네 헬라어에서 ἐκκλησία는 단순히 *모임, 집회, 회중*. 그리스 도시국가의 시민 의회(데모스)도 ἐκκλησία (행 19:32, 39, 41 참조). 어원 분해로 신학을 끌어내는 것은 Root Fallacy.",
+      "correction": "*모인 회중, 교회*. 신학적 의미는 본문 사용례에서 끌어내며, 어원 분해로 결정하지 않음.",
+      "category": "Root Fallacy"
+    },
+    "διάβολος_through_thrower": {
+      "false_claim": "διάβολος(디아볼로스)는 διά(통하여) + βάλλω(던지다)이므로 *우리 사이에 끼어드는 자*다",
+      "why_false": "BDAG: 단순히 *비방하는 자, 모함하는 자* (slanderer, accuser). 어원 분해 신학화는 Root Fallacy.",
+      "correction": "비방자, 모함자, 마귀. 히브리어 사탄(שָׂטָן, 고발자)의 헬라어 번역.",
+      "category": "Root Fallacy"
+    },
+    "ἁμαρτία_missing_the_mark": {
+      "false_claim": "ἁμαρτία(하마르티아)는 *과녁을 빗나감*이라는 의미이므로 단지 *완벽함에 못 미침*이다 (가벼운 의미로 약화)",
+      "why_false": "원래 *과녁을 빗나감*은 호메로스 시대 의미. 1세기 BDAG·LXX에서는 *죄, 범죄, 도덕적 잘못*으로 의미 무거움. 옛 어원으로 현재 의미 약화는 Diachronic Fallacy.",
+      "correction": "신약·LXX 표준 의미: 죄, 범죄, 하나님께 대한 반역 (롬 3:23, 6:23).",
+      "category": "Diachronic Fallacy"
+    },
+    "παρακαλέω_paraclete_combined": {
+      "false_claim": "παρακαλέω(파라칼레오)는 모든 의미(부르다·권면하다·위로하다)를 한 본문에서 모두 가진다",
+      "why_false": "Illegitimate Totality Transfer (D.A. Carson). 한 본문에서 단어는 *한 의미*를 가짐. 모든 가능한 의미를 한 본문에 다 적용 금지.",
+      "correction": "본문 문맥에서 *어느 의미인지* 결정. 롬 12:1 = 권면; 고후 1:3-7 = 위로.",
+      "category": "Illegitimate Totality Transfer"
+    },
+    "λόγος_universal_meaning": {
+      "false_claim": "λόγος(로고스)는 *말씀·이성·계산·법칙* 모든 의미를 한꺼번에 갖는다",
+      "why_false": "Illegitimate Totality Transfer. 요 1:1 λόγος는 *말씀*(personalized expression). 모든 가능한 의미 일괄 적용 금지.",
+      "correction": "본문 문맥에서 정확한 의미 결정.",
+      "category": "Illegitimate Totality Transfer"
+    },
+    "kainos_vs_neos_strict": {
+      "false_claim": "καινός(질적으로 새로움)와 νέος(시간적으로 새로움)는 항상 엄격히 구분된다",
+      "why_false": "두 단어는 신약에서 종종 상호교환. 골 3:10 νέος, 엡 4:24 καινός 두 본문이 같은 주제. Trench *Synonyms of the NT* 19세기 분류는 절대화 금지.",
+      "correction": "본문에서 *상황에 따라* 강조점 다름. 엄격 구분은 학계 거부.",
+      "category": "Diachronic Fallacy"
+    }
+  },
+  "blocked_hebrew_claims": {
+    "shalom_complete_wholeness": {
+      "false_claim": "히브리어 shalom은 *모든 영역의 완전한 평화*를 의미하므로 정치·경제·사회 모든 안녕을 포함한다 (단어 하나가 모든 함의)",
+      "why_false": "Illegitimate Totality Transfer. shalom은 *문맥에 따라* 평화·안녕·번영·건강 중 하나의 강조점을 가짐.",
+      "correction": "본문 문맥에서 정확한 의미 결정. BDB·HALOT 직접 참조.",
+      "category": "Illegitimate Totality Transfer"
+    },
+    "chesed_only_covenant_love": {
+      "false_claim": "chesed는 오직 *언약적 사랑*만 의미한다 (다른 의미 배제)",
+      "why_false": "Glueck(1927) 이후 *언약적 신실*이 주요 의미로 인정되나, 일반적 친절·자비도 포함. 룻기·잠언 등에서 인간 간 친절에도 사용.",
+      "correction": "주요 의미는 언약적 신실한 사랑이나 본문에 따라 폭넓음.",
+      "category": "Illegitimate Totality Transfer"
+    },
+    "yada_complete_intimate_knowing": {
+      "false_claim": "히브리어 yada(알다)는 *항상 친밀한 관계적 앎*을 의미한다",
+      "why_false": "yada는 단순 지식·인지에도 사용 (창 3:5, 4:1 등에서 의미 폭 넓음). 모든 사용을 *관계적*으로 환원 금지.",
+      "correction": "본문 문맥에 따라 의미 결정.",
+      "category": "Illegitimate Totality Transfer"
+    }
+  },
+  "number_symbolism_warnings": {
+    "WARNING": "성경의 *숫자 상징*은 다음 4개만 학계 공인: 3 (삼위·짧은 완성), 7 (완성·언약), 12 (지파·사도·교회), 40 (시험·세대·변화기). 그 외 숫자는 *상징 강조 자체가 곡해*가 될 수 있음.",
+    "blocked_numerologies": [
+      "다윗 물맷돌 5개 = 성령의 5사역",
+      "예수님 십자가 못 5개 = ?",
+      "베드로 회복 3중 질문 = ?를 단순 횟수 너머 의미화",
+      "예수님 8가지 복 = 8 = 새 시작 (8의 의미 부여는 신학적 곡해)",
+      "솔로몬 후궁 700 + 300 = 1000 = 완전수 곡해"
+    ],
+    "rule": "본문에 숫자가 등장해도 *본문이 그 숫자에 신학적 의미를 부여하지 않으면* 의미를 만들지 않는다."
+  }
+}

@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Genie Deck</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600;700;800&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+/* ===== 토큰 (영상 프레임 실측값 — 변경 금지) ===== */
+:root{
+  --purple:#562EA1;      /* 브랜드 딥퍼플: 표지·클로징 배경, 헤드라인, 강조 */
+  --purple-deep:#4A1F8F; /* 거버닝 바, 그라디언트 진한 쪽 */
+  --violet:#7B38E8;      /* 차트 그라디언트 밝은 쪽 */
+  --canvas:#F2F5F7;      /* 슬라이드 캔버스 — 아주 옅은 회색, 순백 금지 */
+  --card:#FFFFFF;        /* 카드 배경 */
+  --ink:#1A2233;         /* 카드 타이틀·강조 */
+  --body:#3C4447;        /* 본문 */
+  --mute:#8A94A0;        /* 캡션·비활성 내비 */
+  --track:#E4E8EB;       /* 차트 트랙·표 괘선 */
+  --letterbox:#0F172A;   /* 화면 여백 레터박스 (slate-900) */
+  --head:'Poppins','Noto Sans KR',sans-serif;
+  --sans:'Noto Sans KR','Poppins',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;background:var(--letterbox);overflow:hidden;cursor:pointer}
+#stage{position:absolute;left:50%;top:50%;width:1920px;height:1080px;
+  transform:translate(-50%,-50%) scale(var(--scale,1));transform-origin:center}
+
+/* ===== 슬라이드 ===== */
+.slide{position:absolute;inset:0;width:1920px;height:1080px;background:var(--canvas);
+  font-family:var(--sans);color:var(--body);display:none;overflow:hidden;
+  padding:0 130px}
+.slide.active{display:block;animation:fade .35s ease}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+
+/* 상단 파트 내비 (브레드크럼) */
+.partnav{position:absolute;top:0;left:130px;right:130px;height:110px;
+  display:flex;align-items:center;justify-content:space-between;
+  font-family:var(--head);font-size:17px;font-weight:600;letter-spacing:.06em;
+  text-transform:uppercase;color:var(--mute)}
+.partnav nav{display:flex;gap:44px}
+.partnav nav b{color:var(--purple);font-weight:700;border-bottom:2.5px solid var(--purple);padding-bottom:5px}
+.partnav .brand{color:var(--mute);font-weight:700;letter-spacing:.08em}
+
+/* 헤드라인 + 거버닝 메시지 */
+h1{position:absolute;top:118px;left:130px;right:130px;
+  font-family:var(--head);font-weight:800;font-size:64px;line-height:1.12;
+  letter-spacing:-.5px;color:var(--purple)}
+h1.ko{font-weight:900;line-height:1.18;letter-spacing:-1.5px}
+.gov{position:absolute;top:225px;left:130px;right:130px;
+  border-left:6px solid var(--purple-deep);padding:6px 0 6px 24px;
+  font-size:25px;line-height:1.55;color:var(--body);font-weight:400}
+
+/* 콘텐츠 영역 */
+.zone{position:absolute;top:345px;left:130px;right:130px;bottom:60px}
+
+/* ===== 부품 ===== */
+.card{background:var(--card);border-radius:20px;padding:44px 48px;
+  box-shadow:0 6px 26px rgba(15,23,42,.07);cursor:default;
+  transition:transform .25s ease,box-shadow .25s ease}
+.card:hover{transform:translateY(-8px);box-shadow:0 18px 44px rgba(15,23,42,.14)}
+.card h3{display:flex;align-items:center;gap:16px;font-family:var(--head);
+  font-size:29px;font-weight:700;color:var(--ink);margin-bottom:26px}
+.card h3 svg{width:28px;height:28px;stroke:var(--ink);flex:none}
+.card ul{list-style:none}
+.card li{position:relative;padding-left:26px;font-size:22px;line-height:1.45;
+  margin-bottom:17px;color:var(--body)}
+.card li::before{content:'';position:absolute;left:4px;top:12px;width:8px;height:8px;
+  border-radius:50%;background:var(--ink)}
+.cols2{display:grid;grid-template-columns:1fr 1fr;gap:34px;height:100%}
+.cols3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:34px;height:100%}
+.cols2>.card,.cols3>.card{height:100%}
+
+/* KPI 스탯 카드 */
+.kpi{text-align:center;padding:50px 30px 44px}
+.kpi b{display:block;font-family:var(--head);font-size:82px;font-weight:800;
+  color:var(--purple);line-height:1;margin-bottom:18px}
+.kpi i{display:block;font-style:normal;font-size:26px;font-weight:700;
+  color:var(--ink);margin-bottom:10px;font-family:var(--head)}
+.kpi small{font-size:17px;color:var(--mute)}
+.kpirow{display:grid;grid-template-columns:1fr 1fr 1fr;gap:34px}
+
+/* 그라디언트 바 차트 */
+.bars{display:flex;flex-direction:column;gap:26px;margin-top:6px}
+.track{background:var(--track);border-radius:999px;height:52px;position:relative}
+.bar{position:absolute;left:0;top:0;bottom:0;border-radius:999px;
+  background:linear-gradient(90deg,var(--purple-deep),var(--violet));
+  display:flex;align-items:center;justify-content:flex-end;padding-right:24px;
+  color:#fff;font-weight:700;font-size:21px;white-space:nowrap;
+  transition:transform .25s ease}
+.track:hover .bar{transform:translateY(-3px)}
+.bar.out{color:var(--ink);justify-content:flex-start}
+.bar.out span{position:absolute;left:calc(100% + 18px)}
+.foot{margin-top:34px;font-size:17px;color:var(--mute)}
+
+/* 타임라인 / 로드맵 */
+.timeline{display:grid;grid-template-columns:repeat(4,1fr);position:relative;margin-top:40px}
+.timeline::before{content:'';position:absolute;top:136px;left:12%;right:12%;
+  height:2px;background:var(--track)}
+.tl{text-align:center;position:relative}
+.tl em{display:block;font-style:normal;font-family:var(--head);font-size:24px;
+  font-weight:700;color:var(--purple);margin-bottom:22px}
+.tl .dot{width:96px;height:96px;border-radius:50%;background:var(--card);
+  border:2.5px solid var(--purple);margin:0 auto 30px;display:flex;
+  align-items:center;justify-content:center;position:relative;
+  transition:transform .25s ease}
+.tl .dot svg{width:36px;height:36px;stroke:var(--purple)}
+.tl.fill .dot{background:var(--purple)}
+.tl.fill .dot svg{stroke:#fff}
+.tl:hover .dot{transform:translateY(-6px)}
+.tl b{display:block;font-family:var(--head);font-size:26px;font-weight:700;
+  color:var(--ink);margin-bottom:12px}
+.tl small{font-size:17px;color:var(--mute);display:block;max-width:230px;margin:0 auto;line-height:1.45}
+
+/* 표 */
+.card table{width:100%;border-collapse:collapse;font-size:21px}
+.card th{font-family:var(--head);font-weight:700;color:var(--ink);text-align:left;
+  padding:14px 18px;border-bottom:2.5px solid var(--ink)}
+.card td{padding:14px 18px;border-bottom:1px solid var(--track);color:var(--body)}
+.card td.hl{color:var(--purple);font-weight:700}
+
+/* ===== 표지 / 클로징 (풀퍼플) ===== */
+.cover,.closing{background:var(--purple) center/cover no-repeat;padding:0;color:#fff}
+.cover .wrap{position:absolute;left:150px;top:150px;right:150px;bottom:130px;
+  display:flex;flex-direction:column;justify-content:center}
+.cover .sub{font-size:27px;font-weight:400;margin-bottom:28px;opacity:.95}
+.cover h2{font-family:var(--head);font-size:128px;font-weight:800;line-height:1.08;letter-spacing:-2px}
+.cover h2 span{font-weight:300}
+.cover.ko h2{font-size:104px;line-height:1.2;letter-spacing:-3px;font-weight:900}
+.cover .logo,.closing .logo{position:absolute;right:150px;bottom:110px;
+  font-family:var(--head);font-weight:800;font-size:40px;letter-spacing:.05em}
+.cover .logo small,.closing .logo small{display:block;font-size:13px;font-weight:600;
+  letter-spacing:.25em;opacity:.85;text-align:right}
+.closing .wrap{position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;text-align:center}
+.closing .mark{width:110px;height:110px;border:5px solid #fff;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;margin-bottom:44px}
+.closing .mark svg{width:52px;height:52px;stroke:#fff}
+.closing h2{font-family:var(--head);font-size:58px;font-weight:300;letter-spacing:-.5px}
+.closing h2 b{font-weight:800}
+.closing hr{width:640px;border:none;border-top:1.5px solid rgba(255,255,255,.6);margin:52px 0}
+.closing .logo{position:static;text-align:center;margin-top:0}
+.closing .logo small{text-align:center}
+
+/* ===== 페이지 표시 · 발표자 노트 ===== */
+#nav{position:fixed;right:18px;bottom:14px;color:#8A94A0;font:600 13px var(--head);z-index:9}
+#notes{display:none;position:fixed;left:0;right:0;bottom:0;height:24vh;background:#0B1120;
+  color:#D7DCE6;font:400 16px/1.6 var(--sans);padding:18px 28px;overflow:auto;
+  border-top:2px solid var(--purple);z-index:8;cursor:default}
+body.notes-on #notes{display:block}
+
+/* ===== 인쇄 (A4 가로) ===== */
+@media print{
+  @page{size:A4 landscape;margin:0}
+  html,body{background:#fff;overflow:visible;cursor:default}
+  #stage{position:static;transform:none;width:auto;height:auto}
+  .slide{display:block;position:relative;inset:auto;
+    width:297mm;height:167mm;margin:0 auto;page-break-after:always;
+    transform-origin:top left;zoom:.555}
+  #nav,#notes{display:none!important}
+}
+</style>
+</head>
+<body>
+<div id="stage">
+
+<!-- ═══ G1. 표지 — 이미지가 있으면: <section class="slide cover" style="background-image:url('cover.png')"> + .wrap 삭제 ═══ -->
+<section class="slide cover" data-note="인사. 오늘 발표의 한 줄 약속을 말한다.">
+  <div class="wrap">
+    <div class="sub">We enhance our clients' AI experience and productivity simultaneously.</div>
+    <h2>Did you know?<br><span>That the AI agent</span><br>service started<br><span>right here!</span></h2>
+  </div>
+  <div class="logo">GENIE<small>COMPANY BRIEF</small></div>
+</section>
+
+<!-- ═══ G2. 리드 카드 1장 ═══ -->
+<section class="slide" data-note="회사가 푸는 문제를 한 문장으로. 카드 불릿은 읽지 말고 요지만.">
+  <header class="partnav">
+    <nav><b>Introduction</b><span>Part 01 | Company</span><span>Part 02 | Technology</span><span>Part 03 | Our Service</span><span>Part 04 | Experience</span></nav>
+    <span class="brand">GENIE TECH</span>
+  </header>
+  <h1>Where AI Agent Services Begin</h1>
+  <p class="gov">Wooseok Genie Tech bridges the gap between abstract reasoning and deterministic execution,
+  serving as a foundational catalyst for autonomous digital transformation in the enterprise</p>
+  <div class="zone">
+    <div class="card" style="height:100%">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Thinking of the AI Ecosystem First</h3>
+      <ul>
+        <li>Proprietary 'Action-Ready' LLM orchestration layer for complex workflows</li>
+        <li>High-security enterprise-grade deployment framework ensuring data sovereignty</li>
+        <li>Human-centric AI design focusing on actual productivity gains</li>
+        <li>Dynamic synchronization between reasoning engines and deterministic execution logic</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ G3. 2열 카드 ═══ -->
+<section class="slide" data-note="비전과 미션 대비. 왼쪽부터.">
+  <header class="partnav">
+    <nav><span>Introduction</span><b>Part 01 | Company</b><span>Part 02 | Technology</span><span>Part 03 | Our Service</span><span>Part 04 | Experience</span></nav>
+    <span class="brand">GENIE TECH</span>
+  </header>
+  <h1>Our Vision and Mission</h1>
+  <p class="gov">By 2030, we aim to build a global 'Agent-as-a-Service(AaaS)' infrastructure
+  that empowers every digital workspace worldwide</p>
+  <div class="zone">
+    <div class="cols2">
+      <div class="card">
+        <h3><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>Global Vision</h3>
+        <ul>
+          <li>Redefining behavioral patterns in the digital economy through trusted intelligence</li>
+          <li>Leading the establishment of universal AI agent interoperability standards</li>
+          <li>Ensuring transparent and ethical autonomous system deployment environments</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>Strategic Mission</h3>
+        <ul>
+          <li>Empowering professionals by automating cognitive repetition through trusted AI partnerships</li>
+          <li>Eliminating manual data orchestration and structural silos</li>
+          <li>Delivering context-aware execution paths for B2B enterprises</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ G6. 그라디언트 바 차트 ═══ -->
+<section class="slide" data-note="숫자 세 개만 기억시키기: 12.8 → 29.5 → 68.">
+  <header class="partnav">
+    <nav><span>Introduction</span><b>Part 01 | Company</b><span>Part 02 | Technology</span><span>Part 03 | Our Service</span><span>Part 04 | Experience</span></nav>
+    <span class="brand">GENIE TECH</span>
+  </header>
+  <h1>Market Traction &amp; Success</h1>
+  <p class="gov">Meeting surging demand for high-performance autonomous agents in the B2B sector
+  based on unmatched security and operational efficiency</p>
+  <div class="zone">
+    <div class="card" style="height:100%">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 17 9 11 13 15 21 7"/><polyline points="14 7 21 7 21 14"/></svg>Projected Revenue Growth (USD)</h3>
+      <div class="bars">
+        <div class="track"><div class="bar out" style="width:30%"><span>2026 Project: 12.8M</span></div></div>
+        <div class="track"><div class="bar" style="width:62%">2028 Target: 29.5M</div></div>
+        <div class="track"><div class="bar" style="width:94%">2030 Vision: 68.0M</div></div>
+      </div>
+      <p class="foot">* Growth based on explosive B2B adoption rates in FinTech and Legal Tech sectors</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ G4. 3열 카드 ═══ -->
+<section class="slide" data-note="제품 셋. 각 카드 첫 불릿만 짚는다.">
+  <header class="partnav">
+    <nav><span>Introduction</span><span>Part 01 | Company</span><span>Part 02 | Technology</span><b>Part 03 | Our Service</b><span>Part 04 | Experience</span></nav>
+    <span class="brand">GENIE TECH</span>
+  </header>
+  <h1>Solutions for the Future</h1>
+  <p class="gov">Integrating managed enterprise suites with robust developer platforms
+  to ensure scalable intelligence across every organizational level</p>
+  <div class="zone">
+    <div class="cols3">
+      <div class="card">
+        <h3><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="9" y1="7" x2="9" y2="7.01"/><line x1="15" y1="7" x2="15" y2="7.01"/><line x1="9" y1="12" x2="9" y2="12.01"/><line x1="15" y1="12" x2="15" y2="12.01"/><path d="M9 22v-4h6v4"/></svg>Corporate Genie</h3>
+        <ul>
+          <li>Enterprise suite for ERP/CRM automation</li>
+          <li>Workflow orchestration and reporting synthesis</li>
+          <li>Audit-ready automated documentation layer</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>Developer SDK</h3>
+        <ul>
+          <li>Low-latency SDK for custom agent building</li>
+          <li>Full API access based on agentic logic templates</li>
+          <li>Built-in security guardrails and debug modules</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>Managed Ops</h3>
+        <ul>
+          <li>24/7 monitoring and agent health optimization</li>
+          <li>Self-healing support and error mitigation</li>
+          <li>Continuous logic refinement based on real data</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ G5. KPI 스탯 + 요약 카드 ═══ -->
+<section class="slide" data-note="숫자 먼저, 근거는 아래 카드로.">
+  <header class="partnav">
+    <nav><span>Introduction</span><span>Part 01 | Company</span><span>Part 02 | Technology</span><span>Part 03 | Our Service</span><b>Part 04 | Experience</b></nav>
+    <span class="brand">GENIE TECH</span>
+  </header>
+  <h1>Business Impact Analysis</h1>
+  <p class="gov">Quantifiable performance metrics confirm significant operational savings
+  and accelerated decision cycles for Fortune 500 early adopters</p>
+  <div class="zone">
+    <div class="kpirow" style="margin-bottom:34px">
+      <div class="card kpi"><b>82%</b><i>Efficiency Gained</i><small>Manual process time saved</small></div>
+      <div class="card kpi"><b>4.8x</b><i>ROI Multiplier</i><small>Return on investment within 18 months</small></div>
+      <div class="card kpi"><b>99.9%</b><i>Accuracy Rate</i><small>Precision for high-volume tasks</small></div>
+    </div>
+    <div class="card">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 17 9 11 13 15 21 7"/><polyline points="14 7 21 7 21 14"/></svg>Strategic Outcomes</h3>
+      <ul>
+        <li>Drastic reduction in repetitive manual labor costs and overhead</li>
+        <li>Real-time data orchestration for immediate insights</li>
+        <li>Agile infrastructure scaling without headcount increases</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ G7. 타임라인 / 로드맵 ═══ -->
+<section class="slide" data-note="마지막 노드(채워진 원)가 오늘의 결론.">
+  <header class="partnav">
+    <nav><span>Introduction</span><span>Part 01 | Company</span><span>Part 02 | Technology</span><span>Part 03 | Our Service</span><b>Part 04 | Experience</b></nav>
+    <span class="brand">GENIE TECH</span>
+  </header>
+  <h1>2030 Strategic Roadmap</h1>
+  <p class="gov">Focusing on full-scale global intelligence ecosystems and committed
+  to leading agent evolution through recursive self-correcting logic</p>
+  <div class="zone">
+    <div class="timeline">
+      <div class="tl"><em>2026</em><div class="dot"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/></svg></div><b>Global Launch</b><small>Expanding AaaS hubs across G20 regions</small></div>
+      <div class="tl"><em>2027</em><div class="dot"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a7 7 0 0 0 0 20M2 12h20"/></svg></div><b>Self-Evolution</b><small>Recursive swarm optimization layers</small></div>
+      <div class="tl"><em>2028</em><div class="dot"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg></div><b>Marketplace</b><small>World's first specialized agent market</small></div>
+      <div class="tl fill"><em>2030</em><div class="dot"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m2 4 3 12h14l3-12-6 7-4-7-4 7-6-7zm3 16h14"/></svg></div><b>Total Autonomy</b><small>Dominating the Global Agentic Economy</small></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ G8. 클로징 — 이미지가 있으면: <section class="slide closing" style="background-image:url('end.png')"> + .wrap 삭제 ═══ -->
+<section class="slide closing" data-note="감사 인사 + 콜투액션 한 문장.">
+  <div class="wrap">
+    <div class="mark"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" y1="2" x2="12" y2="12"/></svg></div>
+    <h2><b>AI agent</b> service start!</h2>
+    <hr>
+    <div class="logo">GENIE<small>YOUTUBE.COM/EXAMPLE</small></div>
+  </div>
+</section>
+
+</div>
+
+<div id="nav"><span id="navPage"></span></div>
+<div id="notes"></div>
+
+<script>
+const slides=[...document.querySelectorAll('.slide')];
+const navPage=document.getElementById('navPage');
+const notes=document.getElementById('notes');
+let cur=-1;
+function show(n){
+  cur=Math.max(0,Math.min(slides.length-1,n));
+  slides.forEach((s,i)=>s.classList.toggle('active',i===cur));
+  navPage.textContent=(cur+1)+' / '+slides.length;
+  notes.textContent=slides[cur].dataset.note||'';
+  const b=slides[cur].querySelector('.brand');
+  if(b&&!b.dataset.pn){b.dataset.pn=1;b.textContent+=' | '+(cur+1)+' / '+slides.length}
+}
+addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key===' ')show(cur+1);
+  else if(e.key==='ArrowLeft')show(cur-1);
+  else if(e.key==='Home')show(0);
+  else if(e.key==='End')show(slides.length-1);
+  else if(e.key==='s'||e.key==='S'){document.body.classList.toggle('notes-on');fit()}
+});
+addEventListener('click',e=>{
+  if(e.target.closest('#notes'))return;
+  if(e.clientX<innerWidth/2)show(cur-1);else show(cur+1)});
+let tx=null;
+addEventListener('touchstart',e=>tx=e.touches[0].clientX);
+addEventListener('touchend',e=>{if(tx===null)return;
+  const dx=e.changedTouches[0].clientX-tx;
+  if(dx<-40)show(cur+1);else if(dx>40)show(cur-1);tx=null});
+function fit(){
+  const on=document.body.classList.contains('notes-on');
+  const h=on?innerHeight*.74:innerHeight;
+  const s=Math.min(innerWidth/1920,h/1080);
+  const st=document.getElementById('stage');
+  st.style.setProperty('--scale',s);
+  st.style.top=on?(h/2)+'px':'50%';
+}
+addEventListener('resize',fit);addEventListener('load',fit);fit();
+const _h=parseInt(location.hash.slice(1));show(isNaN(_h)?0:_h-1);
+addEventListener('hashchange',()=>{const n=parseInt(location.hash.slice(1));if(!isNaN(n))show(n-1)});
+if(location.search.indexOf('shot')>-1){
+  document.getElementById('nav').style.display='none';
+  const st=document.createElement('style');
+  st.textContent='.slide.active{animation:none!important}';
+  document.head.appendChild(st);
+}
+</script>
+</body>
+</html>

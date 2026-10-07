@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><title>강의 개념 모프 · Lecture Concept Morph</title>
+<link rel="stylesheet" href="../../lib/stage.css">
+<style>
+  .frame{background:#0d0f12 !important;background-image:none !important}
+  .scene{position:absolute;inset:0;overflow:hidden;background:#000}
+  :root{--cream:#EDEAE4;--ink:#111;--mut:#8C877E;--acc:#FF5A1F}
+  .card{position:absolute;left:60px;top:60px;width:960px;height:960px;border-radius:72px;background:var(--cream)}
+  .c{position:absolute;left:540px;top:540px}
+  #blob{width:260px;height:88px;border-radius:44px;background:#111;will-change:filter}
+  .head{position:absolute;left:132px;top:128px;height:110px;width:600px}
+  .head .h{position:absolute;left:0;top:0}
+  .head .m{overflow:hidden;padding:2px 0 4px}
+  .head b{display:block;font:500 19px/1 "IBM Plex Mono",monospace;letter-spacing:.18em;color:#6F6A62;margin-bottom:10px}
+  .head span{display:block;font:800 52px/1.1 Pretendard;letter-spacing:-.03em;color:var(--ink)}
+  .steps{position:absolute;left:540px;top:930px;display:flex;gap:12px;transform:translateX(-50%)}
+  .steps i{display:block;width:12px;height:12px;border-radius:6px;background:#C9C4BB}
+  #pillTxt{font:700 32px/1 Pretendard;color:#fff;letter-spacing:-.02em;white-space:nowrap}
+  .verse{width:700px;height:400px;padding:52px 56px}
+  .verse .ref{font:500 18px/1 "IBM Plex Mono",monospace;letter-spacing:.14em;color:var(--acc);margin-bottom:26px}
+  .verse p{margin:0;font:700 38px/1.6 Pretendard;letter-spacing:-.03em;color:var(--ink);white-space:nowrap}
+  .hlw{position:relative;display:inline-block}
+  .hlw i{position:absolute;left:-6px;right:-6px;top:12px;bottom:4px;background:#FFD43B;transform-origin:0 50%;z-index:-1;border-radius:4px}
+  .verse p:nth-child(3){position:relative;z-index:0}
+  #lens{width:150px;height:150px;border-radius:50%;background:var(--cream)}
+  #handle{width:40px;height:120px;border-radius:20px;background:#111}
+  .obs{display:flex;align-items:center;gap:16px;white-space:nowrap}
+  .obs i{display:block;width:26px;height:26px;border-radius:50%;background:#111;flex:none}
+  .obs span{font:800 44px/1 Pretendard;letter-spacing:-.03em;color:var(--ink)}
+  #track{width:660px;height:112px;border-radius:56px;background:#fff;box-shadow:0 10px 30px rgba(0,0,0,.08)}
+  .tab{width:200px;text-align:center;font:700 34px/1 Pretendard;letter-spacing:-.02em;color:var(--mut)}
+  .cpt{font:600 30px/1 Pretendard;color:#4A463F;white-space:nowrap;letter-spacing:-.02em}
+  .capw{position:absolute;left:540px;top:690px;width:700px;height:44px;overflow:hidden}
+  .capw .cpt{position:absolute;left:0;right:0;top:0;height:44px;line-height:44px;text-align:center}
+  .list{width:660px;height:380px;padding:50px 56px}
+  .list .t{font:500 18px/1 "IBM Plex Mono",monospace;letter-spacing:.16em;color:var(--mut);margin-bottom:40px}
+  .row{display:flex;align-items:center;gap:26px;height:70px;margin-bottom:34px}
+  .box{position:relative;width:56px;height:56px;border-radius:16px;border:4px solid #111;flex:none}
+  .box em{position:absolute;inset:-4px;border-radius:16px;background:#111;transform:scale(0)}
+  .box svg{position:absolute;left:8px;top:8px;width:32px;height:32px;overflow:visible}
+  .row span{font:800 42px/1 Pretendard;letter-spacing:-.03em;color:var(--ink)}
+  #fill{width:60px;height:60px;border-radius:30px;background:var(--acc)}
+  .ptxt{width:560px;height:76px;display:flex;align-items:center;justify-content:space-between;padding:0 34px;font:800 30px/1 Pretendard;color:#fff}
+  .ptxt b{font:500 26px/1 "IBM Plex Mono",monospace;letter-spacing:.06em}
+  .final .kick{font:500 18px/1 "IBM Plex Mono",monospace;letter-spacing:.22em;color:var(--mut);text-align:center;margin-bottom:22px}
+  .final h1{margin:0;font:900 92px/1.05 Pretendard;letter-spacing:-.045em;color:var(--ink);white-space:nowrap;text-align:center}
+  .tw{overflow:hidden;padding-bottom:6px}
+  .chip{width:200px;height:64px;border-radius:32px;border:3px solid #111;display:flex;align-items:center;justify-content:center;gap:8px;font:800 24px/1 Pretendard;letter-spacing:-.02em;color:var(--ink);white-space:nowrap}
+  .chip b{font:500 16px/1 "IBM Plex Mono",monospace;color:var(--mut)}
+  .chip.k{border-color:transparent;color:#fff}.chip.k b{color:#aaa}
+  .cursor{position:absolute;left:0;top:0;width:38px;height:46px;z-index:40}
+  .rip{position:absolute;left:0;top:0;width:70px;height:70px;margin:-35px 0 0 -35px;border-radius:50%;border:3px solid #111;opacity:0;z-index:39}
+</style></head>
+<body data-no="S16" data-cat="강의 · LECTURE" data-ko="설교 준비 4단계" data-en="Lecture Concept Morph" data-meta="한 도형 · 끊김 없는 모프 · 0.6초 박자" data-dur="16" data-size="1080x1080" data-poster="15.6">
+<main class="scene">
+  <div class="card" id="card"></div>
+  <div class="head">
+    <div class="h" id="h1"><div class="m"><b>STEP 01</b></div><div class="m"><span>본문 읽기</span></div></div>
+    <div class="h" id="h2"><div class="m"><b>STEP 02</b></div><div class="m"><span>관찰</span></div></div>
+    <div class="h" id="h3"><div class="m"><b>STEP 03</b></div><div class="m"><span>해석</span></div></div>
+    <div class="h" id="h4"><div class="m"><b>STEP 04</b></div><div class="m"><span>적용</span></div></div>
+  </div>
+  <div class="steps" id="steps"><i></i><i></i><i></i><i></i></div>
+
+  <div class="c" id="track"></div>
+  <div class="c" id="handle"></div>
+  <div class="c" id="blob"></div>
+  <div class="c" id="lens"></div>
+  <div class="c" id="pillTxt">본문 읽기</div>
+
+  <div class="c verse" id="verse">
+    <div class="ref">요한복음 15:5</div>
+    <p>나는 포도나무요 너희는 가지라</p>
+    <p>그가 내 안에, <span class="hlw"><i id="hl"></i>내가 그 안에 거하면</span></p>
+    <p>사람이 열매를 많이 맺나니</p>
+  </div>
+
+  <div class="c obs" id="o1"><span>누가</span><i></i></div>
+  <div class="c obs" id="o2"><i></i><span>무엇을</span></div>
+  <div class="c obs" id="o3"><i></i><span>왜</span></div>
+
+  <div class="c tab" id="t1">문맥</div><div class="c tab" id="t2">단어</div><div class="c tab" id="t3">신학</div>
+  <div class="capw" id="capw"><div class="cpt" id="cp1">앞뒤 문맥 속에서 읽는다</div><div class="cpt" id="cp2">핵심 단어의 뜻을 짚는다</div><div class="cpt" id="cp3">성경 전체의 가르침에 비춘다</div></div>
+
+  <div class="c list" id="list">
+    <div class="t">APPLY · THIS WEEK</div>
+    <div class="row"><div class="box" id="b1"><em></em><svg viewBox="0 0 32 32"><path id="ck1" d="M4 17 L13 25 L28 7" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span>이번 주 한 가지</span></div>
+    <div class="row"><div class="box" id="b2"><em></em><svg viewBox="0 0 32 32"><path id="ck2" d="M4 17 L13 25 L28 7" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span>함께 나눌 질문</span></div>
+  </div>
+
+  <div class="c" id="fill"></div>
+  <div class="c ptxt" id="ptxt"><span>준비 완료</span><b id="cnt">0/4</b></div>
+
+  <div class="c final" id="final"><div class="kick">SERMON PREP · 4 STEPS</div><div class="tw"><h1 id="ttl">설교 준비 4단계</h1></div></div>
+  <div class="c chip" id="c1"><b>01</b>본문 읽기</div>
+  <div class="c chip" id="c2"><b>02</b>관찰</div>
+  <div class="c chip" id="c3"><b>03</b>해석</div>
+  <div class="c chip k" id="c4"><b>04</b>적용</div>
+
+  <div class="rip" id="rip"></div>
+  <svg class="cursor" id="cur" viewBox="0 0 38 46"><path d="M3 3 L3 37 L12 29 L18 43 L25 40 L19 26 L32 26 Z" fill="#111" stroke="#fff" stroke-width="2.6" stroke-linejoin="round"/></svg>
+</main>
+<script src="../../lib/gsap.min.js"></script><script src="../../lib/stage.js"></script>
+<script>
+const tl = Motion.timeline();
+const SPR = 'back.out(1.6)';
+gsap.set('.c',{xPercent:-50,yPercent:-50});
+// 초기 상태
+gsap.set('#card',{scale:.86,opacity:0,borderRadius:140});
+gsap.set('#blob',{scale:0});
+gsap.set('#pillTxt',{opacity:0});
+gsap.set(['#verse','#lens','#handle','#track','.tab','#list','#fill','#ptxt','#final','.chip','.obs'],{opacity:0});
+gsap.set(['.head b','.head span'],{yPercent:115,opacity:0});
+gsap.set('#hl',{scaleX:0});
+gsap.set('#verse .ref, #verse p',{opacity:0,y:18});
+gsap.set('.capw .cpt',{yPercent:110});
+gsap.set('#capw',{xPercent:-50});
+gsap.set('#cur',{x:930,y:1120});
+gsap.set(['#ck1','#ck2'],{strokeDasharray:40,strokeDashoffset:40});
+gsap.set('#handle',{x:80,y:80,rotation:-45,scaleY:0,transformOrigin:'50% 0%'});
+gsap.set('#o1',{x:-250,y:-150}); gsap.set('#o2',{x:250,y:-150}); gsap.set('#o3',{x:-230,y:170});
+gsap.set('#t1',{x:-210}); gsap.set('#t3',{x:210});
+gsap.set('#final',{y:-70});
+const CX=[-324,-108,108,324]; ['#c1','#c2','#c3','#c4'].forEach((s,i)=>gsap.set(s,{x:CX[i],y:110}));
+
+// 도우미
+function blur(t){ tl.to('#blob',{filter:'blur(3px)',duration:.06,ease:'none'},t).to('#blob',{filter:'blur(0px)',duration:.2,ease:'power2.out'},t+.06); }
+function morph(t, props, d){
+  const {backgroundColor:bg, ...geo} = props;   // 색은 형태와 분리해 0.1초에 끝낸다 → 회색 중간 프레임 최소화
+  tl.to('#blob',Object.assign({duration:d||.55,ease:SPR},geo),t); blur(t);
+  if (bg) tl.to('#blob',{backgroundColor:bg,duration:.1,ease:'none'},t);
+}
+function moveCur(t, x, y, d){ tl.to('#cur',{x,y,duration:d||.38,ease:'power2.inOut'},t); }
+function click(t, x, y){
+  moveCur(t-.4, x, y);
+  tl.to('#cur',{scale:.82,duration:.08,ease:'power2.in',transformOrigin:'0 0'},t).to('#cur',{scale:1,duration:.22,ease:'back.out(3)'},t+.08);
+  tl.fromTo('#rip',{x:x+3,y:y+3,scale:.3,opacity:.5},{scale:1.3,opacity:0,duration:.45,ease:'power2.out'},t);
+}
+function head(n, t){
+  // 줄마다 마스크: 나가는 줄은 위로 ease-in, 들어오는 줄은 expo.out, 킥→제목 60ms 시차
+  if (n>1){ tl.to(`#h${n-1} b`,{yPercent:-115,opacity:0,duration:.26,ease:'power2.in'},t-.12);
+            tl.to(`#h${n-1} span`,{yPercent:-115,opacity:0,duration:.3,ease:'power2.in'},t-.06); }
+  tl.to(`#h${n} b`,{yPercent:0,opacity:1,duration:.5,ease:'expo.out'},t+.2);
+  tl.to(`#h${n} span`,{yPercent:0,opacity:1,duration:.6,ease:'expo.out'},t+.26);
+  const dots = document.querySelectorAll('#steps i');
+  if (n>1) tl.to(dots[n-2],{width:12,background:'#C9C4BB',duration:.4,ease:SPR},t);
+  tl.to(dots[n-1],{width:40,background:'#111',duration:.45,ease:SPR},t);
+}
+
+// 0 · 카드와 버튼
+tl.to('#card',{scale:1,borderRadius:72,duration:.7,ease:'expo.out'},0); tl.to('#card',{opacity:1,duration:.18,ease:'none'},0);
+head(1,0.15);
+tl.to('#blob',{scale:1,duration:.5,ease:'back.out(2.2)'},0.35);
+tl.to('#pillTxt',{opacity:1,duration:.25},0.55);
+click(1.2, 560, 560);
+tl.to('#blob',{scale:.93,duration:.08},1.2).to('#blob',{scale:1,duration:.25,ease:'back.out(3)'},1.28);
+
+// 1 · 본문 카드 (검정 버튼 → 흰 카드)
+tl.to('#pillTxt',{opacity:0,scale:.8,duration:.15},1.45);
+morph(1.5,{width:700,height:400,borderRadius:40,backgroundColor:'#ffffff',boxShadow:'0 18px 50px rgba(0,0,0,.10)'},.6);
+moveCur(1.8, 900, 820, .5);
+tl.set('#verse',{opacity:1},1.72);
+tl.to('#verse .ref',{opacity:1,y:0,duration:.35,ease:'power3.out'},1.72);
+tl.to('#verse p',{opacity:1,y:0,duration:.45,stagger:.28,ease:'power3.out'},1.82);
+moveCur(2.75, 452, 552, .35);
+tl.to('#hl',{scaleX:1,duration:.55,ease:'power2.inOut'},3.1);
+tl.to('#cur',{x:772,duration:.55,ease:'power2.inOut'},3.1);
+
+// 2 · 관찰 (카드 → 돋보기 원)
+tl.to('#verse',{opacity:0,scale:.92,duration:.2},3.55);
+head(2,3.6);
+morph(3.65,{width:230,height:230,borderRadius:115,backgroundColor:'#111111',boxShadow:'0 0 0 rgba(0,0,0,0)',x:-30,y:-30},.55);
+tl.fromTo('#lens',{opacity:1,x:-30,y:-30,scale:0},{scale:1,duration:.4,ease:SPR},3.95);
+tl.to('#handle',{opacity:1,scaleY:1,duration:.35,ease:SPR},4.1);
+click(4.8, 333, 394); click(5.4, 716, 394); click(6.0, 280, 712); moveCur(6.4, 860, 860, .5);
+[['#o1',4.8],['#o2',5.4],['#o3',6.0]].forEach(([s,t])=>{
+  tl.fromTo(s,{opacity:0,scale:.4},{opacity:1,scale:1,duration:.45,ease:'back.out(2.4)'},t);
+});
+
+// 3 · 해석 (원 → 세그먼트 인디케이터)
+tl.to('.obs',{opacity:0,scale:.5,duration:.25,ease:'power2.in'},6.5);
+tl.to(['#lens','#handle'],{scale:0,opacity:0,duration:.22,ease:'power2.in'},6.55);
+head(3,6.7);
+morph(6.75,{width:200,height:84,borderRadius:42,x:-210,y:0},.55);
+tl.fromTo('#track',{opacity:0,scaleX:.6},{opacity:1,scaleX:1,duration:.5,ease:SPR},6.9);
+tl.to('.tab',{opacity:1,duration:.3,stagger:.06},7.05);
+tl.set('#t1',{color:'#ffffff'},7.05);
+tl.to('#cp1',{yPercent:0,duration:.45},7.2);
+click(8.3, 560, 560);
+tl.to('#blob',{keyframes:[{x:-105,width:300,duration:.18,ease:'power2.in'},{x:0,width:200,duration:.35,ease:SPR}]},8.3); blur(8.3);
+tl.to('#t1',{color:'#8C877E',duration:.15},8.35); tl.to('#t2',{color:'#ffffff',duration:.15},8.5);
+tl.to('#cp1',{yPercent:-110,duration:.3,ease:'power3.in'},8.35); tl.to('#cp2',{yPercent:0,duration:.45,ease:'expo.out'},8.6);
+click(9.5, 770, 560);
+tl.to('#blob',{keyframes:[{x:105,width:300,duration:.18,ease:'power2.in'},{x:210,width:200,duration:.35,ease:SPR}]},9.5); blur(9.5);
+tl.to('#t2',{color:'#8C877E',duration:.15},9.55); tl.to('#t3',{color:'#ffffff',duration:.15},9.7);
+tl.to('#cp2',{yPercent:-110,duration:.3,ease:'power3.in'},9.55); tl.to('#cp3',{yPercent:0,duration:.45,ease:'expo.out'},9.8);
+
+// 4 · 적용 (인디케이터 → 체크리스트 카드)
+tl.to(['#track','.tab'],{opacity:0,duration:.2},11);
+tl.to('#cp3',{yPercent:-110,duration:.3,ease:'power3.in'},10.95);
+head(4,11.05);
+morph(11.1,{width:660,height:380,borderRadius:40,x:0,y:20,backgroundColor:'#ffffff',boxShadow:'0 18px 50px rgba(0,0,0,.10)'},.6);
+tl.set('#list',{y:20},0);
+tl.fromTo('#list',{opacity:0,scale:.96},{opacity:1,scale:1,duration:.35,ease:'power3.out'},11.35);
+click(11.9, 304, 525);
+tl.to('#b1 em',{scale:1,duration:.3,ease:'back.out(2)'},11.9); tl.to('#ck1',{strokeDashoffset:0,duration:.3,ease:'power2.out'},12);
+click(12.5, 304, 629);
+tl.to('#b2 em',{scale:1,duration:.3,ease:'back.out(2)'},12.5); tl.to('#ck2',{strokeDashoffset:0,duration:.3,ease:'power2.out'},12.6);
+
+// 5 · 진행 바 4/4
+tl.to('#list',{opacity:0,scale:.95,duration:.2},12.9);
+moveCur(13, 980, 1150, .6);
+morph(13,{width:560,height:76,borderRadius:38,y:0,backgroundColor:'#111111',boxShadow:'0 0 0 rgba(0,0,0,0)'},.5);
+tl.set(['#fill','#ptxt'],{opacity:1},13.3);
+tl.fromTo('#fill',{x:-242,width:60},{x:0,width:544,duration:.65,ease:'power2.inOut'},13.35);
+tl.fromTo('#ptxt',{opacity:0},{opacity:1,duration:.2},13.3);
+const cnt = {v:0}; tl.to(cnt,{v:4,duration:.65,ease:'power2.inOut',onUpdate(){document.getElementById('cnt').textContent=Math.round(cnt.v)+'/4';}},13.35);
+
+// 6 · 최종 (바 → 4번 칩), 제목, 칩 줄
+tl.to(['#fill','#ptxt'],{opacity:0,duration:.18},14.05);
+tl.to(['#h4 b','#h4 span'],{yPercent:-115,opacity:0,duration:.32,ease:'power2.in',stagger:.05},14);
+tl.to('#steps',{opacity:0,duration:.3},14);
+morph(14.1,{width:200,height:64,borderRadius:32,x:324,y:110},.5);
+tl.set('#c4',{opacity:1},14.45);
+tl.set('#final',{opacity:1},14.1);
+tl.fromTo('#ttl',{yPercent:110},{yPercent:0,duration:.55,ease:'power3.out'},14.15);
+tl.fromTo('.final .kick',{opacity:0},{opacity:1,duration:.3},14.3);
+tl.fromTo(['#c1','#c2','#c3'],{opacity:0,scale:.6},{opacity:1,scale:1,duration:.4,ease:'back.out(2)',stagger:.08},14.25);
+Motion.ready();
+</script></body></html>

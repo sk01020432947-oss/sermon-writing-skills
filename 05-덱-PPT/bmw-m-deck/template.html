@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BMW M Deck</title>
+<!-- Inter(라틴) → Pretendard(한글) 순서. Inter에 한글 글리프가 없어 자동 폴백된다. -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap">
+<style>
+:root{
+  /* ── Surface (스펙 그대로. 순검정이 정체성 — #111·#0a0a0a로 흐리지 않는다) ── */
+  --canvas:#000;        /* 페이지 바닥 */
+  --soft:#0d0d0d;       /* 스펙 셀 */
+  --card:#1a1a1a;       /* 카드·아이콘버튼 */
+  --elev:#262626;       /* 중첩 카드 */
+  --carbon:#2b2b2b;     /* 카본 질감 셀 */
+  --hair:#3c3c3c;       /* 1px 헤어라인 */
+  /* ── Text ── */
+  --ink:#fff;           /* 헤드라인·버튼 라벨 */
+  --body:#bbb;          /* 본문 */
+  --strong:#e6e6e6;     /* 리드 문단 */
+  --muted:#7e7e7e;      /* 캡션·푸터 */
+  /* ── M 트라이컬러 (브랜드 표식 전용. 버튼·배경 채움 절대 금지) ── */
+  --m-blue-l:#0066b1; --m-blue-d:#1c69d4; --m-red:#e22718;
+  --ev-blue:#0653b6;  /* 전기 모델 전용 악센트 */
+  --warn:#f4b400;
+  /* ── 타입 (웹 토큰 × 1.5 = 1920 스테이지 값) ── */
+  --d-xl:120px; --d-lg:84px; --d-md:60px; --d-sm:48px;
+  --t-lg:36px; --t-md:30px; --t-sm:27px;
+  --b-md:24px; --b-sm:21px; --cap:18px;
+  --lab:21px; --track:2.25px;   /* label/button 트래킹 1.5px × 1.5 */
+  /* ── 여백 (× 1.5) ── */
+  --sec:144px; --xxl:96px; --xl:60px; --lg:36px; --md:24px;
+  --pad:8%;             /* 좌우 기준선 */
+}
+
+*{margin:0;padding:0;box-sizing:border-box;border-radius:0}
+html,body{height:100%;background:#000;overflow:hidden}
+body{font-family:"Inter","Pretendard Variable",Pretendard,-apple-system,"Segoe UI",Roboto,sans-serif;
+  color:var(--ink);font-weight:300}
+
+#stage{position:absolute;top:50%;left:50%;width:1920px;height:1080px;
+  transform:translate(-50%,-50%) scale(var(--scale,1));transform-origin:center;background:var(--canvas)}
+.slide{position:absolute;inset:0;display:none;background:var(--canvas);overflow:hidden}
+.slide.active{display:block}
+
+/* ═════ 사진 레이어 — 풀블리드. 라운딩·마진 없음 ═════ */
+.photo{position:absolute;inset:0;background:var(--img,none) center/cover no-repeat}
+/* 텍스트 가독 스크림. 그라디언트 배경이 아니라 사진 위 검정 스크림이다(순수 검정 → 투명) */
+.photo::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(90deg,rgba(0,0,0,.86) 0%,rgba(0,0,0,.60) 38%,rgba(0,0,0,.05) 72%)}
+.photo.center::after{background:linear-gradient(180deg,rgba(0,0,0,.55),rgba(0,0,0,.30) 45%,rgba(0,0,0,.80))}
+.photo.plain::after{display:none}
+/* 사진 없는 밴드는 그냥 검정. 대체 질감을 넣지 않는다 */
+
+/* ═════ M 트라이컬러 스트라이프 — 4px(×1.5=6px). 시스템 유일 장식 ═════ */
+.mstripe{height:6px;width:180px;
+  background:linear-gradient(90deg,var(--m-blue-l) 0 33.33%,var(--m-blue-d) 33.33% 66.66%,var(--m-red) 66.66% 100%)}
+.active .mstripe{animation:draw .7s cubic-bezier(.2,.7,.2,1) both;transform-origin:left}
+@keyframes draw{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+.mstripe.wide{width:100%}
+
+/* ═════ 텍스트 블록 ═════ */
+.lead{position:absolute;left:var(--pad);right:44%;top:0;bottom:0;z-index:5;
+  display:flex;flex-direction:column;justify-content:center}
+.lead.mid{right:var(--pad);align-items:flex-start}
+.lead.ctr{left:var(--pad);right:var(--pad);align-items:center;text-align:center}
+
+.label{font-size:var(--lab);font-weight:700;letter-spacing:var(--track);text-transform:uppercase;
+  color:var(--ink);margin-bottom:var(--md)}
+.label.m{color:var(--m-red)}          /* 모터스포츠 표식에만 */
+h1{font-size:var(--d-xl);font-weight:700;line-height:1.0;letter-spacing:-.5px;text-transform:uppercase}
+h2{font-size:var(--d-lg);font-weight:700;line-height:1.05;letter-spacing:-.5px;text-transform:uppercase}
+h3{font-size:var(--d-md);font-weight:700;line-height:1.1;letter-spacing:-.5px;text-transform:uppercase}
+.sub{margin-top:var(--lg);font-size:var(--b-md);font-weight:300;line-height:1.5;color:var(--body);
+  max-width:24em}                     /* 본문은 항상 300. 400·500으로 올리지 않는다 */
+.sub.strong{color:var(--strong);font-size:var(--t-sm)}
+.caption{font-size:var(--cap);font-weight:400;letter-spacing:.75px;color:var(--muted)}
+
+/* 사진 위 오버레이 캡션 (motorsport-photo-card) */
+.overlay-cap{position:absolute;left:var(--pad);bottom:var(--xxl);font-size:var(--b-sm);
+  font-weight:300;color:var(--ink);z-index:6}
+
+/* ═════ 버튼 — 사각 0px + 대문자 트래킹. 이 실루엣이 브랜드다 ═════ */
+.btn{display:inline-flex;align-items:center;gap:14px;height:72px;padding:0 var(--xl);
+  border:1.5px solid var(--ink);background:transparent;color:var(--ink);
+  font-size:var(--lab);font-weight:700;letter-spacing:var(--track);text-transform:uppercase}
+.btn.solid{background:var(--card)}
+.link{display:inline-flex;align-items:center;gap:12px;font-size:var(--lab);font-weight:700;
+  letter-spacing:var(--track);text-transform:uppercase;color:var(--ink)}
+.link::after{content:"›";font-weight:400;font-size:1.4em;line-height:0}
+.btn-icon{width:72px;height:72px;border-radius:50%;background:var(--card);
+  display:inline-flex;align-items:center;justify-content:center;font-size:28px}
+
+/* ═════ 스펙 셀 그리드 (spec-cell) ═════ */
+.specs{position:absolute;left:var(--pad);right:var(--pad);bottom:var(--xxl);
+  display:grid;grid-template-columns:repeat(var(--cols,4),1fr);gap:var(--lg);z-index:5}
+.specs.mid{top:50%;bottom:auto;transform:translateY(-50%)}
+.cell{background:var(--soft);padding:var(--xl) var(--lg)}
+.cell.carbon{background:var(--carbon)}
+.cell .val{font-size:var(--d-sm);font-weight:700;line-height:1.15;letter-spacing:-.5px}
+.cell .val em{font-style:normal;font-size:.5em;font-weight:300;color:var(--body);margin-left:.25em}
+.cell .key{margin-top:var(--md);font-size:var(--lab);font-weight:700;letter-spacing:var(--track);
+  text-transform:uppercase;color:var(--body)}
+
+/* ═════ 카드 그리드 (feature-photo-card / model-card) ═════ */
+.cards{position:absolute;left:var(--pad);right:var(--pad);top:50%;transform:translateY(-50%);
+  display:grid;grid-template-columns:repeat(var(--cols,3),1fr);gap:var(--lg);z-index:5}
+.card{background:var(--card)}
+.card.bare{background:transparent}          /* model-card = 검정 위 사진만 */
+.card .shot{aspect-ratio:16/9;background:var(--img,var(--elev)) center/cover no-repeat}
+.card.bare .shot{aspect-ratio:16/10}
+.card .body{padding:var(--lg)}
+.card.bare .body{padding:var(--lg) 0 0}
+.card .tag{font-size:var(--cap);font-weight:700;letter-spacing:var(--track);text-transform:uppercase;
+  color:var(--body)}
+.card h4{margin-top:var(--md);font-size:var(--t-lg);font-weight:700;line-height:1.3}
+.card.bare h4{font-size:var(--d-md);text-transform:uppercase;letter-spacing:-.5px;line-height:1.1}
+.card p{margin-top:var(--md);font-size:var(--b-sm);font-weight:300;line-height:1.5;color:var(--body)}
+.card .link{margin-top:var(--lg);font-size:var(--cap)}
+
+/* ═════ 헤어라인 표 (스펙 나열·비교) ═════ */
+.rows{position:absolute;left:var(--pad);right:var(--pad);top:50%;transform:translateY(-50%);z-index:5}
+.row{display:flex;align-items:baseline;gap:var(--xl);padding:var(--lg) 0;border-top:1px solid var(--hair)}
+.row:last-child{border-bottom:1px solid var(--hair)}
+.row .k{flex:0 0 30%;font-size:var(--lab);font-weight:700;letter-spacing:var(--track);
+  text-transform:uppercase;color:var(--body)}
+.row .v{flex:1;font-size:var(--t-md);font-weight:300;color:var(--ink)}
+.row .n{font-size:var(--t-lg);font-weight:700;letter-spacing:-.5px}
+
+/* ═════ 세로 분할 (사진 절반 / 텍스트 절반) ═════ */
+.half{position:absolute;top:0;bottom:0;width:50%;background:var(--img,var(--soft)) center/cover no-repeat}
+.half.r{right:0}.half.l{left:0}
+
+/* ═════ 카테고리 탭 (진행 표시로 전용 가능) ═════ */
+.tabs{position:absolute;left:var(--pad);top:var(--xxl);display:flex;gap:var(--xl);z-index:6}
+.tab{font-size:var(--lab);font-weight:700;letter-spacing:var(--track);text-transform:uppercase;
+  color:var(--body);padding-bottom:10px}
+.tab.on{color:var(--ink);box-shadow:inset 0 -3px 0 var(--ink)}
+
+/* ═════ 모션 — 요소별 순차 등장. 페이드+상승만. 스케일·회전 금지 ═════ */
+.in{opacity:0}
+.active .in{animation:rise .75s cubic-bezier(.2,.7,.2,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:none}}
+.active .d1{animation-delay:.05s}.active .d2{animation-delay:.29s}.active .d3{animation-delay:.53s}
+.active .d4{animation-delay:.77s}.active .d5{animation-delay:1.01s}
+/* 사진은 아주 느린 밀기 — 정지 사진은 이 스타일에서 죽은 화면이다 */
+.active .photo{animation:push 24s linear both}
+@keyframes push{from{transform:scale(1.04)}to{transform:scale(1.12)}}
+
+#nav{position:fixed;right:28px;bottom:22px;font-size:16px;font-weight:700;letter-spacing:var(--track);
+  color:var(--muted);z-index:99}
+
+@media print{
+  html,body,#stage{overflow:visible;position:static;transform:none;width:auto;height:auto}
+  .slide{display:block!important;position:relative;width:1920px;height:1080px;page-break-after:always}
+  .in,.mstripe,.photo{animation:none!important;opacity:1!important;transform:none!important}
+  #nav{display:none}
+}
+</style>
+</head>
+<body>
+<div id="stage">
+
+<!-- ═════ A1. 타이틀 — 풀블리드 사진 + 대문자 h1 ═════ -->
+<section class="slide">
+  <div class="photo" style="--img:url('photo/hero.jpg')"></div>
+  <div class="lead">
+    <div class="mstripe in d1"></div>
+    <div class="label in d2" style="margin-top:var(--lg)">BMW M · 2026</div>
+    <h1 class="in d3">더 얼티밋<br>드라이빙 머신</h1>
+    <p class="sub strong in d4">한 문장으로 이 발표가 무엇을 다루는지 이어서 말한다.</p>
+  </div>
+  <div class="caption overlay-cap in d5">BMW M4 Competition · Nürburgring</div>
+</section>
+
+<!-- ═════ A2. 사진 밴드 — 서사·장면. 가장 자주 쓴다 ═════ -->
+<section class="slide">
+  <div class="photo" style="--img:url('photo/corner.jpg')"></div>
+  <div class="lead">
+    <div class="label in d1">CHAPTER 01</div>
+    <h2 class="in d2">속도는<br>설계된다</h2>
+    <p class="sub in d3">헤드라인을 설명하지 말고 다음 문장으로 이어 말한다. 두 줄까지.</p>
+    <div class="link in d4" style="margin-top:var(--xl)">자세히 보기</div>
+  </div>
+</section>
+
+<!-- ═════ A3. 스펙 셀 — 수치 4개까지 ═════ -->
+<!-- 사진을 쓰면 세로 스크림(.photo.center) + 셀은 하단 고정. 사진 없이 순수 검정이면
+     셀에 class="specs mid"를 줘 화면 중앙에 올린다(하단 고정 시 아래가 비어 보인다). -->
+<section class="slide">
+  <div class="photo center" style="--img:url('photo/spec.jpg')"></div>
+  <div class="lead mid" style="bottom:auto;top:var(--xxl);height:auto;justify-content:flex-start">
+    <div class="mstripe in d1"></div>
+    <h3 class="in d2" style="margin-top:var(--lg)">테크니컬 데이터</h3>
+  </div>
+  <div class="specs" style="--cols:4">
+    <div class="cell in d2"><div class="val">3.5<em>초</em></div><div class="key">0–100 km/h</div></div>
+    <div class="cell in d3"><div class="val">530<em>hp</em></div><div class="key">최고 출력</div></div>
+    <div class="cell in d4"><div class="val">650<em>Nm</em></div><div class="key">최대 토크</div></div>
+    <div class="cell carbon in d5"><div class="val">290<em>km/h</em></div><div class="key">최고 속도</div></div>
+  </div>
+</section>
+
+<!-- ═════ A4. 카드 3분할 — 항목·사례·모델 나열 ═════ -->
+<section class="slide">
+  <div class="tabs"><div class="tab on">MODELS</div><div class="tab">MAGAZINE</div><div class="tab">MOTORSPORT</div></div>
+  <div class="cards" style="--cols:3">
+    <div class="card in d2">
+      <div class="shot" style="--img:url('photo/c1.jpg')"></div>
+      <div class="body">
+        <div class="tag">MOTORSPORT</div>
+        <h4>카드 제목은 두 줄까지</h4>
+        <p>본문 세 줄 이내. 300 웨이트를 유지한다.</p>
+      </div>
+    </div>
+    <div class="card bare in d3">
+      <div class="shot" style="--img:url('photo/c2.jpg')"></div>
+      <div class="body"><h4>M4 CS</h4><p>550 hp · 3.4초 · xDrive</p><div class="link">모델 보기</div></div>
+    </div>
+    <div class="card in d4">
+      <div class="shot" style="--img:url('photo/c3.jpg')"></div>
+      <div class="body">
+        <div class="tag">LIFESTYLE</div>
+        <h4>세 번째 카드</h4>
+        <p>카드는 3개가 기본. 4개 이상은 두 줄로 나누지 말고 슬라이드를 쪼갠다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═════ A5. 세로 분할 — 대비·전후·A vs B ═════ -->
+<section class="slide">
+  <div class="half l" style="--img:url('photo/wheel.jpg')"></div>
+  <div class="lead" style="left:56%;right:var(--pad)">
+    <div class="label m in d1">M CARBON</div>
+    <h3 class="in d2">가벼움이<br>곧 속도다</h3>
+    <p class="sub in d3">왼쪽 사진이 주장하고 오른쪽 문장이 근거를 댄다.</p>
+  </div>
+</section>
+
+<!-- ═════ A6. 헤어라인 표 — 항목 나열·비교. 밴드 리듬 환기용 ═════ -->
+<section class="slide">
+  <div class="lead mid" style="bottom:auto;top:var(--xxl);height:auto;justify-content:flex-start">
+    <h3 class="in d1">라인업 비교</h3>
+  </div>
+  <div class="rows" style="top:56%">
+    <div class="row in d2"><div class="k">M2</div><div class="v">직렬 6기통 · 후륜</div><div class="n">480 hp</div></div>
+    <div class="row in d3"><div class="k">M3 CS</div><div class="v">직렬 6기통 · xDrive</div><div class="n">550 hp</div></div>
+    <div class="row in d4"><div class="k">M5</div><div class="v">V8 하이브리드 · xDrive</div><div class="n">727 hp</div></div>
+  </div>
+</section>
+
+<!-- ═════ A7. 선언 — 순수 검정 + M 스트라이프. 챕터 끝에만 ═════ -->
+<section class="slide">
+  <div class="lead ctr">
+    <div class="mstripe in d1" style="width:240px"></div>
+    <h2 class="in d2" style="margin-top:var(--xl)">타지 않으면<br>알 수 없다</h2>
+  </div>
+</section>
+
+<!-- ═════ A8. 클로징 CTA — 풀블리드 사진 + 중앙 헤드라인 + 아웃라인 버튼 ═════ -->
+<section class="slide">
+  <div class="photo center" style="--img:url('photo/track.jpg')"></div>
+  <div class="lead ctr">
+    <h3 class="in d1">지금 시작하세요</h3>
+    <p class="sub in d2" style="max-width:32em">한 줄 요약 또는 다음 행동.</p>
+    <div class="btn in d3" style="margin-top:var(--xl)">문의하기</div>
+  </div>
+</section>
+
+</div>
+
+<div id="nav"><span id="navPage"></span></div>
+
+<script>
+const slides=[...document.querySelectorAll('.slide')];
+let cur=-1;
+const navPage=document.getElementById('navPage');
+function show(n){
+  cur=Math.max(0,Math.min(slides.length-1,n));
+  slides.forEach((s,i)=>s.classList.toggle('active',i===cur));
+  navPage.textContent=(cur+1)+' / '+slides.length;
+}
+addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key===' ')show(cur+1);
+  else if(e.key==='ArrowLeft')show(cur-1);
+  else if(e.key==='Home')show(0);
+  else if(e.key==='End')show(slides.length-1);
+});
+addEventListener('click',e=>{if(e.clientX<innerWidth/2)show(cur-1);else show(cur+1)});
+let tx=null;
+addEventListener('touchstart',e=>tx=e.touches[0].clientX);
+addEventListener('touchend',e=>{if(tx===null)return;
+  const dx=e.changedTouches[0].clientX-tx;
+  if(dx<-40)show(cur+1);else if(dx>40)show(cur-1);tx=null});
+function fit(){
+  const s=Math.min(innerWidth/1920,innerHeight/1080);
+  document.getElementById('stage').style.setProperty('--scale',s);
+}
+addEventListener('resize',fit);addEventListener('load',fit);fit();
+const _h=parseInt(location.hash.slice(1));show(isNaN(_h)?0:_h-1);
+addEventListener('hashchange',()=>{const n=parseInt(location.hash.slice(1));if(!isNaN(n))show(n-1)});
+if(location.search.indexOf('shot')>-1)document.getElementById('nav').style.display='none';
+</script>
+</body>
+</html>

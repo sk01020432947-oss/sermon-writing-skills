@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><title>GSAP 타임라인 · GSAP Timeline</title>
+<link rel="stylesheet" href="../../lib/stage.css">
+<style>
+.frame{background:#0b1012 !important;background-image:none !important}
+.scene{position:absolute;inset:0;overflow:hidden;font-family:Pretendard,'Noto Sans KR',sans-serif;color:#e9f1ef;letter-spacing:-.01em}
+.bg{position:absolute;inset:0;background:radial-gradient(55% 75% at 12% -5%,#15493e 0%,rgba(21,73,62,0) 70%),radial-gradient(55% 75% at 105% 105%,#2c2257 0%,rgba(44,34,87,0) 70%),#0b1012}
+.tag{position:absolute;display:flex;gap:8px;align-items:center;font:600 12px/1 'IBM Plex Mono',monospace;letter-spacing:.12em;color:#9fb3ae;text-transform:uppercase;white-space:nowrap}
+.tag b{background:#3ee6a8;color:#06231a;padding:3px 6px;border-radius:4px;font-weight:700}
+.panel{position:absolute;background:rgba(18,26,28,.82);border:1px solid rgba(255,255,255,.09);border-radius:12px}
+.code{font:13px/1.75 'IBM Plex Mono',monospace;color:#b9c9c4;white-space:pre}
+.chip{position:absolute;padding:7px 14px;border-radius:999px;border:1px solid rgba(62,230,168,.45);color:#bff5df;font:600 14px/1 Pretendard;background:rgba(62,230,168,.08);white-space:nowrap}
+.mint{color:#3ee6a8}.red{color:#ff5d4f}
+
+.ttl{position:absolute;left:64px;top:96px;font:800 38px/1.25 Pretendard}
+.prev{left:560px;top:70px;width:520px;height:260px;overflow:hidden}
+.prev .cap2{position:absolute;left:16px;top:14px;font:600 11px 'IBM Plex Mono';color:#7c8f8a;letter-spacing:.14em;z-index:3}
+.s1{position:absolute;left:0;right:0;top:110px;text-align:center;font:800 34px Pretendard}
+.circ{position:absolute;left:236px;top:106px;width:48px;height:48px;border-radius:50%;background:#3ee6a8;opacity:0}
+.s2{position:absolute;left:0;right:0;top:110px;text-align:center;font:800 34px Pretendard;color:#06231a;z-index:2}
+.tlp{left:64px;top:370px;width:1152px;height:290px}
+.ruler{position:absolute;left:150px;right:30px;top:22px;height:20px;font:500 11px 'IBM Plex Mono';color:#6f817c}
+.ruler span{position:absolute;top:0}
+.trk{position:absolute;left:24px;right:30px;height:40px;font:600 14px Pretendard;color:#9fb3ae;display:flex;align-items:center}
+.trk i{font-style:normal;width:126px;font:600 12px 'IBM Plex Mono';color:#6f817c}
+.lane{position:absolute;left:150px;right:30px;top:8px;bottom:8px;border-radius:6px;background:rgba(255,255,255,.03)}
+.clip{position:absolute;top:2px;bottom:2px;border-radius:6px;font:600 12px Pretendard;padding:0 10px;display:flex;align-items:center;color:#06231a}
+.ph{position:absolute;top:44px;bottom:16px;width:2px;background:#fff;left:150px}
+.ph:before{content:'';position:absolute;left:-6px;top:-8px;border:7px solid transparent;border-top:9px solid #fff}
+.chipc{left:64px;top:240px;font:500 13px 'IBM Plex Mono';border-color:rgba(255,255,255,.18);color:#cfdcd8;background:rgba(255,255,255,.04)}
+</style></head>
+<body data-no="W03" data-cat="기술 · GSAP" data-ko="순서와 타이밍 (타임라인)" data-en="GSAP Timeline" data-meta="9초 · 글자→도형 확대→덮기→다음 장면" data-dur="9" data-poster="6.2" data-size="1280x720">
+<main class="scene"><div class="bg"></div>
+  <div class="tag" style="left:64px;top:50px"><b>03</b>01 / 05 · GSAP</div>
+  <div class="ttl" id="tt">영상 편집의<br><span class="mint">타임라인</span>처럼</div>
+  <div class="chip chipc">tl.from('.text',{y:80}).to('.shape',{scale:12})</div>
+  <div class="panel prev"><span class="cap2">PREVIEW</span>
+    <div class="s1" id="s1">첫 번째 장면</div><div class="circ" id="c"></div><div class="s2" id="s2">두 번째 장면</div></div>
+  <div class="panel tlp">
+    <div class="ruler" id="ru"></div>
+    <div class="trk" style="top:52px"><i>V1 글자</i><div class="lane"><div class="clip" style="left:4%;width:14%;background:#3ee6a8">나타나기</div></div></div>
+    <div class="trk" style="top:100px"><i>V2 도형</i><div class="lane"><div class="clip" style="left:22%;width:12%;background:#8b7bff">확대</div><div class="clip" style="left:38%;width:12%;background:#8b7bff">덮기</div></div></div>
+    <div class="trk" style="top:148px"><i>V3 다음 장면</i><div class="lane"><div class="clip" style="left:54%;width:14%;background:#ffb547">넘어가기</div></div></div>
+    <div class="trk" style="top:196px"><i>A1 소리</i><div class="lane"><svg id="wave" width="100%" height="24" style="position:absolute;top:8px"></svg></div></div>
+    <div class="ph" id="ph"></div>
+  </div>
+</main>
+<script src="../../lib/gsap.min.js"></script><script src="../../lib/stage.js"></script>
+<script>
+const r = Motion.rand(3);
+const ru = document.getElementById('ru');
+for (let s = 0; s <= 8; s++) ru.insertAdjacentHTML('beforeend', `<span style="left:${s / 8 * 100}%">${s}s</span>`);
+let w = ''; for (let i = 0; i < 160; i++) { const h = 3 + r() * 9 * (0.5 + 0.5 * Math.sin(i / 7)); w += `<rect x="${i / 160 * 100}%" y="${12 - h}" width="2" height="${h * 2}" fill="#3ee6a8" opacity=".55"/>`; }
+document.getElementById('wave').innerHTML = w;
+// 미리보기 장면 시각(초) = 타임라인 눈금과 같은 8초 축. 레인 시작 0.5초 지연.
+const T0 = .5, laneW = 1152 - 150 - 30;
+const tl = Motion.timeline();
+tl.from('.ttl,.chipc,.prev,.tlp', {y: 24, autoAlpha: 0, stagger: .1, duration: .5}, 0);
+tl.fromTo('#ph', {x: 0}, {x: laneW, duration: 8, ease: 'none'}, T0);
+tl.from('#s1', {y: 80, autoAlpha: 0, duration: .9}, T0 + .32);
+tl.to('#c', {opacity: 1, duration: .1}, T0 + 1.76);
+tl.fromTo('#c', {scale: .2}, {scale: 2.2, duration: .9, ease: 'back.out(2)'}, T0 + 1.76);
+tl.to('#s1', {autoAlpha: .2, duration: .4}, T0 + 2.6);
+tl.to('#c', {scale: 14, duration: .95, ease: 'power3.in'}, T0 + 3.04);
+tl.from('#s2', {y: 60, autoAlpha: 0, duration: .8}, T0 + 4.32);
+Motion.ready();
+</script></body></html>
