@@ -1,0 +1,4 @@
+corazzon/pptx-design-styles
+https://github.com/corazzon/pptx-design-styles
+
+원 저장소에 LICENSE 파일이 없고, README의 "License" 단락에 "MIT License — free to use, modify, and distribute."라고 적혀 있습니다 (2026-10-07 확인).

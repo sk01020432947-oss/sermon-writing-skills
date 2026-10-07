@@ -4,27 +4,29 @@
 
 권리자이신데 삭제나 출처 수정을 원하시면 [이슈](https://github.com/sk01020432947-oss/sermon-writing-skills/issues)로 알려 주세요. 바로 반영합니다.
 
-## 1. 라이선스가 명시된 외부 스킬
+## 1. 라이선스가 확인된 외부 스킬
 
-| 스킬 | 원 저장소·제작자 | 라이선스 |
+MIT·Apache-2.0은 원 저작권 고지를 함께 배포해야 합니다. 원본 라이선스 전문은 [licenses/](licenses) 폴더와 각 스킬 폴더에 있습니다. (확인일 2026-10-07)
+
+| 스킬 | 원 저장소·저작권자 | 라이선스 | 고지 파일 |
+|---|---|---|---|
+| `korean-slang-writing`, `korean-character-count`, `korean-humanizer`, `korean-spell-check`, `hwp`, `rhwp-advanced`, `rhwp-edit` | [NomaDamas/k-skill](https://github.com/NomaDamas/k-skill) | MIT | [licenses/k-skill-LICENSE.txt](licenses/k-skill-LICENSE.txt) |
+| `korean-privacy-terms` | [NomaDamas/k-skill](https://github.com/NomaDamas/k-skill) | Apache-2.0 | 스킬 폴더의 `LICENSE.upstream` |
+| `korean-law-search` | [chrisryugj/korean-law-mcp](https://github.com/chrisryugj/korean-law-mcp) (Chris) | MIT | [licenses/korean-law-mcp-LICENSE.txt](licenses/korean-law-mcp-LICENSE.txt) |
+| `html-ppt` | [lewislulu/html-ppt-skill](https://github.com/lewislulu/html-ppt-skill) (lewis) | MIT | 스킬 폴더의 `LICENSE` |
+| `awesome-ai-motion` | gongnyang | MIT | 스킬 폴더의 `LICENSE` |
+| `manim-video` | [browser-use/video-use](https://github.com/browser-use/video-use) (Browser Use) | MIT | [licenses/video-use-LICENSE.txt](licenses/video-use-LICENSE.txt) |
+| `nudocs` | [PSPDFKit/nudocs-cli](https://github.com/PSPDFKit/nudocs-cli) (Nutrient) | MIT | [licenses/nudocs-cli-LICENSE.txt](licenses/nudocs-cli-LICENSE.txt) |
+| `bookwriting-*` (13개) | [idoforgod/cys-bookwriting-skills](https://github.com/idoforgod/cys-bookwriting-skills) (최윤식) | MIT | [licenses/cys-bookwriting-skills-LICENSE.txt](licenses/cys-bookwriting-skills-LICENSE.txt) |
+| `ask-exegesis-pipeline` (9개 스킬) | [paul4you-isaac/ask-exegesis-pipeline](https://github.com/paul4you-isaac/ask-exegesis-pipeline) | MIT (README 표기, LICENSE 파일 없음) | [licenses/ask-exegesis-pipeline-LICENSE-NOTE.txt](licenses/ask-exegesis-pipeline-LICENSE-NOTE.txt) |
+| `pptx-design-styles` | [corazzon/pptx-design-styles](https://github.com/corazzon/pptx-design-styles) | MIT (README 표기, LICENSE 파일 없음) | [licenses/pptx-design-styles-LICENSE-NOTE.txt](licenses/pptx-design-styles-LICENSE-NOTE.txt) |
+| `hwpx-mouseco`, `read-hwp` | 원 저장소 표기 없음 | MIT (SKILL.md 표기) | — |
+
+## 2. 원 저장소에 라이선스가 없는 외부 스킬
+
+| 스킬 | 원 저장소 | 상태 |
 |---|---|---|
-| `korean-slang-writing`, `korean-character-count`, `korean-humanizer`, `korean-spell-check`, `hwp`, `rhwp-advanced`, `rhwp-edit` | [NomaDamas/k-skill](https://github.com/NomaDamas/k-skill) | MIT |
-| `korean-privacy-terms` | [NomaDamas/k-skill](https://github.com/NomaDamas/k-skill) | Apache-2.0 (`LICENSE.upstream`) |
-| `korean-law-search` | [chrisryugj/korean-law-mcp](https://github.com/chrisryugj/korean-law-mcp) | MIT |
-| `html-ppt` | [lewislulu/html-ppt-skill](https://github.com/lewislulu/html-ppt-skill) (lewis) | MIT (`LICENSE`) |
-| `awesome-ai-motion` | gongnyang | MIT (`LICENSE`) |
-| `hwpx-mouseco`, `read-hwp` | 원 저장소 표기 없음 | MIT (SKILL.md 표기) |
-
-## 2. 원 저장소는 확인했으나 라이선스는 확인하지 못한 외부 스킬
-
-| 스킬 | 원 저장소 |
-|---|---|
-| `ask-exegesis-pipeline` (9개 스킬) | [paul4you-isaac/ask-exegesis-pipeline](https://github.com/paul4you-isaac/ask-exegesis-pipeline) |
-| `pptx-design-styles` | [corazzon/pptx-design-styles](https://github.com/corazzon/pptx-design-styles) |
-| `manim-video` | [browser-use/video-use](https://github.com/browser-use/video-use) |
-| `hwpxskill` | [jkf87/hwpx-skill](https://github.com/jkf87/hwpx-skill), [Canine89/hwpxskill](https://github.com/Canine89/hwpxskill) |
-| `nudocs` | [PSPDFKit/nudocs-cli](https://github.com/PSPDFKit/nudocs-cli) |
-| `bookwriting-*` (13개) | [idoforgod/cys-bookwriting-skills](https://github.com/idoforgod/cys-bookwriting-skills) |
+| `hwpxskill` | [Canine89/hwpxskill](https://github.com/Canine89/hwpxskill) | LICENSE 파일도, README 표기도 없음. [jkf87/hwpx-skill](https://github.com/jkf87/hwpx-skill)(MIT)의 아이디어를 참고했다고 밝히고 있으나 코드는 별도 |
 
 ## 3. 공개 강의·자료를 참고해 만든 스킬
 
